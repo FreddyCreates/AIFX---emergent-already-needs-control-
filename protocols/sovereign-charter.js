@@ -59,7 +59,7 @@ const TIERS = {
   V:   { id: 'V',   label: 'Sovereign Organism',     weight: 1        },
 };
 
-// ── Protocol registry (all 43 protocols + this charter as 44th) ──────────────
+// ── Protocol registry (expanded sovereign stack including Mycelium family) ─────
 
 const PROTOCOLS = [
   // ── Tier I: Foundations ────────────────────────────────────────────────────
@@ -114,6 +114,14 @@ const PROTOCOLS = [
   { id: 'PROTO-184', name: 'OroEngineIntegrationProtocol',        tier: 'V',   canister: null },
   { id: 'PROTO-185', name: 'AuroAbsorptionCharterProtocol',       tier: 'V',   canister: null },
   { id: 'PROTO-227', name: 'SovereignCharterProtocol',            tier: 'V',   canister: null },
+  { id: 'PROTO-257', name: 'MyceliumCharterProtocol',            tier: 'V',   canister: null },
+  { id: 'PROTO-258', name: 'MyceliumNodeIdentityProtocol',       tier: 'III', canister: null },
+  { id: 'PROTO-259', name: 'MyceliumMeshFormationProtocol',      tier: 'III', canister: null },
+  { id: 'PROTO-260', name: 'MyceliumRoutingIntelligenceProtocol', tier: 'IV', canister: null },
+  { id: 'PROTO-261', name: 'MyceliumTrustReputationProtocol',    tier: 'IV',  canister: null },
+  { id: 'PROTO-262', name: 'MyceliumHealingRecoveryProtocol',    tier: 'IV',  canister: null },
+  { id: 'PROTO-263', name: 'MyceliumEconomicSignalingProtocol',  tier: 'IV',  canister: null },
+  { id: 'PROTO-264', name: 'MyceliumCrossSubstrateExchangeProtocol', tier: 'IV', canister: null },
 ];
 
 // ── Key dependency edges (non-exhaustive; declares the critical paths) ────────
@@ -146,6 +154,16 @@ const DEPENDENCIES = [
   { from: 'PROTO-227', to: 'PROTO-185', label: 'absorption charter' },
   { from: 'PROTO-227', to: 'PROTO-210', label: 'mini-brain cognition' },
   { from: 'PROTO-227', to: 'PROTO-208', label: 'synapse binding' },
+
+  // Mycelium family integration
+  { from: 'PROTO-257', to: 'PROTO-227', label: 'charter alignment' },
+  { from: 'PROTO-257', to: 'PROTO-258', label: 'identity doctrine' },
+  { from: 'PROTO-257', to: 'PROTO-259', label: 'topology doctrine' },
+  { from: 'PROTO-257', to: 'PROTO-260', label: 'routing doctrine' },
+  { from: 'PROTO-257', to: 'PROTO-261', label: 'trust doctrine' },
+  { from: 'PROTO-257', to: 'PROTO-262', label: 'failure law' },
+  { from: 'PROTO-257', to: 'PROTO-263', label: 'economic signaling law' },
+  { from: 'PROTO-257', to: 'PROTO-264', label: 'exchange doctrine' },
 ];
 
 // ── Canister bindings ─────────────────────────────────────────────────────────

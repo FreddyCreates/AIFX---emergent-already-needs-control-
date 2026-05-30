@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://itsnotailabs.ai/schemas/mycelium-network-event.schema.json",
+  "title": "Mycelium Network Event",
+  "type": "object",
+  "required": ["timestamp", "eventType", "namespace", "state", "subject", "payload"],
+  "properties": {
+    "timestamp": { "type": "integer", "minimum": 0 },
+    "eventType": {
+      "type": "string",
+      "enum": [
+        "join",
+        "leave",
+        "route-discovery",
+        "proof-of-trust",
+        "heal",
+        "partition",
+        "reconcile"
+      ]
+    },
+    "namespace": {
+      "type": "string",
+      "enum": [
+        "mycelium.identity",
+        "mycelium.mesh",
+        "mycelium.route",
+        "mycelium.trust",
+        "mycelium.heal",
+        "mycelium.economy",
+        "mycelium.exchange"
+      ]
+    },
+    "state": { "type": "string" },
+    "subject": { "type": "string", "minLength": 1 },
+    "proofRef": { "type": ["string", "null"] },
+    "payload": {
+      "oneOf": [
+        { "$ref": "#/$defs/joinPayload" },
+        { "$ref": "#/$defs/leavePayload" },
+        { "$ref": "#/$defs/routeDiscoveryPayload" },
+        { "$ref": "#/$defs/proofOfTrustPayload" },
+        { "$ref": "#/$defs/healPayload" },
+        { "$ref": "#/$defs/partitionPayload" },
+        { "$ref": "#/$defs/reconcilePayload" }
+      ]
+    }
+  },
+  "$defs": {
+    "joinPayload": {
+      "type": "object",
+      "required": ["nodeId", "domain", "role"],
+      "properties": {
+        "nodeId": { "type": "string" },
+        "domain": { "type": "string" },
+        "role": { "type": "string" }
+      }
+    },
+    "leavePayload": {
+      "type": "object",
+      "required": ["nodeId", "reason"],
+      "properties": {
+        "nodeId": { "type": "string" },
+        "reason": { "type": "string" }
+      }
+    },
+    "routeDiscoveryPayload": {
+      "type": "object",
+      "required": ["source", "target", "domain", "path"],
+      "properties": {
+        "source": { "type": "string" },
+        "target": { "type": "string" },
+        "domain": { "type": "string" },
+        "path": { "type": "array", "minItems": 2, "items": { "type": "string" } }
+      }
+    },
+    "proofOfTrustPayload": {
+      "type": "object",
+      "required": ["nodeId", "proofType", "valid"],
+      "properties": {
+        "nodeId": { "type": "string" },
+        "proofType": { "type": "string" },
+        "valid": { "type": "boolean" },
+        "weight": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "healPayload": {
+      "type": "object",
+      "required": ["incidentId", "edge", "status"],
+      "properties": {
+        "incidentId": { "type": "string" },
+        "edge": { "type": "string" },
+        "status": { "type": "string", "enum": ["open", "proposed", "failed", "closed"] }
+      }
+    },
+    "partitionPayload": {
+      "type": "object",
+      "required": ["components"],
+      "properties": {
+        "components": { "type": "array", "minItems": 2, "items": { "type": "integer", "minimum": 1 } }
+      }
+    },
+    "reconcilePayload": {
+      "type": "object",
+      "required": ["linksAdded", "reconciled"],
+      "properties": {
+        "linksAdded": { "type": "integer", "minimum": 0 },
+        "reconciled": { "type": "boolean" }
+      }
+    }
+  }
+}
