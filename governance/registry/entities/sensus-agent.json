@@ -1,0 +1,14 @@
+{
+  "id": "atlas://agent/sensus",
+  "name": "sensus",
+  "class": "Agent",
+  "division": "Cognitive Core",
+  "emoji": "👁️",
+  "domain": "Senses — perception, input, awareness",
+  "events": ["perception_cycle_completed", "signal_received", "anomaly_detected"],
+  "capabilities": ["perceive", "detect", "classify", "signal"],
+  "governance_pipeline": "pipeline://governance/agent_cycle",
+  "ocl_ref": "atlas://organism/bot-fleet",
+  "law_refs": ["governance://law/agent-health"],
+  "script": "sdk/agents/sensus-agent.js"
+}

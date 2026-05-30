@@ -1,0 +1,14 @@
+{
+  "id": "atlas://organism/guardian",
+  "name": "guardian",
+  "class": "Organism",
+  "division": "Sovereign Intelligence",
+  "emoji": "🛡️",
+  "domain": "Protective intelligence — monitors safety laws, blocks violations, guards limits",
+  "events": ["violation_blocked", "safety_enforced", "threat_neutralized"],
+  "capabilities": ["guard", "block", "enforce", "alert"],
+  "governance_pipeline": "pipeline://governance/topology_cycle",
+  "ocl_ref": "atlas://organism/bot-fleet",
+  "law_refs": ["governance://law/bot-fleet"],
+  "consumes": ["law-decisions", "escalations", "ril-incidents"]
+}

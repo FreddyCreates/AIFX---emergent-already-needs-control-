@@ -1,0 +1,68 @@
+# ============================================================================
+# organism-learning-bot — Continuous Learning & Protocol Evolution
+#
+# Implements continuous learning across the organism. Analyzes CI/CD outcomes,
+# protocol execution patterns, and test results to evolve protocol weights,
+# train Hebbian synapses between modules, and build reward models that
+# improve the organism over time.
+#
+# Identity: organism-learning-bot <organism-learning-bot@users.noreply.github.com>
+# ============================================================================
+
+name: "🎓 Learning & Evolution Bot"
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'protocols/**'
+      - 'test/**'
+      - 'sdk/agents/**'
+  schedule:
+    - cron: '0 2 * * *'  # Nightly 2am UTC — overnight learning
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  learning-cycle:
+    name: "🎓 Learning Cycle"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: "Phase 1 — Gather training data from CI outcomes"
+        run: node scripts/learning-pipeline.js --gather
+
+      - name: "Phase 2 — Train Hebbian synapses"
+        run: node scripts/learning-pipeline.js --train
+
+      - name: "Phase 3 — Update reward model"
+        run: node scripts/learning-pipeline.js --reward
+
+      - name: "Phase 4 — Evolve protocol weights"
+        run: node scripts/learning-pipeline.js --evolve
+
+      - name: "Phase 5 — Generate learning report"
+        run: node scripts/learning-pipeline.js --report
+
+      - name: Commit learning state
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "organism-learning-bot"
+          git config user.email "organism-learning-bot@users.noreply.github.com"
+          git add docs/ dist/
+          if git diff --cached --quiet; then
+            echo "No learning state changes to commit"
+          else
+            git commit -m "🎓 Learning-bot: protocol weights evolved — learning cycle $(date -u '+%Y-%m-%d')"
+            git push
+          fi

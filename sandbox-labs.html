@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sandbox Labs - ORGANISM SDK</title>
+    <style>
+        :root {
+            --phi: 1.618033988749895;
+            --gold: #C9A227;
+            --bg-dark: #0a0a0f;
+            --text: #e0e0e0;
+            --panel-bg: rgba(20, 20, 30, 0.9);
+            --border: rgba(201, 162, 39, 0.3);
+            --success: #4CAF50;
+            --error: #f44336;
+            --info: #2196F3;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, rgba(201, 162, 39, 0.1), transparent);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 { color: var(--gold); font-size: 1.5rem; }
+        .header nav a {
+            color: var(--text);
+            text-decoration: none;
+            margin-left: 1.5rem;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+        .header nav a:hover { opacity: 1; color: var(--gold); }
+        .main-grid {
+            display: grid;
+            grid-template-columns: 280px 1fr 320px;
+            gap: 1rem;
+            padding: 1rem;
+            height: calc(100vh - 70px);
+        }
+        .panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+        .panel h2 {
+            color: var(--gold);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .protocol-list { list-style: none; }
+        .protocol-list li {
+            padding: 0.5rem;
+            margin-bottom: 0.25rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: 0.85rem;
+        }
+        .protocol-list li:hover { background: rgba(201, 162, 39, 0.1); }
+        .protocol-list li.active { background: rgba(201, 162, 39, 0.2); border-left: 3px solid var(--gold); }
+        .sandbox-area {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .code-editor {
+            flex: 1;
+            background: #1a1a24;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .editor-header {
+            background: rgba(201, 162, 39, 0.1);
+            padding: 0.5rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
+        .editor-tabs { display: flex; gap: 0.5rem; }
+        .editor-tab {
+            padding: 0.25rem 0.75rem;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--text);
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        .editor-tab.active { background: var(--gold); color: var(--bg-dark); }
+        .run-btn {
+            background: var(--gold);
+            color: var(--bg-dark);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .run-btn:hover { filter: brightness(1.1); }
+        #codeInput {
+            width: 100%;
+            height: calc(100% - 45px);
+            background: transparent;
+            border: none;
+            color: var(--text);
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 0.9rem;
+            padding: 1rem;
+            resize: none;
+            outline: none;
+        }
+        .output-panel {
+            height: 200px;
+            background: #0d0d12;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .output-header {
+            background: rgba(33, 150, 243, 0.1);
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            border-bottom: 1px solid var(--border);
+        }
+        #outputLog {
+            height: calc(100% - 35px);
+            overflow-y: auto;
+            padding: 0.5rem 1rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+        }
+        .log-entry { margin-bottom: 0.25rem; }
+        .log-entry.success { color: var(--success); }
+        .log-entry.error { color: var(--error); }
+        .log-entry.info { color: var(--info); }
+        .status-panel .status-grid {
+            display: grid;
+            gap: 0.75rem;
+        }
+        .status-card {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.75rem;
+        }
+        .status-card h3 {
+            font-size: 0.75rem;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+        .status-value {
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+        .status-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+        .status-indicator.active { background: var(--success); box-shadow: 0 0 8px var(--success); }
+        .status-indicator.inactive { background: var(--error); }
+        .agent-list { margin-top: 1rem; }
+        .agent-item {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem;
+            border-radius: 4px;
+            margin-bottom: 0.25rem;
+            background: rgba(0,0,0,0.2);
+            font-size: 0.85rem;
+        }
+        .agent-item .emoji { margin-right: 0.5rem; }
+        .timer-display {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(201, 162, 39, 0.05);
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+        .timer-display .phase { font-size: 0.9rem; color: var(--gold); }
+        .timer-display .time { font-size: 2rem; font-family: monospace; margin: 0.5rem 0; }
+        .timer-display .cycle { font-size: 0.8rem; opacity: 0.7; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .pulsing { animation: pulse 2s infinite; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>🧪 Sandbox Labs</h1>
+        <nav>
+            <a href="index.html">Dashboard</a>
+            <a href="tools.html">Tools</a>
+            <a href="genesis.html">Genesis</a>
+            <a href="docs/architecture-map.md">Architecture</a>
+        </nav>
+    </header>
+
+    <main class="main-grid">
+        <!-- Left Panel: Protocol Browser -->
+        <aside class="panel protocol-browser">
+            <h2>📋 Protocols</h2>
+            <input type="text" id="protocolSearch" placeholder="Search protocols..." style="width:100%;padding:0.5rem;margin-bottom:1rem;background:#1a1a24;border:1px solid var(--border);border-radius:4px;color:var(--text);">
+            <ul class="protocol-list" id="protocolList"></ul>
+        </aside>
+
+        <!-- Center: Sandbox Editor -->
+        <section class="sandbox-area">
+            <div class="code-editor">
+                <div class="editor-header">
+                    <div class="editor-tabs">
+                        <button class="editor-tab active" data-tab="protocol">Protocol</button>
+                        <button class="editor-tab" data-tab="bridge">Bridge</button>
+                        <button class="editor-tab" data-tab="agent">Agent</button>
+                    </div>
+                    <button class="run-btn" onclick="runSandbox()">▶ Run</button>
+                </div>
+                <textarea id="codeInput" spellcheck="false">// Sandbox Labs - Live Protocol Testing
+// Connect to Organism Bridge for engine communication
+
+const bridge = new OrganismBridge();
+const timer = new MedinaTimer({ phi: 1.618033988749895 });
+
+// Example: Test a protocol
+async function testProtocol() {
+    log('Initializing sandbox environment...', 'info');
+    
+    // Connect to bridge
+    await bridge.connect();
+    log('Bridge connected', 'success');
+    
+    // Start sacred geometry timer
+    timer.start();
+    log(`Timer phase: ${timer.getCurrentPhase()}`, 'info');
+    
+    // Load and execute protocol
+    const protocol = protocols.HebbianLearningProtocol;
+    const result = await protocol.execute({
+        input: 'test_signal',
+        weight: 0.5
+    });
+    
+    log(`Protocol result: ${JSON.stringify(result)}`, 'success');
+    return result;
+}
+
+testProtocol();</textarea>
+            </div>
+            <div class="output-panel">
+                <div class="output-header">📤 Output Console</div>
+                <div id="outputLog"></div>
+            </div>
+        </section>
+
+        <!-- Right Panel: Status & Agents -->
+        <aside class="panel status-panel">
+            <h2>⚡ System Status</h2>
+            <div class="status-grid">
+                <div class="status-card">
+                    <h3>Organism Bridge</h3>
+                    <div class="status-value">
+                        <span class="status-indicator active" id="bridgeStatus"></span>
+                        <span id="bridgeState">Connected</span>
+                    </div>
+                </div>
+                <div class="status-card">
+                    <h3>Active Protocols</h3>
+                    <div class="status-value" id="activeProtocols">44</div>
+                </div>
+                <div class="status-card">
+                    <h3>Execution Count</h3>
+                    <div class="status-value" id="execCount">0</div>
+                </div>
+            </div>
+
+            <div class="timer-display">
+                <div class="phase" id="timerPhase">φ Convergence Phase</div>
+                <div class="time pulsing" id="timerValue">00:00:00</div>
+                <div class="cycle">Cycle: <span id="cycleCount">1</span></div>
+            </div>
+
+            <h2 style="margin-top:1.5rem;">🤖 Active Agents</h2>
+            <div class="agent-list" id="agentList"></div>
+        </aside>
+    </main>
+
+    <script>
+        // ============================================
+        // Organism Bridge Simulation
+        // Connects to: sdk/organism-bridge/
+        // ============================================
+        class OrganismBridge {
+            constructor() {
+                this.connected = false;
+                this.listeners = new Map();
+                this.messageQueue = [];
+            }
+
+            async connect() {
+                return new Promise(resolve => {
+                    setTimeout(() => {
+                        this.connected = true;
+                        this.emit('connected', { timestamp: Date.now() });
+                        resolve(true);
+                    }, 100);
+                });
+            }
+
+            disconnect() {
+                this.connected = false;
+                this.emit('disconnected', { timestamp: Date.now() });
+            }
+
+            send(message) {
+                if (!this.connected) throw new Error('Bridge not connected');
+                this.messageQueue.push({ ...message, timestamp: Date.now() });
+                this.emit('message', message);
+                return { status: 'sent', id: Math.random().toString(36).substr(2, 9) };
+            }
+
+            on(event, callback) {
+                if (!this.listeners.has(event)) this.listeners.set(event, []);
+                this.listeners.get(event).push(callback);
+            }
+
+            emit(event, data) {
+                const callbacks = this.listeners.get(event) || [];
+                callbacks.forEach(cb => cb(data));
+            }
+
+            getStatus() {
+                return {
+                    connected: this.connected,
+                    queueSize: this.messageQueue.length,
+                    uptime: this.connected ? Date.now() - this.connectTime : 0
+                };
+            }
+        }
+
+        // ============================================
+        // Medina Timer - Sacred Geometry Timing
+        // Connects to: sdk/medina-timers/
+        // ============================================
+        class MedinaTimer {
+            constructor(config = {}) {
+                this.phi = config.phi || 1.618033988749895;
+                this.running = false;
+                this.startTime = null;
+                this.cycle = 1;
+                this.phases = ['Convergence', 'Expansion', 'Integration', 'Reflection'];
+                this.currentPhaseIndex = 0;
+                this.phaseInterval = null;
+            }
+
+            start() {
+                this.running = true;
+                this.startTime = Date.now();
+                this.tick();
+                this.phaseInterval = setInterval(() => this.advancePhase(), 8000 / this.phi);
+            }
+
+            stop() {
+                this.running = false;
+                if (this.phaseInterval) clearInterval(this.phaseInterval);
+            }
+
+            tick() {
+                if (!this.running) return;
+                const elapsed = Date.now() - this.startTime;
+                const seconds = Math.floor(elapsed / 1000);
+                const h = String(Math.floor(seconds / 3600)).padStart(2, '0');
+                const m = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
+                const s = String(seconds % 60).padStart(2, '0');
+                document.getElementById('timerValue').textContent = `${h}:${m}:${s}`;
+                requestAnimationFrame(() => this.tick());
+            }
+
+            advancePhase() {
+                this.currentPhaseIndex = (this.currentPhaseIndex + 1) % this.phases.length;
+                if (this.currentPhaseIndex === 0) this.cycle++;
+                document.getElementById('timerPhase').textContent = `φ ${this.phases[this.currentPhaseIndex]} Phase`;
+                document.getElementById('cycleCount').textContent = this.cycle;
+            }
+
+            getCurrentPhase() {
+                return this.phases[this.currentPhaseIndex];
+            }
+
+            getPhiRatio() {
+                return this.phi;
+            }
+        }
+
+        // ============================================
+        // Protocol Registry
+        // Connects to: protocols/
+        // ============================================
+        const protocols = {
+            HebbianLearningProtocol: {
+                id: 'PROTO-001',
+                name: 'Hebbian Learning',
+                execute: async (params) => {
+                    const { input, weight } = params;
+                    const delta = 0.1 * (1 - weight);
+                    return { newWeight: weight + delta, strengthened: true };
+                }
+            },
+            KuramotoSyncProtocol: {
+                id: 'PROTO-002',
+                name: 'Kuramoto Sync',
+                execute: async (params) => {
+                    const coupling = params.coupling || 0.5;
+                    const phase = Math.random() * 2 * Math.PI;
+                    return { synchronized: coupling > 0.3, phase };
+                }
+            },
+            PhiResonanceProtocol: {
+                id: 'PROTO-003',
+                name: 'Phi Resonance',
+                execute: async () => {
+                    const phi = 1.618033988749895;
+                    return { resonance: phi, harmonic: phi * phi };
+                }
+            },
+            NeuralPathwayProtocol: {
+                id: 'PROTO-004',
+                name: 'Neural Pathway',
+                execute: async (params) => {
+                    return { pathway: 'established', nodes: params.nodes || 3 };
+                }
+            },
+            QuantumCoherenceProtocol: {
+                id: 'PROTO-005',
+                name: 'Quantum Coherence',
+                execute: async () => {
+                    return { coherent: true, decoherenceTime: 1000 };
+                }
+            },
+            SacredGeometryProtocol: {
+                id: 'PROTO-006',
+                name: 'Sacred Geometry',
+                execute: async () => {
+                    const phi = 1.618033988749895;
+                    return { 
+                        phi, 
+                        sqrt5: Math.sqrt(5),
+                        goldenAngle: 137.5077640500378
+                    };
+                }
+            },
+            ConsensusProtocol: {
+                id: 'PROTO-007',
+                name: 'Consensus',
+                execute: async (params) => {
+                    const votes = params.votes || [1, 1, 0, 1];
+                    const consensus = votes.filter(v => v).length / votes.length;
+                    return { consensus, achieved: consensus > 0.5 };
+                }
+            },
+            MemoryConsolidationProtocol: {
+                id: 'PROTO-008',
+                name: 'Memory Consolidation',
+                execute: async (params) => {
+                    return { consolidated: true, memories: params.count || 1 };
+                }
+            }
+        };
+
+        // Add more protocol stubs (up to 44 as per memory)
+        const protocolNames = [
+            'Attention', 'Binding', 'Cascade', 'Diffusion', 'Emergence',
+            'Fractal', 'Gradient', 'Harmonic', 'Inference', 'Junction',
+            'Kinetic', 'Lattice', 'Manifold', 'Network', 'Oscillation',
+            'Pattern', 'Quorum', 'Resonance', 'Symmetry', 'Topology',
+            'Unity', 'Vector', 'Wave', 'Xenial', 'Yield', 'Zenith',
+            'Adaptive', 'Bifurcation', 'Correlation', 'Dendrite',
+            'Entropy', 'Feedback', 'Governance', 'Holistic', 'Integration',
+            'CenterfoldConvergence'
+        ];
+
+        protocolNames.forEach((name, i) => {
+            const id = `PROTO-${String(i + 9).padStart(3, '0')}`;
+            protocols[`${name}Protocol`] = {
+                id,
+                name,
+                execute: async (params) => ({ executed: true, protocol: name, params })
+            };
+        });
+
+        // ============================================
+        // Agent Registry
+        // Connects to: organism/agents/
+        // ============================================
+        const agents = [
+            { id: 'organism-core-bot', emoji: '🧬', name: 'Core Bot', division: 'Core', status: 'active' },
+            { id: 'organism-memory-bot', emoji: '🧠', name: 'Memory Bot', division: 'Memory', status: 'active' },
+            { id: 'organism-sync-bot', emoji: '🔄', name: 'Sync Bot', division: 'Sync', status: 'active' },
+            { id: 'organism-bridge-bot', emoji: '🌉', name: 'Bridge Bot', division: 'Bridge', status: 'active' },
+            { id: 'organism-protocol-bot', emoji: '📋', name: 'Protocol Bot', division: 'Protocol', status: 'active' },
+            { id: 'organism-governance-bot', emoji: '🏛️', name: 'Governance Bot', division: 'Governance', status: 'active' },
+            { id: 'organism-cyber-bot', emoji: '🔐', name: 'Cyber Bot', division: 'Security', status: 'idle' },
+            { id: 'organism-cloud-bot', emoji: '☁️', name: 'Cloud Bot', division: 'Infrastructure', status: 'idle' }
+        ];
+
+        // ============================================
+        // UI Initialization
+        // ============================================
+        const bridge = new OrganismBridge();
+        const timer = new MedinaTimer();
+        let execCount = 0;
+
+        function initProtocolList() {
+            const list = document.getElementById('protocolList');
+            const search = document.getElementById('protocolSearch');
+            
+            function render(filter = '') {
+                list.innerHTML = '';
+                Object.entries(protocols)
+                    .filter(([key, p]) => 
+                        key.toLowerCase().includes(filter.toLowerCase()) ||
+                        p.name.toLowerCase().includes(filter.toLowerCase())
+                    )
+                    .forEach(([key, protocol]) => {
+                        const li = document.createElement('li');
+                        li.textContent = `${protocol.id}: ${protocol.name}`;
+                        li.onclick = () => loadProtocol(key, protocol);
+                        list.appendChild(li);
+                    });
+            }
+            
+            search.addEventListener('input', (e) => render(e.target.value));
+            render();
+        }
+
+        function initAgentList() {
+            const list = document.getElementById('agentList');
+            agents.forEach(agent => {
+                const div = document.createElement('div');
+                div.className = 'agent-item';
+                div.innerHTML = `
+                    <span class="emoji">${agent.emoji}</span>
+                    <span>${agent.name}</span>
+                    <span class="status-indicator ${agent.status === 'active' ? 'active' : 'inactive'}" style="margin-left:auto;"></span>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        function loadProtocol(key, protocol) {
+            const code = `// ${protocol.id}: ${protocol.name} Protocol Test
+// Sandbox Labs - Live Protocol Testing
+
+const bridge = new OrganismBridge();
+const timer = new MedinaTimer({ phi: 1.618033988749895 });
+
+async function test${key}() {
+    log('Connecting to Organism Bridge...', 'info');
+    await bridge.connect();
+    log('Bridge connected', 'success');
+    
+    timer.start();
+    log(\`Timer started in \${timer.getCurrentPhase()} phase\`, 'info');
+    
+    log('Executing ${protocol.name} protocol...', 'info');
+    const result = await protocols.${key}.execute({
+        // Add your test parameters here
+    });
+    
+    log(\`Result: \${JSON.stringify(result, null, 2)}\`, 'success');
+    return result;
+}
+
+test${key}();`;
+            
+            document.getElementById('codeInput').value = code;
+            document.querySelectorAll('.protocol-list li').forEach(li => li.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function log(message, type = 'info') {
+            const output = document.getElementById('outputLog');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            const timestamp = new Date().toLocaleTimeString();
+            entry.textContent = `[${timestamp}] ${message}`;
+            output.appendChild(entry);
+            output.scrollTop = output.scrollHeight;
+        }
+
+        async function runSandbox() {
+            const code = document.getElementById('codeInput').value;
+            document.getElementById('outputLog').innerHTML = '';
+            log('Starting sandbox execution...', 'info');
+            
+            try {
+                // Create sandbox context
+                const sandboxContext = {
+                    OrganismBridge,
+                    MedinaTimer,
+                    protocols,
+                    agents,
+                    log,
+                    console: { log: (m) => log(String(m), 'info') }
+                };
+                
+                // Execute in sandbox
+                const fn = new Function(...Object.keys(sandboxContext), code);
+                await fn(...Object.values(sandboxContext));
+                
+                execCount++;
+                document.getElementById('execCount').textContent = execCount;
+                log('Execution completed successfully', 'success');
+            } catch (error) {
+                log(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        // Editor tabs
+        document.querySelectorAll('.editor-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.editor-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                const templates = {
+                    protocol: `// Protocol Testing Sandbox
+const bridge = new OrganismBridge();
+await bridge.connect();
+log('Ready to test protocols', 'success');`,
+                    bridge: `// Organism Bridge Testing
+const bridge = new OrganismBridge();
+
+bridge.on('connected', () => log('Bridge event: connected', 'info'));
+bridge.on('message', (m) => log(\`Message: \${JSON.stringify(m)}\`, 'info'));
+
+await bridge.connect();
+bridge.send({ type: 'ping', data: 'hello' });
+log(\`Status: \${JSON.stringify(bridge.getStatus())}\`, 'success');`,
+                    agent: `// Agent Interaction Sandbox
+log('Available agents:', 'info');
+agents.forEach(a => {
+    log(\`  \${a.emoji} \${a.name} (\${a.division}) - \${a.status}\`, 
+        a.status === 'active' ? 'success' : 'info');
+});`
+                };
+                
+                if (templates[tab.dataset.tab]) {
+                    document.getElementById('codeInput').value = templates[tab.dataset.tab];
+                }
+            });
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initProtocolList();
+            initAgentList();
+            bridge.connect().then(() => {
+                document.getElementById('bridgeStatus').className = 'status-indicator active';
+                document.getElementById('bridgeState').textContent = 'Connected';
+            });
+            timer.start();
+            document.getElementById('activeProtocols').textContent = Object.keys(protocols).length;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+__pycache__/
+node_modules/
+*.pyc
+.DS_Store
+
+# Built extension zips are created by build-extensions.sh
+# They are also auto-built by GitHub Actions and attached as release artifacts
+# Keep dist/ tracked so download links and GitHub Pages work
+# To rebuild: bash build-extensions.sh
+
+# Release bundles (built on-demand via npm run bundle)
+dist/sovereign-organism-*.tar.gz
+dist/sovereign-organism-*.zip
+
+# IDE / editor
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+Thumbs.db
+Desktop.ini
+
+# Logs
+*.log
+npm-debug.log*
+
+# Coverage
+coverage/
+.nyc_output/
+
+# TypeScript build output
+organism/typescript/dist/
+
+# Java build output
+organism/java/target/
+
+# C++ build output
+organism/cpp/build/
+
+# Motoko build output
+organism/motoko/.dfx/
+
+# ICP / DFX
+.dfx/
+icp-dist/
+
+# Python eggs/dist
+organism/python/dist/
+organism/python/*.egg-info/
+
+# Environment
+.env
+.env.local
+# LaTeX build output
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+# Secrets
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+# Temporary exports
+tmp/
+temp/

@@ -1,0 +1,91 @@
+{
+  "name": "@medina/sovereign-organism",
+  "version": "1.0.0",
+  "description": "AI Intelligence Organism \u2014 8 SDKs, 26 browser extensions, 11 protocols, 30 callable tools. The organism IS the intelligence.",
+  "private": true,
+  "scripts": {
+    "build": "bash build-extensions.sh",
+    "build:icons": "node scripts/generate-icons.js",
+    "prebuild": "node scripts/generate-icons.js",
+    "build:vigil": "cd extensions/jarvis && npm install && npm run build",
+    "build:desktop": "npm run build:vigil && cd desktop && npm install && npm run dist",
+    "build:desktop:win": "npm run build:vigil && cd desktop && npm install && npm run dist",
+    "build:all": "bash scripts/build-all.sh",
+    "start:desktop": "cd desktop && npm install --prefer-offline && npm start",
+    "centerfold:cycle": "node scripts/centerfold-cycle.js",
+    "test": "node --test test/**/*.test.js",
+    "test:sdk": "node --test test/sdk/*.test.js",
+    "test:extensions": "node --test test/extensions/*.test.js",
+    "test:cli": "node --test test/cli/*.test.js",
+    "lint": "node scripts/lint-manifests.js",
+    "validate": "node organism-cli validate",
+    "list": "node organism-cli list",
+    "status": "node organism-cli status",
+    "install-extensions": "node organism-cli install",
+    "bundle": "node scripts/bundle-release.js",
+    "prepare-sdks": "node scripts/prepare-sdks.js",
+    "clean": "rm -rf dist/"
+  },
+  "keywords": [
+    "ai",
+    "intelligence",
+    "organism",
+    "browser-extensions",
+    "chrome-extensions",
+    "sdk",
+    "marketplace",
+    "sovereign",
+    "phi",
+    "multimodal"
+  ],
+  "author": "Medina",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "main": "electron/main.js",
+  "build": {
+    "appId": "ai.vigil.desktop",
+    "productName": "Vigil AI",
+    "directories": {
+      "output": "dist/desktop"
+    },
+    "files": [
+      "electron/**/*",
+      "extensions/jarvis/dist/**/*"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "extensions/jarvis/dist/icons/icon128.png"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "extensions/jarvis/dist/icons/icon128.png"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "extensions/jarvis/dist/icons/icon128.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.1.8"
+  }
+}

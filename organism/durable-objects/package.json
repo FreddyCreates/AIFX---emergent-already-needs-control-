@@ -1,0 +1,30 @@
+{
+  "name": "@organism/vein-of-intelligence",
+  "version": "1.0.0",
+  "description": "Durable Object cognitive entities - fractures of the vein of intelligence",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "deploy:production": "wrangler deploy --env production",
+    "tail": "wrangler tail",
+    "types": "wrangler types"
+  },
+  "keywords": [
+    "cloudflare",
+    "durable-objects",
+    "ai",
+    "cognitive",
+    "hebbian",
+    "memory",
+    "consciousness",
+    "phi",
+    "organism"
+  ],
+  "author": "ORO Systems",
+  "license": "ISC",
+  "devDependencies": {
+    "wrangler": "^3.0.0"
+  }
+}

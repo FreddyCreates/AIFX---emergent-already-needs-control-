@@ -1,0 +1,68 @@
+# ============================================================================
+# organism-runtime-bot — Live Civitas Runtime Monitor & Contract Manager
+#
+# Monitors the live Civitas runtime: agent health, engine vitals, active
+# intelligence contracts, and microbot registry. Ensures all active
+# protocols and contracts are properly wired and producing outputs.
+# Reports the full "state of the runtime" on every run.
+#
+# Microbots: agent-vitals, contract-watcher, engine-probe
+#
+# Identity: organism-runtime-bot <organism-runtime-bot@users.noreply.github.com>
+# ============================================================================
+
+name: "⚙️ Runtime Monitor & Contract Manager"
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'sdk/runtime/**'
+      - 'sdk/agents/**'
+      - 'sdk/engines/**'
+      - 'protocols/**'
+  schedule:
+    - cron: '0 */2 * * *'  # Every 2 hours — runtime pulse
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  runtime-monitor:
+    name: "⚙️ Runtime Monitoring Cycle"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: "Phase 1 — Probe runtime modules"
+        run: node scripts/runtime-monitor.js --probe
+
+      - name: "Phase 2 — Validate intelligence contracts"
+        run: node scripts/runtime-monitor.js --contracts
+
+      - name: "Phase 3 — Check microbot registry"
+        run: node scripts/runtime-monitor.js --microbots
+
+      - name: "Phase 4 — Generate runtime state report"
+        run: node scripts/runtime-monitor.js --report
+
+      - name: Commit runtime report
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "organism-runtime-bot"
+          git config user.email "organism-runtime-bot@users.noreply.github.com"
+          git add docs/
+          if git diff --cached --quiet; then
+            echo "No runtime report changes"
+          else
+            git commit -m "⚙️ Runtime-bot: runtime state report updated"
+            git push
+          fi

@@ -1,0 +1,54 @@
+{
+  "name": "vigil:build",
+  "description": "Full production build — validates, compiles, packages. Mirrors VigilEngine dispatch protocol.",
+  "version": "19.0.0",
+  "steps": [
+    {
+      "action": "validate:manifests",
+      "payload": { "path": "extensions" },
+      "agent": "PROTOCOLLUM",
+      "failFast": true
+    },
+    {
+      "action": "run:tests",
+      "payload": { "pattern": "test/**/*.test.js" },
+      "agent": "ORCHESTRATOR",
+      "failFast": false
+    },
+    {
+      "action": "build:extension",
+      "payload": { "path": "extensions/jarvis", "version": "19.0.0" },
+      "agent": "SUBSTRATUM",
+      "failFast": true
+    },
+    {
+      "action": "package:zip",
+      "payload": {
+        "source": "extensions/jarvis/dist",
+        "dest": "dist/extensions/vigil-ai-v19.zip",
+        "exclude": ["*.DS_Store", "*.map"]
+      },
+      "agent": "SUBSTRATUM",
+      "failFast": true
+    },
+    {
+      "action": "package:all-extensions",
+      "payload": {
+        "source": "extensions",
+        "dest": "dist/extensions/all-extensions.zip",
+        "skip": ["jarvis", "windows"]
+      },
+      "agent": "SUBSTRATUM",
+      "failFast": false
+    },
+    {
+      "action": "generate:download-manifest",
+      "payload": {
+        "outputFile": "VIGIL_DOWNLOADS.md",
+        "baseUrl": "https://raw.githubusercontent.com/FreddyCreates/potential-succotash"
+      },
+      "agent": "PROTOCOLLUM",
+      "failFast": false
+    }
+  ]
+}

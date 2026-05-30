@@ -1,0 +1,24 @@
+{
+  "canisters": {
+    "nevada_organism": {
+      "type": "motoko",
+      "main": "NevadaOrganism.mo"
+    }
+  },
+  "networks": {
+    "local": {
+      "bind": "127.0.0.1:4944",
+      "type": "ephemeral"
+    },
+    "ic": {
+      "providers": ["https://icp-api.io"],
+      "type": "persistent"
+    }
+  },
+  "defaults": {
+    "build": {
+      "packtool": ""
+    }
+  },
+  "version": 1
+}

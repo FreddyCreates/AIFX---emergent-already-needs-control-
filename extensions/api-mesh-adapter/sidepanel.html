@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Mesh Adapter</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "Segoe UI", -apple-system, sans-serif;
+      background: #0d1117; color: #e0e0e0;
+      min-height: 100vh; display: flex; flex-direction: column;
+    }
+    .header {
+      background: linear-gradient(135deg, #10b981, #059669);
+      padding: 16px 20px; display: flex; align-items: center; gap: 12px;
+    }
+    .header-icon {
+      width: 36px; height: 36px; background: rgba(255,255,255,0.2);
+      border-radius: 8px; display: flex; align-items: center;
+      justify-content: center; font-size: 18px;
+    }
+    .header h1 { font-size: 16px; font-weight: 700; color: #fff; }
+    .header p { font-size: 11px; opacity: 0.85; margin-top: 2px; color: #d1fae5; }
+    .content { flex: 1; padding: 16px; overflow-y: auto; }
+    .stats-row { display: flex; gap: 8px; margin-bottom: 16px; }
+    .stat-card {
+      flex: 1; background: #061a10; border: 1px solid #10b98133;
+      border-radius: 8px; padding: 10px; text-align: center;
+    }
+    .stat-card .val { font-size: 22px; font-weight: 700; color: #10b981; font-family: 'Courier New', monospace; }
+    .stat-card .lbl { font-size: 10px; color: #555; margin-top: 2px; }
+    .section-label {
+      font-size: 11px; color: #888; text-transform: uppercase;
+      letter-spacing: 0.5px; margin-bottom: 6px; margin-top: 12px;
+    }
+    .btn-row { display: flex; gap: 8px; }
+    .btn {
+      flex: 1; padding: 10px 0; border: none; border-radius: 8px;
+      color: #fff; font-weight: 600; font-size: 13px;
+      cursor: pointer; transition: opacity 0.15s;
+    }
+    .btn:hover { opacity: 0.85; }
+    .btn-primary { background: #10b981; }
+    .btn-secondary { background: #0ea5e9; }
+    .btn-tertiary { background: #7c3aed; }
+    .log-area {
+      margin-top: 16px; padding: 10px; background: #061a10;
+      border: 1px solid #10b98122; border-radius: 8px; min-height: 80px;
+      max-height: 300px; overflow-y: auto; font-size: 11px;
+      font-family: 'Courier New', monospace; line-height: 1.6; display: none;
+    }
+    .log-area.active { display: block; }
+    .log-entry {
+      border-bottom: 1px solid #0a2a1a; padding: 4px 0;
+      display: flex; gap: 8px; align-items: baseline;
+    }
+    .log-entry .schema-badge {
+      background: #10b98122; color: #10b981; padding: 1px 6px;
+      border-radius: 8px; font-size: 10px; flex-shrink: 0;
+    }
+    .log-entry .url-text { color: #aaa; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .status-bar {
+      padding: 8px 16px; background: #161b22; border-top: 1px solid #222;
+      font-size: 10px; color: #666; display: flex; justify-content: space-between;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-icon">🕸️</div>
+    <div>
+      <h1>API Mesh Adapter</h1>
+      <p>Schema detection &amp; mesh routing — EXT-038</p>
+    </div>
+  </div>
+  <div class="content">
+    <div class="stats-row">
+      <div class="stat-card"><div class="val" id="statIntercepts">0</div><div class="lbl">Intercepted</div></div>
+      <div class="stat-card"><div class="val" id="statSchemas">0</div><div class="lbl">Schemas</div></div>
+      <div class="stat-card"><div class="val" id="statMesh">0</div><div class="lbl">Routed</div></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" id="logBtn">📋 Intercept Log</button>
+      <button class="btn btn-secondary" id="schemaBtn">🗂️ Schema Map</button>
+      <button class="btn btn-tertiary" id="stateBtn">⚙️ State</button>
+    </div>
+
+    <div class="log-area" id="logArea"></div>
+  </div>
+  <div class="status-bar">
+    <span id="statusText">Listening — Transport Ring</span>
+    <span>API Mesh Adapter &bull; EXT-038</span>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+      var logBtn = document.getElementById('logBtn');
+      var schemaBtn = document.getElementById('schemaBtn');
+      var stateBtn = document.getElementById('stateBtn');
+      var logArea = document.getElementById('logArea');
+      var statusText = document.getElementById('statusText');
+      var statIntercepts = document.getElementById('statIntercepts');
+      var statSchemas = document.getElementById('statSchemas');
+      var statMesh = document.getElementById('statMesh');
+
+      function showLog(data) {
+        logArea.className = 'log-area active';
+        logArea.innerHTML = '';
+        if (!Array.isArray(data) || data.length === 0) {
+          logArea.textContent = 'No intercepts yet. Browse pages with JSON/XML APIs.';
+          return;
+        }
+        data.forEach(function (entry) {
+          var el = document.createElement('div');
+          el.className = 'log-entry';
+          var badge = document.createElement('span');
+          badge.className = 'schema-badge';
+          badge.textContent = entry.schema || '?';
+          var url = document.createElement('span');
+          url.className = 'url-text';
+          url.textContent = entry.url || '';
+          el.appendChild(badge);
+          el.appendChild(url);
+          logArea.appendChild(el);
+        });
+      }
+
+      function showRaw(data) {
+        logArea.className = 'log-area active';
+        logArea.textContent = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+      }
+
+      function refreshStats() {
+        chrome.runtime.sendMessage({ action: 'getState' }, function (r) {
+          if (!r) return;
+          statIntercepts.textContent = r.interceptCount || 0;
+          statSchemas.textContent = r.registeredSchemas || 0;
+          statMesh.textContent = r.meshRoutes || 0;
+          statusText.textContent = 'HB #' + r.heartbeatCount + ' — Transport Ring';
+        });
+      }
+
+      logBtn.addEventListener('click', function () {
+        chrome.runtime.sendMessage({ action: 'getLog', n: 30 }, function (r) {
+          if (chrome.runtime.lastError) { showRaw('Error: ' + chrome.runtime.lastError.message); return; }
+          showLog(r);
+        });
+      });
+
+      schemaBtn.addEventListener('click', function () {
+        chrome.runtime.sendMessage({ action: 'getSchemaRegistry' }, function (r) {
+          if (chrome.runtime.lastError) { showRaw('Error: ' + chrome.runtime.lastError.message); return; }
+          showRaw(r);
+        });
+      });
+
+      stateBtn.addEventListener('click', function () {
+        chrome.runtime.sendMessage({ action: 'getState' }, function (r) {
+          if (chrome.runtime.lastError) { showRaw('Error: ' + chrome.runtime.lastError.message); return; }
+          showRaw(r);
+        });
+      });
+
+      refreshStats();
+      setInterval(refreshStats, 3000);
+    })();
+  </script>
+</body>
+</html>

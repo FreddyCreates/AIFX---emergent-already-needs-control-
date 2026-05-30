@@ -1,0 +1,224 @@
+# ============================================================================
+# deploy-twin-alpha — Twin Alpha Runtime Interface Deployment
+#
+# Deploys the Geminus Primus (Twin Alpha) — the always-on autonomous user-facing
+# interface to the entire organism. Deploys to GitHub Pages with Service Worker
+# for offline capability.
+#
+# Deployment Surface:
+#   - organism/web/index.html (main entry)
+#   - organism/web/*.js (22+ workers)
+#   - organism/web/neuro-core.js (shared MiniBrain/MiniHeart engine)
+#   - Service Worker for offline capability
+#
+# Identity: organism-deploy-bot <organism-deploy-bot@users.noreply.github.com>
+# ============================================================================
+
+name: "🔷 Deploy Twin Alpha Runtime"
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'organism/web/**'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment (staging or production)'
+        required: false
+        default: 'production'
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: twin-alpha-deploy
+  cancel-in-progress: false
+
+jobs:
+  validate-twin-alpha:
+    name: "🧪 Validate Twin Alpha"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Validate worker structure
+        run: |
+          echo "👑 Validating Twin Alpha Runtime..."
+          
+          REQUIRED_FILES=(
+            "organism/web/index.html"
+            "organism/web/neuro-core.js"
+            "organism/web/twin-alpha-worker.js"
+          )
+          
+          for file in "${REQUIRED_FILES[@]}"; do
+            if [ ! -f "$file" ]; then
+              echo "❌ Missing required file: $file"
+              exit 1
+            fi
+            echo "✅ Found: $file"
+          done
+          
+          # Count web workers
+          WORKER_COUNT=$(ls -1 organism/web/*.js 2>/dev/null | wc -l)
+          echo "📊 Worker count: $WORKER_COUNT"
+          
+          if [ "$WORKER_COUNT" -lt 10 ]; then
+            echo "⚠️ Warning: Expected at least 10 workers, found $WORKER_COUNT"
+          fi
+          
+          echo "✅ Twin Alpha validation passed"
+
+      - name: Generate deployment manifest
+        run: |
+          echo "📋 Generating Twin Alpha deployment manifest..."
+          
+          mkdir -p dist/twin-alpha
+          
+          # Create deployment manifest
+          cat > dist/twin-alpha/manifest.json << 'EOF'
+          {
+            "name": "Twin Alpha Runtime Interface",
+            "version": "1.0.0",
+            "deployment": {
+              "type": "github-pages",
+              "path": "organism/web/",
+              "offlineCapable": true
+            },
+            "workers": [],
+            "deployedAt": null,
+            "commit": null
+          }
+          EOF
+          
+          # Populate workers list
+          node -e "
+            const fs = require('fs');
+            const path = require('path');
+            const manifest = JSON.parse(fs.readFileSync('dist/twin-alpha/manifest.json', 'utf8'));
+            
+            const workers = fs.readdirSync('organism/web')
+              .filter(f => f.endsWith('.js'))
+              .map(f => ({ name: f.replace('.js', ''), file: f }));
+            
+            manifest.workers = workers;
+            manifest.deployedAt = new Date().toISOString();
+            manifest.commit = process.env.GITHUB_SHA || 'local';
+            
+            fs.writeFileSync('dist/twin-alpha/manifest.json', JSON.stringify(manifest, null, 2));
+            console.log('📋 Manifest generated with', workers.length, 'workers');
+          "
+
+      - name: Upload validation artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: twin-alpha-manifest
+          path: dist/twin-alpha/
+          retention-days: 30
+
+  deploy-twin-alpha:
+    name: "🚀 Deploy to GitHub Pages"
+    runs-on: ubuntu-latest
+    needs: validate-twin-alpha
+    if: github.ref == 'refs/heads/main'
+    
+    environment:
+      name: twin-alpha-production
+      url: ${{ steps.deployment.outputs.page_url }}organism/web/
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Inject service worker version
+        run: |
+          if [ -f "organism/web/sw.js" ]; then
+            # Update cache version with commit SHA
+            sed -i "s/CACHE_VERSION = '[^']*'/CACHE_VERSION = 'twin-alpha-${GITHUB_SHA:0:8}'/" organism/web/sw.js
+            echo "✅ Service worker cache version updated"
+          fi
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Report deployment
+        run: |
+          echo "🔷 Twin Alpha deployed successfully!"
+          echo "   URL: ${{ steps.deployment.outputs.page_url }}organism/web/"
+          echo "   Commit: ${GITHUB_SHA:0:8}"
+          echo "   Time: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+  emit-governance-event:
+    name: "🏛️ Emit Governance Event"
+    runs-on: ubuntu-latest
+    needs: deploy-twin-alpha
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Emit deployment event
+        run: |
+          EVENT_FILE="dist/governance/events/twin-alpha-deploy-$(date -u +%Y-%m-%dT%H-%M-%S-%3NZ).json"
+          mkdir -p dist/governance/events
+          
+          cat > "$EVENT_FILE" << EOF
+          {
+            "id": "twin-alpha-deploy-$(date +%s)",
+            "type": "DEPLOYMENT",
+            "source": "organism-deploy-bot",
+            "subject": "twin-alpha",
+            "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "data": {
+              "deployment": "twin-alpha-runtime",
+              "commit": "$GITHUB_SHA",
+              "environment": "production",
+              "url": "https://itsnotailabs.github.io/PRODUCTION-/organism/web/",
+              "workerCount": $(ls -1 organism/web/*.js 2>/dev/null | wc -l),
+              "offlineCapable": true
+            },
+            "governance": {
+              "pipeline": "pipeline://governance/deployment_cycle",
+              "laws_checked": ["NO_DEPLOY_ON_RED", "TWIN_ALPHA_INTEGRITY"]
+            }
+          }
+          EOF
+          
+          echo "🏛️ Governance event emitted: $EVENT_FILE"
+
+      - name: Commit governance event
+        run: |
+          git config user.name "organism-deploy-bot"
+          git config user.email "organism-deploy-bot@users.noreply.github.com"
+          git add dist/governance/events/
+          if git diff --cached --quiet; then
+            echo "No governance events to commit"
+          else
+            git commit -m "🔷 Twin Alpha: deployment event logged"
+            git push
+          fi

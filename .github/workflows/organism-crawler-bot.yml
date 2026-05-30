@@ -1,0 +1,64 @@
+# ============================================================================
+# organism-crawler-bot — Internal Organism Crawler & Mapper
+#
+# Crawls the entire organism repository structure. Discovers dead links,
+# orphan files (files no one imports), unused exports, stale CSV entries,
+# broken cross-references, and builds a living dependency web of every
+# module, protocol, extension, and runtime.
+#
+# Identity: organism-crawler-bot <organism-crawler-bot@users.noreply.github.com>
+# ============================================================================
+
+name: "🕷️ Organism Crawler & Mapper"
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '0 3 * * 2,5'  # Tuesday & Friday 3am UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  crawl:
+    name: "🕷️ Full Organism Crawl"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: "Phase 1 — Map directory structure"
+        run: node scripts/organism-crawler.js --map
+
+      - name: "Phase 2 — Scan for orphan files"
+        run: node scripts/organism-crawler.js --orphans
+
+      - name: "Phase 3 — Detect dead links & stale refs"
+        run: node scripts/organism-crawler.js --dead-links
+
+      - name: "Phase 4 — Build dependency web"
+        run: node scripts/organism-crawler.js --dependency-web
+
+      - name: "Phase 5 — Generate crawler report"
+        run: node scripts/organism-crawler.js --report
+
+      - name: Commit crawler report
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "organism-crawler-bot"
+          git config user.email "organism-crawler-bot@users.noreply.github.com"
+          git add docs/
+          if git diff --cached --quiet; then
+            echo "No crawler report changes to commit"
+          else
+            git commit -m "🕷️ Crawler-bot: organism map & dependency web updated"
+            git push
+          fi

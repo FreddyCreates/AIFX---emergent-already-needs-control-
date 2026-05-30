@@ -1,0 +1,62 @@
+name: CI — Build & Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  lint-and-test:
+    name: Lint & Test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18, 20, 22]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Validate manifests
+        run: node scripts/lint-manifests.js
+
+      - name: Run tests
+        run: node --test test/**/*.test.js
+
+  build-extensions:
+    name: Build & Commit Extensions
+    runs-on: ubuntu-latest
+    needs: lint-and-test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Generate icons (if missing)
+        run: node scripts/generate-icons.js
+
+      - name: Build extension zips
+        run: bash build-extensions.sh
+
+      - name: Commit dist/ if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add dist/
+          if git diff --cached --quiet; then
+            echo "No changes to dist/"
+          else
+            git commit -m "build: rebuild extension zips [skip ci]"
+            git push
+          fi

@@ -1,0 +1,18 @@
+{
+  "id": "atlas://bot/organism-deps-bot",
+  "name": "organism-deps-bot",
+  "class": "Bot",
+  "division": "Secure & Monitor",
+  "divisionNum": "III",
+  "emoji": "🔄",
+  "domain": "Dependency health",
+  "triggers": ["schedule:mon-thu", "push:package.json"],
+  "capabilities": ["dep_scan", "staleness_check", "vulnerability_report"],
+  "languages": ["atlas://language/ril"],
+  "governance_pipeline": "pipeline://governance/bot_cycle",
+  "ocl_ref": "atlas://organism/bot-fleet",
+  "script": "scripts/scan-dependencies.js",
+  "workflow": ".github/workflows/organism-deps-bot.yml",
+  "report": "docs/dependency-freshness-report.md",
+  "microbots": []
+}

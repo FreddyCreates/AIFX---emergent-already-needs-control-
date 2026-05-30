@@ -1,0 +1,35 @@
+{
+  "name": "@medina/medina-calls",
+  "version": "1.0.0",
+  "description": "Write operations SDK: Civitas mutations, Organism mutations, Governance mutations",
+  "type": "module",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./civitas": "./src/civitas-calls.js",
+    "./organism": "./src/organism-calls.js",
+    "./governance": "./src/governance-calls.js"
+  },
+  "files": [
+    "src/**/*"
+  ],
+  "keywords": [
+    "calls",
+    "mutations",
+    "civitas",
+    "organism",
+    "governance",
+    "icp",
+    "blockchain"
+  ],
+  "author": "Medina",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FreddyCreates/potential-succotash.git",
+    "directory": "sdk/medina-calls"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  }
+}

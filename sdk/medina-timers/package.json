@@ -1,0 +1,36 @@
+{
+  "name": "@medina/medina-timers",
+  "version": "1.0.0",
+  "description": "Mathematical timer implementations: Ancient calendars, sacred geometry, cosmic cycles, agent timer suites",
+  "type": "module",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./ancient-calendars": "./src/ancient-calendars.js",
+    "./sacred-geometry": "./src/sacred-geometry.js",
+    "./cosmic-cycles": "./src/cosmic-cycles.js"
+  },
+  "files": [
+    "src/**/*"
+  ],
+  "keywords": [
+    "phi",
+    "timers",
+    "fibonacci",
+    "golden-ratio",
+    "mayan-calendar",
+    "sacred-geometry",
+    "organism",
+    "civitas"
+  ],
+  "author": "Medina",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FreddyCreates/potential-succotash.git",
+    "directory": "sdk/medina-timers"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  }
+}

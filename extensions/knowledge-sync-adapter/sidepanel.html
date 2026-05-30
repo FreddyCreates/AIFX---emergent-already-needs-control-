@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Knowledge Sync Adapter</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "Segoe UI", -apple-system, sans-serif;
+      background: #0d1117; color: #e0e0e0;
+      min-height: 100vh; display: flex; flex-direction: column;
+    }
+    .header {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      padding: 16px 20px; display: flex; align-items: center; gap: 12px;
+    }
+    .header-icon {
+      width: 36px; height: 36px; background: rgba(0,0,0,0.2);
+      border-radius: 8px; display: flex; align-items: center;
+      justify-content: center; font-size: 18px;
+    }
+    .header h1 { font-size: 16px; font-weight: 700; color: #1a0a00; }
+    .header p { font-size: 11px; opacity: 0.85; margin-top: 2px; color: #1a0a00; }
+    .content { flex: 1; padding: 16px; overflow-y: auto; }
+    .stats-row { display: flex; gap: 8px; margin-bottom: 16px; }
+    .stat-card {
+      flex: 1; background: #1a0e00; border: 1px solid #f59e0b33;
+      border-radius: 8px; padding: 10px; text-align: center;
+    }
+    .stat-card .val { font-size: 22px; font-weight: 700; color: #f59e0b; font-family: 'Courier New', monospace; }
+    .stat-card .lbl { font-size: 10px; color: #666; margin-top: 2px; }
+    .search-row { display: flex; gap: 8px; margin-bottom: 12px; }
+    .search-input {
+      flex: 1; background: #161b22; color: #e0e0e0; border: 1px solid #333;
+      border-radius: 8px; padding: 10px 12px; font-size: 13px; outline: none;
+    }
+    .search-input:focus { border-color: #f59e0b; }
+    .btn-row { display: flex; gap: 8px; }
+    .btn {
+      flex: 1; padding: 10px 0; border: none; border-radius: 8px;
+      color: #fff; font-weight: 600; font-size: 13px;
+      cursor: pointer; transition: opacity 0.15s;
+    }
+    .btn:hover { opacity: 0.85; }
+    .btn-primary { background: #f59e0b; color: #1a0a00; }
+    .btn-secondary { background: #7c3aed; }
+    .results {
+      margin-top: 16px; padding: 12px; background: #1a0e00;
+      border: 1px solid #f59e0b22; border-radius: 8px; min-height: 60px;
+      font-size: 12px; line-height: 1.6; white-space: pre-wrap;
+      word-break: break-word; display: none;
+    }
+    .results.active { display: block; }
+    .entity-chip {
+      display: inline-block; padding: 3px 8px; border-radius: 10px;
+      background: #f59e0b22; color: #f59e0b; font-size: 11px;
+      margin: 2px; border: 1px solid #f59e0b44;
+    }
+    .status-bar {
+      padding: 8px 16px; background: #161b22; border-top: 1px solid #222;
+      font-size: 10px; color: #666; display: flex; justify-content: space-between;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-icon">🧠</div>
+    <div>
+      <h1>Knowledge Sync Adapter</h1>
+      <p>Entity extraction &amp; graph sync — EXT-039</p>
+    </div>
+  </div>
+  <div class="content">
+    <div class="stats-row">
+      <div class="stat-card"><div class="val" id="statEntities">0</div><div class="lbl">Entities</div></div>
+      <div class="stat-card"><div class="val" id="statEdges">0</div><div class="lbl">Edges</div></div>
+      <div class="stat-card"><div class="val" id="statSyncs">0</div><div class="lbl">Syncs</div></div>
+    </div>
+
+    <div class="search-row">
+      <input class="search-input" id="queryInput" placeholder="Query graph (e.g. OpenAI, Python, AGI)..." />
+      <button class="btn btn-primary" id="queryBtn" style="flex:0;padding:10px 16px">🔍</button>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" id="syncBtn">🧠 Sync Current Tab</button>
+      <button class="btn btn-secondary" id="graphBtn">🗺️ View Graph</button>
+    </div>
+
+    <div class="results" id="resultsArea"></div>
+    <div id="entityChips" style="margin-top:10px"></div>
+  </div>
+  <div class="status-bar">
+    <span id="statusText">Ready — Memory Ring</span>
+    <span>Knowledge Sync Adapter &bull; EXT-039</span>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+      var queryInput = document.getElementById('queryInput');
+      var queryBtn = document.getElementById('queryBtn');
+      var syncBtn = document.getElementById('syncBtn');
+      var graphBtn = document.getElementById('graphBtn');
+      var resultsArea = document.getElementById('resultsArea');
+      var entityChips = document.getElementById('entityChips');
+      var statusText = document.getElementById('statusText');
+      var statEntities = document.getElementById('statEntities');
+      var statEdges = document.getElementById('statEdges');
+      var statSyncs = document.getElementById('statSyncs');
+
+      function show(data) {
+        resultsArea.className = 'results active';
+        entityChips.innerHTML = '';
+        resultsArea.textContent = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+      }
+
+      function showEntities(result) {
+        resultsArea.className = 'results active';
+        resultsArea.textContent = 'Synced: ' + result.entitiesFound + ' entities, ' + result.edgesBuilt + ' edges';
+        entityChips.innerHTML = '';
+        if (result.topEntities) {
+          result.topEntities.forEach(function (e) {
+            var chip = document.createElement('span');
+            chip.className = 'entity-chip';
+            chip.textContent = e.name + ' (' + e.count + ')';
+            entityChips.appendChild(chip);
+          });
+        }
+      }
+
+      function refreshStats() {
+        chrome.runtime.sendMessage({ action: 'getState' }, function (r) {
+          if (!r) return;
+          statEntities.textContent = r.totalEntities || 0;
+          statEdges.textContent = r.totalEdges || 0;
+          statSyncs.textContent = r.syncCount || 0;
+          statusText.textContent = 'HB #' + r.heartbeatCount + ' — Memory Ring';
+        });
+      }
+
+      syncBtn.addEventListener('click', function () {
+        chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+          if (!tabs || !tabs[0]) { show('No active tab.'); return; }
+          show('🧠 Extracting entities from page...');
+          chrome.scripting.executeScript({
+            target: { tabId: tabs[0].id },
+            func: function () {
+              var clone = document.body.cloneNode(true);
+              clone.querySelectorAll('script,style,nav,footer').forEach(function (e) { e.remove(); });
+              return (clone.innerText || clone.textContent || '').replace(/\s+/g, ' ').trim().substring(0, 8000);
+            }
+          }, function (results) {
+            var text = results && results[0] ? results[0].result : '';
+            chrome.runtime.sendMessage({
+              action: 'syncPage', text: text, url: tabs[0].url
+            }, function (r) {
+              if (chrome.runtime.lastError) { show('Error: ' + chrome.runtime.lastError.message); return; }
+              showEntities(r);
+              refreshStats();
+              statusText.textContent = 'Synced — ' + r.totalEntities + ' entities';
+            });
+          });
+        });
+      });
+
+      graphBtn.addEventListener('click', function () {
+        chrome.runtime.sendMessage({ action: 'getGraph' }, function (r) {
+          if (chrome.runtime.lastError) { show('Error: ' + chrome.runtime.lastError.message); return; }
+          show(r);
+        });
+      });
+
+      queryBtn.addEventListener('click', function () {
+        var term = queryInput.value.trim();
+        if (!term) { show('Enter a query term.'); return; }
+        chrome.runtime.sendMessage({ action: 'query', term: term }, function (r) {
+          if (chrome.runtime.lastError) { show('Error: ' + chrome.runtime.lastError.message); return; }
+          show(r);
+        });
+      });
+
+      queryInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') queryBtn.click();
+      });
+
+      refreshStats();
+      setInterval(refreshStats, 5000);
+    })();
+  </script>
+</body>
+</html>

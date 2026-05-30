@@ -1,0 +1,35 @@
+{
+  "folders": [
+    {
+      "name": "Jarvis AI — Universal CPL WASM Intelligence",
+      "path": "."
+    }
+  ],
+  "settings": {
+    "editor.tabSize": 2,
+    "editor.formatOnSave": true,
+    "files.associations": {
+      "*.wat": "wat"
+    }
+  },
+  "extensions": {
+    "recommendations": [
+      "dbaeumer.vscode-eslint",
+      "PKief.material-icon-theme"
+    ]
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Load Jarvis AI in Chrome",
+        "type": "chrome",
+        "request": "launch",
+        "url": "chrome://extensions",
+        "runtimeArgs": [
+          "--load-extension=${workspaceFolder}"
+        ]
+      }
+    ]
+  }
+}

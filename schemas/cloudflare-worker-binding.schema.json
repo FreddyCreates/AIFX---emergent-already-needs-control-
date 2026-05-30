@@ -1,0 +1,155 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://organism.earth/schemas/cloudflare-worker-binding.schema.json",
+  "title": "Cloudflare Worker Protocol Binding Schema",
+  "description": "Schema for binding AURO/ORO protocols to Cloudflare Workers in the sovereign edge mesh",
+  "version": "1.0.0",
+  "type": "object",
+  "required": ["workerId", "name", "role", "protocols", "metadata"],
+  "properties": {
+    "workerId": {
+      "type": "string",
+      "description": "Unique Cloudflare Worker identifier (e.g., 'gate-node', 'knowledge-realm')",
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+    "name": {
+      "type": "string",
+      "description": "Human-readable display name"
+    },
+    "role": {
+      "type": "string",
+      "description": "Functional role in the organism",
+      "enum": [
+        "Protocol Gateway",
+        "Memory Core",
+        "Nova Protocol Core",
+        "OS Layer",
+        "Intelligence Engine",
+        "Crypto Core",
+        "AI Orchestrator",
+        "Orchestration Engine",
+        "Honeypot",
+        "Auto-Probe"
+      ]
+    },
+    "tier": {
+      "type": "string",
+      "description": "Charter tier level (I-V)",
+      "enum": ["I", "II", "III", "IV", "V"]
+    },
+    "protocols": {
+      "type": "array",
+      "description": "Array of 10 bound protocols",
+      "minItems": 10,
+      "maxItems": 10,
+      "items": {
+        "type": "object",
+        "required": ["protoId", "name", "purpose", "priority"],
+        "properties": {
+          "protoId": {
+            "type": "string",
+            "description": "Protocol identifier (e.g., 'PROTO-226')",
+            "pattern": "^PROTO-\\d{3}$"
+          },
+          "name": {
+            "type": "string",
+            "description": "Protocol class name"
+          },
+          "purpose": {
+            "type": "string",
+            "description": "Purpose of this protocol in this worker"
+          },
+          "priority": {
+            "type": "integer",
+            "description": "Phi-weighted priority (0=CRITICAL, 1=HIGH, 2=NORMAL, 3=LOW)",
+            "minimum": 0,
+            "maximum": 3
+          },
+          "configOverrides": {
+            "type": "object",
+            "description": "Worker-specific configuration overrides"
+          }
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["version", "heartbeatMs", "region"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "description": "Binding version"
+        },
+        "heartbeatMs": {
+          "type": "integer",
+          "description": "Heartbeat interval in milliseconds",
+          "default": 873
+        },
+        "region": {
+          "type": "string",
+          "description": "Primary deployment region or 'global'"
+        },
+        "dependencies": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Other worker IDs this worker depends on"
+        },
+        "feedsTo": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Worker IDs this worker sends data to"
+        },
+        "receivesFrom": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Worker IDs this worker receives data from"
+        }
+      }
+    },
+    "routes": {
+      "type": "array",
+      "description": "URL patterns handled by this worker",
+      "items": {
+        "type": "object",
+        "properties": {
+          "pattern": { "type": "string" },
+          "methods": {
+            "type": "array",
+            "items": { "type": "string", "enum": ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"] }
+          }
+        }
+      }
+    },
+    "kvNamespaces": {
+      "type": "array",
+      "description": "KV namespace bindings",
+      "items": {
+        "type": "object",
+        "properties": {
+          "binding": { "type": "string" },
+          "id": { "type": "string" }
+        }
+      }
+    },
+    "durableObjects": {
+      "type": "array",
+      "description": "Durable Object bindings",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "className": { "type": "string" }
+        }
+      }
+    },
+    "phiConstants": {
+      "type": "object",
+      "description": "Phi-math constants for this worker",
+      "properties": {
+        "phi": { "type": "number", "const": 1.618033988749895 },
+        "emergenceThreshold": { "type": "number", "const": 0.618033988749895 },
+        "goldenAngle": { "type": "number", "const": 137.508 }
+      }
+    }
+  }
+}

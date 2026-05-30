@@ -1,0 +1,41 @@
+{
+  "name": "@medina/enterprise-integration-sdk",
+  "version": "1.0.0",
+  "description": "Plug any enterprise into a sovereign intelligence substrate — company onboarding, connector templates, campaign management, multi-channel messaging, and export pipelines.",
+  "license": "MIT",
+  "main": "src/index.js",
+  "type": "module",
+  "keywords": [
+    "enterprise",
+    "integration",
+    "connectors",
+    "onboarding",
+    "campaign",
+    "messaging",
+    "export",
+    "sovereign-intelligence"
+  ],
+  "exports": {
+    ".": "./src/index.js",
+    "./onboarding": "./src/onboarding.js",
+    "./connectors": "./src/connectors/index.js",
+    "./campaign-manager": "./src/campaign-manager.js",
+    "./messaging": "./src/messaging.js",
+    "./export-pipeline": "./src/export-pipeline.js"
+  },
+  "files": [
+    "src/"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FreddyCreates/potential-succotash.git",
+    "directory": "sdk/enterprise-integration-sdk"
+  },
+  "author": "Medina",
+  "publishConfig": {
+    "access": "public"
+  }
+}

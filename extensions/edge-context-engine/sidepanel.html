@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edge Context Engine</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "Segoe UI", -apple-system, sans-serif;
+      background: #0d1117;
+      color: #e0e0e0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .header {
+      background: linear-gradient(135deg, #ff8c00, #e07800);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .header-icon {
+      width: 36px;
+      height: 36px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .header h1 { font-size: 16px; font-weight: 700; }
+    .header p { font-size: 11px; opacity: 0.85; margin-top: 2px; }
+    .content { flex: 1; padding: 16px; overflow-y: auto; }
+    .model-chips {
+      display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px;
+    }
+    .chip {
+      padding: 4px 10px;
+      border-radius: 14px;
+      background: #ff8c00;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .section-label {
+      font-size: 11px; color: #888; text-transform: uppercase;
+      letter-spacing: 0.5px; margin-bottom: 6px;
+    }
+    .btn-row { display: flex; gap: 8px; margin-top: 12px; }
+    .btn {
+      flex: 1;
+      padding: 10px 0;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .btn:hover { opacity: 0.85; }
+    .btn-primary { background: #ff8c00; }
+    .btn-secondary { background: #0078d4; }
+    .context-summary {
+      margin-top: 16px;
+      padding: 12px;
+      background: #161b22;
+      border: 1px solid #222;
+      border-radius: 8px;
+      font-size: 12px;
+      line-height: 1.6;
+      display: none;
+    }
+    .context-summary.active { display: block; }
+    .timeline {
+      margin-top: 16px;
+      display: none;
+    }
+    .timeline.active { display: block; }
+    .timeline-item {
+      display: flex;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid #1c1c1c;
+    }
+    .timeline-dot {
+      width: 8px;
+      height: 8px;
+      background: #ff8c00;
+      border-radius: 50%;
+      margin-top: 5px;
+      flex-shrink: 0;
+    }
+    .timeline-content {
+      flex: 1;
+      font-size: 12px;
+    }
+    .timeline-title {
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+    .timeline-time {
+      font-size: 10px;
+      color: #888;
+    }
+    .topic-chips {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+      display: none;
+    }
+    .topic-chips.active { display: flex; }
+    .topic-chip {
+      padding: 4px 10px;
+      border-radius: 14px;
+      background: #2e1a00;
+      border: 1px solid #ff8c00;
+      color: #ff8c00;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .status-bar {
+      padding: 8px 16px;
+      background: #161b22;
+      border-top: 1px solid #222;
+      font-size: 10px;
+      color: #666;
+      display: flex;
+      justify-content: space-between;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-icon">CE</div>
+    <div>
+      <h1>Edge Context Engine</h1>
+      <p>Browsing session knowledge builder</p>
+    </div>
+  </div>
+  <div class="content">
+    <div class="model-chips">
+      <span class="chip">Embeddings</span>
+      <span class="chip">GPT</span>
+      <span class="chip">Command R</span>
+      <span class="chip">Florence</span>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="captureBtn">&#128229; Capture Page</button>
+      <button class="btn btn-secondary" id="buildBtn">&#129504; Build Context</button>
+    </div>
+    <div class="context-summary" id="contextSummary"></div>
+    <div class="section-label" id="topicLabel" style="display:none;margin-top:16px;">Topics</div>
+    <div class="topic-chips" id="topicChips"></div>
+    <div class="section-label" id="timelineLabel" style="display:none;margin-top:16px;">Context Timeline</div>
+    <div class="timeline" id="contextTimeline"></div>
+  </div>
+  <div class="status-bar">
+    <span id="statusText">Ready</span>
+    <span>Memory Ring &bull; EXT-035</span>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      var captureBtn = document.getElementById('captureBtn');
+      var buildBtn = document.getElementById('buildBtn');
+      var contextSummary = document.getElementById('contextSummary');
+      var topicChips = document.getElementById('topicChips');
+      var topicLabel = document.getElementById('topicLabel');
+      var contextTimeline = document.getElementById('contextTimeline');
+      var timelineLabel = document.getElementById('timelineLabel');
+      var statusText = document.getElementById('statusText');
+
+      captureBtn.addEventListener('click', function () {
+        statusText.textContent = 'Capturing...';
+        chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+          if (!tabs || tabs.length === 0) {
+            statusText.textContent = 'No active tab found';
+            return;
+          }
+          chrome.tabs.sendMessage(tabs[0].id, { action: 'getPageContent' }, function (pageData) {
+            var content = '';
+            if (pageData && pageData.content) {
+              content = pageData.content.substring(0, 2000);
+            }
+            chrome.runtime.sendMessage(
+              { action: 'addContext', url: tabs[0].url || '', title: tabs[0].title || '', content: content },
+              function (resp) {
+                if (chrome.runtime.lastError) {
+                  statusText.textContent = 'Error: ' + chrome.runtime.lastError.message;
+                  return;
+                }
+                contextSummary.className = 'context-summary active';
+                contextSummary.textContent = 'Page captured. Total entries: ' + (resp.totalEntries || 0) + ', Topics tracked: ' + (resp.topicCount || 0);
+                statusText.textContent = 'Page captured';
+              }
+            );
+          });
+        });
+      });
+
+      buildBtn.addEventListener('click', function () {
+        statusText.textContent = 'Building context...';
+        chrome.runtime.sendMessage({ action: 'buildContext' }, function (resp) {
+          if (chrome.runtime.lastError) {
+            statusText.textContent = 'Error: ' + chrome.runtime.lastError.message;
+            return;
+          }
+          if (resp && resp.summary) {
+            contextSummary.className = 'context-summary active';
+            contextSummary.textContent = resp.summary;
+          }
+          if (resp && resp.topics && resp.topics.length > 0) {
+            topicLabel.style.display = 'block';
+            topicChips.className = 'topic-chips active';
+            topicChips.innerHTML = '';
+            resp.topics.forEach(function (t) {
+              var chip = document.createElement('span');
+              chip.className = 'topic-chip';
+              chip.textContent = t.topic + ' (' + t.weight + ')';
+              topicChips.appendChild(chip);
+            });
+          }
+          if (resp && resp.timeline && resp.timeline.length > 0) {
+            timelineLabel.style.display = 'block';
+            contextTimeline.className = 'timeline active';
+            contextTimeline.innerHTML = '';
+            resp.timeline.forEach(function (entry) {
+              var item = document.createElement('div');
+              item.className = 'timeline-item';
+              item.innerHTML =
+                '<div class="timeline-dot"></div>' +
+                '<div class="timeline-content">' +
+                  '<div class="timeline-title">' + (entry.title || 'Untitled') + '</div>' +
+                  '<div class="timeline-time">' + (entry.time || '') + '</div>' +
+                '</div>';
+              contextTimeline.appendChild(item);
+            });
+          }
+          statusText.textContent = 'Context built (' + (resp.totalEntries || 0) + ' entries)';
+        });
+      });
+
+      chrome.runtime.sendMessage({ action: 'getState' }, function (resp) {
+        if (resp && resp.healthy) statusText.textContent = 'Engine healthy';
+      });
+    })();
+  </script>
+</body>
+</html>

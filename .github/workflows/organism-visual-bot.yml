@@ -1,0 +1,103 @@
+# ============================================================================
+# organism-visual-bot — Visual Regression Testing, Screenshots & Recordings
+#
+# Captures screenshots of every production page and extension popup using
+# Playwright on a virtual display. Produces pixel-diff reports against saved
+# baselines. Records video walkthroughs of the organism UI. Auto-commits
+# screenshots to dist/screenshots/ and recordings to dist/recordings/ so
+# they are always available as deliverables.
+#
+# Identity: organism-visual-bot <organism-visual-bot@users.noreply.github.com>
+# ============================================================================
+
+name: "📸 Visual Regression & Capture Bot"
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'download.html'
+      - 'extensions/**/manifest.json'
+      - 'extensions/**/sidepanel.html'
+      - 'extensions/**/popup.html'
+      - 'docs/**'
+  schedule:
+    - cron: '0 4 * * *'  # Nightly 4am UTC — always-fresh screenshots
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  capture:
+    name: "📸 Screenshot & Record"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Playwright + system deps
+        run: |
+          npm install --no-save playwright@latest
+          npx playwright install chromium --with-deps
+
+      - name: Install recording tools (Xvfb + ffmpeg)
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq xvfb ffmpeg
+
+      - name: Capture screenshots of all pages
+        run: node scripts/visual-regression.js --screenshots
+        env:
+          DISPLAY: ':99'
+
+      - name: Run visual diff against baselines
+        run: node scripts/visual-regression.js --diff
+        continue-on-error: true
+
+      - name: Record video walkthrough
+        run: |
+          Xvfb :99 -screen 0 1920x1080x24 &
+          sleep 2
+          node scripts/visual-regression.js --record
+          kill %1 2>/dev/null || true
+        env:
+          DISPLAY: ':99'
+
+      - name: Generate visual report
+        run: node scripts/visual-regression.js --report
+
+      - name: Upload screenshots as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: organism-screenshots-${{ github.sha }}
+          path: dist/screenshots/
+          retention-days: 30
+
+      - name: Upload recordings as artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: organism-recordings-${{ github.sha }}
+          path: dist/recordings/
+          retention-days: 30
+
+      - name: Commit visual deliverables
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "organism-visual-bot"
+          git config user.email "organism-visual-bot@users.noreply.github.com"
+          git add dist/screenshots/ dist/recordings/ docs/
+          if git diff --cached --quiet; then
+            echo "No visual changes to commit"
+          else
+            git commit -m "📸 Visual-bot: screenshots & recordings updated — $(date -u '+%Y-%m-%d %H:%M UTC')"
+            git push
+          fi

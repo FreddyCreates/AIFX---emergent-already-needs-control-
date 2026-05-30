@@ -1,0 +1,27 @@
+{
+  "id": "atlas://bot/organism-governance-bot",
+  "name": "organism-governance-bot",
+  "class": "Bot",
+  "division": "Governance",
+  "divisionNum": "VIII",
+  "emoji": "🏛️",
+  "domain": "Fleet governance, CPL-L/CPL-P runtime, meta-analysis",
+  "triggers": ["push:governance/", "push:docs/", "push:protocols/", "push:sdk/", "schedule:every-3h", "workflow_dispatch"],
+  "capabilities": [
+    "apply_cpl_l", "run_cpl_p", "audit_trail", "meta_analysis",
+    "escalation_routing", "feedback_intake", "governance_report"
+  ],
+  "languages": ["atlas://language/cpl-l", "atlas://language/cpl-p", "atlas://language/ocl"],
+  "governance_pipeline": "pipeline://governance/bot_cycle",
+  "ocl_ref": "atlas://organism/bot-fleet",
+  "authority": "governance_engine",
+  "scripts": [
+    "scripts/governance-engine.js",
+    "scripts/governance-meta-engine.js"
+  ],
+  "workflow": ".github/workflows/organism-governance-bot.yml",
+  "report": "docs/governance-report.md",
+  "meta_report": "docs/governance-meta-report.md",
+  "audit_log": "dist/governance/audit-log.jsonl",
+  "microbots": []
+}

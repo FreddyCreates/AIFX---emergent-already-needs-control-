@@ -1,0 +1,19 @@
+{
+  "id": "atlas://bot/organism-cloud-bot",
+  "name": "organism-cloud-bot",
+  "class": "Bot",
+  "division": "Deploy & Operate",
+  "divisionNum": "V",
+  "emoji": "☁️",
+  "domain": "Cloudflare Workers & edge orchestration",
+  "triggers": ["push:protocols/edge-compute-protocol.js", "push:sdk/", "schedule:every-4h"],
+  "capabilities": ["deploy_edge", "manifest_gen", "region_health", "worker_manage"],
+  "languages": ["atlas://language/cpl-p"],
+  "governance_pipeline": "pipeline://governance/bot_cycle",
+  "ocl_ref": "atlas://organism/bot-fleet",
+  "protocol_refs": ["PROTO-224:EdgeComputeProtocol"],
+  "script": "scripts/cloud-worker-deploy.js",
+  "workflow": ".github/workflows/organism-cloud-bot.yml",
+  "report": "docs/cloud-report.md",
+  "microbots": ["worker-health", "edge-latency"]
+}

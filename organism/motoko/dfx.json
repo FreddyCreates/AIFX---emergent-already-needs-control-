@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "canisters": {
+    "organism": {
+      "type": "motoko",
+      "main": "src/Organism.mo"
+    },
+    "auto_generate_calls": {
+      "type": "motoko",
+      "main": "src/AutoGenerateCallsEngine.mo"
+    },
+    "jarvisius": {
+      "type": "motoko",
+      "main": "src/Jarvisius.mo"
+    },
+    "geometry_lock": {
+      "type": "motoko",
+      "main": "src/GeometryLock.mo"
+    }
+  },
+  "defaults": {
+    "build": {
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env"
+}

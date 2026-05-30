@@ -1,0 +1,13 @@
+{
+  "id": "atlas://engine/coreograph",
+  "name": "coreograph",
+  "class": "Engine",
+  "division": "Infrastructure",
+  "emoji": "🎼",
+  "domain": "Orchestration — multi-agent choreography, pipeline sequencing",
+  "events": ["orchestration_completed", "pipeline_sequenced", "agent_choreographed"],
+  "capabilities": ["orchestrate", "sequence", "choreograph", "coordinate"],
+  "governance_pipeline": "pipeline://governance/default_cycle",
+  "ocl_ref": "atlas://organism/bot-fleet",
+  "script": "sdk/engines/coreograph-engine.js"
+}

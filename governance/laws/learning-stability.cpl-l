@@ -1,0 +1,46 @@
+# ════════════════════════════════════════════════════════════════════════════
+# CPL-L — Learning Stability Laws
+# id: governance://law/learning-stability
+# version: 1.0.0
+#
+# Safety laws for learning domain (organism-learning-bot + Hebbian protocols).
+# Applied by the learning_cycle pipeline.
+# ════════════════════════════════════════════════════════════════════════════
+
+id: "governance://law/learning-stability"
+version: "1.0.0"
+updated: "2026-05-03"
+ocl_ref: "atlas://organism/bot-fleet"
+
+subjects:
+
+  - id: "atlas://bot/organism-learning-bot"
+    rules:
+      - name: "HALT_ON_REWARD_DIVERGENCE"
+        description: "Stop learning if reward signal diverges (NaN or > φ²)"
+        when: 'isNaN(context.reward_signal) || context.reward_signal > 2.618'
+        then:
+          - action: "FORBID"
+            target: "weight_update"
+            reason: "Reward signal divergence — Hebbian learning halted"
+          - action: "ESCALATE"
+            target: "human://operator"
+            reason: "Reward divergence requires manual inspection of training data"
+
+      - name: "SLOW_LEARNING_ON_PROTOCOL_FAILURE"
+        description: "Reduce learning rate when protocol failures are high"
+        when: 'context.protocol_failure_rate > 0.3'
+        then:
+          - action: "REQUIRE"
+            target: "learning_rate_reduction"
+            reason: "Protocol failure rate >30% — reduce learning rate to avoid bad generalization"
+          - action: "NOTIFY"
+            target: "fleet_commander"
+
+      - name: "BLOCK_CURRICULUM_ADVANCE"
+        description: "Block curriculum progression if current stage score < 0.6"
+        when: 'context.curriculum_stage_score < 0.6 && context.curriculum_advance_requested'
+        then:
+          - action: "FORBID"
+            target: "curriculum_advance"
+            reason: "Current curriculum stage score below 60% — cannot advance"

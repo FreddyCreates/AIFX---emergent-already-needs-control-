@@ -1,0 +1,19 @@
+{
+  "id": "atlas://bot/organism-cyber-bot",
+  "name": "organism-cyber-bot",
+  "class": "Bot",
+  "division": "Secure & Monitor",
+  "divisionNum": "III",
+  "emoji": "🔐",
+  "domain": "Cyber defense & threat intelligence",
+  "triggers": ["push:extensions/", "push:protocols/", "push:sdk/", "push:scripts/", "schedule:nightly"],
+  "capabilities": ["threat_scan", "surface_map", "defense_matrix", "incident_manage"],
+  "languages": ["atlas://language/cpl-l", "atlas://language/err"],
+  "governance_pipeline": "pipeline://governance/bot_cycle",
+  "ocl_ref": "atlas://organism/bot-fleet",
+  "protocol_refs": ["PROTO-225:CyberDefenseProtocol"],
+  "script": "scripts/cyber-defense.js",
+  "workflow": ".github/workflows/organism-cyber-bot.yml",
+  "report": "docs/cyber-report.md",
+  "microbots": ["threat-scanner", "surface-mapper"]
+}
