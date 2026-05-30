@@ -1,0 +1,406 @@
+{
+  "timestamp": "2026-05-27T08:07:25.682Z",
+  "mode": "playwright",
+  "viewports": [
+    "desktop",
+    "tablet",
+    "mobile"
+  ],
+  "pages": [
+    {
+      "name": "index",
+      "type": "page",
+      "file": "index.html"
+    },
+    {
+      "name": "download",
+      "type": "page",
+      "file": "download.html"
+    },
+    {
+      "name": "ext-alpha-tools-hub-popup",
+      "type": "extension",
+      "file": "extensions/alpha-tools-hub/popup.html"
+    },
+    {
+      "name": "ext-alpha-tools-hub-sidepanel",
+      "type": "extension",
+      "file": "extensions/alpha-tools-hub/sidepanel.html"
+    },
+    {
+      "name": "ext-api-mesh-adapter-popup",
+      "type": "extension",
+      "file": "extensions/api-mesh-adapter/popup.html"
+    },
+    {
+      "name": "ext-api-mesh-adapter-sidepanel",
+      "type": "extension",
+      "file": "extensions/api-mesh-adapter/sidepanel.html"
+    },
+    {
+      "name": "ext-cipher-shield-popup",
+      "type": "extension",
+      "file": "extensions/cipher-shield/popup.html"
+    },
+    {
+      "name": "ext-cipher-shield-sidepanel",
+      "type": "extension",
+      "file": "extensions/cipher-shield/sidepanel.html"
+    },
+    {
+      "name": "ext-code-sovereign-popup",
+      "type": "extension",
+      "file": "extensions/code-sovereign/popup.html"
+    },
+    {
+      "name": "ext-code-sovereign-sidepanel",
+      "type": "extension",
+      "file": "extensions/code-sovereign/sidepanel.html"
+    },
+    {
+      "name": "ext-context-bridge-adapter-popup",
+      "type": "extension",
+      "file": "extensions/context-bridge-adapter/popup.html"
+    },
+    {
+      "name": "ext-context-bridge-adapter-sidepanel",
+      "type": "extension",
+      "file": "extensions/context-bridge-adapter/sidepanel.html"
+    },
+    {
+      "name": "ext-contract-forge-popup",
+      "type": "extension",
+      "file": "extensions/contract-forge/popup.html"
+    },
+    {
+      "name": "ext-contract-forge-sidepanel",
+      "type": "extension",
+      "file": "extensions/contract-forge/sidepanel.html"
+    },
+    {
+      "name": "ext-creative-muse-popup",
+      "type": "extension",
+      "file": "extensions/creative-muse/popup.html"
+    },
+    {
+      "name": "ext-creative-muse-sidepanel",
+      "type": "extension",
+      "file": "extensions/creative-muse/sidepanel.html"
+    },
+    {
+      "name": "ext-data-alchemist-popup",
+      "type": "extension",
+      "file": "extensions/data-alchemist/popup.html"
+    },
+    {
+      "name": "ext-data-alchemist-sidepanel",
+      "type": "extension",
+      "file": "extensions/data-alchemist/sidepanel.html"
+    },
+    {
+      "name": "ext-data-oracle-popup",
+      "type": "extension",
+      "file": "extensions/data-oracle/popup.html"
+    },
+    {
+      "name": "ext-data-oracle-sidepanel",
+      "type": "extension",
+      "file": "extensions/data-oracle/sidepanel.html"
+    },
+    {
+      "name": "ext-edge-ai-assistant-popup",
+      "type": "extension",
+      "file": "extensions/edge-ai-assistant/popup.html"
+    },
+    {
+      "name": "ext-edge-ai-assistant-sidepanel",
+      "type": "extension",
+      "file": "extensions/edge-ai-assistant/sidepanel.html"
+    },
+    {
+      "name": "ext-edge-context-engine-popup",
+      "type": "extension",
+      "file": "extensions/edge-context-engine/popup.html"
+    },
+    {
+      "name": "ext-edge-context-engine-sidepanel",
+      "type": "extension",
+      "file": "extensions/edge-context-engine/sidepanel.html"
+    },
+    {
+      "name": "ext-edge-prompt-lab-popup",
+      "type": "extension",
+      "file": "extensions/edge-prompt-lab/popup.html"
+    },
+    {
+      "name": "ext-edge-prompt-lab-sidepanel",
+      "type": "extension",
+      "file": "extensions/edge-prompt-lab/sidepanel.html"
+    },
+    {
+      "name": "ext-edge-runner-popup",
+      "type": "extension",
+      "file": "extensions/edge-runner/popup.html"
+    },
+    {
+      "name": "ext-edge-runner-sidepanel",
+      "type": "extension",
+      "file": "extensions/edge-runner/sidepanel.html"
+    },
+    {
+      "name": "ext-edge-tab-analyzer-popup",
+      "type": "extension",
+      "file": "extensions/edge-tab-analyzer/popup.html"
+    },
+    {
+      "name": "ext-edge-tab-analyzer-sidepanel",
+      "type": "extension",
+      "file": "extensions/edge-tab-analyzer/sidepanel.html"
+    },
+    {
+      "name": "ext-jarvis-popup",
+      "type": "extension",
+      "file": "extensions/jarvis/popup.html"
+    },
+    {
+      "name": "ext-jarvis-sidepanel",
+      "type": "extension",
+      "file": "extensions/jarvis/sidepanel.html"
+    },
+    {
+      "name": "ext-jarvis-sidepanel",
+      "type": "extension",
+      "file": "extensions/jarvis/src/sidepanel/sidepanel.html"
+    },
+    {
+      "name": "ext-knowledge-cartographer-popup",
+      "type": "extension",
+      "file": "extensions/knowledge-cartographer/popup.html"
+    },
+    {
+      "name": "ext-knowledge-cartographer-sidepanel",
+      "type": "extension",
+      "file": "extensions/knowledge-cartographer/sidepanel.html"
+    },
+    {
+      "name": "ext-knowledge-sync-adapter-popup",
+      "type": "extension",
+      "file": "extensions/knowledge-sync-adapter/popup.html"
+    },
+    {
+      "name": "ext-knowledge-sync-adapter-sidepanel",
+      "type": "extension",
+      "file": "extensions/knowledge-sync-adapter/sidepanel.html"
+    },
+    {
+      "name": "ext-logic-prover-popup",
+      "type": "extension",
+      "file": "extensions/logic-prover/popup.html"
+    },
+    {
+      "name": "ext-logic-prover-sidepanel",
+      "type": "extension",
+      "file": "extensions/logic-prover/sidepanel.html"
+    },
+    {
+      "name": "ext-marketplace-hub-popup",
+      "type": "extension",
+      "file": "extensions/marketplace-hub/popup.html"
+    },
+    {
+      "name": "ext-marketplace-hub-sidepanel",
+      "type": "extension",
+      "file": "extensions/marketplace-hub/sidepanel.html"
+    },
+    {
+      "name": "ext-memory-palace-popup",
+      "type": "extension",
+      "file": "extensions/memory-palace/popup.html"
+    },
+    {
+      "name": "ext-memory-palace-sidepanel",
+      "type": "extension",
+      "file": "extensions/memory-palace/sidepanel.html"
+    },
+    {
+      "name": "ext-model-router-adapter-popup",
+      "type": "extension",
+      "file": "extensions/model-router-adapter/popup.html"
+    },
+    {
+      "name": "ext-model-router-adapter-sidepanel",
+      "type": "extension",
+      "file": "extensions/model-router-adapter/sidepanel.html"
+    },
+    {
+      "name": "ext-organism-dashboard-popup",
+      "type": "extension",
+      "file": "extensions/organism-dashboard/popup.html"
+    },
+    {
+      "name": "ext-organism-dashboard-sidepanel",
+      "type": "extension",
+      "file": "extensions/organism-dashboard/sidepanel.html"
+    },
+    {
+      "name": "ext-pattern-forge-popup",
+      "type": "extension",
+      "file": "extensions/pattern-forge/popup.html"
+    },
+    {
+      "name": "ext-pattern-forge-sidepanel",
+      "type": "extension",
+      "file": "extensions/pattern-forge/sidepanel.html"
+    },
+    {
+      "name": "ext-polyglot-oracle-popup",
+      "type": "extension",
+      "file": "extensions/polyglot-oracle/popup.html"
+    },
+    {
+      "name": "ext-polyglot-oracle-sidepanel",
+      "type": "extension",
+      "file": "extensions/polyglot-oracle/sidepanel.html"
+    },
+    {
+      "name": "ext-protocol-bridge-popup",
+      "type": "extension",
+      "file": "extensions/protocol-bridge/popup.html"
+    },
+    {
+      "name": "ext-protocol-bridge-sidepanel",
+      "type": "extension",
+      "file": "extensions/protocol-bridge/sidepanel.html"
+    },
+    {
+      "name": "ext-register-popup",
+      "type": "extension",
+      "file": "extensions/register/popup.html"
+    },
+    {
+      "name": "ext-register-sidepanel",
+      "type": "extension",
+      "file": "extensions/register/sidepanel.html"
+    },
+    {
+      "name": "ext-research-nexus-popup",
+      "type": "extension",
+      "file": "extensions/research-nexus/popup.html"
+    },
+    {
+      "name": "ext-research-nexus-sidepanel",
+      "type": "extension",
+      "file": "extensions/research-nexus/sidepanel.html"
+    },
+    {
+      "name": "ext-screen-commander-popup",
+      "type": "extension",
+      "file": "extensions/screen-commander/popup.html"
+    },
+    {
+      "name": "ext-screen-commander-sidepanel",
+      "type": "extension",
+      "file": "extensions/screen-commander/sidepanel.html"
+    },
+    {
+      "name": "ext-sentinel-watch-popup",
+      "type": "extension",
+      "file": "extensions/sentinel-watch/popup.html"
+    },
+    {
+      "name": "ext-sentinel-watch-sidepanel",
+      "type": "extension",
+      "file": "extensions/sentinel-watch/sidepanel.html"
+    },
+    {
+      "name": "ext-signal-relay-adapter-popup",
+      "type": "extension",
+      "file": "extensions/signal-relay-adapter/popup.html"
+    },
+    {
+      "name": "ext-signal-relay-adapter-sidepanel",
+      "type": "extension",
+      "file": "extensions/signal-relay-adapter/sidepanel.html"
+    },
+    {
+      "name": "ext-social-cortex-popup",
+      "type": "extension",
+      "file": "extensions/social-cortex/popup.html"
+    },
+    {
+      "name": "ext-social-cortex-sidepanel",
+      "type": "extension",
+      "file": "extensions/social-cortex/sidepanel.html"
+    },
+    {
+      "name": "ext-sovereign-alpha-popup",
+      "type": "extension",
+      "file": "extensions/sovereign-alpha/popup.html"
+    },
+    {
+      "name": "ext-sovereign-alpha-sidepanel",
+      "type": "extension",
+      "file": "extensions/sovereign-alpha/sidepanel.html"
+    },
+    {
+      "name": "ext-sovereign-mind-popup",
+      "type": "extension",
+      "file": "extensions/sovereign-mind/popup.html"
+    },
+    {
+      "name": "ext-sovereign-mind-sidepanel",
+      "type": "extension",
+      "file": "extensions/sovereign-mind/sidepanel.html"
+    },
+    {
+      "name": "ext-sovereign-nexus-popup",
+      "type": "extension",
+      "file": "extensions/sovereign-nexus/popup.html"
+    },
+    {
+      "name": "ext-sovereign-nexus-sidepanel",
+      "type": "extension",
+      "file": "extensions/sovereign-nexus/sidepanel.html"
+    },
+    {
+      "name": "ext-spread-scanner-popup",
+      "type": "extension",
+      "file": "extensions/spread-scanner/popup.html"
+    },
+    {
+      "name": "ext-spread-scanner-sidepanel",
+      "type": "extension",
+      "file": "extensions/spread-scanner/sidepanel.html"
+    },
+    {
+      "name": "ext-video-architect-popup",
+      "type": "extension",
+      "file": "extensions/video-architect/popup.html"
+    },
+    {
+      "name": "ext-video-architect-sidepanel",
+      "type": "extension",
+      "file": "extensions/video-architect/sidepanel.html"
+    },
+    {
+      "name": "ext-vision-weaver-popup",
+      "type": "extension",
+      "file": "extensions/vision-weaver/popup.html"
+    },
+    {
+      "name": "ext-vision-weaver-sidepanel",
+      "type": "extension",
+      "file": "extensions/vision-weaver/sidepanel.html"
+    },
+    {
+      "name": "ext-voice-forge-popup",
+      "type": "extension",
+      "file": "extensions/voice-forge/popup.html"
+    },
+    {
+      "name": "ext-voice-forge-sidepanel",
+      "type": "extension",
+      "file": "extensions/voice-forge/sidepanel.html"
+    }
+  ]
+}

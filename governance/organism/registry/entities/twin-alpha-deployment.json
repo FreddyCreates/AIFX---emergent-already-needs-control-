@@ -1,0 +1,58 @@
+{
+  "id": "atlas://deployment/twin-alpha",
+  "name": "twin-alpha-runtime",
+  "class": "Deployment",
+  "type": "web-app",
+  "division": "Deploy & Operate",
+  "divisionNum": "V",
+  "emoji": "🔷",
+  "domain": "Twin Alpha Runtime Interface",
+  "description": "Geminus Primus — the first twin, the always-on autonomous user-facing interface to the entire organism",
+  "deployment": {
+    "target": "github-pages",
+    "path": "organism/web/",
+    "url": "https://itsnotailabs.github.io/PRODUCTION-/organism/web/",
+    "offlineCapable": true,
+    "serviceWorker": "organism/web/sw.js"
+  },
+  "capabilities": [
+    "memory_search_proxy",
+    "task_dispatch_router",
+    "organism_health_aggregator",
+    "conversation_context_buffer",
+    "autonomous_suggestions",
+    "user_profile_persistence",
+    "heartbeat_873ms"
+  ],
+  "workers": [
+    "twin-alpha-worker",
+    "organism-worker",
+    "memory-worker",
+    "engine-worker",
+    "inference-worker",
+    "routing-worker",
+    "scheduler-worker",
+    "orchestrator-worker",
+    "guardian-worker",
+    "crypto-worker",
+    "math-worker",
+    "analytics-worker",
+    "telemetry-worker",
+    "pipeline-worker",
+    "mesh-worker",
+    "contract-worker",
+    "download-worker"
+  ],
+  "triggers": ["push:organism/web/"],
+  "dependencies": ["neuro-core.js"],
+  "governance_pipeline": "pipeline://governance/deployment_cycle",
+  "ocl_ref": "atlas://organism/bot-fleet",
+  "law_refs": [
+    "governance://law/BOT_FLEET_SAFETY#NO_DEPLOY_ON_RED",
+    "governance://law/BOT_FLEET_SAFETY#TWIN_ALPHA_INTEGRITY"
+  ],
+  "workflow": ".github/workflows/deploy-twin-alpha.yml",
+  "bot": "organism-deploy-bot",
+  "version": "1.0.0",
+  "createdAt": "2026-05-18T08:00:00Z"
+}

@@ -1,0 +1,491 @@
+#!/usr/bin/env node
+
+/**
+ * nova-julia — CLI for NOVA Julia-Motoko Bridge
+ * 
+ * Command-line interface for calling Julia computational functions
+ * through the NOVA bridge.
+ * 
+ * Usage:
+ *   nova-julia call <function> [options]
+ *   nova-julia list
+ *   nova-julia types
+ *   nova-julia validate <type> <value>
+ *   nova-julia info <function>
+ * 
+ * @module NOVA/cli/nova-julia
+ * @version 1.0.0
+ * @powered-by NOVA (Networked Omniscient Verified Architecture)
+ */
+
+import { readFileSync, writeFileSync, existsSync } from 'fs';
+import { resolve, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+// ESM compatibility
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// ─── Import Bridge ────────────────────────────────────────────────────────────
+
+// Dynamic import for the protocol
+const protocolPath = resolve(__dirname, '../protocols/PROTOCOL-JULIA.js');
+
+// ─── Constants ────────────────────────────────────────────────────────────────
+
+const PHI = 1.618033988749895;
+const VERSION = '1.0.0';
+
+const COMMANDS = {
+  call: 'Call a Julia function',
+  list: 'List available functions',
+  types: 'Show type mappings',
+  validate: 'Validate a type',
+  info: 'Show function information',
+  help: 'Show this help message',
+  version: 'Show version',
+};
+
+// ─── Argument Parser ──────────────────────────────────────────────────────────
+
+function parseArgs(args) {
+  const parsed = {
+    command: null,
+    function: null,
+    options: {},
+    positional: [],
+  };
+  
+  let i = 0;
+  while (i < args.length) {
+    const arg = args[i];
+    
+    if (arg.startsWith('--')) {
+      const key = arg.slice(2);
+      const next = args[i + 1];
+      
+      if (next && !next.startsWith('--')) {
+        parsed.options[key] = next;
+        i += 2;
+      } else {
+        parsed.options[key] = true;
+        i += 1;
+      }
+    } else if (!parsed.command) {
+      parsed.command = arg;
+      i += 1;
+    } else {
+      parsed.positional.push(arg);
+      i += 1;
+    }
+  }
+  
+  if (parsed.positional.length > 0) {
+    parsed.function = parsed.positional[0];
+  }
+  
+  return parsed;
+}
+
+// ─── Value Parser ─────────────────────────────────────────────────────────────
+
+function parseValue(value) {
+  // If it's a file path, read from file
+  if (value && typeof value === 'string') {
+    if (existsSync(value) && (value.endsWith('.json') || value.endsWith('.txt'))) {
+      const content = readFileSync(value, 'utf-8');
+      return JSON.parse(content);
+    }
+    
+    // Try parsing as JSON
+    try {
+      return JSON.parse(value);
+    } catch {
+      return value;
+    }
+  }
+  return value;
+}
+
+// ─── Commands ─────────────────────────────────────────────────────────────────
+
+async function cmdCall(funcName, options) {
+  const { getJuliaCompute, JULIA_FUNCTIONS } = await import(protocolPath);
+  
+  if (!funcName) {
+    console.error('Error: Function name required');
+    console.error('Usage: nova-julia call <function> [--matrix <data>] [--data <data>]');
+    process.exit(1);
+  }
+  
+  // Validate function exists
+  if (!JULIA_FUNCTIONS[funcName]) {
+    console.error(`Error: Unknown function '${funcName}'`);
+    console.error('Run "nova-julia list" to see available functions');
+    process.exit(1);
+  }
+  
+  // Initialize bridge
+  const julia = getJuliaCompute({
+    enableProofRecording: options['record-proof'] || false,
+  });
+  
+  await julia.initialize();
+  
+  // Parse inputs
+  const args = [];
+  
+  if (options.matrix) {
+    args.push(parseValue(options.matrix));
+  }
+  if (options.data) {
+    args.push(parseValue(options.data));
+  }
+  if (options.signal) {
+    args.push(parseValue(options.signal));
+  }
+  if (options.x0) {
+    args.push(parseValue(options.x0));
+  }
+  if (options.coefficients) {
+    args.push(parseValue(options.coefficients));
+  }
+  
+  // Map function name to method
+  const methodMap = {
+    'linalg.eigen': 'eigen',
+    'linalg.svd': 'svd',
+    'linalg.qr': 'qr',
+    'linalg.lu': 'lu',
+    'linalg.cholesky': 'cholesky',
+    'signal.fft': 'fft',
+    'signal.ifft': 'ifft',
+    'stats.mean': 'mean',
+    'stats.std': 'std',
+    'stats.cov': 'cov',
+    'stats.cor': 'cor',
+    'optim.minimize': 'minimize',
+    'phi.gradient_descent': 'phiGradientDescent',
+    'phi.resonance_filter': 'phiResonanceFilter',
+  };
+  
+  const method = methodMap[funcName];
+  if (!method || typeof julia[method] !== 'function') {
+    console.error(`Error: No method mapping for '${funcName}'`);
+    process.exit(1);
+  }
+  
+  try {
+    const startTime = performance.now();
+    const result = await julia[method](...args);
+    const elapsed = performance.now() - startTime;
+    
+    // Output format
+    const format = options.format || 'json';
+    
+    if (format === 'pretty') {
+      console.log('Result:');
+      console.log(JSON.stringify(result, null, 2));
+      console.log(`\nCompute time: ${elapsed.toFixed(2)}ms`);
+    } else {
+      console.log(JSON.stringify(result));
+    }
+    
+    // Show proof if recording
+    if (options['record-proof']) {
+      const proofs = julia.getAllProofRecords();
+      if (proofs.length > 0) {
+        console.error('\nProof Record:');
+        console.error(JSON.stringify(proofs[proofs.length - 1], null, 2));
+      }
+    }
+    
+    // Output to file if specified
+    if (options.output) {
+      writeFileSync(options.output, JSON.stringify(result, null, 2));
+      console.error(`Result written to ${options.output}`);
+    }
+    
+  } catch (error) {
+    console.error(`Error: ${error.message}`);
+    process.exit(1);
+  }
+}
+
+async function cmdList() {
+  const { JULIA_FUNCTIONS } = await import(protocolPath);
+  
+  console.log('Available Julia Functions:\n');
+  
+  const categories = {};
+  for (const [name, spec] of Object.entries(JULIA_FUNCTIONS)) {
+    const category = name.split('.')[0];
+    if (!categories[category]) {
+      categories[category] = [];
+    }
+    categories[category].push({ name, ...spec });
+  }
+  
+  for (const [category, funcs] of Object.entries(categories)) {
+    console.log(`${category.toUpperCase()}`);
+    console.log('─'.repeat(40));
+    
+    for (const func of funcs) {
+      const phiMarker = func.phiEnhanced ? ' (φ-enhanced)' : '';
+      console.log(`  ${func.name}${phiMarker}`);
+      console.log(`    ${func.description}`);
+      console.log(`    Input:  ${func.input.join(', ')}`);
+      console.log(`    Output: ${func.output}`);
+      console.log(`    Time:   ${func.complexity}`);
+      console.log();
+    }
+  }
+}
+
+async function cmdTypes() {
+  const { TYPE_ISOMORPHISMS } = await import(protocolPath);
+  
+  console.log('Type Isomorphism Map:\n');
+  console.log('Julia Type          │ JavaScript          │ Motoko              │ Candid');
+  console.log('────────────────────┼─────────────────────┼─────────────────────┼─────────────────────');
+  
+  for (const [name, iso] of Object.entries(TYPE_ISOMORPHISMS)) {
+    const julia = iso.julia.padEnd(18);
+    const js = iso.js.padEnd(19);
+    const motoko = iso.motoko.padEnd(19);
+    const candid = iso.candid;
+    
+    console.log(`${julia} │ ${js} │ ${motoko} │ ${candid}`);
+  }
+  
+  console.log('\nConversion Notes:');
+  console.log('  • Matrices: Julia uses column-major, JS/Motoko use row-major');
+  console.log('  • Complex: Julia has native Complex, JS/Motoko use records');
+  console.log('  • BigInt: Use BigInt in JS for Int64 to avoid precision loss');
+}
+
+async function cmdInfo(funcName) {
+  const { JULIA_FUNCTIONS } = await import(protocolPath);
+  
+  if (!funcName) {
+    console.error('Error: Function name required');
+    console.error('Usage: nova-julia info <function>');
+    process.exit(1);
+  }
+  
+  const spec = JULIA_FUNCTIONS[funcName];
+  if (!spec) {
+    console.error(`Error: Unknown function '${funcName}'`);
+    process.exit(1);
+  }
+  
+  console.log(`Function: ${funcName}`);
+  console.log('═'.repeat(50));
+  console.log();
+  console.log(`Description: ${spec.description}`);
+  console.log(`Julia:       ${spec.julia}`);
+  console.log(`Complexity:  ${spec.complexity}`);
+  console.log(`Stable:      ${spec.stable ? 'Yes' : 'No'}`);
+  
+  if (spec.phiEnhanced) {
+    console.log(`φ-Enhanced:  Yes (uses golden ratio)`);
+  }
+  
+  console.log();
+  console.log('Input Types:');
+  for (const input of spec.input) {
+    console.log(`  • ${input}`);
+  }
+  
+  console.log();
+  console.log(`Output Type: ${spec.output}`);
+  
+  console.log();
+  console.log('Usage Examples:');
+  console.log();
+  console.log('  JavaScript:');
+  console.log(`    const julia = getJuliaCompute()`);
+  console.log(`    await julia.initialize()`);
+  console.log(`    const result = await julia.${funcName.split('.').pop()}(input)`);
+  console.log();
+  console.log('  CLI:');
+  
+  if (funcName.startsWith('linalg')) {
+    console.log(`    nova-julia call ${funcName} --matrix '[[1,2],[3,4]]'`);
+  } else if (funcName.startsWith('stats') || funcName.startsWith('signal')) {
+    console.log(`    nova-julia call ${funcName} --data '[1,2,3,4,5]'`);
+  } else if (funcName.startsWith('phi') || funcName.startsWith('optim')) {
+    console.log(`    nova-julia call ${funcName} --x0 '[1,1]' --coefficients '[1,1]'`);
+  }
+}
+
+async function cmdValidate(typeName, value) {
+  const { TYPE_ISOMORPHISMS } = await import(protocolPath);
+  
+  if (!typeName || value === undefined) {
+    console.error('Error: Type name and value required');
+    console.error('Usage: nova-julia validate <type> <value>');
+    process.exit(1);
+  }
+  
+  const typeSpec = TYPE_ISOMORPHISMS[typeName];
+  if (!typeSpec) {
+    console.error(`Error: Unknown type '${typeName}'`);
+    console.error('Run "nova-julia types" to see available types');
+    process.exit(1);
+  }
+  
+  const parsed = parseValue(value);
+  
+  // Basic validation
+  let valid = true;
+  const issues = [];
+  
+  if (typeName === 'Matrix{Float64}') {
+    if (!Array.isArray(parsed)) {
+      valid = false;
+      issues.push('Value must be an array');
+    } else if (parsed.length === 0) {
+      valid = false;
+      issues.push('Matrix cannot be empty');
+    } else {
+      const cols = parsed[0]?.length;
+      for (let i = 0; i < parsed.length; i++) {
+        if (!Array.isArray(parsed[i])) {
+          valid = false;
+          issues.push(`Row ${i} is not an array`);
+        } else if (parsed[i].length !== cols) {
+          valid = false;
+          issues.push(`Row ${i} has inconsistent length`);
+        }
+      }
+    }
+  } else if (typeName.startsWith('Vector')) {
+    if (!Array.isArray(parsed)) {
+      valid = false;
+      issues.push('Value must be an array');
+    }
+  } else if (typeName === 'Float64') {
+    if (typeof parsed !== 'number') {
+      valid = false;
+      issues.push('Value must be a number');
+    }
+  }
+  
+  if (valid) {
+    console.log(`✓ Valid ${typeName}`);
+    console.log(`  JavaScript type: ${typeSpec.js}`);
+    console.log(`  Motoko type: ${typeSpec.motoko}`);
+  } else {
+    console.log(`✗ Invalid ${typeName}`);
+    for (const issue of issues) {
+      console.log(`  • ${issue}`);
+    }
+    process.exit(1);
+  }
+}
+
+function cmdHelp() {
+  console.log(`
+nova-julia — CLI for NOVA Julia-Motoko Bridge
+Version ${VERSION}
+
+USAGE:
+  nova-julia <command> [arguments] [options]
+
+COMMANDS:
+  call <function>     Call a Julia function through the bridge
+  list                List all available functions
+  types               Show type isomorphism mappings
+  validate <type>     Validate a value against a type
+  info <function>     Show detailed function information
+  help                Show this help message
+  version             Show version information
+
+CALL OPTIONS:
+  --matrix <data>     Matrix input (JSON or file path)
+  --data <data>       Vector/data input (JSON or file path)
+  --signal <data>     Signal input for FFT functions
+  --x0 <data>         Initial guess for optimization
+  --coefficients <d>  Coefficients for optimization
+  --format <fmt>      Output format: json (default), pretty
+  --output <file>     Write result to file
+  --record-proof      Record computation proof
+
+EXAMPLES:
+  # Compute eigenvalues
+  nova-julia call linalg.eigen --matrix '[[4,2],[2,3]]'
+
+  # Compute mean from file
+  nova-julia call stats.mean --data data.json
+
+  # Phi-enhanced gradient descent
+  nova-julia call phi.gradient_descent --x0 '[5,5]' --coefficients '[1,1]'
+
+  # Pretty output with proof
+  nova-julia call linalg.svd --matrix '[[1,2],[3,4],[5,6]]' --format pretty --record-proof
+
+  # Validate a matrix type
+  nova-julia validate 'Matrix{Float64}' '[[1,2],[3,4]]'
+
+POWERED BY:
+  NOVA (Networked Omniscient Verified Architecture)
+  φ = ${PHI}
+`);
+}
+
+function cmdVersion() {
+  console.log(`nova-julia version ${VERSION}`);
+  console.log(`NOVA Julia-Motoko Bridge`);
+  console.log(`φ = ${PHI}`);
+}
+
+// ─── Main ─────────────────────────────────────────────────────────────────────
+
+async function main() {
+  const args = process.argv.slice(2);
+  
+  if (args.length === 0) {
+    cmdHelp();
+    return;
+  }
+  
+  const parsed = parseArgs(args);
+  
+  switch (parsed.command) {
+    case 'call':
+      await cmdCall(parsed.function, parsed.options);
+      break;
+    case 'list':
+      await cmdList();
+      break;
+    case 'types':
+      await cmdTypes();
+      break;
+    case 'info':
+      await cmdInfo(parsed.function);
+      break;
+    case 'validate':
+      await cmdValidate(parsed.positional[0], parsed.positional[1]);
+      break;
+    case 'help':
+    case '--help':
+    case '-h':
+      cmdHelp();
+      break;
+    case 'version':
+    case '--version':
+    case '-v':
+      cmdVersion();
+      break;
+    default:
+      console.error(`Unknown command: ${parsed.command}`);
+      console.error('Run "nova-julia help" for usage');
+      process.exit(1);
+  }
+}
+
+main().catch(error => {
+  console.error(`Fatal error: ${error.message}`);
+  process.exit(1);
+});

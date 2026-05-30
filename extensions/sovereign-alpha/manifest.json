@@ -1,0 +1,56 @@
+{
+  "manifest_version": 3,
+  "name": "Sovereign Alpha",
+  "version": "1.0.0",
+  "description": "Four sovereign tools unified \u2014 Workbook AI, Page Intelligence, Secure Vault, Command Bar. One install, one sidepanel.",
+  "permissions": [
+    "storage",
+    "sidePanel",
+    "activeTab",
+    "contextMenus",
+    "alarms",
+    "tabs",
+    "scripting",
+    "bookmarks"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ]
+    }
+  ],
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+K"
+      },
+      "description": "Open Sovereign Alpha"
+    }
+  },
+  "action": {
+    "default_title": "Sovereign Alpha (Ctrl+Shift+K)",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "minimum_chrome_version": "114",
+  "devtools_page": "devtools.html"
+}

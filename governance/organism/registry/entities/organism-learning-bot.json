@@ -1,0 +1,19 @@
+{
+  "id": "atlas://bot/organism-learning-bot",
+  "name": "organism-learning-bot",
+  "class": "Bot",
+  "division": "Learn & Evolve",
+  "divisionNum": "VI",
+  "emoji": "🎓",
+  "domain": "Protocol evolution & Hebbian training",
+  "triggers": ["push:protocols/", "push:test/", "push:sdk/agents/", "schedule:nightly"],
+  "capabilities": ["gather_signals", "train_synapses", "reward_model", "weight_evolve"],
+  "languages": ["atlas://language/ocl", "atlas://language/ril"],
+  "governance_pipeline": "pipeline://governance/bot_cycle",
+  "ocl_ref": "atlas://organism/bot-fleet",
+  "protocol_refs": ["PROTO-203:HebbianLearningProtocol", "PROTO-217:RewardSignalProtocol", "PROTO-221:MetaLearningProtocol"],
+  "script": "scripts/learning-pipeline.js",
+  "workflow": ".github/workflows/organism-learning-bot.yml",
+  "report": "docs/learning-report.md",
+  "microbots": ["signal-gatherer", "synapse-trainer", "weight-evolver"]
+}

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signal Relay Adapter</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "Segoe UI", -apple-system, sans-serif;
+      background: #0d1117; color: #e0e0e0;
+      min-height: 100vh; display: flex; flex-direction: column;
+    }
+    .header {
+      background: linear-gradient(135deg, #e94560, #c41c3c);
+      padding: 16px 20px; display: flex; align-items: center; gap: 12px;
+    }
+    .header-icon {
+      width: 36px; height: 36px; background: rgba(255,255,255,0.15);
+      border-radius: 8px; display: flex; align-items: center;
+      justify-content: center; font-size: 18px;
+    }
+    .header h1 { font-size: 16px; font-weight: 700; }
+    .header p { font-size: 11px; opacity: 0.85; margin-top: 2px; }
+    .content { flex: 1; padding: 16px; overflow-y: auto; }
+    .stats-row { display: flex; gap: 8px; margin-bottom: 16px; }
+    .stat-card {
+      flex: 1; background: #1a0a10; border: 1px solid #e9456033;
+      border-radius: 8px; padding: 10px; text-align: center;
+    }
+    .stat-card .val { font-size: 22px; font-weight: 700; color: #e94560; font-family: 'Courier New', monospace; }
+    .stat-card .lbl { font-size: 10px; color: #555; margin-top: 2px; }
+    .pulse-bar {
+      background: #1a0a10; border: 1px solid #e9456033; border-radius: 8px;
+      padding: 10px 14px; margin-bottom: 16px; display: flex;
+      align-items: center; gap: 10px;
+    }
+    .pulse-dot {
+      width: 10px; height: 10px; border-radius: 50%; background: #22c55e;
+      box-shadow: 0 0 8px #22c55e; flex-shrink: 0;
+      animation: pulse 0.873s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    .pulse-label { font-size: 12px; color: #aaa; }
+    .btn-row { display: flex; gap: 8px; margin-bottom: 8px; }
+    .btn {
+      flex: 1; padding: 10px 0; border: none; border-radius: 8px;
+      color: #fff; font-weight: 600; font-size: 13px;
+      cursor: pointer; transition: opacity 0.15s;
+    }
+    .btn:hover { opacity: 0.85; }
+    .btn-primary { background: #e94560; }
+    .btn-secondary { background: #7c3aed; }
+    .btn-tertiary { background: #0ea5e9; }
+    .btn-quaternary { background: #10b981; }
+    .log-area {
+      margin-top: 16px; padding: 10px; background: #1a0a10;
+      border: 1px solid #e9456022; border-radius: 8px; min-height: 60px;
+      max-height: 280px; overflow-y: auto; font-family: 'Courier New', monospace;
+      font-size: 11px; line-height: 1.6; white-space: pre-wrap;
+      word-break: break-word; display: none;
+    }
+    .log-area.active { display: block; }
+    .channel-list { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; }
+    .channel-item {
+      display: flex; align-items: center; justify-content: space-between;
+      background: #1a0a10; border: 1px solid #e9456022; border-radius: 6px; padding: 6px 10px;
+    }
+    .channel-name { font-size: 12px; color: #e0e0e0; }
+    .channel-count { font-size: 11px; color: #e94560; font-family: 'Courier New', monospace; }
+    .status-bar {
+      padding: 8px 16px; background: #161b22; border-top: 1px solid #222;
+      font-size: 10px; color: #666; display: flex; justify-content: space-between;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-icon">⚡</div>
+    <div>
+      <h1>Signal Relay Adapter</h1>
+      <p>Synapse binding &amp; phi-pulse relay — EXT-040</p>
+    </div>
+  </div>
+  <div class="content">
+    <div class="pulse-bar">
+      <div class="pulse-dot"></div>
+      <div class="pulse-label">φ-Pulse relay active — <span id="phiPhaseDisplay">phase 0°</span></div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card"><div class="val" id="statSignals">0</div><div class="lbl">Captured</div></div>
+      <div class="stat-card"><div class="val" id="statRelays">0</div><div class="lbl">Relayed</div></div>
+      <div class="stat-card"><div class="val" id="statPending">0</div><div class="lbl">Pending</div></div>
+      <div class="stat-card"><div class="val" id="statPulse">0</div><div class="lbl">Pulses</div></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" id="relayBtn">🔄 Relay Now</button>
+      <button class="btn btn-secondary" id="pendingBtn">📥 Pending</button>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-tertiary" id="channelsBtn">📡 Channels</button>
+      <button class="btn btn-quaternary" id="logBtn">📋 Relay Log</button>
+    </div>
+
+    <div class="log-area" id="logArea"></div>
+    <div class="channel-list" id="channelList" style="display:none"></div>
+  </div>
+  <div class="status-bar">
+    <span id="statusText">φ-Pulse relay active — Sovereign Ring</span>
+    <span>Signal Relay Adapter &bull; EXT-040</span>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+      var relayBtn = document.getElementById('relayBtn');
+      var pendingBtn = document.getElementById('pendingBtn');
+      var channelsBtn = document.getElementById('channelsBtn');
+      var logBtn = document.getElementById('logBtn');
+      var logArea = document.getElementById('logArea');
+      var channelList = document.getElementById('channelList');
+      var statusText = document.getElementById('statusText');
+      var phiPhaseDisplay = document.getElementById('phiPhaseDisplay');
+      var statSignals = document.getElementById('statSignals');
+      var statRelays = document.getElementById('statRelays');
+      var statPending = document.getElementById('statPending');
+      var statPulse = document.getElementById('statPulse');
+
+      function showLog(data) {
+        logArea.className = 'log-area active';
+        logArea.textContent = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+        channelList.style.display = 'none';
+      }
+
+      function refreshStats() {
+        chrome.runtime.sendMessage({ action: 'getState' }, function (r) {
+          if (!r) return;
+          statSignals.textContent = r.totalSignals || 0;
+          statRelays.textContent = r.totalRelays || 0;
+          statPending.textContent = r.pendingSignals || 0;
+          statPulse.textContent = r.pulseCount || 0;
+          phiPhaseDisplay.textContent = 'phase ' + (r.phiPhase || 0) + '°';
+          statusText.textContent = 'HB #' + r.heartbeatCount + ' — Sovereign Ring';
+        });
+      }
+
+      relayBtn.addEventListener('click', function () {
+        chrome.runtime.sendMessage({ action: 'relay' }, function (r) {
+          if (chrome.runtime.lastError) { showLog('Error: ' + chrome.runtime.lastError.message); return; }
+          showLog(r);
+          refreshStats();
+        });
+      });
+
+      pendingBtn.addEventListener('click', function () {
+        chrome.runtime.sendMessage({ action: 'getPending', n: 20 }, function (r) {
+          if (chrome.runtime.lastError) { showLog('Error: ' + chrome.runtime.lastError.message); return; }
+          showLog(r);
+        });
+      });
+
+      channelsBtn.addEventListener('click', function () {
+        var visible = channelList.style.display !== 'none';
+        if (visible) { channelList.style.display = 'none'; logArea.className = 'log-area'; return; }
+        chrome.runtime.sendMessage({ action: 'getChannelStats' }, function (r) {
+          if (chrome.runtime.lastError) { showLog('Error: ' + chrome.runtime.lastError.message); return; }
+          channelList.innerHTML = '';
+          logArea.className = 'log-area';
+          if (!Array.isArray(r) || r.length === 0) {
+            channelList.innerHTML = '<div style="color:#666;font-size:12px">No channels.</div>';
+          } else {
+            r.forEach(function (ch) {
+              var el = document.createElement('div');
+              el.className = 'channel-item';
+              el.innerHTML = '<span class="channel-name">' + ch.name + '</span>' +
+                '<span class="channel-count">' + ch.signalCount + ' signals</span>';
+              channelList.appendChild(el);
+            });
+          }
+          channelList.style.display = 'flex';
+        });
+      });
+
+      logBtn.addEventListener('click', function () {
+        chrome.runtime.sendMessage({ action: 'getRelayLog', n: 15 }, function (r) {
+          if (chrome.runtime.lastError) { showLog('Error: ' + chrome.runtime.lastError.message); return; }
+          showLog(r);
+        });
+      });
+
+      refreshStats();
+      setInterval(refreshStats, 873);
+    })();
+  </script>
+</body>
+</html>

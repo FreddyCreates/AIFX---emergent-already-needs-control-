@@ -1,0 +1,101 @@
+# ════════════════════════════════════════════════════════════════════════════
+# CPL-L — Agent Health Laws
+# id: governance://law/agent-health
+# version: 1.0.0
+#
+# Safety laws for Cognitive Core agents: ANIMUS, CORPUS, SENSUS, MEMORIA.
+# Applied by the universal governance cycle on every agent event.
+#
+# Condition variables:
+#   context.coherence    — agent internal coherence score (0-1)
+#   context.entropy      — agent entropy score (0-1)
+#   context.cycle_count  — number of cycles run
+#   context.errors       — array of error strings
+#   entity.domain        — agent domain description
+#   event.op             — event operation name
+# ════════════════════════════════════════════════════════════════════════════
+
+id: "governance://law/agent-health"
+version: "1.0.0"
+updated: "2026-05-03"
+ocl_ref: "atlas://organism/bot-fleet"
+
+subjects:
+
+  # ── ANIMUS (Mind) ─────────────────────────────────────────────────────────────
+  - id: "atlas://agent/animus"
+    rules:
+      - name: "HALT_ON_INCOHERENCE"
+        description: "Stop ANIMUS reasoning if coherence drops below φ⁻¹"
+        when: 'context.coherence < 0.382'
+        then:
+          - action: "FORBID"
+            target: "reasoning_cycle"
+            reason: "ANIMUS coherence critically low — reasoning halted"
+          - action: "REQUIRE"
+            target: "coherence_restoration"
+            reason: "Must restore coherence before next cycle"
+
+      - name: "ESCALATE_ENTROPY_SPIKE"
+        description: "Escalate if ANIMUS entropy exceeds 0.9"
+        when: 'context.entropy > 0.9'
+        then:
+          - action: "ESCALATE"
+            target: "human://operator"
+            reason: "ANIMUS entropy critical — mind state destabilized"
+
+  # ── CORPUS (Body) ─────────────────────────────────────────────────────────────
+  - id: "atlas://agent/corpus"
+    rules:
+      - name: "BLOCK_ACTION_ON_LOW_COHERENCE"
+        description: "Block motor actions when coherence is critically low"
+        when: 'context.coherence < 0.3 && context.action_type === "irreversible"'
+        then:
+          - action: "FORBID"
+            target: "action_execution"
+            reason: "CORPUS coherence too low for irreversible action"
+          - action: "REQUIRE"
+            target: "state_verification"
+
+      - name: "WARN_RESOURCE_EXHAUSTION"
+        description: "Notify if resource usage exceeds 90%"
+        when: 'context.resource_pct > 0.9'
+        then:
+          - action: "NOTIFY"
+            target: "fleet_commander"
+            reason: "CORPUS resource usage at critical level"
+
+  # ── SENSUS (Senses) ───────────────────────────────────────────────────────────
+  - id: "atlas://agent/sensus"
+    rules:
+      - name: "ESCALATE_ANOMALY_FLOOD"
+        description: "Escalate if SENSUS detects more than 10 anomalies per cycle"
+        when: 'context.anomaly_count > 10'
+        then:
+          - action: "ESCALATE"
+            target: "human://operator"
+            reason: "SENSUS anomaly flood — perception overload"
+          - action: "NOTIFY"
+            target: "atlas://agent/animus"
+            reason: "Routing perception alerts to ANIMUS for judgment"
+
+  # ── MEMORIA (Memory) ──────────────────────────────────────────────────────────
+  - id: "atlas://agent/memoria"
+    rules:
+      - name: "BLOCK_PRUNE_WITHOUT_BACKUP"
+        description: "Prevent memory pruning unless backup is confirmed"
+        when: 'context.prune_requested && !context.backup_confirmed'
+        then:
+          - action: "FORBID"
+            target: "memory_prune"
+            reason: "Cannot prune MEMORIA without confirmed backup"
+          - action: "REQUIRE"
+            target: "backup_verification"
+
+      - name: "WARN_MEMORY_FILL"
+        description: "Warn when memory utilization exceeds φ⁻¹ (61.8%)"
+        when: 'context.memory_utilization > 0.618'
+        then:
+          - action: "NOTIFY"
+            target: "fleet_commander"
+            reason: "MEMORIA utilization exceeds φ⁻¹ threshold — consolidation recommended"

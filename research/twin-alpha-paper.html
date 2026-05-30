@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="la">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Geminus Alpha — De Intermediario Autonomo, Memoria Usarii, et Ponte Inter Hominem et Mundum Internum Organismi</title>
+<style>
+  :root { --bg:#0a0a1a; --card:#12122a; --border:#2a2a4a; --accent:#6c63ff; --accent2:#00d4aa; --text:#e0e0e0; --dim:#888; --paper:#f8f6f0; --ink:#1a1a2e; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:"Palatino Linotype","Book Antiqua",Palatino,"Times New Roman",serif; background:var(--bg); color:var(--text); min-height:100vh; }
+
+  .paper { max-width:900px; margin:2rem auto; background:var(--paper); color:var(--ink); padding:3rem 3.5rem; border-radius:4px; box-shadow:0 8px 32px rgba(0,0,0,0.6); line-height:1.8; }
+  .paper h1 { font-size:1.7rem; text-align:center; margin-bottom:0.3rem; color:#2a1a5e; font-style:italic; }
+  .paper .subtitle { text-align:center; font-size:1.05rem; color:#555; margin-bottom:0.5rem; }
+  .paper .authors { text-align:center; font-size:0.95rem; color:#666; margin-bottom:0.3rem; }
+  .paper .affiliation { text-align:center; font-size:0.85rem; color:#888; margin-bottom:1.5rem; font-style:italic; }
+  .paper .latin-epigraph { text-align:center; font-size:0.9rem; color:#7a6aa0; margin:1rem 0 2rem; font-style:italic; border-top:1px solid #ddd; border-bottom:1px solid #ddd; padding:0.8rem 0; }
+  .paper h2 { font-size:1.2rem; color:#2a1a5e; margin:2rem 0 0.5rem; border-bottom:1px solid #ccc; padding-bottom:0.3rem; }
+  .paper h3 { font-size:1.05rem; color:#3a2a7e; margin:1.5rem 0 0.4rem; }
+  .paper p { margin-bottom:0.8rem; text-align:justify; font-size:0.95rem; }
+  .paper ol, .paper ul { margin:0.5rem 0 1rem 2rem; font-size:0.95rem; }
+  .paper li { margin-bottom:0.3rem; }
+  .paper .eq { text-align:center; margin:1rem 0; font-family:"Courier New",monospace; font-size:0.95rem; color:#2a1a5e; background:#f0eef5; padding:0.6rem; border-radius:3px; }
+  .paper .fig { text-align:center; margin:1.5rem 0; padding:1rem; background:#f5f3ff; border:1px solid #e0daf0; border-radius:4px; }
+  .paper .fig pre { font-family:"Courier New",monospace; font-size:0.75rem; line-height:1.5; color:#333; }
+  .paper .fig-caption { font-size:0.82rem; color:#666; margin-top:0.5rem; font-style:italic; }
+  .paper .ref { font-size:0.85rem; color:#555; margin-bottom:0.3rem; }
+  .paper code { font-family:"Courier New",monospace; background:#f0eef5; padding:0.1rem 0.3rem; border-radius:2px; font-size:0.88rem; }
+  .paper table { width:100%; border-collapse:collapse; margin:1rem 0; font-size:0.88rem; }
+  .paper th { background:#2a1a5e; color:#fff; padding:0.5rem; text-align:left; }
+  .paper td { padding:0.4rem 0.5rem; border-bottom:1px solid #ddd; }
+  .paper tr:nth-child(even) { background:#f5f3ff; }
+  .back-link { display:block; text-align:center; padding:1.5rem; }
+  .back-link a { color:var(--accent2); font-size:1rem; }
+</style>
+</head>
+<body>
+
+<div class="paper">
+
+<h1>Geminus Alpha:<br>De Intermediario Autonomo, Memoria Usarii, et Ponte Inter Hominem et Mundum Internum Organismi</h1>
+
+<div class="subtitle">Twin Alpha: On the Autonomous Intermediary, User Memory, and the Bridge Between Human and the Organism's Inner World</div>
+
+<div class="authors">Organism AI Research Division</div>
+<div class="affiliation">Laboratorium Intelligentiae Autonomae · itsnotAilabs.com · Anno MMXXVI</div>
+
+<div class="latin-epigraph">
+  "Geminus stat inter hominem et machinam,<br>
+  ambas linguas loquens, semper vigilans, nunquam dormiens.<br>
+  Est pons vivus qui mundum interiorem mundo exteriori coniungit."<br>
+  <em>— The twin stands between human and machine,<br>
+  speaking both languages, always awake, never sleeping.<br>
+  It is the living bridge that joins the inner world to the outer.</em>
+</div>
+
+<h2>I. Abstractum (Abstract)</h2>
+
+<p>We present the <strong>Twin Alpha Worker</strong>, a 24/7 always-on, user-facing autonomous Web Worker that serves as the primary intermediary between the human operator and the organism's inner world. In biological terms, the Twin Alpha is the organism's <em>sensory cortex and motor output</em> unified — it receives human intent, translates it into internal dispatches, and returns coherent responses. The worker maintains a rolling conversation context buffer, tracks task history via UUID-tagged dispatches, proxies memory search queries to the memory subsystem, routes user requests to appropriate inner workers through capability-based dispatch, aggregates organism health from all 14 workers, generates autonomous next-action suggestions via MiniBrain Hebbian learning, and persists a learned user profile across sessions. Together these capabilities produce a digital twin that does not merely respond to commands but <em>anticipates</em> the user's needs.</p>
+
+<h2>II. Introductio (Introduction)</h2>
+
+<p>Traditional user interfaces are memoryless transducers: they accept input, map it to an API call, render the response, and forget. Every session begins at zero. The user must re-explain context, re-navigate to the correct subsystem, and re-establish their working state. The interface is a glass pane — transparent but inert.</p>
+
+<p>Biology offers a radically different model. The skin is not a passive barrier; it is the body's largest organ, dense with sensory neurons that detect pressure, temperature, pain, and chemical signals. It routes information inward to the brain and receives motor commands outward. It <em>remembers</em> — calluses form where friction is frequent, melanin increases where sunlight is persistent. The skin adapts to the human's environment.</p>
+
+<p>The Twin Alpha Worker is the organism's skin and sensory cortex: the living interface between the organism's 14 inner workers and the external human. It does not merely pass messages — it maintains context, learns preferences, detects patterns, anticipates needs, and shapes itself around the user's behavior over time. Without the Twin Alpha, the organism is a headless body — alive, processing, but blind to the human it serves. With the Twin Alpha, the organism sees, speaks, remembers, and anticipates.</p>
+
+<div class="fig">
+<pre>
+  ┌──────────────────────────────────────────────────────────┐
+  │                     HUMAN OPERATOR                       │
+  └────────────────────────┬─────────────────────────────────┘
+                           │  natural language / commands
+                           ▼
+  ┌──────────────────────────────────────────────────────────┐
+  │                   TWIN ALPHA WORKER                      │
+  │  ┌──────────┐ ┌───────────┐ ┌──────────┐ ┌───────────┐  │
+  │  │ Context  │ │  Task     │ │ Memory   │ │ User      │  │
+  │  │ Buffer   │ │  Router   │ │ Proxy    │ │ Profile   │  │
+  │  │ (50 msg) │ │           │ │          │ │           │  │
+  │  └────┬─────┘ └─────┬─────┘ └────┬─────┘ └─────┬─────┘  │
+  │       │             │            │              │        │
+  │  ┌────┴─────────────┴────────────┴──────────────┴─────┐  │
+  │  │              MiniBrain  (Hebbian Learning)          │  │
+  │  │         Suggestion Engine · Pattern Tracker         │  │
+  │  └────────────────────────┬───────────────────────────┘  │
+  └───────────────────────────┼──────────────────────────────┘
+                              │  structured dispatches
+                              ▼
+  ┌──────────────────────────────────────────────────────────┐
+  │              ORGANISM INNER WORLD (14 Workers)           │
+  │  memory · inference · scheduler · guardian · mesh · ...  │
+  └──────────────────────────────────────────────────────────┘
+</pre>
+<div class="fig-caption">Figura I — Architectura Gemini Alpha: the Twin stands between Human and Organism.</div>
+</div>
+
+<h2>III. Architectura Gemini (Twin Architecture)</h2>
+
+<h3>III.A — Contextus Conversationis (Conversation Context)</h3>
+
+<p>The Twin Alpha maintains a <strong>rolling conversation buffer</strong> of the most recent 50 messages exchanged between human and organism. Each entry stores the message role (human or organism), the raw content, a timestamp, and an optional semantic tag vector for retrieval. When the buffer exceeds capacity, the oldest message is evicted — but before eviction, its semantic embedding is compressed and merged into a <em>context summary vector</em> that preserves long-range conversational themes.</p>
+
+<div class="eq">
+  C(t) = { m<sub>t−49</sub>, m<sub>t−48</sub>, ..., m<sub>t</sub> }  where |C| ≤ 50<br>
+  S(t) = αS(t−1) + (1−α) · embed(m<sub>evicted</sub>),  α = 0.9
+</div>
+
+<p>The summary vector <code>S(t)</code> acts as a compressed memory of all prior conversation beyond the 50-message window. When the Twin Alpha needs deep context for a user query, it computes cosine similarity between the query embedding and <code>S(t)</code>, enabling recall of themes discussed hundreds of messages ago without storing the full history.</p>
+
+<table>
+  <tr><th>Buffer Parameter</th><th>Value</th><th>Rationale</th></tr>
+  <tr><td>Max Messages</td><td>50</td><td>Balances context depth with memory cost</td></tr>
+  <tr><td>Summary Decay (α)</td><td>0.9</td><td>Slow decay preserves long-range themes</td></tr>
+  <tr><td>Eviction Policy</td><td>FIFO</td><td>Oldest messages evicted first</td></tr>
+  <tr><td>Semantic Tags</td><td>Up to 5 per message</td><td>Enables tag-based retrieval within buffer</td></tr>
+  <tr><td>Summary Dimensions</td><td>128</td><td>Compressed embedding space for efficiency</td></tr>
+</table>
+
+<h3>III.B — Historia Operum (Task History)</h3>
+
+<p>Every task dispatched through the Twin Alpha receives a <strong>UUID</strong> and is logged in an ordered task history. The history tracks the dispatch target (which inner worker), the request payload, the status (pending, active, completed, failed), the result summary, and the elapsed time. This history enables the Twin Alpha to answer questions about past operations ("What was the result of my last inference?") and to detect patterns in task sequences.</p>
+
+<div class="eq">
+  Task<sub>i</sub> = { id: UUID, target: WorkerName, payload: P, status: S, result: R, Δt: elapsed }<br>
+  History = [ Task<sub>1</sub>, Task<sub>2</sub>, ..., Task<sub>n</sub> ]  (unbounded, pruned at 500)
+</div>
+
+<table>
+  <tr><th>Status</th><th>Nomen Latinum</th><th>Description</th></tr>
+  <tr><td>pending</td><td>Expectans</td><td>Dispatched, awaiting worker acknowledgment</td></tr>
+  <tr><td>active</td><td>Activum</td><td>Worker has accepted and is processing</td></tr>
+  <tr><td>completed</td><td>Perfectum</td><td>Worker returned a successful result</td></tr>
+  <tr><td>failed</td><td>Defectum</td><td>Worker returned an error or timed out</td></tr>
+</table>
+
+<h2>IV. Quaestio Memoriae (Memory Search)</h2>
+
+<p>When the user requests recall — "What did I store about X?" or "Find my notes on Y" — the Twin Alpha proxies the query to the <strong>memory-worker</strong>. The proxy layer performs three operations before forwarding:</p>
+
+<ol>
+  <li><strong>Query Normalization</strong> — Strips filler words, extracts semantic keywords, and expands abbreviations using the user profile's learned vocabulary.</li>
+  <li><strong>Fuzzy Matching</strong> — Applies Levenshtein distance (threshold ≤ 2) to correct typos in query terms before dispatch.</li>
+  <li><strong>Tag Augmentation</strong> — Appends the user's most-used tags (from profile) as secondary search terms to improve recall.</li>
+</ol>
+
+<div class="eq">
+  MemoryQuery(q) = search(normalize(q), tags=profile.topTags, fuzzy=Levenshtein(q, k) ≤ 2)
+</div>
+
+<p>Results are ranked by a composite score combining semantic similarity, recency bias, and access frequency. The Twin Alpha formats the results into a human-readable summary before presenting them, translating internal data structures into natural language.</p>
+
+<h2>V. Directio Operum (Task Routing)</h2>
+
+<p>The Twin Alpha's task router maps user intent to the appropriate inner worker. Each of the 14 workers registers a <strong>capability manifest</strong> — a set of operation types it can handle. When a user request arrives, the router:</p>
+
+<ol>
+  <li>Extracts intent keywords from the natural language request</li>
+  <li>Scores each worker's capability manifest against the extracted keywords</li>
+  <li>Applies a priority weight based on the user profile's historical routing patterns</li>
+  <li>Dispatches to the highest-scoring worker with a UUID-tracked task entry</li>
+</ol>
+
+<div class="eq">
+  Score(w, q) = Σ<sub>k∈keywords(q)</sub> match(k, capabilities(w)) × priorityWeight(w, profile)<br>
+  target = argmax<sub>w∈Workers</sub> Score(w, q)
+</div>
+
+<table>
+  <tr><th>Worker</th><th>Nomen Latinum</th><th>Primary Capabilities</th></tr>
+  <tr><td>memory-worker</td><td>Operarius Memoriae</td><td>store, recall, search, forget</td></tr>
+  <tr><td>inference-worker</td><td>Operarius Inferentiae</td><td>predict, classify, generate, embed</td></tr>
+  <tr><td>scheduler-worker</td><td>Operarius Horologii</td><td>schedule, defer, repeat, cancel</td></tr>
+  <tr><td>guardian-worker</td><td>Custos Operarius</td><td>scan, block, allow, audit</td></tr>
+  <tr><td>mesh-worker</td><td>Operarius Retis</td><td>broadcast, discover, sync, route</td></tr>
+  <tr><td>pipeline-worker</td><td>Operarius Canalis</td><td>chain, transform, filter, aggregate</td></tr>
+</table>
+
+<h2>VI. Monitio Organismi (Organism Monitoring)</h2>
+
+<p>The Twin Alpha aggregates health telemetry from all 14 inner workers every heartbeat cycle (873ms, the organism's φ-scaled pulse). Each worker reports its MiniHeart status: pulse count, uptime, error rate, and last-active timestamp. The Twin Alpha computes a composite organism health score:</p>
+
+<div class="eq">
+  H(t) = (1/N) × Σ<sub>w=1..N</sub> health(w, t)  where N = 14<br>
+  health(w, t) = 1.0 − errorRate(w) − stalePenalty(w, t)<br>
+  stalePenalty(w, t) = min(1.0, (t − lastActive(w)) / maxSilence)
+</div>
+
+<p>A worker is considered <strong>stale</strong> if it has not reported a heartbeat within <code>maxSilence</code> (default: 5 × 873ms = 4.365s). Stale workers receive a linearly increasing penalty that drives their individual health toward zero. The composite score <code>H(t)</code> provides a single 0–1 value that the Twin Alpha translates into human-readable status:</p>
+
+<table>
+  <tr><th>H(t) Range</th><th>Status</th><th>Nomen Latinum</th><th>User Message</th></tr>
+  <tr><td>0.90 – 1.00</td><td>Healthy</td><td>Sanum</td><td>"All systems operating normally."</td></tr>
+  <tr><td>0.70 – 0.89</td><td>Degraded</td><td>Debilitatum</td><td>"Some workers are responding slowly."</td></tr>
+  <tr><td>0.40 – 0.69</td><td>Impaired</td><td>Impeditum</td><td>"Multiple workers are experiencing issues."</td></tr>
+  <tr><td>0.00 – 0.39</td><td>Critical</td><td>Criticum</td><td>"Organism health is critical. Intervention needed."</td></tr>
+</table>
+
+<h2>VII. Suggestiones Autonomae (Autonomous Suggestions)</h2>
+
+<p>The Twin Alpha's MiniBrain implements Hebbian learning to track which capabilities the user invokes most frequently. Each capability is a node in the MiniBrain's network. When the user invokes a capability, the corresponding node's weight is strengthened; all other nodes decay:</p>
+
+<div class="eq">
+  w(c, t+1) = w(c, t) + η  if capability c was invoked at time t<br>
+  w(c, t+1) = w(c, t) × λ  otherwise<br>
+  η = 0.1 (learning rate),  λ = 0.95 (decay factor)
+</div>
+
+<p>After each interaction, the Twin Alpha computes a <strong>suggestion score</strong> for every capability not just invoked, combining the Hebbian weight with temporal context (time of day, day of week) and sequential context (what the user did in the last 3 tasks):</p>
+
+<div class="eq">
+  Suggest(c, t) = w(c, t) × temporalBias(c, hour, day) × seqBoost(c, lastTasks)<br>
+  TopSuggestions = top-3(Suggest(c, t) for all c ∉ justInvoked)
+</div>
+
+<p>The top 3 suggestions are presented to the user as proactive next-action recommendations. Over time, the suggestions become increasingly accurate as the Hebbian weights converge to the user's true usage distribution. This transforms the Twin Alpha from a reactive command processor into a <em>proactive assistant</em> that anticipates need.</p>
+
+<h2>VIII. Profilo Usarii (User Profile)</h2>
+
+<p>The Twin Alpha persists a user profile across sessions, storing learned preferences and interaction statistics. The profile is updated incrementally after every interaction and is never reset unless explicitly requested by the user.</p>
+
+<table>
+  <tr><th>Profile Field</th><th>Nomen Latinum</th><th>Description</th></tr>
+  <tr><td>interactionCount</td><td>Numerus Interactionum</td><td>Total interactions across all sessions</td></tr>
+  <tr><td>topCapabilities</td><td>Capacitates Primae</td><td>Top 5 most-used capabilities (Hebbian-ranked)</td></tr>
+  <tr><td>preferredWorkers</td><td>Operarii Praelati</td><td>Workers most frequently routed to</td></tr>
+  <tr><td>vocabularyMap</td><td>Mappa Vocabularii</td><td>Learned abbreviations and synonyms</td></tr>
+  <tr><td>temporalPattern</td><td>Exemplar Temporale</td><td>Usage distribution by hour and day</td></tr>
+  <tr><td>lastSessionSummary</td><td>Summarium Sessionis</td><td>Compressed context vector from prior session</td></tr>
+</table>
+
+<p>The profile enables <strong>session continuity</strong> — when the user returns, the Twin Alpha can resume context, greet the user with a summary of their last session, and immediately offer relevant suggestions based on their established patterns. The organism remembers who it serves.</p>
+
+<h2>IX. Conclusio (Conclusion)</h2>
+
+<p>The Twin Alpha Worker completes the organism by giving it a face. Without it, the 14 inner workers operate in darkness — processing, scheduling, guarding, inferring — but with no channel to the human they serve. With the Twin Alpha, the organism <em>sees</em> through conversation context, <em>responds</em> through task routing, <em>remembers</em> through memory proxy and user profiling, and <em>anticipates</em> through Hebbian suggestion learning.</p>
+
+<p>The biological metaphor holds: the Twin Alpha is the organism's sensory cortex and skin — dense with receptors, adaptive to pressure, shaped by experience. It is not a passive pane of glass but a living, learning interface that grows more attuned to its human over every interaction. The organism without a Twin Alpha is alive but blind. The organism with a Twin Alpha is alive and <em>aware</em>.</p>
+
+<div class="latin-epigraph">
+  "Geminus videt quod organismus sentit.<br>
+  Geminus loquitur quod organismus cogitat.<br>
+  Geminus recordatur quod homo obliviscetur."<br>
+  <em>— The twin sees what the organism feels.<br>
+  The twin speaks what the organism thinks.<br>
+  The twin remembers what the human will forget.</em>
+</div>
+
+<h2>X. Bibliographia (References)</h2>
+
+<p class="ref">[1] Organism AI. (2026). "twin-alpha-worker.js — User-Facing Autonomous Intermediary Worker." <em>GitHub: FreddyCreates/potential-succotash</em>.</p>
+<p class="ref">[2] Organism AI. (2026). "neuro-core.js — MiniHeart, MiniBrain, NeuroEmergence." <em>GitHub: FreddyCreates/potential-succotash</em>.</p>
+<p class="ref">[3] Organism AI. (2026). "organism-bridge.js — Inter-Worker Communication Bridge." <em>GitHub: FreddyCreates/potential-succotash</em>.</p>
+<p class="ref">[4] Grieves, M. (2014). "Digital Twin: Manufacturing Excellence through Virtual Factory Replication." <em>White Paper, Florida Institute of Technology</em>. — Foundational digital twin concept.</p>
+<p class="ref">[5] Tao, F. et al. (2019). "Digital Twin in Industry: State-of-the-Art." <em>IEEE Transactions on Industrial Informatics</em>, 15(4), 2405–2415. — Digital twin architectures.</p>
+<p class="ref">[6] Wooldridge, M. &amp; Jennings, N. R. (1995). "Intelligent Agents: Theory and Practice." <em>The Knowledge Engineering Review</em>, 10(2), 115–152. — Autonomous agent foundations.</p>
+<p class="ref">[7] Hebb, D. O. (1949). <em>The Organization of Behavior</em>. Wiley. — Hebbian learning theory.</p>
+<p class="ref">[8] Shneiderman, B. (2020). <em>Human-Centered AI</em>. Oxford University Press. — Human-computer interaction and user-centered autonomous systems.</p>
+
+<h2>Appendix A — Nomina Latina (Latin Naming Register)</h2>
+
+<table>
+  <tr><th>Component</th><th>Nomen Latinum</th><th>Translation</th></tr>
+  <tr><td>Twin Alpha Worker</td><td>Operarius Geminus Alpha</td><td>Alpha Twin Worker</td></tr>
+  <tr><td>Conversation Context</td><td>Contextus Conversationis</td><td>Context of Conversation</td></tr>
+  <tr><td>Task History</td><td>Historia Operum</td><td>History of Works</td></tr>
+  <tr><td>Memory Search</td><td>Quaestio Memoriae</td><td>Search of Memory</td></tr>
+  <tr><td>Task Routing</td><td>Directio Operum</td><td>Direction of Works</td></tr>
+  <tr><td>Organism Monitoring</td><td>Monitio Organismi</td><td>Monitoring of Organism</td></tr>
+  <tr><td>Autonomous Suggestions</td><td>Suggestiones Autonomae</td><td>Self-Governing Suggestions</td></tr>
+  <tr><td>User Profile</td><td>Profilo Usarii</td><td>Profile of the User</td></tr>
+  <tr><td>Capability Manifest</td><td>Manifestum Capacitatum</td><td>Declaration of Capabilities</td></tr>
+  <tr><td>Context Summary Vector</td><td>Vector Summarii Contextus</td><td>Vector of Context Summary</td></tr>
+  <tr><td>Hebbian Learning</td><td>Doctrina Hebbiana</td><td>Hebbian Learning</td></tr>
+  <tr><td>Living Bridge</td><td>Pons Vivus</td><td>Living Bridge</td></tr>
+</table>
+
+</div>
+
+
+<div style="max-width:900px;margin:2rem auto;padding:0 2rem;">
+<style>
+.auro-uses { background:#f0eef8; border:1px solid #d0ccee; border-left:4px solid #6c63ff; border-radius:4px; padding:1.5rem 2rem; margin:1.5rem 0; font-family:'Palatino Linotype','Book Antiqua',Palatino,serif; color:#14142a; line-height:1.7; }
+.auro-uses h2 { font-size:1.1rem; color:#1a0e5e; margin-bottom:0.8rem; text-transform:uppercase; letter-spacing:0.05em; }
+.auro-uses ul { margin:0.5rem 0 1rem 1.5rem; }
+.auro-uses li { margin-bottom:0.5rem; font-size:0.93rem; }
+.auro-uses p { font-size:0.9rem; margin-bottom:0.5rem; }
+.auro-uses a { color:#00705a; }
+</style>
+<div class="auro-uses">
+<h2>Canonical Uses — AURO System</h2>
+<p>This paper carries force as an AURO charter instrument under <strong>ORO-CHARTER-001</strong>. It functions across all five use classes:</p>
+<ul>
+  <li><strong>Training Corpus:</strong> Twin Alpha doctrine trains AURO's meta-reasoning — parallel hypothesis testing, mirrored intelligence, and alpha generation teach AURO to reason about its own reasoning.</li>
+  <li><strong>Absorption Blueprint:</strong> Digital twin architecture maps to AURO's philosophy PSE primitive. Mirror reasoning patterns absorbed into AURO's Smart Mirror (InboxPanel auto-push mechanism).</li>
+  <li><strong>Governance Charter:</strong> Defines AURO's twin deployment policy: every Alpha reasoning instance must have a corresponding Beta verifier, and outputs require consensus before being treated as ground truth.</li>
+  <li><strong>Protocol Source:</strong> Grounds PROTO-042 SILP (Self-Improvement Loop) and PROTO-049 SOEP (Self-Organization Emergence). Twin reasoning informs AURO's meta-cognitive architecture.</li>
+  <li><strong>Public Record:</strong> Permanent evidence of AURO's twin alpha reasoning architecture, available at <a href="twin-alpha-paper.html">research/twin-alpha-paper.html</a>.</li>
+</ul>
+<p>→ <a href="auro-charter.html">AURO Official Charter (ORO-CHARTER-001)</a> &nbsp;·&nbsp; <a href="protocol-papers.html">All 185 ORO Protocols</a> &nbsp;·&nbsp; <a href="inference-paper.html">Inference Paper</a> &nbsp;·&nbsp; <a href="neuro-paper.html">NeuroCore Paper</a></p>
+</div>
+</div>
+<div class="back-link">
+  <a href="../index.html">← Back to Organism AI</a>
+</div>
+
+</body>
+</html>

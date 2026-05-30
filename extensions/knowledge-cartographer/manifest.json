@@ -1,0 +1,44 @@
+{
+  "manifest_version": 3,
+  "name": "Knowledge Cartographer",
+  "version": "1.0.0",
+  "description": "AI User Experience — Browse the web and watch your knowledge graph grow visually with every page you visit",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "tabs",
+    "history",
+    "alarms",
+    "sidePanel"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ]
+    }
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "minimum_chrome_version": "114",
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png"
+    }
+  },
+  "devtools_page": "devtools.html",
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  }
+}

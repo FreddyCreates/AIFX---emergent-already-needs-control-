@@ -1,0 +1,176 @@
+# NOVA Julia-Motoko Bridge
+# AI Instructions File (llms.txt)
+# Version: 1.0.0
+
+## What This Is
+
+NOVA is a translation layer between three computational substrates:
+
+1. **Julia** - High-performance scientific computing
+2. **JavaScript** - Runtime, WASM loading, type conversion
+3. **Motoko** - Internet Computer smart contracts
+
+Think of it as a "customs office" where every value crossing the border
+carries a passport (type isomorphism) that is verified at each crossing.
+
+## Quick Start for AI Agents
+
+1. Read `/ai/bridge_manifest.json` for full architecture
+2. Read `/ai/type_map.json` for type conversions
+3. Read `/ai/function_cards/*.json` for function specifications
+4. Generate calls using the patterns below
+
+## How to Call Functions
+
+### From JavaScript
+```javascript
+import { getJuliaCompute } from './protocols/PROTOCOL-JULIA.js'
+const julia = getJuliaCompute()
+await julia.initialize()
+const result = await julia.eigen(matrix)
+```
+
+### From Motoko
+```motoko
+import JuliaCompute "JuliaCompute"
+let result = await JuliaCompute.linalg_eigen(matrix)
+```
+
+### From CLI
+```bash
+nova-julia call linalg.eigen --matrix matrix.json
+```
+
+### From AI/MCP
+```json
+{
+  "tool": "julia_compute",
+  "arguments": {
+    "function": "linalg.eigen",
+    "args": [[[4, 2], [2, 3]]]
+  }
+}
+```
+
+## Available Functions
+
+### Linear Algebra (linalg.*)
+- `eigen` - Eigenvalue decomposition
+- `svd` - Singular value decomposition
+- `qr` - QR factorization
+- `lu` - LU factorization
+- `cholesky` - Cholesky factorization
+
+### Signal Processing (signal.*)
+- `fft` - Fast Fourier Transform
+- `ifft` - Inverse FFT
+
+### Statistics (stats.*)
+- `mean` - Arithmetic mean
+- `std` - Standard deviation
+- `cov` - Covariance matrix
+- `cor` - Correlation matrix
+
+### Optimization (optim.*)
+- `minimize` - Function minimization
+
+### Phi-Enhanced (phi.*)
+- `gradient_descent` - Golden ratio adaptive learning
+- `resonance_filter` - Phi-harmonic extraction
+
+## Type Conversions
+
+| Julia | JavaScript | Motoko | Candid |
+|-------|------------|--------|--------|
+| Float64 | number | Float | float64 |
+| Int64 | bigint | Int | int64 |
+| Bool | boolean | Bool | bool |
+| String | string | Text | text |
+| Vector{Float64} | Float64Array | [Float] | vec float64 |
+| Matrix{Float64} | number[][] | [[Float]] | vec vec float64 |
+
+**IMPORTANT**: Julia uses column-major matrices, JS/Motoko use row-major.
+The bridge handles this automatically.
+
+## Phi Constants
+
+These constants are used throughout the bridge:
+
+- `PHI = 1.618033988749895` (Golden ratio)
+- `PHI_INV = 0.618033988749895` (1/φ = φ-1)
+- `HEARTBEAT = 873` (Synchronization period)
+- `GOLDEN_ANGLE = 137.508` (360°/φ²)
+
+## Error Handling
+
+All functions return results or throw errors:
+
+- **Empty input**: "Vector/Matrix cannot be empty"
+- **Non-square matrix**: "Matrix must be square"
+- **Bridge not ready**: "Bridge not ready. Current state: ..."
+
+Always call `initialize()` before making compute calls.
+
+## Proof Recording
+
+Enable computational proofs for verifiable computation:
+
+```javascript
+const julia = getJuliaCompute({ enableProofRecording: true })
+await julia.initialize()
+await julia.eigen(matrix)
+const proofs = julia.getAllProofRecords()
+```
+
+Each proof contains:
+- Computation ID
+- Function name
+- Input/output hashes
+- Compute time
+- Timestamp
+- Phi-enhanced flag
+
+## File Structure
+
+```
+NOVA/
+├── protocols/PROTOCOL-JULIA.js  # Main JS SDK
+├── julia/NovaJulia.jl           # Julia module
+├── generated/
+│   ├── JuliaCompute.mo          # Motoko canister
+│   ├── julia_compute.did        # Candid interface
+│   └── julia_compute_client.ts  # TypeScript client
+├── ai/
+│   ├── bridge_manifest.json     # Full specification
+│   ├── type_map.json            # Type mappings
+│   ├── function_cards/          # Per-function docs
+│   └── examples/                # Usage examples
+├── cli/nova-julia               # CLI tool
+├── tests/                       # Test suite
+└── llms.txt                     # This file
+```
+
+## For Generating Wrappers
+
+When generating new wrappers:
+
+1. Look up the function in `/ai/function_cards/`
+2. Check input/output types in `/ai/type_map.json`
+3. Handle matrix transposition for column-major ↔ row-major
+4. Include error handling for empty/invalid inputs
+5. Consider proof recording if verification needed
+
+## For Validating Types
+
+```bash
+nova-julia validate 'Matrix{Float64}' '[[1,2],[3,4]]'
+```
+
+Or programmatically check against TYPE_ISOMORPHISMS in the protocol.
+
+## Contact
+
+This bridge is part of the NOVA (Networked Omniscient Verified Architecture)
+system maintained at https://github.com/ItsNotAILABS/PRODUCTION-
+
+Powered by φ = 1.618033988749895

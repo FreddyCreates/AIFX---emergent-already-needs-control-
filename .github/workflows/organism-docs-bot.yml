@@ -1,0 +1,65 @@
+# ============================================================================
+# organism-docs-bot — Auto-Documentation from Registers, SDKs & Protocols
+#
+# Reads every CSV register, every SDK, every protocol, and every extension
+# manifest — then generates a unified documentation site under docs/.
+# Produces: API references, extension catalog, protocol encyclopedia,
+# SDK quickstart guides, and a master architecture map.
+#
+# Identity: organism-docs-bot <organism-docs-bot@users.noreply.github.com>
+# ============================================================================
+
+name: "📚 Documentation Generator"
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '*.csv'
+      - 'sdk/**'
+      - 'protocols/**'
+      - 'extensions/**/manifest.json'
+      - 'organism/**'
+      - 'docs/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate-docs:
+    name: Generate Documentation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Generate extension catalog
+        run: node scripts/generate-docs.js --extensions
+
+      - name: Generate protocol encyclopedia
+        run: node scripts/generate-docs.js --protocols
+
+      - name: Generate SDK reference
+        run: node scripts/generate-docs.js --sdks
+
+      - name: Generate master architecture map
+        run: node scripts/generate-docs.js --architecture
+
+      - name: Commit documentation
+        run: |
+          git config user.name "organism-docs-bot"
+          git config user.email "organism-docs-bot@users.noreply.github.com"
+          git add docs/
+          if git diff --cached --quiet; then
+            echo "No documentation changes to commit"
+          else
+            git commit -m "📚 Docs-bot: documentation regenerated from source"
+            git push
+          fi

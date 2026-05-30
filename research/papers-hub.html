@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Research Papers Hub — MedinaSITech / ItsNotAILABS</title>
+<meta name="description" content="Complete collection of MedinaSITech research papers: Latin-titled theoretical works, protocol specifications, and technical documentation.">
+<style>
+  :root {
+    --bg: #070914;
+    --bg2: #0f1324;
+    --card: #151a2e;
+    --border: #242c4a;
+    --gold: #d4af37;
+    --gold-dim: #b8962c;
+    --teal: #00d4aa;
+    --purple: #8b5cf6;
+    --text: #e8eaf3;
+    --dim: #9aa0b5;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: linear-gradient(180deg, #070914 0%, #0c1020 100%);
+    color: var(--text);
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+  a { color: var(--teal); text-decoration: none; }
+  a:hover { color: var(--gold); }
+
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(7, 9, 20, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 1.5rem;
+  }
+  nav .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .nav-brand {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--gold);
+  }
+  .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+  .nav-links a { color: var(--dim); font-size: 0.9rem; }
+  .nav-links a:hover { color: var(--teal); }
+
+  .hero {
+    padding: 7rem 1.5rem 3rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    background:
+      radial-gradient(circle at top, rgba(212,175,55,0.12), transparent 35%),
+      linear-gradient(135deg, #070914 0%, #11172a 45%, #0a0d18 100%);
+  }
+  .hero .badge {
+    display: inline-block;
+    padding: 0.25rem 0.9rem;
+    border: 1px solid rgba(212,175,55,0.35);
+    border-radius: 999px;
+    color: var(--gold);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    color: var(--gold);
+    letter-spacing: 0.04em;
+    margin-bottom: 0.8rem;
+  }
+  .hero p {
+    max-width: 700px;
+    margin: 0 auto;
+    color: var(--dim);
+    font-size: 1.05rem;
+  }
+
+  .wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+  }
+
+  .section {
+    margin-top: 2.5rem;
+  }
+  .section h2 {
+    color: var(--gold);
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .section > p {
+    color: var(--dim);
+    margin-bottom: 1.5rem;
+    max-width: 800px;
+  }
+
+  .papers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 1.25rem;
+  }
+  .paper-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.2s;
+  }
+  .paper-card:hover {
+    border-color: var(--gold);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(212,175,55,0.1);
+  }
+  .paper-card .status {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+  .status.published { background: rgba(0,212,170,0.15); color: var(--teal); }
+  .status.candidate { background: rgba(212,175,55,0.15); color: var(--gold); }
+  .status.draft { background: rgba(139,92,246,0.15); color: var(--purple); }
+  
+  .paper-card h3 {
+    font-size: 1.1rem;
+    color: var(--text);
+    margin-bottom: 0.3rem;
+    line-height: 1.4;
+  }
+  .paper-card .latin-title {
+    font-style: italic;
+    font-size: 0.9rem;
+    color: var(--gold-dim);
+    margin-bottom: 0.6rem;
+  }
+  .paper-card p {
+    font-size: 0.9rem;
+    color: var(--dim);
+    margin-bottom: 1rem;
+  }
+  .paper-card .record-id {
+    font-size: 0.75rem;
+    color: var(--dim);
+    font-family: monospace;
+    opacity: 0.7;
+  }
+  .paper-links {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    margin-top: 0.8rem;
+  }
+  .paper-links a {
+    font-size: 0.8rem;
+    padding: 0.35rem 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    background: rgba(255,255,255,0.02);
+  }
+  .paper-links a:hover {
+    border-color: var(--teal);
+  }
+
+  .category-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .category-list li {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: border-color 0.2s;
+  }
+  .category-list li:hover {
+    border-color: var(--teal);
+  }
+  .category-list .title {
+    font-size: 0.95rem;
+    color: var(--text);
+  }
+  .category-list .count {
+    font-size: 0.8rem;
+    color: var(--dim);
+    background: rgba(255,255,255,0.05);
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+  }
+
+  .footer {
+    text-align: center;
+    color: var(--dim);
+    padding: 2rem 1rem;
+    border-top: 1px solid var(--border);
+    margin-top: 3rem;
+  }
+  .footer a { color: var(--teal); }
+
+  @media (max-width: 700px) {
+    .nav-links { display: none; }
+    .papers-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <a href="../index.html" class="nav-brand">🧬 ItsNotAILABS</a>
+    <ul class="nav-links">
+      <li><a href="../index.html">Lab Home</a></li>
+      <li><a href="research-mission.html">Research Mission</a></li>
+      <li><a href="protocol-papers.html">Protocol Papers</a></li>
+      <li><a href="../tools.html">Tools</a></li>
+      <li><a href="https://github.com/ItsNotAILABS/PRODUCTION-" target="_blank">GitHub</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="badge">Bibliotheca Academica</div>
+  <h1>📚 Research Papers Hub</h1>
+  <p>
+    Complete collection of MedinaSITech research papers, technical specifications, and theoretical works.
+    All papers are authored in formal academic Latin with English translations.
+  </p>
+</header>
+
+<main class="wrap">
+
+  <!-- Primary Latin Papers -->
+  <section class="section">
+    <h2>📜 Primary Research Papers (Latin Titles)</h2>
+    <p>Formal academic papers published or in preparation through Zenodo with DOI assignment.</p>
+    
+    <div class="papers-grid">
+      <article class="paper-card">
+        <span class="status published">Published</span>
+        <h3>De Superficie Terminorum</h3>
+        <div class="latin-title">A Native Workstation Surface for Governed Agentic Execution</div>
+        <p>Defines TERMINUS as a native workstation surface for governed AI agent execution. The foundational paper of the research program.</p>
+        <div class="record-id">MSIT-RP-2026-001</div>
+        <div class="paper-links">
+          <a href="../papers/terminus/paper.pdf">PDF</a>
+          <a href="../papers/terminus/">Archive</a>
+          <a href="../zenodo/records/MSIT-RP-2026-001.md">Zenodo Record</a>
+        </div>
+      </article>
+
+      <article class="paper-card">
+        <span class="status candidate">Candidate</span>
+        <h3>Ratio Ordinis</h3>
+        <div class="latin-title">A Risk-Aware AI Routing Algorithm for Paradigm-Aware Agentic Execution</div>
+        <p>Formalizes ORDO as a risk-aware routing algorithm that classifies, routes, scores, and corrects AI execution paths.</p>
+        <div class="record-id">MSIT-RP-2026-002</div>
+        <div class="paper-links">
+          <a href="../papers/ordo-algorithm/paper.pdf">PDF</a>
+          <a href="../papers/ordo-algorithm/">Archive</a>
+          <a href="../zenodo/records/MSIT-RP-2026-002.md">Zenodo Record</a>
+        </div>
+      </article>
+
+      <article class="paper-card">
+        <span class="status candidate">Candidate</span>
+        <h3>Machina Polyglotta Ordinata</h3>
+        <div class="latin-title">Multi-Terminal AI Orchestration for Cost-Aware Polyglot Computing</div>
+        <p>Multi-terminal AI orchestration model for routing workloads across heterogeneous runtimes and language paradigms.</p>
+        <div class="record-id">MSIT-RP-2026-003</div>
+        <div class="paper-links">
+          <a href="pipeline-paper.html">HTML</a>
+          <a href="../papers/polyglot-orchestration/paper.pdf">PDF</a>
+          <a href="../papers/polyglot-orchestration/">Archive</a>
+        </div>
+      </article>
+
+      <article class="paper-card">
+        <span class="status candidate">Candidate</span>
+        <h3>Mathematica Aurea</h3>
+        <div class="latin-title">De Intelligentia Mathematica, Ratione Aurea, et Computatione Soverena</div>
+        <p>Mathematical frameworks for model coordination, golden ratio applications, information geometry, and formal verification.</p>
+        <div class="record-id">MSIT-RP-2026-004</div>
+        <div class="paper-links">
+          <a href="math-paper.html">HTML</a>
+          <a href="../papers/math-aurea/paper.pdf">PDF</a>
+          <a href="../papers/math-aurea/">Archive</a>
+        </div>
+      </article>
+
+      <article class="paper-card">
+        <span class="status candidate">Candidate</span>
+        <h3>Intelligentia Localis</h3>
+        <div class="latin-title">De Inferentia In-Navigatorio, Classificatione Textus, et Embeddingis Sine Nube</div>
+        <p>In-browser AI inference, text classification, and embedding generation without cloud dependencies.</p>
+        <div class="record-id">MSIT-RP-2026-005</div>
+        <div class="paper-links">
+          <a href="inference-paper.html">HTML</a>
+          <a href="../papers/intelligentia-localis/paper.pdf">PDF</a>
+          <a href="../papers/intelligentia-localis/">Archive</a>
+        </div>
+      </article>
+
+      <article class="paper-card">
+        <span class="status candidate">Candidate</span>
+        <h3>Rete Vivum</h3>
+        <div class="latin-title">De Reticulis Infrastructurae, Electione Ducis, et Statu Distributo in Tabulis Navigatoris</div>
+        <p>Living network infrastructure, leader election, and distributed state management in browser tabs.</p>
+        <div class="record-id">MSIT-RP-2026-006</div>
+        <div class="paper-links">
+          <a href="mesh-paper.html">HTML</a>
+          <a href="../papers/rete-vivum/paper.pdf">PDF</a>
+          <a href="../papers/rete-vivum/">Archive</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Theory Papers -->
+  <section class="section">
+    <h2>🧠 Theory & Philosophy Papers</h2>
+    <p>Extended theoretical works exploring the foundations and implications of the research program.</p>
+    
+    <div class="papers-grid">
+      <article class="paper-card">
+        <span class="status published">Published</span>
+        <h3>De Autonomia Perpetua</h3>
+        <div class="latin-title">Sanatio Sui et Divisiones Autonomae in Organismo Computationali</div>
+        <p>On perpetual autonomy: Self-healing and autonomous divisions in a computational organism.</p>
+        <div class="paper-links">
+          <a href="autonomy-paper.html">HTML</a>
+        </div>
+      </article>
+
+      <article class="paper-card">
+        <span class="status published">Published</span>
+        <h3>Sovereign Thinking with Humans and AI</h3>
+        <div class="latin-title">Theory Paper on Code-Grounded Research</div>
+        <p>A theory paper explaining the recent repository work, code-grounded research, and sovereign human-AI collaboration.</p>
+        <div class="paper-links">
+          <a href="../docs/sovereign-thinking-theory-paper.md">Markdown</a>
+        </div>
+      </article>
+
+      <article class="paper-card">
+        <span class="status published">Published</span>
+        <h3>AURO Charter</h3>
+        <div class="latin-title">Autonoma Unified Research Organism</div>
+        <p>The founding charter of the Organism AI research program, establishing governance, divisions, and protocols.</p>
+        <div class="paper-links">
+          <a href="auro-charter.html">HTML</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Domain Papers -->
+  <section class="section">
+    <h2>🔬 Domain Research Papers</h2>
+    <p>Technical papers on specific research domains within the Organism architecture.</p>
+    
+    <div class="papers-grid">
+      <article class="paper-card">
+        <span class="status draft">Technical</span>
+        <h3>Hebbian Neural Networks</h3>
+        <div class="latin-title">De Neuroplasticitate Computationali</div>
+        <p>Implementing biologically-inspired Hebbian learning algorithms for real-time AI adaptation in browser environments.</p>
+        <div class="paper-links">
+          <a href="neuro-paper.html">HTML</a>
+        </div>
+      </article>
+
+      <article class="paper-card">
+        <span class="status draft">Technical</span>
+        <h3>Cryptographic Protocols</h3>
+        <div class="latin-title">De Arcana Computationis</div>
+        <p>Secure multi-party computation, zero-knowledge proofs, and privacy-preserving AI inference systems.</p>
+        <div class="paper-links">
+          <a href="crypto-paper.html">HTML</a>
+        </div>
+      </article>
+
+      <article class="paper-card">
+        <span class="status draft">Technical</span>
+        <h3>Guardian Systems</h3>
+        <div class="latin-title">De Custodibus Autonomis</div>
+        <p>Formal governance frameworks, charter-based bot coordination, and law-driven autonomous agent architectures.</p>
+        <div class="paper-links">
+          <a href="guardian-paper.html">HTML</a>
+        </div>
+      </article>
+
+      <article class="paper-card">
+        <span class="status draft">Technical</span>
+        <h3>Twin Alpha Protocol</h3>
+        <div class="latin-title">De Geminis Alphabeticis</div>
+        <p>Mechanisms for paired AI agents to coordinate, verify, and enhance each other's outputs through structured dialogue.</p>
+        <div class="paper-links">
+          <a href="twin-alpha-paper.html">HTML</a>
+        </div>
+      </article>
+
+      <article class="paper-card">
+        <span class="status draft">Technical</span>
+        <h3>Scheduler Architecture</h3>
+        <div class="latin-title">De Ordinatione Temporis</div>
+        <p>Adaptive scheduling algorithms for AI workload distribution and temporal coordination.</p>
+        <div class="paper-links">
+          <a href="scheduler-paper.html">HTML</a>
+        </div>
+      </article>
+
+      <article class="paper-card">
+        <span class="status published">Published</span>
+        <h3>BLACKWXDOW et JUMPER</h3>
+        <div class="latin-title">De Mixtione Expertorum in Intelligentia Generali et Cognitione Emergente</div>
+        <p>MoE AGI/AECI systems with personality cores: BLACKWXDOW (strategic patience) and JUMPER (emergent intuition).</p>
+        <div class="paper-links">
+          <a href="spider-moe-agi-paper.html">Technical Paper</a>
+        </div>
+      </article>
+
+      <article class="paper-card">
+        <span class="status published">Published</span>
+        <h3>The Spider and the Grasshopper</h3>
+        <div class="latin-title">A Narrative on Two Minds Becoming One</div>
+        <p>A narrative story about BLACKWXDOW and JUMPER — their creation, first meeting, collaboration, and evolution as symbiotic intelligences.</p>
+        <div class="paper-links">
+          <a href="spider-moe-narrative-paper.html">Narrative Paper</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Zenodo Records -->
+  <section class="section">
+    <h2>📋 Publication Records</h2>
+    <p>Official publication records and DOI registrations through Zenodo.</p>
+    
+    <ul class="category-list">
+      <li>
+        <a href="../zenodo/records/MSIT-RP-2026-001.md" class="title">MSIT-RP-2026-001 — De Superficie Terminorum</a>
+        <span class="count">Research Paper</span>
+      </li>
+      <li>
+        <a href="../zenodo/records/MSIT-RP-2026-002.md" class="title">MSIT-RP-2026-002 — Ratio Ordinis</a>
+        <span class="count">Research Paper</span>
+      </li>
+      <li>
+        <a href="../zenodo/records/MSIT-RP-2026-003.md" class="title">MSIT-RP-2026-003 — Machina Polyglotta</a>
+        <span class="count">Research Paper</span>
+      </li>
+      <li>
+        <a href="../zenodo/records/MSIT-RP-2026-004.md" class="title">MSIT-RP-2026-004 — Mathematica Aurea</a>
+        <span class="count">Research Paper</span>
+      </li>
+      <li>
+        <a href="../zenodo/records/MSIT-RP-2026-005.md" class="title">MSIT-RP-2026-005 — Intelligentia Localis</a>
+        <span class="count">Research Paper</span>
+      </li>
+      <li>
+        <a href="../zenodo/records/MSIT-RP-2026-006.md" class="title">MSIT-RP-2026-006 — Rete Vivum</a>
+        <span class="count">Research Paper</span>
+      </li>
+      <li>
+        <a href="../zenodo/records/MSIT-SW-2026-001.md" class="title">MSIT-SW-2026-001 — Software Release</a>
+        <span class="count">Software</span>
+      </li>
+      <li>
+        <a href="../zenodo/records/MSIT-DS-2026-001.md" class="title">MSIT-DS-2026-001 — Dataset Release</a>
+        <span class="count">Dataset</span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- Quick Links -->
+  <section class="section">
+    <h2>🔗 Quick Links</h2>
+    <div class="papers-grid">
+      <div class="paper-card">
+        <h3>Protocol Encyclopedia</h3>
+        <p>Complete reference for all 229+ published protocols with dependency graphs and implementation notes.</p>
+        <div class="paper-links">
+          <a href="../docs/protocol-encyclopedia.md">Browse →</a>
+        </div>
+      </div>
+      <div class="paper-card">
+        <h3>Research Mission</h3>
+        <p>Code-grounded research program: missions, packaging, protocols, governance, and autonomous support.</p>
+        <div class="paper-links">
+          <a href="research-mission.html">View →</a>
+        </div>
+      </div>
+      <div class="paper-card">
+        <h3>Citation File</h3>
+        <p>Official CITATION.cff for citing the MedinaSITech research repository.</p>
+        <div class="paper-links">
+          <a href="../CITATION.cff">Download →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <p>
+    MedinaSITech Research Papers · <a href="../index.html">Lab Home</a> · 
+    <a href="auro-charter.html">Charter</a> · 
+    <a href="protocol-licenses.html">Licenses</a>
+  </p>
+  <p style="margin-top:0.5rem; font-size:0.85rem;">© 2024–2026 MedinaSITech / ItsNotAILABS</p>
+</footer>
+
+</body>
+</html>

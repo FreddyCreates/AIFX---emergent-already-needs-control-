@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "organism"
+version = "0.1.0"
+description = "Sovereign Organism Runtime — phi-encoded, 4-register, 873 ms heartbeat"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+keywords = ["organism", "phi", "sovereign", "heartbeat"]
+
+[project.scripts]
+organism = "organism.__main__:main"

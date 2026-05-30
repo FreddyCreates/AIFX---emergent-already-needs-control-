@@ -1,0 +1,73 @@
+{
+  "name": "stats_mean",
+  "full_name": "stats.mean",
+  "category": "statistics",
+  "version": "1.0.0",
+  
+  "description": {
+    "short": "Compute the arithmetic mean of a data vector",
+    "long": "Computes the arithmetic mean (average) of a vector of floating-point numbers. This is the sum of all values divided by the count of values.",
+    "mathematical": "μ = (1/n) Σᵢ xᵢ"
+  },
+  
+  "julia_backend": {
+    "package": "Statistics",
+    "function": "mean",
+    "signature": "mean(x::Vector{Float64}) -> Float64"
+  },
+  
+  "input": {
+    "data": {
+      "type": "Vector{Float64}",
+      "js_type": "number[]",
+      "motoko_type": "[Float]",
+      "constraints": ["length > 0"],
+      "example": [1.0, 2.0, 3.0, 4.0, 5.0]
+    }
+  },
+  
+  "output": {
+    "type": "Float64",
+    "js_type": "number",
+    "motoko_type": "Float",
+    "description": "The arithmetic mean",
+    "example": 3.0
+  },
+  
+  "complexity": {
+    "time": "O(n)",
+    "space": "O(1)",
+    "algorithm": "Linear summation with Kahan compensation for numerical stability"
+  },
+  
+  "usage": {
+    "javascript": {
+      "code": "import { getJuliaCompute } from './protocols/PROTOCOL-JULIA.js'\nconst julia = getJuliaCompute()\nawait julia.initialize()\nconst mean = await julia.mean([1, 2, 3, 4, 5])",
+      "output": "3.0"
+    },
+    "motoko": {
+      "code": "import JuliaCompute \"JuliaCompute\"\nlet data : [Float] = [1.0, 2.0, 3.0, 4.0, 5.0];\nlet result = await JuliaCompute.stats_mean(data);",
+      "output": "#ok(3.0)"
+    },
+    "cli": {
+      "code": "nova-julia call stats.mean --data '[1,2,3,4,5]'",
+      "output": "3.0"
+    }
+  },
+  
+  "special_cases": {
+    "single_element": "Returns the element itself",
+    "all_same": "Returns that value",
+    "symmetric_around_value": "Returns that center value"
+  },
+  
+  "errors": {
+    "empty_vector": "Vector cannot be empty"
+  },
+  
+  "related_functions": ["stats.std", "stats.median", "stats.var"],
+  
+  "numerical_notes": "Uses compensated summation to minimize floating-point error accumulation for large datasets.",
+  
+  "phi_notes": "The mean of a Fibonacci-like sequence converges to a value related to φ as the sequence grows."
+}

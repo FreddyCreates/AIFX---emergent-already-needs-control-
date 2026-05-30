@@ -1,0 +1,45 @@
+{
+  "rules": [
+    {
+      "id": "uel-feedback-fb-2026-05-02-001",
+      "type": "HUMAN_OVERRIDE",
+      "description": "Human overrode NO_RELEASE_ON_RED: FORBID → ALLOW",
+      "suggestion": "Consider relaxing rule \"NO_RELEASE_ON_RED\" — repeated overrides indicate false positives",
+      "source": "human_feedback",
+      "metric": {
+        "feedback_id": "fb-2026-05-02-001"
+      },
+      "created_at": "2026-05-03T04:38:41.361Z",
+      "updated_at": "2026-05-28T02:57:26.341Z"
+    },
+    {
+      "id": "uel-overblocked-atlas---bot-organism-learning-bot",
+      "type": "LAW_TOO_STRICT",
+      "description": "\"atlas://bot/organism-learning-bot\" blocked in 100% of cycles — law condition may be too broad",
+      "suggestion": "Review FORBID rules for atlas://bot/organism-learning-bot and add context exceptions",
+      "source": "meta_engine",
+      "metric": {
+        "blockRate": 1,
+        "total": 12561
+      },
+      "created_at": "2026-05-04T02:43:25.548Z",
+      "updated_at": "2026-05-28T02:57:26.340Z"
+    },
+    {
+      "id": "uel-incident-governance---law-learning-stability-HALT-ON-REWARD-DIVERGENCE",
+      "type": "RECURRING_INCIDENT",
+      "description": "Cause \"governance://law/learning-stability#HALT_ON_REWARD_DIVERGENCE\" has occurred 200 times across 1 entities",
+      "suggestion": "Create a new law rule or automated remediation for \"governance://law/learning-stability#HALT_ON_REWARD_DIVERGENCE\"",
+      "source": "meta_engine",
+      "metric": {
+        "count": 200,
+        "entities": [
+          "atlas://bot/organism-learning-bot"
+        ]
+      },
+      "created_at": "2026-05-04T02:43:25.549Z",
+      "updated_at": "2026-05-28T02:57:26.340Z"
+    }
+  ],
+  "updated_at": "2026-05-28T02:57:26.341Z"
+}

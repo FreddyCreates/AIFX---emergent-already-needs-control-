@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Knowledge Sync Adapter</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{width:380px;background:#1a1a2e;color:#c8c8e0;font-family:'Segoe UI',system-ui,sans-serif;font-size:13px}
+  .popup{display:flex;flex-direction:column;padding:16px;gap:12px}
+  .hdr{display:flex;align-items:center;gap:10px}
+  .phi{font-size:22px;color:#f59e0b;font-weight:700}
+  .hdr h1{font-size:16px;font-weight:600;color:#e0e0ff;flex:1}
+  .status{display:flex;align-items:center;gap:6px;font-size:11px;color:#888}
+  .status-dot{width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 4px #22c55e80}
+  .stats-row{display:flex;gap:6px}
+  .stat{flex:1;background:#1a0e00;border:1px solid #f59e0b33;border-radius:6px;padding:8px;text-align:center}
+  .stat .v{font-size:18px;font-weight:700;color:#f59e0b;font-family:'Courier New',monospace}
+  .stat .l{font-size:10px;color:#666;margin-top:2px}
+  .search-row{display:flex;gap:6px}
+  .search-input{flex:1;background:#0e0e22;border:1px solid #3a2a00;color:#e0e0ff;padding:8px 10px;border-radius:6px;font-size:12px;outline:none}
+  .search-input:focus{border-color:#f59e0b}
+  .search-btn{background:#f59e0b;color:#1a0a00;border:none;border-radius:6px;padding:8px 12px;font-weight:700;cursor:pointer;font-size:13px}
+  .response-area{background:#1a0e00;border:1px solid #3a2a00;border-radius:6px;padding:10px;min-height:60px;max-height:120px;overflow-y:auto;font-family:'Courier New',monospace;font-size:11px;color:#d0a050;line-height:1.5}
+  .btn-row{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  .btn{background:#0e0e22;color:#c8c8e0;border:1px solid #3a2a00;border-radius:6px;padding:10px;font-size:12px;cursor:pointer;font-weight:500;transition:all .15s;text-align:center}
+  .btn:hover{border-color:#f59e0b;color:#f59e0b;background:#f59e0b11}
+  .side-panel-btn{width:100%;background:#f59e0b22;color:#f59e0b;border:1px solid #f59e0b44;border-radius:6px;padding:8px;font-weight:600;cursor:pointer;font-size:12px;transition:all .15s}
+  .side-panel-btn:hover{background:#f59e0b44}
+  .footer{display:flex;justify-content:space-between;align-items:center;font-size:10px;color:#555;padding-top:4px;border-top:1px solid #3a2a00}
+</style>
+</head>
+<body>
+<div class="popup">
+  <div class="hdr">
+    <span class="phi">φ</span>
+    <h1>Knowledge Sync</h1>
+    <div class="status"><span class="status-dot" id="statusDot"></span><span id="statusText">Connecting…</span></div>
+  </div>
+  <div class="stats-row">
+    <div class="stat"><div class="v" id="sE">0</div><div class="l">Entities</div></div>
+    <div class="stat"><div class="v" id="sG">0</div><div class="l">Edges</div></div>
+    <div class="stat"><div class="v" id="sS">0</div><div class="l">Syncs</div></div>
+  </div>
+  <div class="search-row">
+    <input class="search-input" id="queryInput" placeholder="Query graph…" />
+    <button class="search-btn" id="queryBtn">🔍</button>
+  </div>
+  <div class="response-area" id="responseArea">Sync a page to extract entities and build the knowledge graph.</div>
+  <div class="btn-row">
+    <button class="btn" id="syncBtn">🧠 Sync Page</button>
+    <button class="btn" id="graphBtn">🗺️ Graph</button>
+    <button class="btn" id="stateBtn">⚙️ State</button>
+    <button class="btn" id="topBtn">⭐ Top Entities</button>
+  </div>
+  <button class="side-panel-btn" id="sidePanelBtn">Open Side Panel</button>
+  <div class="footer">
+    <span>v1.0.0 — Knowledge Sync Adapter EXT-039</span>
+    <span id="hbFooter">HB: 0</span>
+  </div>
+</div>
+<script>
+(function(){
+  const responseArea=document.getElementById('responseArea');
+  const queryInput=document.getElementById('queryInput');
+  const queryBtn=document.getElementById('queryBtn');
+  const syncBtn=document.getElementById('syncBtn');
+  const graphBtn=document.getElementById('graphBtn');
+  const stateBtn=document.getElementById('stateBtn');
+  const topBtn=document.getElementById('topBtn');
+  const statusDot=document.getElementById('statusDot');
+  const statusText=document.getElementById('statusText');
+  const hbFooter=document.getElementById('hbFooter');
+  const sE=document.getElementById('sE'),sG=document.getElementById('sG'),sS=document.getElementById('sS');
+  let hb=0;
+
+  function show(data){responseArea.textContent=typeof data==='string'?data:JSON.stringify(data,null,2);}
+
+  syncBtn.addEventListener('click',function(){
+    chrome.tabs.query({active:true,currentWindow:true},function(tabs){
+      if(!tabs||!tabs[0]){show('No active tab.');return;}
+      show('🧠 Syncing page...');
+      chrome.scripting.executeScript({target:{tabId:tabs[0].id},func:function(){
+        var c=document.body.cloneNode(true);
+        c.querySelectorAll('script,style,nav,footer').forEach(function(e){e.remove();});
+        return(c.innerText||c.textContent||'').replace(/\s+/g,' ').trim().substring(0,8000);
+      }},function(res){
+        var text=res&&res[0]?res[0].result:'';
+        chrome.runtime.sendMessage({action:'syncPage',text:text,url:tabs[0].url},function(r){
+          if(chrome.runtime.lastError){show('Error: '+chrome.runtime.lastError.message);return;}
+          show('Entities: '+r.entitiesFound+', Edges: '+r.edgesBuilt+'\nTop: '+(r.topEntities||[]).map(function(e){return e.name;}).join(', '));
+        });
+      });
+    });
+  });
+
+  graphBtn.addEventListener('click',function(){
+    chrome.runtime.sendMessage({action:'getGraph'},function(r){show(r);});
+  });
+
+  stateBtn.addEventListener('click',function(){
+    chrome.runtime.sendMessage({action:'getState'},function(r){show(r);});
+  });
+
+  topBtn.addEventListener('click',function(){
+    chrome.runtime.sendMessage({action:'getGraph'},function(r){
+      if(r&&r.entities){show((r.entities||[]).slice(0,10).map(function(e){return e.name+' ('+e.count+')'}).join('\n'));}
+      else{show(r);}
+    });
+  });
+
+  queryBtn.addEventListener('click',function(){
+    var t=queryInput.value.trim();if(!t)return;
+    chrome.runtime.sendMessage({action:'query',term:t},function(r){show(r);});
+  });
+  queryInput.addEventListener('keydown',function(e){if(e.key==='Enter')queryBtn.click();});
+
+  document.getElementById('sidePanelBtn').addEventListener('click',function(){try{chrome.runtime.sendMessage({action:'getState'},function(){});}catch(e){}});
+
+  function hbeat(){
+    try{chrome.runtime.sendMessage({action:'getState'},function(r){
+      hb++;hbFooter.textContent='HB: '+hb;statusDot.style.background='#22c55e';
+      if(r){sE.textContent=r.totalEntities||0;sG.textContent=r.totalEdges||0;sS.textContent=r.syncCount||0;statusText.textContent='Active';}
+    });}catch(e){statusDot.style.background='#f87171';statusText.textContent='Offline';}
+  }
+  hbeat();setInterval(hbeat,5000);
+})();
+</script>
+</body>
+</html>

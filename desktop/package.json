@@ -1,0 +1,57 @@
+{
+  "name": "vigil-ai-desktop",
+  "version": "18.0.0",
+  "description": "Vigil AI — Autonomous AI Intelligence, Windows Desktop App",
+  "main": "main.js",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win",
+    "dist:portable": "electron-builder --win portable"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "electron": "41.3.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.vigil.ai.desktop",
+    "productName": "Vigil AI",
+    "copyright": "Copyright © 2024 Medina",
+    "directories": {
+      "output": "../dist/desktop"
+    },
+    "extraResources": [
+      {
+        "from": "../extensions/jarvis",
+        "to": "jarvis",
+        "filter": [
+          "**/*",
+          "!*.code-workspace"
+        ]
+      }
+    ],
+    "win": {
+      "icon": "../extensions/jarvis/icons/icon128.png",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        },
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Vigil AI"
+    }
+  }
+}

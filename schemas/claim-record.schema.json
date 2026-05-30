@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://itsnotailabs.github.io/production/schemas/claim-record.schema.json",
+  "title": "THESIS Claim Record",
+  "type": "object",
+  "required": ["claim_id", "claim_class", "statement", "authority_state", "evidence_ids"],
+  "properties": {
+    "claim_id": { "type": "string" },
+    "claim_class": {
+      "type": "string",
+      "pattern": "^C([1-9]|10)$",
+      "description": "SVA claim class in the C1-C10 release-gating taxonomy documented in protocols/medina-protocol-charter-index-v1.md (SVA section)."
+    },
+    "statement": { "type": "string", "minLength": 1 },
+    "authority_state": {
+      "type": "string",
+      "enum": [
+        "DRAFT",
+        "INTERNAL_RESEARCH",
+        "CLAIM_HARDENED",
+        "HASHED",
+        "NOTARY_READY",
+        "COUNSEL_READY",
+        "PUBLIC_SAFE",
+        "PRIVATE_VAULT",
+        "DEPLOYMENT_READY"
+      ]
+    },
+    "evidence_ids": { "type": "array", "items": { "type": "string" } },
+    "public_safe_summary": { "type": "string" }
+  },
+  "additionalProperties": false
+}

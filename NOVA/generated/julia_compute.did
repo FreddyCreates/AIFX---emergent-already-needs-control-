@@ -1,0 +1,127 @@
+// NOVA Julia Compute — Candid Interface Definition
+// 
+// This Candid interface describes the type-safe boundary between
+// the Internet Computer and the Julia computation bridge.
+//
+// Version: 1.0.0
+// Powered by: NOVA (Networked Omniscient Verified Architecture)
+
+// ─── Complex Number Type ────────────────────────────────────────────────────────
+
+type ComplexNum = record {
+    real: float64;
+    imag: float64;
+};
+
+// ─── Basic Types ────────────────────────────────────────────────────────────────
+
+type Vector = vec float64;
+type Matrix = vec vec float64;
+type ComplexVector = vec ComplexNum;
+type ComplexMatrix = vec vec ComplexNum;
+
+// ─── Result Types ───────────────────────────────────────────────────────────────
+
+type EigenResult = record {
+    values: ComplexVector;
+    vectors: ComplexMatrix;
+};
+
+type SVDResult = record {
+    U: Matrix;
+    S: Vector;
+    V: Matrix;
+};
+
+type QRResult = record {
+    Q: Matrix;
+    R: Matrix;
+};
+
+type LUResult = record {
+    L: Matrix;
+    U: Matrix;
+    p: vec int64;
+};
+
+type CholeskyResult = record {
+    L: Matrix;
+};
+
+type FFTResult = record {
+    coefficients: ComplexVector;
+};
+
+type OptimizationResult = record {
+    minimum: float64;
+    minimizer: Vector;
+    converged: bool;
+    iterations: nat;
+};
+
+// ─── State and Statistics ───────────────────────────────────────────────────────
+
+type BridgeState = variant {
+    Uninitialized;
+    Ready;
+    Computing;
+    Error;
+};
+
+type BridgeStats = record {
+    call_count: nat;
+    total_compute_time_ns: int;
+    errors: nat;
+    type_conversions: nat;
+};
+
+type ComputeProof = record {
+    id: text;
+    function_name: text;
+    input_hash: text;
+    output_hash: text;
+    compute_time_ns: int;
+    timestamp: int;
+    phi_enhanced: bool;
+};
+
+// ─── Service Interface ──────────────────────────────────────────────────────────
+
+service : {
+    // Initialization
+    initialize: () -> (variant { ok: text; err: text });
+    getState: () -> (BridgeState) query;
+    getStats: () -> (BridgeStats) query;
+    
+    // Linear Algebra
+    linalg_eigen: (Matrix) -> (variant { ok: EigenResult; err: text });
+    linalg_svd: (Matrix) -> (variant { ok: SVDResult; err: text });
+    linalg_qr: (Matrix) -> (variant { ok: QRResult; err: text });
+    linalg_lu: (Matrix) -> (variant { ok: LUResult; err: text });
+    linalg_cholesky: (Matrix) -> (variant { ok: CholeskyResult; err: text });
+    
+    // Signal Processing
+    signal_fft: (Vector) -> (variant { ok: FFTResult; err: text });
+    signal_ifft: (FFTResult) -> (variant { ok: Vector; err: text });
+    
+    // Statistics
+    stats_mean: (Vector) -> (variant { ok: float64; err: text });
+    stats_std: (Vector) -> (variant { ok: float64; err: text });
+    stats_cov: (Matrix) -> (variant { ok: Matrix; err: text });
+    stats_cor: (Matrix) -> (variant { ok: Matrix; err: text });
+    
+    // Optimization
+    optim_minimize: (Vector, Vector) -> (variant { ok: OptimizationResult; err: text });
+    
+    // Phi-Enhanced Functions
+    phi_gradient_descent: (Vector, Vector) -> (variant { ok: OptimizationResult; err: text });
+    phi_resonance_filter: (Vector) -> (variant { ok: Vector; err: text });
+    
+    // Proof Recording
+    getProofHistory: () -> (vec ComputeProof) query;
+    getProof: (text) -> (opt ComputeProof) query;
+    
+    // System
+    health: () -> (text) query;
+    version: () -> (text) query;
+}

@@ -1,0 +1,45 @@
+{
+  "contract_type": "NOVA_INTELLIGENCE_CONTRACT",
+  "contract_id": "ic_linalg_eigen_001",
+  "intent": "Spectral analysis of governance graph — extract eigenvalues and eigenvectors for network centrality computation",
+  "requesting_model": "research_agent",
+  "executing_model": "julia_compute_agent",
+  "verifying_models": ["motoko_type_agent", "proof_agent", "critic_agent"],
+  "source_language": "Julia",
+  "target_language": "Motoko",
+  "bridge_language": "JavaScript",
+  "interface_language": "Candid",
+  "function_signature": "linalg.eigen",
+  "input_shape": {
+    "shape_type": "Matrix",
+    "element_type": "Float64",
+    "dimensions": [3, 3],
+    "layout": "row-major"
+  },
+  "output_shape": {
+    "shape_type": "EigenResult",
+    "element_type": "Complex128",
+    "dimensions": [3]
+  },
+  "type_map_id": "tm_matrix_float64_to_eigen_result",
+  "proof_requirements": {
+    "input_hash": true,
+    "output_hash": true,
+    "wrapper_hash": true,
+    "candid_hash": true,
+    "roundtrip_test": true,
+    "runtime_hash": true
+  },
+  "risk_level": "medium",
+  "execution_mode": "local-julia",
+  "allowed_runtime": ["julia-wasm", "local-julia"],
+  "motoko_storage": true,
+  "status": "stored",
+  "timestamps": {
+    "proposed_at": "2026-05-21T04:00:00.000Z",
+    "accepted_at": "2026-05-21T04:00:00.150Z",
+    "executed_at": "2026-05-21T04:00:01.200Z",
+    "verified_at": "2026-05-21T04:00:01.350Z",
+    "stored_at": "2026-05-21T04:00:01.500Z"
+  }
+}

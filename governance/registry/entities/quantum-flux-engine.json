@@ -1,0 +1,13 @@
+{
+  "id": "atlas://engine/quantum_flux",
+  "name": "quantum_flux",
+  "class": "Engine",
+  "division": "Infrastructure",
+  "emoji": "⚛️",
+  "domain": "State superposition — probabilistic state management",
+  "events": ["state_collapsed", "superposition_entered", "flux_stabilized"],
+  "capabilities": ["superpose", "collapse", "entangle", "probabilistic_route"],
+  "governance_pipeline": "pipeline://governance/default_cycle",
+  "ocl_ref": "atlas://organism/bot-fleet",
+  "script": "sdk/engines/quantum-flux-engine.js"
+}

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #030712; color: #f8fafc; font-family: Inter, system-ui, sans-serif; padding: 16px; min-height: 100vh; }
+    h1 { font-size: 18px; color: #a855f7; margin-bottom: 4px; }
+    .subtitle { font-size: 12px; color: #64748b; margin-bottom: 20px; }
+    .tool-section { margin-bottom: 20px; }
+    .tool-section h2 { font-size: 12px; color: #00ffcc; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; border-bottom: 1px solid rgba(0,255,204,0.2); padding-bottom: 6px; }
+    .tool-input { width: 100%; padding: 10px; background: rgba(17,24,39,0.8); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #f8fafc; font-family: 'JetBrains Mono', monospace; font-size: 11px; resize: vertical; min-height: 60px; margin-bottom: 8px; }
+    .tool-input:focus { outline: none; border-color: rgba(168,85,247,0.5); }
+    .btn-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+    .btn { padding: 6px 12px; background: rgba(168,85,247,0.2); border: 1px solid rgba(168,85,247,0.3); border-radius: 6px; color: #a855f7; font-size: 10px; cursor: pointer; transition: all 0.2s; }
+    .btn:hover { background: rgba(168,85,247,0.4); }
+    .btn.green { background: rgba(34,197,94,0.2); border-color: rgba(34,197,94,0.3); color: #22c55e; }
+    .btn.blue { background: rgba(59,130,246,0.2); border-color: rgba(59,130,246,0.3); color: #3b82f6; }
+    .btn.gold { background: rgba(212,175,55,0.2); border-color: rgba(212,175,55,0.3); color: #d4af37; }
+    .output { padding: 12px; background: rgba(0,0,0,0.4); border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 10px; white-space: pre-wrap; max-height: 200px; overflow-y: auto; color: #94a3b8; border: 1px solid rgba(255,255,255,0.05); }
+    .status { display: flex; justify-content: space-between; padding: 10px; background: rgba(0,255,204,0.05); border: 1px solid rgba(0,255,204,0.2); border-radius: 8px; font-size: 10px; color: #00ffcc; margin-top: 16px; }
+  </style>
+</head>
+<body>
+  <h1>⚡ Alpha Tools Hub</h1>
+  <p class="subtitle">Production Tool Primitives — φ-Enhanced</p>
+
+  <div class="tool-section">
+    <h2>Tool Input</h2>
+    <textarea class="tool-input" id="toolInput" placeholder="Enter data (JSON, text, CSV...)">{"name": "test", "value": 42, "nested": {"key": "data"}}</textarea>
+    <div class="btn-row">
+      <button class="btn" onclick="invoke('transform')">🔄 Transform</button>
+      <button class="btn green" onclick="invoke('analyze')">📊 Analyze</button>
+      <button class="btn blue" onclick="invoke('generate')">✨ Generate</button>
+      <button class="btn" onclick="invoke('connect')">🔗 Connect</button>
+      <button class="btn gold" onclick="invoke('automate')">⚙️ Automate</button>
+    </div>
+  </div>
+
+  <div class="tool-section">
+    <h2>Plugins</h2>
+    <div class="btn-row">
+      <button class="btn" onclick="plugin('json-flattener')">Flatten</button>
+      <button class="btn blue" onclick="plugin('markdown-generator')">→ Markdown</button>
+      <button class="btn green" onclick="plugin('data-validator')">Validate</button>
+      <button class="btn gold" onclick="plugin('phi-encoder')">φ Encode</button>
+      <button class="btn" onclick="plugin('batch-processor')">Batch</button>
+    </div>
+  </div>
+
+  <div class="tool-section">
+    <h2>Adapters</h2>
+    <div class="btn-row">
+      <button class="btn" onclick="adapt('rest-api')">REST</button>
+      <button class="btn blue" onclick="adapt('graphql')">GraphQL</button>
+      <button class="btn green" onclick="adapt('websocket')">WS</button>
+      <button class="btn gold" onclick="adapt('event-bus')">PubSub</button>
+      <button class="btn" onclick="adapt('organism-mesh')">Mesh</button>
+    </div>
+  </div>
+
+  <div class="tool-section">
+    <h2>Output</h2>
+    <div class="output" id="output">Ready. Select a tool, plugin, or adapter above.</div>
+  </div>
+
+  <div class="status">
+    <span>● LIVE</span>
+    <span>5 Tools</span>
+    <span>5 Plugins</span>
+    <span>5 Adapters</span>
+    <span>φ = 1.618</span>
+  </div>
+
+  <script>
+    function getInput() {
+      const raw = document.getElementById('toolInput').value;
+      try { return JSON.parse(raw); } catch (e) { return raw; }
+    }
+    function showOutput(data) {
+      document.getElementById('output').textContent = JSON.stringify(data, null, 2);
+    }
+    function invoke(category) {
+      chrome.runtime.sendMessage({ type: 'ALPHA_INVOKE_TOOL', category, input: getInput() }, showOutput);
+    }
+    function plugin(name) {
+      chrome.runtime.sendMessage({ type: 'ALPHA_INVOKE_PLUGIN', name, data: getInput() }, showOutput);
+    }
+    function adapt(name) {
+      chrome.runtime.sendMessage({ type: 'ALPHA_INVOKE_ADAPTER', name, data: getInput() }, showOutput);
+    }
+  </script>
+</body>
+</html>

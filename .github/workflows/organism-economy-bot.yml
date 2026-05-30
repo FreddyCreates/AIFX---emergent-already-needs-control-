@@ -1,0 +1,64 @@
+# ============================================================================
+# organism-economy-bot — Marketplace Analytics & Economy Dashboard
+#
+# Tracks the organism's internal economy: SDK module sizes, extension counts,
+# protocol complexity, marketplace spec coverage, and produces economy
+# dashboards. Monitors the health of the organism marketplace ecosystem.
+#
+# Identity: organism-economy-bot <organism-economy-bot@users.noreply.github.com>
+# ============================================================================
+
+name: "💰 Economy & Marketplace Analytics"
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'sdk/**'
+      - 'extensions/**'
+      - 'protocols/**'
+      - '*.csv'
+      - 'CallMarketplaceSpec_v1.json'
+      - 'Organism_Marketplace_Register.csv'
+  schedule:
+    - cron: '0 12 * * 3'  # Weekly Wednesday noon UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  economy-scan:
+    name: "💰 Economy Dashboard"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Scan marketplace assets
+        run: node scripts/economy-tracker.js --scan
+
+      - name: Analyze economy metrics
+        run: node scripts/economy-tracker.js --analyze
+
+      - name: Generate economy dashboard
+        run: node scripts/economy-tracker.js --report
+
+      - name: Commit economy report
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "organism-economy-bot"
+          git config user.email "organism-economy-bot@users.noreply.github.com"
+          git add docs/
+          if git diff --cached --quiet; then
+            echo "No economy report changes to commit"
+          else
+            git commit -m "💰 Economy-bot: marketplace analytics dashboard updated"
+            git push
+          fi

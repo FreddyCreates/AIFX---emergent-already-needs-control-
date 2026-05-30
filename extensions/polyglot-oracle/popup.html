@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Polyglot Oracle</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{width:380px;background:#1a1a2e;color:#c8c8e0;font-family:'Segoe UI',system-ui,sans-serif;font-size:13px}
+  .popup{display:flex;flex-direction:column;padding:16px;gap:12px}
+  .hdr{display:flex;align-items:center;gap:10px}
+  .phi{font-size:22px;color:#6c63ff;font-weight:700}
+  .hdr h1{font-size:16px;font-weight:600;color:#e0e0ff;flex:1}
+  .status{display:flex;align-items:center;gap:6px;font-size:11px;color:#888}
+  .status-dot{width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 4px #22c55e80}
+  .cmd-section{display:flex;gap:6px}
+  .cmd-input{flex:1;background:#0e0e22;border:1px solid #2a2a4a;color:#e0e0ff;padding:8px 12px;border-radius:6px;font-size:12px;outline:none;font-family:inherit}
+  .cmd-input:focus{border-color:#6c63ff}
+  .cmd-input::placeholder{color:#444}
+  .send-btn{background:#6c63ff;color:#fff;border:none;border-radius:6px;padding:8px 14px;font-weight:600;cursor:pointer;font-size:12px;transition:background .15s}
+  .send-btn:hover{background:#5a52e0}
+  .response-area{background:#0e0e22;border:1px solid #2a2a4a;border-radius:6px;padding:10px;min-height:60px;max-height:120px;overflow-y:auto;font-family:'Courier New',monospace;font-size:11px;color:#a0a0d0;line-height:1.5}
+  .side-panel-btn{width:100%;background:#6c63ff22;color:#6c63ff;border:1px solid #6c63ff44;border-radius:6px;padding:8px;font-weight:600;cursor:pointer;font-size:12px;transition:all .15s}
+  .side-panel-btn:hover{background:#6c63ff44}
+  .devtools-info{text-align:center;font-size:10px;color:#555}
+  .devtools-info kbd{background:#12122a;padding:1px 5px;border-radius:3px;font-family:'Courier New',monospace;color:#6c63ff;font-size:10px}
+  .quick-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  .qa-btn{background:#12122a;color:#c8c8e0;border:1px solid #2a2a4a;border-radius:6px;padding:8px;font-size:11px;cursor:pointer;font-weight:500;transition:all .15s;text-align:center}
+  .qa-btn:hover{border-color:#6c63ff;color:#6c63ff;background:#6c63ff11}
+  .activity{background:#0e0e22;border:1px solid #2a2a4a;border-radius:6px;padding:8px}
+  .activity h3{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#6c63ff;margin-bottom:6px}
+  .activity-list{font-size:11px;color:#888;line-height:1.8}
+  .activity-item{border-bottom:1px solid #1a1a30;padding:2px 0;display:flex;justify-content:space-between}
+  .activity-item:last-child{border:none}
+  .activity-item .ts{color:#555;font-family:'Courier New',monospace;font-size:10px}
+  .footer{display:flex;justify-content:space-between;align-items:center;font-size:10px;color:#555;padding-top:4px;border-top:1px solid #2a2a4a}
+</style>
+</head>
+<body>
+<div class="popup">
+  <div class="hdr">
+    <span class="phi">φ</span>
+    <h1>Polyglot Oracle</h1>
+    <div class="status"><span class="status-dot" id="statusDot"></span><span id="statusText">Connecting…</span></div>
+  </div>
+  <div class="cmd-section">
+    <input class="cmd-input" id="cmdInput" placeholder="Ask Polyglot Oracle…" />
+    <button class="send-btn" id="sendBtn">Send</button>
+  </div>
+  <div class="response-area" id="responseArea">Ready. Type a command or use a quick action below.</div>
+  <button class="side-panel-btn" id="sidePanelBtn">Open Side Panel</button>
+  <div class="devtools-info">DevTools Panel: <kbd>F12</kbd> → <kbd>Polyglot Oracle</kbd> tab</div>
+  <div class="quick-actions">
+    <button class="qa-btn" data-action="Translate Text">Translate Text</button>
+    <button class="qa-btn" data-action="Detect Language">Detect Language</button>
+    <button class="qa-btn" data-action="Compare Langs">Compare Langs</button>
+    <button class="qa-btn" data-action="Dictionary">Dictionary</button>
+  </div>
+  <div class="activity">
+    <h3>Recent Activity</h3>
+    <div class="activity-list" id="activityList">
+      <div class="activity-item"><span>No recent activity</span><span class="ts">—</span></div>
+    </div>
+  </div>
+  <div class="footer">
+    <span>v1.0.0 — Polyglot Oracle</span>
+    <span id="hbFooter">HB: 0</span>
+  </div>
+</div>
+<script>
+(function(){
+  const cmdInput=document.getElementById('cmdInput');
+  const sendBtn=document.getElementById('sendBtn');
+  const responseArea=document.getElementById('responseArea');
+  const sidePanelBtn=document.getElementById('sidePanelBtn');
+  const statusDot=document.getElementById('statusDot');
+  const statusText=document.getElementById('statusText');
+  const activityList=document.getElementById('activityList');
+  const hbFooter=document.getElementById('hbFooter');
+  let heartbeats=0;
+
+  function ts(){return new Date().toLocaleTimeString('en-US',{hour12:false})}
+
+  function addActivity(action){
+    chrome.storage.local.get({recentActivity:[]},function(data){
+      var list=data.recentActivity;
+      list.unshift({action:action,time:ts()});
+      if(list.length>5)list=list.slice(0,5);
+      chrome.storage.local.set({recentActivity:list});
+      renderActivity(list);
+    });
+  }
+
+  function renderActivity(list){
+    activityList.textContent="";if(!list.length){var empty=document.createElement("div");empty.className="activity-item";var s1=document.createElement("span");s1.textContent="No recent activity";var s2=document.createElement("span");s2.className="ts";s2.textContent="\u2014";empty.appendChild(s1);empty.appendChild(s2);activityList.appendChild(empty);return;}
+    list.forEach(function(item){var row=document.createElement("div");row.className="activity-item";var s1=document.createElement("span");s1.textContent=item.action;var s2=document.createElement("span");s2.className="ts";s2.textContent=item.time;row.appendChild(s1);row.appendChild(s2);activityList.appendChild(row);});
+  }
+
+  function sendCommand(cmd){
+    responseArea.textContent='Processing…';
+    addActivity(cmd);
+    try{
+      chrome.runtime.sendMessage({type:'popup',command:cmd},function(resp){
+        if(resp&&resp.result){responseArea.textContent=resp.result;}
+        else if(resp){responseArea.textContent=JSON.stringify(resp);}
+        else{responseArea.textContent='Command sent (no response from engine).';}
+      });
+    }catch(e){responseArea.textContent='Error: '+e.message;}
+  }
+
+  sendBtn.addEventListener('click',function(){
+    var v=cmdInput.value.trim();if(v){sendCommand(v);cmdInput.value='';}
+  });
+  cmdInput.addEventListener('keydown',function(e){
+    if(e.key==='Enter'){var v=cmdInput.value.trim();if(v){sendCommand(v);cmdInput.value='';}}
+  });
+
+  document.querySelectorAll('.qa-btn').forEach(function(btn){
+    btn.addEventListener('click',function(){sendCommand(btn.dataset.action);});
+  });
+
+  sidePanelBtn.addEventListener('click',function(){
+    try{
+      chrome.runtime.sendMessage({type:'openSidePanel'},function(){});
+    }catch(e){responseArea.textContent='Side panel not available.';}
+  });
+
+  function heartbeat(){
+    try{
+      chrome.runtime.sendMessage({type:'heartbeat'},function(resp){
+        heartbeats++;
+        hbFooter.textContent='HB: '+heartbeats;
+        statusDot.style.background='#22c55e';
+        statusDot.style.boxShadow='0 0 4px #22c55e80';
+        statusText.textContent='Online';
+      });
+    }catch(e){
+      statusDot.style.background='#f87171';
+      statusDot.style.boxShadow='0 0 4px #f8717180';
+      statusText.textContent='Offline';
+    }
+  }
+
+  chrome.storage.local.get({recentActivity:[]},function(data){renderActivity(data.recentActivity);});
+  heartbeat();
+  setInterval(heartbeat,5000);
+})();
+</script>
+</body>
+</html>
