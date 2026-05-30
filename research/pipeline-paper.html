@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="la">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Canalis Datorum Vivus — De Transformationibus Aqueductuum, Fluxibus Perpetuis, et Processibus Lotionis in Organismo Computationali</title>
+<style>
+  :root { --bg:#0a0a1a; --card:#12122a; --border:#2a2a4a; --accent:#6c63ff; --accent2:#00d4aa; --text:#e0e0e0; --dim:#888; --paper:#f8f6f0; --ink:#1a1a2e; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:"Palatino Linotype","Book Antiqua",Palatino,"Times New Roman",serif; background:var(--bg); color:var(--text); min-height:100vh; }
+
+  .paper { max-width:900px; margin:2rem auto; background:var(--paper); color:var(--ink); padding:3rem 3.5rem; border-radius:4px; box-shadow:0 8px 32px rgba(0,0,0,0.6); line-height:1.8; }
+  .paper h1 { font-size:1.7rem; text-align:center; margin-bottom:0.3rem; color:#2a1a5e; font-style:italic; }
+  .paper .subtitle { text-align:center; font-size:1.05rem; color:#555; margin-bottom:0.5rem; }
+  .paper .authors { text-align:center; font-size:0.95rem; color:#666; margin-bottom:0.3rem; }
+  .paper .affiliation { text-align:center; font-size:0.85rem; color:#888; margin-bottom:1.5rem; font-style:italic; }
+  .paper .latin-epigraph { text-align:center; font-size:0.9rem; color:#7a6aa0; margin:1rem 0 2rem; font-style:italic; border-top:1px solid #ddd; border-bottom:1px solid #ddd; padding:0.8rem 0; }
+  .paper h2 { font-size:1.2rem; color:#2a1a5e; margin:2rem 0 0.5rem; border-bottom:1px solid #ccc; padding-bottom:0.3rem; }
+  .paper h3 { font-size:1.05rem; color:#3a2a7e; margin:1.5rem 0 0.4rem; }
+  .paper p { margin-bottom:0.8rem; text-align:justify; font-size:0.95rem; }
+  .paper ol, .paper ul { margin:0.5rem 0 1rem 2rem; font-size:0.95rem; }
+  .paper li { margin-bottom:0.3rem; }
+  .paper .eq { text-align:center; margin:1rem 0; font-family:"Courier New",monospace; font-size:0.95rem; color:#2a1a5e; background:#f0eef5; padding:0.6rem; border-radius:3px; }
+  .paper .fig { text-align:center; margin:1.5rem 0; padding:1rem; background:#f5f3ff; border:1px solid #e0daf0; border-radius:4px; }
+  .paper .fig pre { font-family:"Courier New",monospace; font-size:0.75rem; line-height:1.5; color:#333; }
+  .paper .fig-caption { font-size:0.82rem; color:#666; margin-top:0.5rem; font-style:italic; }
+  .paper .ref { font-size:0.85rem; color:#555; margin-bottom:0.3rem; }
+  .paper code { font-family:"Courier New",monospace; background:#f0eef5; padding:0.1rem 0.3rem; border-radius:2px; font-size:0.88rem; }
+  .paper table { width:100%; border-collapse:collapse; margin:1rem 0; font-size:0.88rem; }
+  .paper th { background:#2a1a5e; color:#fff; padding:0.5rem; text-align:left; }
+  .paper td { padding:0.4rem 0.5rem; border-bottom:1px solid #ddd; }
+  .paper tr:nth-child(even) { background:#f5f3ff; }
+  .back-link { display:block; text-align:center; padding:1.5rem; }
+  .back-link a { color:var(--accent2); font-size:1rem; }
+</style>
+</head>
+<body>
+
+<div class="paper">
+
+<h1>Canalis Datorum Vivus:<br>De Transformationibus Aqueductuum, Fluxibus Perpetuis, et Processibus Lotionis in Organismo Computationali</h1>
+
+<div class="subtitle">The Living Data Pipeline: On Aqueduct Transformations, Perpetual Streams, and Batch Processing in a Computational Organism</div>
+
+<div class="authors">Organism AI Research Division</div>
+<div class="affiliation">Laboratorium Intelligentiae Autonomae · itsnotAilabs.com · Anno MMXXVI</div>
+
+<div class="latin-epigraph">
+  "Data fluunt ut aqua per canales organismi,<br>
+  mutantur in itinere, purgantur in fine."<br>
+  <em>— Data flows like water through the channels of the organism,<br>
+  transformed along the journey, purified at the end.</em>
+</div>
+
+<h2>I. Abstractum (Abstract)</h2>
+
+<p>We present the <strong>Pipeline Worker</strong>, a bio-inspired data processing layer within the Organism AI architecture that implements Extract-Transform-Load (ETL) operations, real-time stream processing, and batch aggregation — all running autonomously in a browser Web Worker. The Pipeline Worker treats data as <em>aqua vivens</em> (living water) flowing through a series of composable stages: source, transform, and sink. Each pipeline is registered in a central <em>Registrum Canalium</em> (Pipeline Registry) and can be chained to form complex directed acyclic graphs of data transformation. We formalize the theory of <em>Canalis Vivus</em> (The Living Pipeline): a self-monitoring, self-validating data conduit that carries its own MiniHeart for health monitoring and MiniBrain for adaptive routing. The system supports five core transformation primitives — map, filter, aggregate, validate, and enrich — and enforces data quality through schema validation and prototype-pollution-safe key checking via <code>isSafeKey()</code>.</p>
+
+<h2>II. Introductio (Introduction)</h2>
+
+<p>Traditional ETL systems are mechanical: rigid schedules extract data from sources, apply brittle transformations, and load results into warehouses. They are pipelines in the industrial sense — inert metal tubes through which data is pumped without awareness.</p>
+
+<p>In biological systems, data transport is fundamentally different. The circulatory system does not merely move blood; it monitors its own pressure, adapts flow rates to organ demand, filters toxins through the liver and kidneys, and repairs damaged vessels. Blood is simultaneously the medium and the message — carrying oxygen, hormones, and immune signals in a continuous, adaptive stream.</p>
+
+<p>The Pipeline Worker brings this biological metaphor to computational data processing. Each pipeline is an <em>aqueductus vivus</em> (living aqueduct) that monitors its own throughput, validates its contents, adapts its routing based on downstream health, and reports vital signs through its embedded MiniHeart. Data does not simply pass through the pipeline — it is <em>transformed</em>, <em>validated</em>, and <em>enriched</em> at every stage.</p>
+
+<h2>III. Architectura Canalium (Pipeline Architecture)</h2>
+
+<h3>III.A — Definitio Canalis (Pipeline Definition)</h3>
+
+<p>A pipeline is defined as an ordered sequence of stages, each with a type and a transformation function. The Pipeline Worker maintains a registry of all active pipelines, keyed by a unique pipeline identifier:</p>
+
+<div class="eq">
+  Pipeline = { id, name, stages: [Stage₁, Stage₂, ..., Stageₙ], status, metrics }
+</div>
+
+<p>Each pipeline progresses through a lifecycle: <code>registered → running → paused → completed</code>. The registry enforces uniqueness of pipeline IDs and validates stage configurations before activation. Pipelines may be chained such that the sink of one pipeline feeds the source of another:</p>
+
+<div class="eq">
+  Chain(P₁, P₂) ⟹ P₁.sink → P₂.source
+</div>
+
+<div class="fig">
+<pre>
+  ┌──────────┐    ┌─────────────┐    ┌─────────────┐    ┌──────────┐
+  │  Source   │───▶│  Transform  │───▶│  Transform  │───▶│   Sink   │
+  │ (Extract) │    │   (Map)     │    │ (Validate)  │    │  (Load)  │
+  └──────────┘    └─────────────┘    └─────────────┘    └──────────┘
+       │                                                       │
+       │              Pipeline P₁                              │
+       │                                                       ▼
+       │          ┌─────────────┐    ┌─────────────┐    ┌──────────┐
+       │          │  Transform  │───▶│  Transform  │───▶│   Sink   │
+       └─────────▶│  (Filter)   │    │ (Aggregate) │    │  (Load)  │
+                  └─────────────┘    └─────────────┘    └──────────┘
+                        Pipeline P₂ (chained)
+</pre>
+<div class="fig-caption">Figura I — Pipeline chaining: the output of P₁ feeds both its own sink and the source of P₂, forming a directed acyclic graph.</div>
+</div>
+
+<h3>III.B — Stadia Transformationis (Transform Stages)</h3>
+
+<p>The Pipeline Worker implements five core transformation primitives, each modeled after a biological function of the circulatory system:</p>
+
+<table>
+  <tr><th>Stadium</th><th>Nomen Latinum</th><th>Biological Analogue</th><th>Operation</th></tr>
+  <tr><td><code>map</code></td><td>Mutatio</td><td>Enzyme catalysis</td><td>Transform each datum to a new form: f(x) → y</td></tr>
+  <tr><td><code>filter</code></td><td>Filtrum</td><td>Kidney filtration</td><td>Remove data failing predicate: p(x) → boolean</td></tr>
+  <tr><td><code>aggregate</code></td><td>Congregatio</td><td>Platelet aggregation</td><td>Collect and reduce: [x₁...xₙ] → summary</td></tr>
+  <tr><td><code>validate</code></td><td>Probatio</td><td>Immune recognition</td><td>Check schema conformance, reject malformed data</td></tr>
+  <tr><td><code>enrich</code></td><td>Augmentatio</td><td>Nutrient absorption</td><td>Annotate data with metadata or external lookups</td></tr>
+</table>
+
+<p>Each stage receives an input record, applies its transformation, and passes the result to the next stage. If a stage rejects a record (e.g., validation failure), the record is routed to a <em>canalis mortuus</em> (dead-letter channel) for later inspection. The stage execution model is:</p>
+
+<div class="eq">
+  output = stageₙ(stageₙ₋₁(...stage₂(stage₁(input))))
+</div>
+
+<h2>IV. Fluxus Perpetuus (Stream Processing)</h2>
+
+<p>In stream mode, the Pipeline Worker processes data as a continuous, unbounded flow of events. Each event is pushed through the pipeline stages immediately upon arrival, with no batching delay. This models the biological principle of <em>fluxus sanguinis</em> (blood flow): continuous, real-time, and responsive to demand.</p>
+
+<p>The stream processor maintains a push-based architecture. Sources emit events asynchronously, and each stage processes them as they arrive. Back-pressure is managed through an internal buffer with configurable high-water and low-water marks:</p>
+
+<div class="eq">
+  if (buffer.length &gt; HIGH_WATER_MARK) → pause source emission<br>
+  if (buffer.length &lt; LOW_WATER_MARK) → resume source emission
+</div>
+
+<p>Stream processing supports windowed aggregation for time-series data. Windows are defined by either a fixed time interval (tumbling window) or a sliding duration (sliding window):</p>
+
+<table>
+  <tr><th>Window Type</th><th>Nomen Latinum</th><th>Semantics</th></tr>
+  <tr><td>Tumbling</td><td>Fenestra Fixa</td><td>Non-overlapping fixed intervals: [0–5s], [5–10s], ...</td></tr>
+  <tr><td>Sliding</td><td>Fenestra Labens</td><td>Overlapping intervals: every 1s, window of 5s</td></tr>
+  <tr><td>Session</td><td>Fenestra Sessionis</td><td>Gap-based: window closes after inactivity timeout</td></tr>
+</table>
+
+<h2>V. Processus Lotionum (Batch Processing)</h2>
+
+<p>In batch mode, the Pipeline Worker collects records into discrete lots (<em>lotiones</em>) before processing. This is analogous to the digestive system: food is collected, processed in batches through the stomach and intestines, and nutrients are emitted in periodic waves of absorption.</p>
+
+<p>The batch processor follows the Collect–Process–Emit pattern:</p>
+
+<div class="eq">
+  Batch(n) = { collect(records, until: |records| ≥ n), process(stages), emit(results) }
+</div>
+
+<p>Batch sizes are configurable per pipeline, with adaptive sizing controlled by the MiniBrain. When the system detects high load (via MiniHeart throughput metrics), batch sizes increase to amortize per-record overhead. When load is low, batch sizes decrease to reduce latency:</p>
+
+<div class="eq">
+  batchSize = baseBatchSize × (1 + MiniBrain.load_factor × α)
+</div>
+
+<p>Batch aggregation supports common reduction operations: <code>sum</code>, <code>count</code>, <code>average</code>, <code>min</code>, <code>max</code>, and custom reducer functions. Results are emitted as a single aggregate record per batch, suitable for dashboard updates, metric collection, or downstream pipeline consumption.</p>
+
+<h2>VI. Validatio et Sanitatio (Validation &amp; Sanitization)</h2>
+
+<p>Data quality is enforced at every stage through two complementary mechanisms: <em>schema validation</em> and <em>key sanitization</em>. Together, these ensure that no malformed or malicious data propagates through the pipeline.</p>
+
+<h3>VI.A — Probatio Schematis (Schema Validation)</h3>
+
+<p>Each pipeline stage may declare a schema that incoming records must satisfy. Schemas define required fields, expected types, value ranges, and structural constraints:</p>
+
+<div class="eq">
+  Schema = { fields: { name: { type, required, range?, pattern? } } }
+</div>
+
+<p>Records failing validation are rejected with a structured error describing which field violated which constraint. Rejected records flow to the dead-letter channel, preserving the original data for debugging and reprocessing.</p>
+
+<h3>VI.B — Sanitatio Clavium (Key Sanitization)</h3>
+
+<p>All key lookups in pipeline data, stage configurations, and pipeline metadata pass through the <code>isSafeKey()</code> guard. This function rejects keys that could trigger prototype pollution attacks:</p>
+
+<ul>
+  <li><code>__proto__</code> — Direct prototype chain manipulation</li>
+  <li><code>constructor</code> — Constructor property access</li>
+  <li><code>prototype</code> — Prototype object reference</li>
+</ul>
+
+<p>This defense is critical because pipeline data often originates from untrusted external sources. Without key sanitization, a malicious payload containing <code>{"__proto__": {"isAdmin": true}}</code> could pollute the prototype chain of all JavaScript objects in the worker context.</p>
+
+<h2>VII. Neurologia Canalis (Pipeline Neurology)</h2>
+
+<p>Each Pipeline Worker instance carries the full NeuroCore stack. This gives the pipeline biological self-awareness and adaptive capacity far beyond traditional ETL systems:</p>
+
+<h3>VII.A — Cor Parvum Canalis (Pipeline MiniHeart)</h3>
+
+<p>The MiniHeart monitors pipeline vital signs: throughput (records per second), latency (average stage processing time), error rate, and buffer utilization. These metrics are emitted as heartbeat pulses on a configurable interval:</p>
+
+<div class="eq">
+  PipelineHealth = { throughput, latency, errorRate, bufferUtil, uptime }
+</div>
+
+<p>When any vital sign exceeds its threshold, the MiniHeart triggers an alert that propagates to the MetaCardiacModel for system-wide cardiac rhythm adjustment.</p>
+
+<h3>VII.B — Cerebrum Parvum Canalis (Pipeline MiniBrain)</h3>
+
+<p>The MiniBrain enables adaptive routing and resource allocation. Through Hebbian learning, the MiniBrain strengthens connections to downstream sinks that process data fastest and weakens connections to slow or unhealthy consumers:</p>
+
+<div class="eq">
+  Δw<sub>ij</sub> = η × throughput<sub>i</sub> × health<sub>j</sub>
+</div>
+
+<p>This enables the pipeline to dynamically re-route data to the healthiest available sink, achieving fault tolerance without explicit failover configuration.</p>
+
+<h3>VII.C — Rhythmus MetaCardiacus (MetaCardiacModel Rhythm)</h3>
+
+<p>The MetaCardiacModel synchronizes pipeline heartbeats across all workers via Kuramoto phase coupling. When pipelines across multiple workers synchronize their processing rhythms, the system enters a state of <em>resonantia canalis</em> (pipeline resonance), enabling coordinated batch flushes and synchronized windowed aggregations:</p>
+
+<div class="eq">
+  dθ<sub>i</sub>/dt = ω<sub>i</sub> + (K/N) × Σ<sub>j</sub> sin(θ<sub>j</sub> − θ<sub>i</sub>)
+</div>
+
+<div class="fig">
+<pre>
+    ┌──────────────────────────────────────────────────────┐
+    │                  MetaCardiacModel                    │
+    │            (Phase Coupling Controller)                │
+    │                                                      │
+    │   θ₁ ●────────● θ₂ ●────────● θ₃ ●────────● θ₄    │
+    │   Pipeline-1    Pipeline-2    Pipeline-3    Pipeline-4│
+    │                                                      │
+    │   ω₁=1.0Hz     ω₂=1.2Hz     ω₃=0.9Hz     ω₄=1.1Hz │
+    │         ↘          ↕          ↕          ↙           │
+    │              Resonantia Canalis (K=0.5)               │
+    │            synchronized batch emissions                │
+    └──────────────────────────────────────────────────────┘
+</pre>
+<div class="fig-caption">Figura II — Kuramoto phase coupling across four pipeline workers: natural frequencies ω converge toward collective resonance under coupling strength K.</div>
+</div>
+
+<h2>VIII. Conclusio (Conclusion)</h2>
+
+<p>The Canalis Datorum Vivus reimagines data pipelines as living biological conduits. By embedding MiniHeart health monitoring, MiniBrain adaptive routing, and MetaCardiacModel phase coupling into every pipeline, the Pipeline Worker transcends traditional ETL limitations. Data is not merely extracted, transformed, and loaded — it <em>flows</em>, is <em>validated</em>, <em>adapts</em> to system health, and <em>synchronizes</em> across workers. The five transformation primitives (map, filter, aggregate, validate, enrich) mirror the biological functions of enzyme catalysis, kidney filtration, platelet aggregation, immune recognition, and nutrient absorption. This living pipeline architecture demonstrates that bio-inspired principles can produce data processing systems that are self-monitoring, self-healing, and self-optimizing — all running autonomously within the browser.</p>
+
+<div class="latin-epigraph">
+  "Aqua pura per canales puros fluit.<br>
+  Data pura per canales vivos fluunt."<br>
+  <em>— Pure water flows through clean channels.<br>
+  Pure data flows through living pipelines.</em>
+</div>
+
+<h2>IX. Bibliographia (References)</h2>
+
+<p class="ref">[1] Organism AI. (2026). "pipeline-worker.js — Data Pipeline Worker: ETL, Streams &amp; Batch Processing." <em>GitHub: FreddyCreates/potential-succotash</em>.</p>
+<p class="ref">[2] Organism AI. (2026). "neuro-core.js — MiniHeart, MiniBrain, NeuroEmergence." <em>GitHub: FreddyCreates/potential-succotash</em>.</p>
+<p class="ref">[3] Zaharia, M. et al. (2016). "Apache Spark: A Unified Engine for Big Data Processing." <em>Communications of the ACM</em>, 59(11), 56–65. — Unified batch and stream processing.</p>
+<p class="ref">[4] Akidau, T. et al. (2015). "The Dataflow Model: A Practical Approach to Balancing Correctness, Latency, and Cost in Massive-Scale, Unbounded, Out-of-Order Data Processing." <em>VLDB</em>. — Google Dataflow windowing semantics.</p>
+<p class="ref">[5] Kreps, J. (2014). "Questioning the Lambda Architecture." <em>O'Reilly Radar</em>. — Unified stream/batch architectures.</p>
+<p class="ref">[6] Carbone, P. et al. (2015). "Apache Flink: Stream and Batch Processing in a Single Engine." <em>IEEE Data Engineering Bulletin</em>, 38(4). — Stream-first processing model.</p>
+<p class="ref">[7] Kleppmann, M. (2017). <em>Designing Data-Intensive Applications</em>. O'Reilly Media. — ETL patterns and data pipeline architecture.</p>
+<p class="ref">[8] Kuramoto, Y. (1984). <em>Chemical Oscillations, Waves, and Turbulence</em>. Springer-Verlag. — Phase coupling model applied to pipeline synchronization.</p>
+
+</div>
+
+
+<div style="max-width:900px;margin:2rem auto;padding:0 2rem;">
+<style>
+.auro-uses { background:#f0eef8; border:1px solid #d0ccee; border-left:4px solid #6c63ff; border-radius:4px; padding:1.5rem 2rem; margin:1.5rem 0; font-family:'Palatino Linotype','Book Antiqua',Palatino,serif; color:#14142a; line-height:1.7; }
+.auro-uses h2 { font-size:1.1rem; color:#1a0e5e; margin-bottom:0.8rem; text-transform:uppercase; letter-spacing:0.05em; }
+.auro-uses ul { margin:0.5rem 0 1rem 1.5rem; }
+.auro-uses li { margin-bottom:0.5rem; font-size:0.93rem; }
+.auro-uses p { font-size:0.9rem; margin-bottom:0.5rem; }
+.auro-uses a { color:#00705a; }
+</style>
+<div class="auro-uses">
+<h2>Canonical Uses — AURO System</h2>
+<p>This paper carries force as an AURO charter instrument under <strong>ORO-CHARTER-001</strong>. It functions across all five use classes:</p>
+<ul>
+  <li><strong>Training Corpus:</strong> Pipeline architecture trains AURO's data flow reasoning — teaching the system how to construct, validate, and optimize multi-stage processing pipelines.</li>
+  <li><strong>Absorption Blueprint:</strong> Pipeline stages map to AURO's systems PSE primitive. Stage dependency graphs absorbed into AURO's task planning intelligence (PROTO-040 TPIP).</li>
+  <li><strong>Governance Charter:</strong> Defines AURO's data flow governance: every pipeline stage is auditable, no data flows without a lineage record, and failures cascade with φ-backoff retry.</li>
+  <li><strong>Protocol Source:</strong> Grounds PROTO-040 TPIP, PROTO-041 GDP, and PROTO-185 AACP absorption pipeline stages.</li>
+  <li><strong>Public Record:</strong> Permanent evidence of AURO's pipeline architecture design, available at <a href="pipeline-paper.html">research/pipeline-paper.html</a>.</li>
+</ul>
+<p>→ <a href="auro-charter.html">AURO Official Charter (ORO-CHARTER-001)</a> &nbsp;·&nbsp; <a href="protocol-papers.html">PROTO-185 AACP</a> &nbsp;·&nbsp; <a href="scheduler-paper.html">Scheduler Paper</a></p>
+</div>
+</div>
+<div class="back-link">
+  <a href="../index.html">← Back to Organism AI</a>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,18 @@
+{
+  "id": "atlas://bot/organism-docs-bot",
+  "name": "organism-docs-bot",
+  "class": "Bot",
+  "division": "Document & Report",
+  "divisionNum": "IV",
+  "emoji": "📚",
+  "domain": "Auto-documentation",
+  "triggers": ["push:*"],
+  "capabilities": ["generate_docs", "catalog", "encyclopedia", "reference"],
+  "languages": ["atlas://language/cil"],
+  "governance_pipeline": "pipeline://governance/bot_cycle",
+  "ocl_ref": "atlas://organism/bot-fleet",
+  "script": "scripts/generate-docs.js",
+  "workflow": ".github/workflows/organism-docs-bot.yml",
+  "report": "docs/architecture-map.md",
+  "microbots": []
+}

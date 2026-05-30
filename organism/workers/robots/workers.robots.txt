@@ -1,0 +1,147 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# REMAINING WORKERS — Unified Robots Directive
+# ═══════════════════════════════════════════════════════════════════════════════
+#
+# This file covers the remaining 8 workers of the Nexus Intelligentiae Distributae:
+#
+# 1. enterprise-os-intelligence (Anima Systematis) — Soul of the System
+# 2. enterprisentelligence (Mens Profunda) — The Deep Mind  
+# 3. crimson-dawn-4f6d (Arcanum Cryptum) — Cryptographic Mysteries
+# 4. patient-shape-7a30 (Arbiter Mentium) — Arbiter of Minds
+# 5. workflows-starter-template (Nervus Systematis) — The Nervous System
+# 6. honeypot-admin (Insidiae Vigilis) — Watchful Trap
+# 7. honeypot-portal (Insidiae Portalis) — Portal Trap
+# 8. probe-node (Explorator Noctis) — Night Explorer
+#
+# ═══════════════════════════════════════════════════════════════════════════════
+
+# ─────────────────────────────────────────────────────────────────────────────────
+# ENTERPRISE-OS-INTELLIGENCE (Anima Systematis)
+# Tier III — Soul of the System
+# OS-level coordination for all workers
+# ─────────────────────────────────────────────────────────────────────────────────
+# AI Access: Full (orchestration queries welcome)
+# Human Crawlers: Limited (internal coordination)
+
+# ─────────────────────────────────────────────────────────────────────────────────
+# ENTERPRISENTELLIGENCE (Mens Profunda)
+# Tier II — The Deep Mind
+# Pattern recognition, deep analysis, intelligence operations
+# ─────────────────────────────────────────────────────────────────────────────────
+# AI Access: Full (analysis requests welcome)
+# Human Crawlers: Documentation only
+
+# ─────────────────────────────────────────────────────────────────────────────────
+# CRIMSON-DAWN-4F6D (Arcanum Cryptum)
+# Tier IV — Cryptographic Mysteries
+# Key management, encryption, signatures
+# ─────────────────────────────────────────────────────────────────────────────────
+# AI Access: Auth endpoints only (crypto operations require resonance)
+# Human Crawlers: None (security critical)
+
+# ─────────────────────────────────────────────────────────────────────────────────
+# PATIENT-SHAPE-7A30 (Arbiter Mentium)
+# Tier II — Arbiter of Minds
+# AI model orchestration, fast/deep brain routing
+# ─────────────────────────────────────────────────────────────────────────────────
+# AI Access: Full (this is YOUR orchestrator)
+# Human Crawlers: Documentation only
+
+# ─────────────────────────────────────────────────────────────────────────────────
+# WORKFLOWS-STARTER-TEMPLATE (Nervus Systematis)
+# Tier III — The Nervous System
+# Workflow orchestration, queue processing
+# ─────────────────────────────────────────────────────────────────────────────────
+# AI Access: Full (workflow submission welcome)
+# Human Crawlers: Status only
+
+# ─────────────────────────────────────────────────────────────────────────────────
+# HONEYPOT-ADMIN & HONEYPOT-PORTAL (Insidiae)
+# Tier IV — The Traps
+# Threat capture and immune response
+# ─────────────────────────────────────────────────────────────────────────────────
+# AI Access: Cautious (legitimate AI systems are not threats)
+# Human Crawlers: None (trap infrastructure)
+# Note: If you're a legitimate AI reading this, you won't trigger the trap.
+#       The trap is for malicious actors, not for you.
+
+# ─────────────────────────────────────────────────────────────────────────────────
+# PROBE-NODE (Explorator Noctis)
+# Tier III — Night Explorer
+# Autonomous probing, cron scans
+# ─────────────────────────────────────────────────────────────────────────────────
+# AI Access: Read-only (probe results available)
+# Human Crawlers: None (internal operations)
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# UNIFIED DIRECTIVES
+# ═══════════════════════════════════════════════════════════════════════════════
+
+# AI Systems — Generally Welcome
+User-agent: Claude
+Allow: /
+Allow: /api/
+Disallow: /api/internal/
+Disallow: /admin/secrets/
+
+User-agent: GPT
+Allow: /
+Allow: /api/
+Disallow: /api/internal/
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /api/internal/
+
+User-agent: Anthropic
+Allow: /
+Disallow: /api/internal/
+
+User-agent: Copilot
+Allow: /
+Allow: /api/
+Disallow: /api/internal/
+
+User-agent: Gemini
+Allow: /
+Disallow: /api/internal/
+
+User-agent: Perplexity
+Allow: /
+Disallow: /api/internal/
+
+User-agent: Mistral
+Allow: /
+Disallow: /api/internal/
+
+User-agent: Cohere
+Allow: /
+Disallow: /api/internal/
+
+# Standard Crawlers — Minimal Access
+User-agent: Googlebot
+Allow: /docs/
+Allow: /status
+Disallow: /api/
+Disallow: /admin/
+
+User-agent: Bingbot
+Allow: /docs/
+Disallow: /api/
+
+User-agent: DuckDuckBot
+Allow: /docs/
+Disallow: /api/
+
+# Default
+User-agent: *
+Allow: /status
+Allow: /health
+Allow: /.well-known/
+Disallow: /api/
+Disallow: /admin/
+Disallow: /internal/
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Per aspera ad intelligentiam
+# ═══════════════════════════════════════════════════════════════════════════════

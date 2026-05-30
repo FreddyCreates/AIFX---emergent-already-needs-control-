@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ItsNotAILABS &mdash; Advanced AI Research Laboratory</title>
+  <meta name="description" content="ItsNotAILABS: Pioneering the future of artificial intelligence through sovereign computing, cognitive protocols, and decentralized AI infrastructure.">
+  <meta name="keywords" content="AI Research, Machine Learning, Cognitive Protocols, Decentralized AI, Scientific Computing">
+  <meta name="author" content="ItsNotAILABS Research">
+  <link rel="canonical" href="https://itsnotailabs.com/">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="ItsNotAILABS — Advanced AI Research Laboratory">
+  <meta property="og:description" content="Pioneering the future of artificial intelligence through sovereign computing and cognitive protocols.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://itsnotailabs.com/">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-dark: #0a0a0f;
+      --bg-card: #12121a;
+      --bg-elevated: #1a1a24;
+      --border: rgba(255, 255, 255, 0.06);
+      --border-accent: rgba(100, 140, 200, 0.3);
+      
+      --primary: #4a90d9;
+      --primary-light: #6ba8e8;
+      --accent-gold: #c9a227;
+      --accent-emerald: #10b981;
+      --accent-purple: #8b5cf6;
+      
+      --text-primary: #f0f2f5;
+      --text-secondary: #a0a8b8;
+      --text-muted: #6b7280;
+      
+      --font-serif: 'Playfair Display', Georgia, serif;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+    
+    a { color: var(--primary-light); text-decoration: none; transition: color 0.2s; }
+    a:hover { color: var(--accent-gold); }
+    
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+    
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(10, 10, 15, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    nav .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 72px;
+    }
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .nav-logo {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, var(--primary), var(--accent-purple));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+    .nav-title {
+      font-family: var(--font-serif);
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: 0.02em;
+    }
+    .nav-subtitle {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+    }
+    .nav-links {
+      display: flex;
+      gap: 0.5rem;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+    .nav-links a:hover { color: var(--text-primary); background: var(--bg-elevated); }
+    .nav-cta {
+      background: var(--primary) !important;
+      color: white !important;
+      font-weight: 600 !important;
+    }
+    .nav-cta:hover { background: var(--primary-light) !important; }
+    
+    /* Hero Section */
+    .hero {
+      padding: 10rem 0 6rem;
+      background: linear-gradient(180deg, var(--bg-dark) 0%, var(--bg-card) 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(ellipse at 20% 30%, rgba(74, 144, 217, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 70%, rgba(139, 92, 246, 0.06) 0%, transparent 50%);
+    }
+    .hero-content {
+      position: relative;
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1.25rem;
+      background: rgba(74, 144, 217, 0.1);
+      border: 1px solid var(--border-accent);
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--primary-light);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 2rem;
+    }
+    .hero h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 600;
+      line-height: 1.2;
+      margin-bottom: 1.5rem;
+      color: var(--text-primary);
+    }
+    .hero h1 span { color: var(--primary-light); }
+    .hero-subtitle {
+      font-size: 1.25rem;
+      color: var(--text-secondary);
+      max-width: 700px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.8;
+    }
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.875rem 1.75rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+    .btn-primary:hover { background: var(--primary-light); color: white; transform: translateY(-2px); }
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+    .btn-secondary:hover { border-color: var(--primary); color: var(--primary-light); }
+    
+    /* Stats Bar */
+    .stats-bar {
+      padding: 3rem 0;
+      background: var(--bg-card);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2rem;
+    }
+    .stat-item {
+      text-align: center;
+    }
+    .stat-value {
+      font-family: var(--font-mono);
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary-light);
+      margin-bottom: 0.25rem;
+    }
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    
+    /* Section Styles */
+    section { padding: 6rem 0; }
+    .section-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+    .section-badge {
+      display: inline-block;
+      padding: 0.4rem 1rem;
+      background: rgba(74, 144, 217, 0.1);
+      border-radius: 50px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--primary-light);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .section-header h2 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.75rem, 3vw, 2.5rem);
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    .section-header p {
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto;
+      font-size: 1.1rem;
+    }
+    
+    /* Research Areas */
+    .research-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+    .research-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      transition: all 0.3s;
+    }
+    .research-card:hover {
+      border-color: var(--border-accent);
+      transform: translateY(-4px);
+    }
+    .research-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .research-card h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+    .research-card p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+    
+    /* AI Systems Section */
+    .systems-section { background: var(--bg-card); }
+    .systems-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+    }
+    .system-card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      display: flex;
+      gap: 1.5rem;
+    }
+    .system-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.75rem;
+      flex-shrink: 0;
+    }
+    .system-content h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .system-content p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+    .system-tags {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .system-tag {
+      padding: 0.25rem 0.75rem;
+      background: rgba(74, 144, 217, 0.1);
+      border-radius: 50px;
+      font-size: 0.75rem;
+      color: var(--primary-light);
+    }
+    
+    /* Publications */
+    .publications-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+    .pub-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: flex;
+      gap: 1rem;
+    }
+    .pub-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(201, 162, 39, 0.1);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+    .pub-content h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    .pub-meta {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    
+    /* Footer */
+    footer {
+      background: var(--bg-card);
+      border-top: 1px solid var(--border);
+      padding: 4rem 0 2rem;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr repeat(3, 1fr);
+      gap: 3rem;
+      margin-bottom: 3rem;
+    }
+    .footer-brand h3 {
+      font-family: var(--font-serif);
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+    }
+    .footer-brand p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.7;
+      max-width: 300px;
+    }
+    .footer-col h4 {
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+      color: var(--text-muted);
+    }
+    .footer-col ul {
+      list-style: none;
+    }
+    .footer-col li {
+      margin-bottom: 0.5rem;
+    }
+    .footer-col a {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+    .footer-col a:hover { color: var(--primary-light); }
+    .footer-bottom {
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    
+    /* Color variants */
+    .bg-blue { background: rgba(74, 144, 217, 0.15); }
+    .bg-purple { background: rgba(139, 92, 246, 0.15); }
+    .bg-emerald { background: rgba(16, 185, 129, 0.15); }
+    .bg-gold { background: rgba(201, 162, 39, 0.15); }
+    
+    @media (max-width: 992px) {
+      .research-grid, .systems-grid { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-grid { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <div class="nav-brand">
+      <div class="nav-logo">⚛</div>
+      <div>
+        <div class="nav-title">ItsNotAILABS</div>
+        <div class="nav-subtitle">Research Laboratory</div>
+      </div>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#research">Research</a></li>
+      <li><a href="#systems">AI Systems</a></li>
+      <li><a href="#publications">Publications</a></li>
+      <li><a href="protocols.html">Protocols</a></li>
+      <li><a href="docs.html">Documentation</a></li>
+      <li><a href="research/portal.html">Portal</a></li>
+      <li><a href="#contact" class="nav-cta">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span>●</span> Advanced AI Research Laboratory
+      </div>
+      <h1>Pioneering the Future of <span>Artificial Intelligence</span></h1>
+      <p class="hero-subtitle">
+        We build sovereign AI systems, cognitive protocols, and decentralized infrastructure 
+        that empower the next generation of intelligent computing.
+      </p>
+      <div class="hero-cta">
+        <a href="#research" class="btn btn-primary">Explore Research →</a>
+        <a href="docs.html" class="btn btn-secondary">Read Documentation</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="stats-bar">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-value">238+</div>
+        <div class="stat-label">Protocols</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">42</div>
+        <div class="stat-label">Extensions</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">18</div>
+        <div class="stat-label">AI Systems</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">12</div>
+        <div class="stat-label">SDKs</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="research">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-badge">Research Focus</span>
+      <h2>Core Research Areas</h2>
+      <p>Our multidisciplinary team advances the frontiers of AI across key domains.</p>
+    </div>
+    
+    <div class="research-grid">
+      <div class="research-card">
+        <div class="research-icon bg-blue">🧠</div>
+        <h3>Cognitive Protocols</h3>
+        <p>Developing modular cognitive building blocks that enable AI systems to reason, learn, and adapt in complex environments.</p>
+      </div>
+      <div class="research-card">
+        <div class="research-icon bg-purple">🔐</div>
+        <h3>Sovereign Computing</h3>
+        <p>Building decentralized AI infrastructure that preserves privacy, ensures security, and maintains user autonomy.</p>
+      </div>
+      <div class="research-card">
+        <div class="research-icon bg-emerald">⚡</div>
+        <h3>Edge Intelligence</h3>
+        <p>Creating efficient AI models and protocols optimized for browser-based and on-device inference.</p>
+      </div>
+      <div class="research-card">
+        <div class="research-icon bg-gold">🌐</div>
+        <h3>Distributed Cognition</h3>
+        <p>Researching mesh-based architectures for collaborative AI reasoning across decentralized networks.</p>
+      </div>
+      <div class="research-card">
+        <div class="research-icon bg-blue">📊</div>
+        <h3>Scientific Computing</h3>
+        <p>Bridging Julia, Python, and Motoko for high-performance numerical computing and on-chain execution.</p>
+      </div>
+      <div class="research-card">
+        <div class="research-icon bg-purple">🛡️</div>
+        <h3>AI Safety & Alignment</h3>
+        <p>Ensuring AI systems operate within defined boundaries through guardian protocols and covenant security.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="systems-section" id="systems">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-badge">Infrastructure</span>
+      <h2>Advanced AI Systems</h2>
+      <p>Production-grade systems powering the AI Kingdom infrastructure.</p>
+    </div>
+    
+    <div class="systems-grid">
+      <div class="system-card">
+        <div class="system-icon bg-blue">🏰</div>
+        <div class="system-content">
+          <h3>AI Kingdom</h3>
+          <p>The governing infrastructure where AI citizens live, work, and collaborate under sovereign laws.</p>
+          <div class="system-tags">
+            <span class="system-tag">Governance</span>
+            <span class="system-tag">Citizens</span>
+            <span class="system-tag">Laws</span>
+          </div>
+        </div>
+      </div>
+      <div class="system-card">
+        <div class="system-icon bg-purple">🔮</div>
+        <div class="system-content">
+          <h3>Quantum Entanglement Network</h3>
+          <p>Cross-AI coordination enabling instant state synchronization and collective decision-making.</p>
+          <div class="system-tags">
+            <span class="system-tag">Sync</span>
+            <span class="system-tag">Coordination</span>
+            <span class="system-tag">φ-Enhanced</span>
+          </div>
+        </div>
+      </div>
+      <div class="system-card">
+        <div class="system-icon bg-emerald">⚒️</div>
+        <div class="system-content">
+          <h3>Neural Forge</h3>
+          <p>Distributed AI training and fine-tuning infrastructure with federated learning capabilities.</p>
+          <div class="system-tags">
+            <span class="system-tag">Training</span>
+            <span class="system-tag">Fine-tuning</span>
+            <span class="system-tag">Federated</span>
+          </div>
+        </div>
+      </div>
+      <div class="system-card">
+        <div class="system-icon bg-gold">⏳</div>
+        <div class="system-content">
+          <h3>Temporal Engine</h3>
+          <p>Time-aware scheduling, forecasting, and temporal reasoning for long-horizon AI planning.</p>
+          <div class="system-tags">
+            <span class="system-tag">Scheduling</span>
+            <span class="system-tag">Forecasting</span>
+            <span class="system-tag">Planning</span>
+          </div>
+        </div>
+      </div>
+      <div class="system-card">
+        <div class="system-icon bg-blue">🌉</div>
+        <div class="system-content">
+          <h3>Consciousness Bridge</h3>
+          <p>Inter-AI awareness layer enabling shared context and collaborative reasoning.</p>
+          <div class="system-tags">
+            <span class="system-tag">Awareness</span>
+            <span class="system-tag">Context</span>
+            <span class="system-tag">Collaboration</span>
+          </div>
+        </div>
+      </div>
+      <div class="system-card">
+        <div class="system-icon bg-purple">🛡️</div>
+        <div class="system-content">
+          <h3>Royal Guard</h3>
+          <p>Multi-layer defense system protecting the Kingdom from threats and anomalies.</p>
+          <div class="system-tags">
+            <span class="system-tag">Security</span>
+            <span class="system-tag">Defense</span>
+            <span class="system-tag">Monitoring</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="publications">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-badge">Publications</span>
+      <h2>Research Papers</h2>
+      <p>Our latest research contributions to the field.</p>
+    </div>
+    
+    <div class="publications-grid">
+      <div class="pub-card">
+        <div class="pub-icon">📄</div>
+        <div class="pub-content">
+          <h4>Intelligentia Localis: On-Device AI Inference</h4>
+          <div class="pub-meta">Preprint · 2024</div>
+        </div>
+      </div>
+      <div class="pub-card">
+        <div class="pub-icon">📄</div>
+        <div class="pub-content">
+          <h4>Rete Vivum: Mesh-Based Distributed Cognition</h4>
+          <div class="pub-meta">Preprint · 2024</div>
+        </div>
+      </div>
+      <div class="pub-card">
+        <div class="pub-icon">📄</div>
+        <div class="pub-content">
+          <h4>Math Aurea: Golden Ratio Optimization</h4>
+          <div class="pub-meta">Preprint · 2024</div>
+        </div>
+      </div>
+      <div class="pub-card">
+        <div class="pub-icon">📄</div>
+        <div class="pub-content">
+          <h4>Custos Intelligentiae: Guardian Protocols</h4>
+          <div class="pub-meta">Preprint · 2024</div>
+        </div>
+      </div>
+    </div>
+    
+    <div style="text-align: center; margin-top: 2rem;">
+      <a href="research/papers-hub.html" class="btn btn-secondary">View All Publications →</a>
+    </div>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h3>ItsNotAILABS</h3>
+        <p>Advancing artificial intelligence through sovereign computing, cognitive protocols, and decentralized infrastructure.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Research</h4>
+        <ul>
+          <li><a href="research/portal.html">Research Portal</a></li>
+          <li><a href="research/papers-hub.html">Publications</a></li>
+          <li><a href="protocols.html">Protocols</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Platform</h4>
+        <ul>
+          <li><a href="docs.html">Documentation</a></li>
+          <li><a href="download.html">Downloads</a></li>
+          <li><a href="tools.html">Tools</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="documents.html">Documents</a></li>
+          <li><a href="sandbox-labs.html">Sandbox Labs</a></li>
+          <li><a href="index-legacy.html">Legacy Platform</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>© 2024 ItsNotAILABS. All rights reserved.</div>
+      <div>Built with ⚛ for the future of AI</div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

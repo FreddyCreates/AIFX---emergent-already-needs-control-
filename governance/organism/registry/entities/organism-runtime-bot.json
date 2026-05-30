@@ -1,0 +1,19 @@
+{
+  "id": "atlas://bot/organism-runtime-bot",
+  "name": "organism-runtime-bot",
+  "class": "Bot",
+  "division": "Deploy & Operate",
+  "divisionNum": "V",
+  "emoji": "⚙️",
+  "domain": "Live Civitas runtime monitoring",
+  "triggers": ["push:sdk/runtime/", "push:sdk/agents/", "push:sdk/engines/", "push:protocols/", "schedule:every-2h"],
+  "capabilities": ["runtime_probe", "contract_validate", "microbot_registry", "report"],
+  "languages": ["atlas://language/ocl", "atlas://language/ril"],
+  "governance_pipeline": "pipeline://governance/bot_cycle",
+  "ocl_ref": "atlas://organism/bot-fleet",
+  "protocol_refs": ["PROTO-223:IntelligenceContractProtocol"],
+  "script": "scripts/runtime-monitor.js",
+  "workflow": ".github/workflows/organism-runtime-bot.yml",
+  "report": "docs/runtime-report.md",
+  "microbots": ["agent-vitals", "contract-watcher"]
+}

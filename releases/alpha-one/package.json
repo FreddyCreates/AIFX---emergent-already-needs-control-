@@ -1,0 +1,25 @@
+{
+  "name": "@medina/alpha-one",
+  "version": "0.1.0-alpha.1",
+  "description": "ALPHA ONE — The complete bot fleet release package. Agents + Microbots + Runner infrastructure.",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js --status",
+    "test": "node --test test.js",
+    "build": "node ../../scripts/build-alpha-one.js"
+  },
+  "keywords": [
+    "alpha-one",
+    "bots",
+    "agents",
+    "microbots",
+    "organism",
+    "ai-fleet"
+  ],
+  "author": "Medina",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

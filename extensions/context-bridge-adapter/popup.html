@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Context Bridge Adapter</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{width:380px;background:#1a1a2e;color:#c8c8e0;font-family:'Segoe UI',system-ui,sans-serif;font-size:13px}
+  .popup{display:flex;flex-direction:column;padding:16px;gap:12px}
+  .hdr{display:flex;align-items:center;gap:10px}
+  .phi{font-size:22px;color:#0ea5e9;font-weight:700}
+  .hdr h1{font-size:16px;font-weight:600;color:#e0e0ff;flex:1}
+  .status{display:flex;align-items:center;gap:6px;font-size:11px;color:#888}
+  .status-dot{width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 4px #22c55e80}
+  .response-area{background:#0e0e22;border:1px solid #0a2a3d;border-radius:6px;padding:10px;min-height:60px;max-height:140px;overflow-y:auto;font-family:'Courier New',monospace;font-size:11px;color:#a0a0d0;line-height:1.5}
+  .btn-row{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  .btn{background:#0e0e22;color:#c8c8e0;border:1px solid #0a2a3d;border-radius:6px;padding:10px;font-size:12px;cursor:pointer;font-weight:500;transition:all .15s;text-align:center}
+  .btn:hover{border-color:#0ea5e9;color:#0ea5e9;background:#0ea5e911}
+  .btn-primary{background:#0ea5e9;color:#fff;border-color:#0ea5e9}
+  .btn-primary:hover{background:#0284c7;color:#fff}
+  .side-panel-btn{width:100%;background:#0ea5e922;color:#0ea5e9;border:1px solid #0ea5e944;border-radius:6px;padding:8px;font-weight:600;cursor:pointer;font-size:12px;transition:all .15s}
+  .side-panel-btn:hover{background:#0ea5e944}
+  .footer{display:flex;justify-content:space-between;align-items:center;font-size:10px;color:#555;padding-top:4px;border-top:1px solid #0a2a3d}
+</style>
+</head>
+<body>
+<div class="popup">
+  <div class="hdr">
+    <span class="phi">φ</span>
+    <h1>Context Bridge Adapter</h1>
+    <div class="status"><span class="status-dot" id="statusDot"></span><span id="statusText">Connecting…</span></div>
+  </div>
+  <div class="response-area" id="responseArea">Click Capture to grab this page's context, then Bridge to copy to AI.</div>
+  <div class="btn-row">
+    <button class="btn btn-primary" id="captureBtn">📸 Capture Context</button>
+    <button class="btn" id="bridgeBtn">🌉 Bridge to AI</button>
+    <button class="btn" id="listBtn">📋 Active Bridges</button>
+    <button class="btn" id="stateBtn">⚙️ State</button>
+  </div>
+  <button class="side-panel-btn" id="sidePanelBtn">Open Side Panel</button>
+  <div class="footer">
+    <span>v1.0.0 — Context Bridge Adapter EXT-037</span>
+    <span id="hbFooter">HB: 0</span>
+  </div>
+</div>
+<script>
+(function(){
+  const responseArea=document.getElementById('responseArea');
+  const captureBtn=document.getElementById('captureBtn');
+  const bridgeBtn=document.getElementById('bridgeBtn');
+  const listBtn=document.getElementById('listBtn');
+  const stateBtn=document.getElementById('stateBtn');
+  const sidePanelBtn=document.getElementById('sidePanelBtn');
+  const statusDot=document.getElementById('statusDot');
+  const statusText=document.getElementById('statusText');
+  const hbFooter=document.getElementById('hbFooter');
+  let hb=0;
+
+  function show(data){responseArea.textContent=typeof data==='string'?data:JSON.stringify(data,null,2);}
+
+  captureBtn.addEventListener('click',function(){
+    chrome.tabs.query({active:true,currentWindow:true},function(tabs){
+      if(!tabs||!tabs[0]){show('No active tab.');return;}
+      var t=tabs[0];
+      var ctx={url:t.url,title:t.title,domain:t.url?new URL(t.url).hostname:'',selection:'',headings:[],wordCount:0,language:'en',readingTime:0};
+      show('📸 Capturing...');
+      chrome.runtime.sendMessage({action:'captureContext',tabId:t.id,context:ctx},function(r){
+        if(chrome.runtime.lastError){show('Error: '+chrome.runtime.lastError.message);return;}
+        show(r);statusText.textContent='Captured — '+ctx.domain;
+      });
+    });
+  });
+
+  bridgeBtn.addEventListener('click',function(){
+    chrome.tabs.query({active:true,currentWindow:true},function(tabs){
+      if(!tabs||!tabs[0]){show('No active tab.');return;}
+      show('🌉 Building bridge...');
+      chrome.runtime.sendMessage({action:'bridgeToPrompt',tabId:tabs[0].id},function(r){
+        if(chrome.runtime.lastError){show('Error: '+chrome.runtime.lastError.message);return;}
+        show(r&&r.bridgedPrompt?r.bridgedPrompt:r);
+      });
+    });
+  });
+
+  listBtn.addEventListener('click',function(){
+    chrome.runtime.sendMessage({action:'getAllBridges'},function(r){
+      if(chrome.runtime.lastError){show('Error: '+chrome.runtime.lastError.message);return;}
+      show(r);
+    });
+  });
+
+  stateBtn.addEventListener('click',function(){
+    chrome.runtime.sendMessage({action:'getState'},function(r){
+      if(chrome.runtime.lastError){show('Error: '+chrome.runtime.lastError.message);return;}
+      show(r);
+    });
+  });
+
+  sidePanelBtn.addEventListener('click',function(){try{chrome.runtime.sendMessage({action:'getState'},function(){});}catch(e){}});
+
+  function hbeat(){
+    try{chrome.runtime.sendMessage({action:'getState'},function(r){
+      hb++;hbFooter.textContent='HB: '+hb;statusDot.style.background='#22c55e';
+      statusText.textContent='Bridges: '+(r&&r.activeBridges||0);
+    });}catch(e){statusDot.style.background='#f87171';statusText.textContent='Offline';}
+  }
+  hbeat();setInterval(hbeat,5000);
+})();
+</script>
+</body>
+</html>

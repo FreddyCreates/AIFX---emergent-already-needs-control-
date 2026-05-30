@@ -1,0 +1,13 @@
+{
+  "id": "atlas://engine/chrono",
+  "name": "chrono",
+  "class": "Engine",
+  "division": "Infrastructure",
+  "emoji": "⏱️",
+  "domain": "Temporal orchestration — 873ms heartbeat, phi-locked timing",
+  "events": ["heartbeat_tick", "timing_drift_detected", "beat_cycle_completed"],
+  "capabilities": ["heartbeat", "schedule", "sync", "phi_timing"],
+  "governance_pipeline": "pipeline://governance/default_cycle",
+  "ocl_ref": "atlas://organism/bot-fleet",
+  "script": "sdk/engines/chrono-engine.js"
+}

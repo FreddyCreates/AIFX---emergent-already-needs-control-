@@ -1,0 +1,57 @@
+# ════════════════════════════════════════════════════════════════════════════
+# CPL-L — Topology Safety Laws
+# id: governance://law/topology-safety
+# version: 1.0.0
+#
+# Safety laws for topology/infrastructure: engines, organisms, realm entities.
+# Applied by the topology_cycle pipeline.
+# ════════════════════════════════════════════════════════════════════════════
+
+id: "governance://law/topology-safety"
+version: "1.0.0"
+updated: "2026-05-03"
+ocl_ref: "atlas://organism/bot-fleet"
+
+subjects:
+
+  - id: "atlas://engine/chrono"
+    rules:
+      - name: "ALERT_HEARTBEAT_DRIFT"
+        description: "Alert if heartbeat deviates from 873ms by more than 10%"
+        when: 'Math.abs(context.heartbeat_ms - 873) / 873 > 0.1'
+        then:
+          - action: "NOTIFY"
+            target: "fleet_commander"
+            reason: "CHRONO heartbeat drift detected (>10% from 873ms φ-lock)"
+
+  - id: "atlas://engine/nexoris"
+    rules:
+      - name: "BLOCK_DANGLING_SYNAPSES"
+        description: "Block new synapse binding if more than 20 are dangling"
+        when: 'context.dangling_synapses > 20'
+        then:
+          - action: "FORBID"
+            target: "synapse_bind"
+            reason: "Too many dangling synapses — nexoris mesh degraded"
+          - action: "REQUIRE"
+            target: "synapse_cleanup"
+
+  - id: "atlas://organism/oracle"
+    rules:
+      - name: "REQUIRE_CITATION_ON_JUDGMENT"
+        description: "All Oracle judgments must cite at least one law or evidence source"
+        when: 'context.judgment_citations.length === 0'
+        then:
+          - action: "FORBID"
+            target: "judgment_emit"
+            reason: "ORACLE judgment lacks citations — must reference a law or evidence"
+
+  - id: "atlas://organism/guardian"
+    rules:
+      - name: "ESCALATE_SIMULTANEOUS_VIOLATIONS"
+        description: "Escalate if GUARDIAN sees violations across 3+ domains simultaneously"
+        when: 'context.violation_domains.length >= 3'
+        then:
+          - action: "ESCALATE"
+            target: "human://operator"
+            reason: "Cross-domain violation cascade detected — GUARDIAN requesting human arbitration"

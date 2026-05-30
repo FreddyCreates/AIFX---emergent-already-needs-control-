@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Protocols — ItsNotAILABS Scientific Computing</title>
+  <meta name="description" content="234+ Cognitive Protocols for AI orchestration, memory consolidation, attention routing, and distributed cognition.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Orbitron:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-primary: #030712;
+      --bg-secondary: #0a0f1e;
+      --bg-glass: rgba(255, 255, 255, 0.03);
+      --border: rgba(255, 255, 255, 0.08);
+      --accent-cpl: #00D4AA;
+      --accent-julia: #9558B2;
+      --accent-gold: #D4AF37;
+      --text-primary: #F8FAFC;
+      --text-secondary: #94A3B8;
+      --text-dim: #64748B;
+      --gradient-scientific: linear-gradient(135deg, #00D4AA 0%, #3776AB 50%, #9558B2 100%);
+    }
+    
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+    
+    a { color: var(--accent-cpl); text-decoration: none; }
+    a:hover { color: var(--accent-gold); }
+    
+    .container { max-width: 1400px; margin: 0 auto; padding: 0 2rem; }
+    
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(3, 7, 18, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 0;
+    }
+    nav .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .nav-brand {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent-cpl);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .nav-brand .logo-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--gradient-scientific);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+    }
+    .nav-links {
+      display: flex;
+      gap: 0.25rem;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+    .nav-links a:hover, .nav-links a.active {
+      color: var(--accent-cpl);
+      background: rgba(0, 212, 170, 0.1);
+    }
+    
+    /* Hero */
+    .hero {
+      padding: 10rem 0 4rem;
+      text-align: center;
+      background: 
+        radial-gradient(ellipse at 50% 0%, rgba(0, 212, 170, 0.1) 0%, transparent 50%),
+        var(--bg-primary);
+    }
+    .hero h1 {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(2rem, 4vw, 3rem);
+      margin-bottom: 1rem;
+    }
+    .hero h1 .highlight { color: var(--accent-cpl); }
+    .hero p {
+      color: var(--text-secondary);
+      max-width: 700px;
+      margin: 0 auto 2rem;
+      font-size: 1.1rem;
+    }
+    
+    /* Filters */
+    .filters {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 3rem;
+    }
+    .filter-btn {
+      padding: 0.5rem 1.25rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      border-color: var(--accent-cpl);
+      color: var(--accent-cpl);
+      background: rgba(0, 212, 170, 0.1);
+    }
+    
+    /* Protocols Grid */
+    .protocols-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      padding-bottom: 4rem;
+    }
+    .protocol-card {
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+    .protocol-card:hover {
+      border-color: var(--accent-julia);
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    }
+    .protocol-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .protocol-id {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--accent-julia);
+      padding: 0.25rem 0.75rem;
+      background: rgba(149, 88, 178, 0.15);
+      border-radius: 6px;
+    }
+    .protocol-category {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .protocol-card h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+    .protocol-card p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+    .protocol-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+    .protocol-tag {
+      padding: 0.2rem 0.6rem;
+      background: rgba(0, 212, 170, 0.1);
+      border-radius: 4px;
+      font-size: 0.7rem;
+      color: var(--accent-cpl);
+    }
+    
+    /* Footer */
+    footer {
+      padding: 3rem 0;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 0.85rem;
+    }
+    
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .protocols-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <a href="index.html" class="nav-brand">
+      <div class="logo-icon">⚛</div>
+      ItsNotAILABS
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Platform</a></li>
+      <li><a href="index.html#bridges">Bridges</a></li>
+      <li><a href="index.html#cpl">CPL</a></li>
+      <li><a href="index.html#models">Models</a></li>
+      <li><a href="index.html#tools">Tools</a></li>
+      <li><a href="protocols.html" class="active">Protocols</a></li>
+      <li><a href="docs.html">Docs</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="container">
+    <h1>234+ <span class="highlight">Cognitive Protocols</span></h1>
+    <p>Modular building blocks for intelligent systems — from attention routing to memory consolidation, all embedded with CPL orchestration.</p>
+    
+    <div class="filters">
+      <button class="filter-btn active">All</button>
+      <button class="filter-btn">Learning</button>
+      <button class="filter-btn">Memory</button>
+      <button class="filter-btn">Attention</button>
+      <button class="filter-btn">Cognition</button>
+      <button class="filter-btn">Security</button>
+      <button class="filter-btn">Integration</button>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="protocols-grid">
+      <div class="protocol-card">
+        <div class="protocol-header">
+          <span class="protocol-id">PROTO-024</span>
+          <span class="protocol-category">Learning</span>
+        </div>
+        <h3>Hebbian Learning Protocol</h3>
+        <p>Neural plasticity implementation — "neurons that fire together, wire together" with φ-optimized weight updates.</p>
+        <div class="protocol-tags">
+          <span class="protocol-tag">plasticity</span>
+          <span class="protocol-tag">weights</span>
+          <span class="protocol-tag">φ-enhanced</span>
+        </div>
+      </div>
+      
+      <div class="protocol-card">
+        <div class="protocol-header">
+          <span class="protocol-id">PROTO-031</span>
+          <span class="protocol-category">Memory</span>
+        </div>
+        <h3>Memory Consolidation</h3>
+        <p>Short-term to long-term memory transfer with temporal-difference learning and replay buffers.</p>
+        <div class="protocol-tags">
+          <span class="protocol-tag">STM→LTM</span>
+          <span class="protocol-tag">replay</span>
+          <span class="protocol-tag">compression</span>
+        </div>
+      </div>
+      
+      <div class="protocol-card">
+        <div class="protocol-header">
+          <span class="protocol-id">PROTO-047</span>
+          <span class="protocol-category">Attention</span>
+        </div>
+        <h3>Attention Routing</h3>
+        <p>Dynamic attention allocation across cognitive subsystems with priority queuing and resource management.</p>
+        <div class="protocol-tags">
+          <span class="protocol-tag">priority</span>
+          <span class="protocol-tag">allocation</span>
+          <span class="protocol-tag">routing</span>
+        </div>
+      </div>
+      
+      <div class="protocol-card">
+        <div class="protocol-header">
+          <span class="protocol-id">PROTO-089</span>
+          <span class="protocol-category">Cognition</span>
+        </div>
+        <h3>Predictive Coding</h3>
+        <p>Hierarchical prediction error minimization with Bayesian inference and free energy principle.</p>
+        <div class="protocol-tags">
+          <span class="protocol-tag">prediction</span>
+          <span class="protocol-tag">bayesian</span>
+          <span class="protocol-tag">free-energy</span>
+        </div>
+      </div>
+      
+      <div class="protocol-card">
+        <div class="protocol-header">
+          <span class="protocol-id">PROTO-112</span>
+          <span class="protocol-category">Learning</span>
+        </div>
+        <h3>Reward Signal Protocol</h3>
+        <p>Reinforcement learning with dopaminergic reward signals, temporal difference, and actor-critic architecture.</p>
+        <div class="protocol-tags">
+          <span class="protocol-tag">RL</span>
+          <span class="protocol-tag">TD-learning</span>
+          <span class="protocol-tag">actor-critic</span>
+        </div>
+      </div>
+      
+      <div class="protocol-card">
+        <div class="protocol-header">
+          <span class="protocol-id">PROTO-156</span>
+          <span class="protocol-category">Cognition</span>
+        </div>
+        <h3>Kuramoto Oscillator Sync</h3>
+        <p>Phase synchronization for distributed cognition with coupled oscillator networks and entrainment.</p>
+        <div class="protocol-tags">
+          <span class="protocol-tag">oscillators</span>
+          <span class="protocol-tag">sync</span>
+          <span class="protocol-tag">phase</span>
+        </div>
+      </div>
+      
+      <div class="protocol-card">
+        <div class="protocol-header">
+          <span class="protocol-id">PROTO-201</span>
+          <span class="protocol-category">Cognition</span>
+        </div>
+        <h3>Goal Stack Protocol</h3>
+        <p>Hierarchical task decomposition with goal-subgoal relationships and dynamic reprioritization.</p>
+        <div class="protocol-tags">
+          <span class="protocol-tag">goals</span>
+          <span class="protocol-tag">hierarchy</span>
+          <span class="protocol-tag">planning</span>
+        </div>
+      </div>
+      
+      <div class="protocol-card">
+        <div class="protocol-header">
+          <span class="protocol-id">PROTO-227</span>
+          <span class="protocol-category">Security</span>
+        </div>
+        <h3>Sovereign Charter</h3>
+        <p>Governance protocol for autonomous AI systems with safety constraints and alignment verification.</p>
+        <div class="protocol-tags">
+          <span class="protocol-tag">governance</span>
+          <span class="protocol-tag">safety</span>
+          <span class="protocol-tag">alignment</span>
+        </div>
+      </div>
+      
+      <div class="protocol-card">
+        <div class="protocol-header">
+          <span class="protocol-id">PROTO-230</span>
+          <span class="protocol-category">Security</span>
+        </div>
+        <h3>Cloud Glade Security</h3>
+        <p>Phantom-powered AI security biome with threat detection, seasonal cycles, and playbook automation.</p>
+        <div class="protocol-tags">
+          <span class="protocol-tag">security</span>
+          <span class="protocol-tag">phantom</span>
+          <span class="protocol-tag">biome</span>
+        </div>
+      </div>
+      
+      <div class="protocol-card">
+        <div class="protocol-header">
+          <span class="protocol-id">PROTO-232</span>
+          <span class="protocol-category">Integration</span>
+        </div>
+        <h3>GateKeeper Protocol</h3>
+        <p>Kingdom edge intelligence with border security, traffic control, toll calculation, and threat scoring.</p>
+        <div class="protocol-tags">
+          <span class="protocol-tag">edge</span>
+          <span class="protocol-tag">gateway</span>
+          <span class="protocol-tag">traffic</span>
+        </div>
+      </div>
+      
+      <div class="protocol-card">
+        <div class="protocol-header">
+          <span class="protocol-id">PROTO-233</span>
+          <span class="protocol-category">Integration</span>
+        </div>
+        <h3>Thermal Management</h3>
+        <p>Self-cooling H2O reservoirs and thermal regulation across the Organism with φ-enhanced load balancing.</p>
+        <div class="protocol-tags">
+          <span class="protocol-tag">thermal</span>
+          <span class="protocol-tag">cooling</span>
+          <span class="protocol-tag">H2O</span>
+        </div>
+      </div>
+      
+      <div class="protocol-card">
+        <div class="protocol-header">
+          <span class="protocol-id">PROTO-234</span>
+          <span class="protocol-category">Integration</span>
+        </div>
+        <h3>Power Distribution</h3>
+        <p>Organism-wide power generation, distribution, storage, load balancing, and energy monetization.</p>
+        <div class="protocol-tags">
+          <span class="protocol-tag">power</span>
+          <span class="protocol-tag">grid</span>
+          <span class="protocol-tag">energy</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>© 2024 ItsNotAILABS — MedinaSITech Research Laboratory. All protocols under open research license.</p>
+  </div>
+</footer>
+
+</body>
+</html>

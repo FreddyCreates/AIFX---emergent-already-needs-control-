@@ -1,0 +1,63 @@
+# ════════════════════════════════════════════════════════════════════════════
+# CPL-P — Learning Governance Cycle
+# id: pipeline://governance/learning_cycle
+# Extends: default_cycle with learning-specific steps
+# ════════════════════════════════════════════════════════════════════════════
+
+id: "pipeline://governance/learning_cycle"
+version: "1.0.0"
+updated: "2026-05-03"
+extends: "pipeline://governance/default_cycle"
+domain: "learning"
+law_files:
+  - "governance/laws/learning-stability.cpl-l"
+  - "governance/laws/bot-fleet.cpl-l"
+
+steps:
+
+  - id: "ingest_events"
+    description: "Load learning events from dist/governance/events/ (tagged: learning, hebbian)"
+    use: "governance.ingest_events"
+    filter_tags: ["learning", "hebbian", "protocol", "curriculum"]
+    on_error: "continue"
+
+  - id: "collect_protocol_state"
+    description: "Load protocol weights, reward signal, curriculum progress"
+    use: "governance.learning.collect_protocol_state"
+    on_error: "continue"
+
+  - id: "apply_laws"
+    description: "Apply learning-stability.cpl-l laws"
+    use: "governance.apply_cpl_l"
+    on_error: "stop"
+
+  - id: "record_decisions"
+    use: "governance.record_decisions"
+    on_error: "continue"
+
+  - id: "update_mml"
+    use: "governance.update_mml"
+    on_error: "continue"
+
+  - id: "route_actions"
+    use: "governance.route_actions"
+    on_error: "continue"
+
+  - id: "learning_report"
+    description: "Generate learning governance report to docs/learning-governance-report.md"
+    use: "governance.learning.generate_report"
+    on_error: "continue"
+
+branches:
+
+  - id: "if_reward_divergence"
+    when: "isNaN(context.reward_signal) || context.reward_signal > 2.618"
+    then:
+      type: "ESCALATE"
+      target: "human://operator"
+
+  - id: "if_learning_healthy"
+    when: "context.reward_signal > 0.7 && context.protocol_failure_rate < 0.1"
+    then:
+      type: "ALLOW"
+      skip_steps: ["route_actions"]

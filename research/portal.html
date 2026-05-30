@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Research Portal — MedinaSITech / ItsNotAILABS</title>
+<meta name="description" content="Central navigation portal for MedinaSITech research: papers, protocols, tools, architecture, and governance documentation.">
+<style>
+  :root {
+    --bg: #070914;
+    --bg2: #0f1324;
+    --card: #151a2e;
+    --border: #242c4a;
+    --gold: #d4af37;
+    --gold-dim: #b8962c;
+    --teal: #00d4aa;
+    --purple: #8b5cf6;
+    --blue: #3b82f6;
+    --text: #e8eaf3;
+    --dim: #9aa0b5;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+  a { color: var(--teal); text-decoration: none; }
+  a:hover { color: var(--gold); }
+
+  .hero {
+    padding: 4rem 1.5rem 3rem;
+    text-align: center;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(212,175,55,0.1) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(139,92,246,0.08) 0%, transparent 40%),
+      linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+    border-bottom: 1px solid var(--border);
+  }
+  .hero .badge {
+    display: inline-block;
+    padding: 0.25rem 0.9rem;
+    border: 1px solid rgba(212,175,55,0.35);
+    border-radius: 999px;
+    color: var(--gold);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  .hero h1 {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, var(--text) 0%, var(--gold) 50%, var(--teal) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero p {
+    max-width: 600px;
+    margin: 0 auto;
+    color: var(--dim);
+    font-size: 1.1rem;
+  }
+
+  .nav-home {
+    display: inline-block;
+    margin-top: 1.5rem;
+    padding: 0.6rem 1.2rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.02);
+    font-size: 0.9rem;
+  }
+  .nav-home:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  .wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 4rem;
+  }
+
+  .portal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .portal-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 2rem;
+    transition: all 0.3s;
+    display: flex;
+    flex-direction: column;
+  }
+  .portal-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+  }
+  .portal-card.gold:hover { border-color: var(--gold); box-shadow: 0 12px 40px rgba(212,175,55,0.15); }
+  .portal-card.teal:hover { border-color: var(--teal); box-shadow: 0 12px 40px rgba(0,212,170,0.15); }
+  .portal-card.purple:hover { border-color: var(--purple); box-shadow: 0 12px 40px rgba(139,92,246,0.15); }
+  .portal-card.blue:hover { border-color: var(--blue); box-shadow: 0 12px 40px rgba(59,130,246,0.15); }
+
+  .portal-card .icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+  .portal-card h2 {
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+    color: var(--text);
+  }
+  .portal-card p {
+    color: var(--dim);
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+    flex-grow: 1;
+  }
+  .portal-card .links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .portal-card .links a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 0.9rem;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    color: var(--text);
+  }
+  .portal-card .links a:hover {
+    border-color: var(--teal);
+    color: var(--teal);
+  }
+  .portal-card .links a::after {
+    content: '→';
+    opacity: 0.5;
+    transition: transform 0.2s;
+  }
+  .portal-card .links a:hover::after {
+    transform: translateX(4px);
+    opacity: 1;
+  }
+
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+    padding: 2rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    margin-bottom: 3rem;
+  }
+  .stat {
+    text-align: center;
+  }
+  .stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--teal);
+  }
+  .stat-label {
+    font-size: 0.8rem;
+    color: var(--dim);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  .section-header h2 {
+    font-size: 1.75rem;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+  }
+  .section-header p {
+    color: var(--dim);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .quick-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+  }
+  .quick-links a {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.85rem;
+    color: var(--dim);
+    background: rgba(255,255,255,0.02);
+  }
+  .quick-links a:hover {
+    border-color: var(--teal);
+    color: var(--teal);
+  }
+
+  .footer {
+    text-align: center;
+    color: var(--dim);
+    padding: 2rem 1rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 700px) {
+    .portal-grid { grid-template-columns: 1fr; }
+    .stats-bar { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="badge">Research Navigation</div>
+  <h1>🧬 Research Portal</h1>
+  <p>Central navigation hub for all MedinaSITech research artifacts, papers, protocols, tools, and documentation.</p>
+  <a href="../index.html" class="nav-home">← Back to Lab Home</a>
+</header>
+
+<main class="wrap">
+
+  <!-- Stats Bar -->
+  <div class="stats-bar">
+    <div class="stat">
+      <div class="stat-value">229+</div>
+      <div class="stat-label">Protocols</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">7</div>
+      <div class="stat-label">Latin Papers</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">27</div>
+      <div class="stat-label">Extensions</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">21</div>
+      <div class="stat-label">Bots</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">6</div>
+      <div class="stat-label">Microbots</div>
+    </div>
+  </div>
+
+  <!-- Portal Cards -->
+  <div class="portal-grid">
+
+    <!-- Papers -->
+    <div class="portal-card gold">
+      <div class="icon">📚</div>
+      <h2>Research Papers</h2>
+      <p>Formal academic papers with Latin titles covering AI orchestration, distributed systems, and computational theory.</p>
+      <div class="links">
+        <a href="papers-hub.html">Papers Hub (All Papers)</a>
+        <a href="protocol-papers.html">Protocol Encyclopedia</a>
+        <a href="../docs/sovereign-thinking-theory-paper.md">Theory Paper</a>
+        <a href="auro-charter.html">AURO Charter</a>
+      </div>
+    </div>
+
+    <!-- Latin Papers Direct -->
+    <div class="portal-card teal">
+      <div class="icon">📜</div>
+      <h2>Latin Papers (Direct)</h2>
+      <p>Direct links to the primary Latin-titled research papers in HTML format.</p>
+      <div class="links">
+        <a href="autonomy-paper.html">De Autonomia Perpetua</a>
+        <a href="math-paper.html">Mathematica Aurea</a>
+        <a href="inference-paper.html">Intelligentia Localis</a>
+        <a href="mesh-paper.html">Rete Vivum</a>
+        <a href="pipeline-paper.html">Machina Polyglotta</a>
+        <a href="neuro-paper.html">Neuroplasticitas</a>
+      </div>
+    </div>
+
+    <!-- Tools & Software -->
+    <div class="portal-card blue">
+      <div class="icon">🛠️</div>
+      <h2>Tools & Software</h2>
+      <p>Browser extensions, SDKs, and software artifacts produced by the research program.</p>
+      <div class="links">
+        <a href="../tools.html">AI Extensions Portal</a>
+        <a href="../download.html">Extension Downloads</a>
+        <a href="../docs/extension-catalog.md">Extension Catalog</a>
+        <a href="../docs/sdk-reference.md">SDK Reference</a>
+      </div>
+    </div>
+
+    <!-- Protocols -->
+    <div class="portal-card purple">
+      <div class="icon">⚖️</div>
+      <h2>Protocols & Governance</h2>
+      <p>229+ published protocols, governance frameworks, and coordination mechanisms.</p>
+      <div class="links">
+        <a href="../docs/protocol-encyclopedia.md">Protocol Encyclopedia</a>
+        <a href="../docs/governance-report.md">Governance Report</a>
+        <a href="../docs/bot-fleet-charter.md">Bot Fleet Charter</a>
+        <a href="protocol-licenses.html">Protocol Licenses</a>
+      </div>
+    </div>
+
+    <!-- Architecture -->
+    <div class="portal-card gold">
+      <div class="icon">🏗️</div>
+      <h2>Architecture</h2>
+      <p>System architecture, worker divisions, and infrastructure documentation.</p>
+      <div class="links">
+        <a href="../docs/architecture-map.md">Architecture Map</a>
+        <a href="../docs/centerfold-engine-spec.md">Centerfold Engine</a>
+        <a href="../specs/terminus-architecture-artifact-v1.md">TERMINUS Spec</a>
+        <a href="../docs/ai-workspace-map.md">AI Workspace Map</a>
+      </div>
+    </div>
+
+    <!-- Research Mission -->
+    <div class="portal-card teal">
+      <div class="icon">🎯</div>
+      <h2>Research Mission</h2>
+      <p>Code-grounded research program: missions, packaging, governance, and autonomous support.</p>
+      <div class="links">
+        <a href="research-mission.html">Research Mission</a>
+        <a href="../README.md">Repository README</a>
+        <a href="../CONTRIBUTING.md">Contributing Guide</a>
+        <a href="../RIGHTS.md">Rights & Licensing</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Paper Archives -->
+  <section>
+    <div class="section-header">
+      <h2>📦 Paper Archives (PDF & Source)</h2>
+      <p>Direct access to paper archives with PDF versions, source materials, and metadata.</p>
+    </div>
+    <div class="portal-grid">
+      <div class="portal-card">
+        <h2>📄 De Superficie Terminorum</h2>
+        <p>MSIT-RP-2026-001 — Native workstation surface for governed agentic execution.</p>
+        <div class="links">
+          <a href="../papers/terminus/">Archive Folder</a>
+          <a href="../papers/terminus/paper.pdf">PDF</a>
+        </div>
+      </div>
+      <div class="portal-card">
+        <h2>📄 Ratio Ordinis</h2>
+        <p>MSIT-RP-2026-002 — Risk-aware AI routing algorithm.</p>
+        <div class="links">
+          <a href="../papers/ordo-algorithm/">Archive Folder</a>
+          <a href="../papers/ordo-algorithm/paper.pdf">PDF</a>
+        </div>
+      </div>
+      <div class="portal-card">
+        <h2>📄 Machina Polyglotta</h2>
+        <p>MSIT-RP-2026-003 — Multi-terminal polyglot orchestration.</p>
+        <div class="links">
+          <a href="../papers/polyglot-orchestration/">Archive Folder</a>
+          <a href="../papers/polyglot-orchestration/paper.pdf">PDF</a>
+        </div>
+      </div>
+      <div class="portal-card">
+        <h2>📄 Mathematica Aurea</h2>
+        <p>MSIT-RP-2026-004 — Golden ratio mathematics and sovereign computation.</p>
+        <div class="links">
+          <a href="../papers/math-aurea/">Archive Folder</a>
+          <a href="../papers/math-aurea/paper.pdf">PDF</a>
+        </div>
+      </div>
+      <div class="portal-card">
+        <h2>📄 Intelligentia Localis</h2>
+        <p>MSIT-RP-2026-005 — In-browser inference and embeddings.</p>
+        <div class="links">
+          <a href="../papers/intelligentia-localis/">Archive Folder</a>
+          <a href="../papers/intelligentia-localis/paper.pdf">PDF</a>
+        </div>
+      </div>
+      <div class="portal-card">
+        <h2>📄 Rete Vivum</h2>
+        <p>MSIT-RP-2026-006 — Living network infrastructure.</p>
+        <div class="links">
+          <a href="../papers/rete-vivum/">Archive Folder</a>
+          <a href="../papers/rete-vivum/paper.pdf">PDF</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick Links -->
+  <div class="quick-links">
+    <a href="../index.html">Lab Home</a>
+    <a href="../CITATION.cff">Citation</a>
+    <a href="../zenodo/">Zenodo Records</a>
+    <a href="../osf/">OSF Records</a>
+    <a href="../arxiv/">arXiv Materials</a>
+    <a href="https://github.com/ItsNotAILABS/PRODUCTION-" target="_blank">GitHub</a>
+    <a href="../docs/">Documentation</a>
+    <a href="../schemas/">Schemas</a>
+  </div>
+
+</main>
+
+<footer class="footer">
+  <p>MedinaSITech Research Portal · <a href="../index.html">ItsNotAILABS</a> · © 2024–2026</p>
+</footer>
+
+</body>
+</html>

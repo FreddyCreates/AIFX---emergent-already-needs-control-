@@ -1,0 +1,73 @@
+# ════════════════════════════════════════════════════════════════════════════
+# CPL-P — Topology Governance Cycle
+# id: pipeline://governance/topology_cycle
+# Covers: engines, organisms (ORACLE, GUARDIAN), runtime topology
+# ════════════════════════════════════════════════════════════════════════════
+
+id: "pipeline://governance/topology_cycle"
+version: "1.0.0"
+updated: "2026-05-03"
+extends: "pipeline://governance/default_cycle"
+domain: "topology"
+law_files:
+  - "governance/laws/topology-safety.cpl-l"
+  - "governance/laws/agent-health.cpl-l"
+
+steps:
+
+  - id: "ingest_events"
+    description: "Load topology events: engines, organisms, agents"
+    use: "governance.ingest_events"
+    filter_tags: ["engine", "organism", "agent", "topology"]
+    on_error: "continue"
+
+  - id: "collect_topology_state"
+    description: "Map current engine heartbeats, synapse counts, organism states"
+    use: "governance.topology.collect_topology_state"
+    on_error: "continue"
+
+  - id: "apply_laws"
+    description: "Apply topology-safety.cpl-l + agent-health.cpl-l laws"
+    use: "governance.apply_cpl_l"
+    on_error: "stop"
+
+  - id: "record_decisions"
+    use: "governance.record_decisions"
+    on_error: "continue"
+
+  - id: "update_mml"
+    use: "governance.update_mml"
+    on_error: "continue"
+
+  - id: "route_actions"
+    use: "governance.route_actions"
+    on_error: "continue"
+
+  - id: "oracle_narration"
+    description: "ORACLE converts law decisions + proposals into human narratives"
+    use: "governance.topology.oracle_narrate"
+    on_error: "continue"
+
+  - id: "guardian_enforcement"
+    description: "GUARDIAN enforces safety boundaries and blocks violations"
+    use: "governance.topology.guardian_enforce"
+    on_error: "continue"
+
+  - id: "topology_report"
+    description: "Generate topology governance report to docs/topology-governance-report.md"
+    use: "governance.topology.generate_report"
+    on_error: "continue"
+
+branches:
+
+  - id: "if_cross_domain_violation"
+    when: "context.violation_domains && context.violation_domains.length >= 3"
+    then:
+      type: "ESCALATE"
+      target: "human://operator"
+
+  - id: "if_heartbeat_critical"
+    when: "context.heartbeat_drift > 0.2"
+    then:
+      type: "NOTIFY"
+      target: "atlas://engine/chrono"

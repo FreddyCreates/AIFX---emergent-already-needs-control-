@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "dfx": "0.22.0",
+  "canisters": {
+    "vigil_frontend": {
+      "type": "assets",
+      "source": ["icp-dist"]
+    }
+  },
+  "networks": {
+    "local": {
+      "bind": "127.0.0.1:4943",
+      "type": "ephemeral"
+    },
+    "ic": {
+      "providers": ["https://icp0.io"],
+      "type": "persistent"
+    }
+  },
+  "output_env_file": ".env"
+}

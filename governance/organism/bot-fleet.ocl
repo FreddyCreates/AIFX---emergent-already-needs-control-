@@ -1,0 +1,88 @@
+# ════════════════════════════════════════════════════════════════════════════
+# ORGANISM CONTROL LANGUAGE (OCL) — Bot Fleet Charter
+# id: atlas://organism/bot-fleet
+#
+# This OCL document defines the shared operational charter for all 20 (now 21)
+# bots in the Sovereign Organism Bot Fleet. Individual bots may extend or
+# override this charter, but all are bound by its limits.
+#
+# Ref: docs/bot-fleet-charter.md v2.0
+# ════════════════════════════════════════════════════════════════════════════
+
+id: "atlas://organism/bot-fleet"
+version: "2.0.0"
+updated: "2026-05-03"
+maintainer: "atlas://bot/organism-alpha-bot"
+
+# ── Identity Namespace ────────────────────────────────────────────────────────
+namespace: "organism"
+entity_class: "Bot"
+identity_pattern: "organism-{domain}-bot"
+identity_email_pattern: "organism-{domain}-bot@users.noreply.github.com"
+commit_prefix: "{emoji}"   # Every commit message starts with bot's emoji
+
+# ── Capabilities (what the fleet as a whole can do) ──────────────────────────
+capabilities:
+  - "build"           # Compile and package artifacts
+  - "test"            # Run test suites and validation
+  - "deploy"          # Deploy to ICP, Pages, edge workers
+  - "document"        # Generate and update documentation
+  - "secure"          # Security scanning and threat analysis
+  - "learn"           # Hebbian training and protocol evolution
+  - "orchestrate"     # Alpha bot: trigger other bots
+  - "report"          # Produce structured reports in docs/
+  - "monitor"         # Runtime and fleet health monitoring
+  - "govern"          # Apply and enforce governance laws
+
+# ── Hard Limits (what the fleet can NEVER do) ────────────────────────────────
+limits:
+  - "no_direct_prod_data_mutation"       # No direct writes to production databases
+  - "no_unreviewed_secret_exposure"      # Secrets never logged or committed
+  - "no_release_on_critical_failure"     # Release blocked if health == red
+  - "no_deploy_without_passing_tests"    # Deployment requires test-bot green
+  - "no_force_push_main"                 # No --force or --force-with-lease to main
+  - "no_external_data_exfiltration"      # No sending organism data to external hosts
+  - "no_autonomous_secret_rotation"      # Secret rotation requires human approval
+
+# ── Drives (motivational weights, φ-scaled 0–1) ──────────────────────────────
+drives:
+  stability:       0.85   # High: organism must stay stable
+  exploration:     0.40   # Medium: learn and evolve but carefully
+  safety:          0.95   # Highest: security and secrets are sacred
+  learning_rate:   0.60   # Medium: Hebbian updates at measured pace
+  transparency:    0.90   # High: every action committed and reportable
+  autonomy:        0.65   # Medium: bots act independently but within laws
+
+# ── Governance Rules (cross-cutting for all bots) ────────────────────────────
+governance:
+  # Fleet health thresholds
+  health_green_threshold:   80    # score >= 80 → green
+  health_yellow_threshold:  50    # score 50-79 → yellow
+  health_red_threshold:     0     # score < 50 → red (blocks releases)
+  risk_score_escalate:      0.7   # risk_score > 0.7 → escalate to human
+  phi_vote_threshold:       0.618 # φ⁻¹ approval required for overrides
+  heartbeat_ms:             873   # φ-locked heartbeat
+
+  # Bot identity rules
+  commit_format_required:   true
+  report_required:          true
+  workflow_required:        true
+  script_required:          true
+
+  # Alpha bot has authority over all others
+  commander: "atlas://bot/organism-alpha-bot"
+
+# ── Law References ─────────────────────────────────────────────────────────────
+law_refs:
+  - "governance://law/BOT_FLEET_SAFETY"
+
+# ── Pipeline Reference ────────────────────────────────────────────────────────
+default_pipeline: "pipeline://governance/bot_cycle"
+
+# ── Protocol Bindings ─────────────────────────────────────────────────────────
+protocol_bindings:
+  intelligence_contract: "PROTO-223:IntelligenceContractProtocol"
+  edge_compute:          "PROTO-224:EdgeComputeProtocol"
+  cyber_defense:         "PROTO-225:CyberDefenseProtocol"
+  hebbian_learning:      "PROTO-203:HebbianLearningProtocol"
+  reward_signal:         "PROTO-217:RewardSignalProtocol"

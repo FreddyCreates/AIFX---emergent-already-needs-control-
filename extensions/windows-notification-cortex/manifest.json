@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "Windows Notification Cortex",
+  "version": "1.0.0",
+  "description": "AI User Experience — Smart Notification AI with GPT + Claude + Inflection empathic management for Windows",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "alarms"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ]
+    }
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "minimum_chrome_version": "110",
+  "action": {
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png"
+    }
+  }
+}

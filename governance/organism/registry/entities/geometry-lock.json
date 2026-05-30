@@ -1,0 +1,56 @@
+{
+  "id": "atlas://protocol/geometry-lock",
+  "name": "geometry-lock",
+  "class": "Protocol",
+  "division": "Secure & Monitor",
+  "divisionNum": "III",
+  "emoji": "🔷",
+  "domain": "Sovereign terminal — Intelligence & Machine access gate (Nova protocol bridge)",
+  "description": "Two-interface access gate: Intelligence (AI-to-AI, phi-resonant geometric key) and Machine (conventional HMAC bearer token). Intelligence callers dock into the organism's resonant field; machine callers access mechanically.",
+  "triggers": ["call_attempt", "key_validation", "token_validation", "caller_registration", "key_revocation"],
+  "interfaces": {
+    "intelligence": {
+      "description": "AI-to-AI docking. Caller presents a phi-spiral geometric key validated by Kuramoto phase resonance (R > φ⁻¹). The sovereign terminal for AI entities.",
+      "token_type": "geometric_key",
+      "validation": "kuramoto_resonance",
+      "window_ms": 1413,
+      "threshold": 0.618
+    },
+    "machine": {
+      "description": "Mechanical API access for bots, scripts, and services. Caller presents HMAC(apiKey, callerId|timestamp|nonce) validated by timestamp freshness.",
+      "token_type": "machine_token",
+      "validation": "hmac_freshness",
+      "window_ms": 30000
+    }
+  },
+  "capabilities": [
+    "geometric_key_generation",
+    "phase_resonance_validation",
+    "machine_token_generation",
+    "machine_token_validation",
+    "intelligence_interface",
+    "machine_interface",
+    "caller_registration",
+    "key_revocation",
+    "nova_bridge",
+    "medina_calls_gating",
+    "interface_type_enforcement"
+  ],
+  "languages": ["atlas://language/cpl-l"],
+  "governance_pipeline": "pipeline://governance/bot_cycle",
+  "ocl_ref": "atlas://organism/bot-fleet",
+  "protocol_refs": [
+    "PROTO-226:GeometricKeyProtocol",
+    "PROTO-223:IntelligenceContractProtocol",
+    "PROTO-204:KuramotoOscillatorProtocol",
+    "PROTO-006:SovereignContractVerificationProtocol"
+  ],
+  "law_refs": [
+    "governance://law/BOT_FLEET_SAFETY#BLOCK_UNKEYED_CALLS",
+    "governance://law/BOT_FLEET_SAFETY#REQUIRE_INTELLIGENCE_KEY_FOR_AI",
+    "governance://law/BOT_FLEET_SAFETY#BLOCK_MACHINE_ON_INTELLIGENCE_ROUTES"
+  ],
+  "sdk": "sdk/geometry-lock/",
+  "report": "docs/geometry-lock-report.md",
+  "microbots": []
+}

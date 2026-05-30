@@ -1,0 +1,62 @@
+# ════════════════════════════════════════════════════════════════════════════
+# CPL-P — Agent Governance Cycle
+# id: pipeline://governance/agent_cycle
+# Covers: ANIMUS, CORPUS, SENSUS, MEMORIA
+# ════════════════════════════════════════════════════════════════════════════
+
+id: "pipeline://governance/agent_cycle"
+version: "1.0.0"
+updated: "2026-05-03"
+extends: "pipeline://governance/default_cycle"
+domain: "agent"
+law_files:
+  - "governance/laws/agent-health.cpl-l"
+
+steps:
+
+  - id: "ingest_events"
+    description: "Load agent events from dist/governance/events/ (tagged: agent)"
+    use: "governance.ingest_events"
+    filter_tags: ["agent", "cognitive", "animus", "corpus", "sensus", "memoria"]
+    on_error: "continue"
+
+  - id: "collect_agent_state"
+    description: "Read current coherence, entropy, cycle counts from agent state"
+    use: "governance.agent.collect_agent_state"
+    on_error: "continue"
+
+  - id: "apply_laws"
+    description: "Apply agent-health.cpl-l laws"
+    use: "governance.apply_cpl_l"
+    on_error: "stop"
+
+  - id: "record_decisions"
+    use: "governance.record_decisions"
+    on_error: "continue"
+
+  - id: "update_mml"
+    use: "governance.update_mml"
+    on_error: "continue"
+
+  - id: "route_actions"
+    use: "governance.route_actions"
+    on_error: "continue"
+
+  - id: "agent_report"
+    description: "Generate agent governance report to docs/agent-governance-report.md"
+    use: "governance.agent.generate_report"
+    on_error: "continue"
+
+branches:
+
+  - id: "if_agent_incoherent"
+    when: "context.coherence < 0.382"
+    then:
+      type: "ESCALATE"
+      target: "human://operator"
+
+  - id: "if_agents_healthy"
+    when: "context.coherence > 0.7 && context.entropy < 0.3"
+    then:
+      type: "ALLOW"
+      skip_steps: ["route_actions"]

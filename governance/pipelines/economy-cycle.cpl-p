@@ -1,0 +1,63 @@
+# ════════════════════════════════════════════════════════════════════════════
+# CPL-P — Economy Governance Cycle
+# id: pipeline://governance/economy_cycle
+# Extends: default_cycle with economy-specific steps
+# ════════════════════════════════════════════════════════════════════════════
+
+id: "pipeline://governance/economy_cycle"
+version: "1.0.0"
+updated: "2026-05-03"
+extends: "pipeline://governance/default_cycle"
+domain: "economy"
+law_files:
+  - "governance/laws/economy-health.cpl-l"
+  - "governance/laws/bot-fleet.cpl-l"
+
+steps:
+
+  - id: "ingest_events"
+    description: "Load economy events from dist/governance/events/ (tagged: economy)"
+    use: "governance.ingest_events"
+    filter_tags: ["economy", "marketplace", "sdk"]
+    on_error: "continue"
+
+  - id: "collect_marketplace_state"
+    description: "Pull latest economy metrics: installs, revenue, churn"
+    use: "governance.economy.collect_marketplace_state"
+    on_error: "continue"
+
+  - id: "apply_laws"
+    description: "Apply economy-health.cpl-l laws"
+    use: "governance.apply_cpl_l"
+    on_error: "stop"
+
+  - id: "record_decisions"
+    use: "governance.record_decisions"
+    on_error: "continue"
+
+  - id: "update_mml"
+    use: "governance.update_mml"
+    on_error: "continue"
+
+  - id: "route_actions"
+    use: "governance.route_actions"
+    on_error: "continue"
+
+  - id: "economy_report"
+    description: "Generate economy governance report to docs/economy-governance-report.md"
+    use: "governance.economy.generate_report"
+    on_error: "continue"
+
+branches:
+
+  - id: "if_marketplace_red"
+    when: "context.economy_health === 'red'"
+    then:
+      type: "ESCALATE"
+      target: "human://operator"
+
+  - id: "if_revenue_anomaly"
+    when: "Math.abs(context.revenue_delta) > 0.5"
+    then:
+      type: "ESCALATE"
+      target: "human://operator"

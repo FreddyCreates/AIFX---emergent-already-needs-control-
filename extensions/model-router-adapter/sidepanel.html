@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Model Router Adapter</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "Segoe UI", -apple-system, sans-serif;
+      background: #0d1117; color: #e0e0e0;
+      min-height: 100vh; display: flex; flex-direction: column;
+    }
+    .header {
+      background: linear-gradient(135deg, #7c3aed, #5b21b6);
+      padding: 16px 20px; display: flex; align-items: center; gap: 12px;
+    }
+    .header-icon {
+      width: 36px; height: 36px; background: rgba(255,255,255,0.2);
+      border-radius: 8px; display: flex; align-items: center;
+      justify-content: center; font-weight: 700; font-size: 18px;
+    }
+    .header h1 { font-size: 16px; font-weight: 700; }
+    .header p { font-size: 11px; opacity: 0.85; margin-top: 2px; }
+    .content { flex: 1; padding: 16px; overflow-y: auto; }
+    .model-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+    .chip {
+      padding: 4px 10px; border-radius: 14px;
+      background: #5b21b6; color: #e0e0ff; font-size: 11px; font-weight: 600;
+    }
+    .section-label {
+      font-size: 11px; color: #888; text-transform: uppercase;
+      letter-spacing: 0.5px; margin-bottom: 6px;
+    }
+    textarea {
+      width: 100%; height: 90px; background: #161b22; color: #e0e0e0;
+      border: 1px solid #333; border-radius: 8px; padding: 10px;
+      font-size: 13px; resize: vertical; font-family: inherit;
+    }
+    textarea:focus { outline: none; border-color: #7c3aed; }
+    .btn-row { display: flex; gap: 8px; margin-top: 12px; }
+    .btn {
+      flex: 1; padding: 10px 0; border: none; border-radius: 8px;
+      color: #fff; font-weight: 600; font-size: 13px;
+      cursor: pointer; transition: opacity 0.15s;
+    }
+    .btn:hover { opacity: 0.85; }
+    .btn-primary { background: #7c3aed; }
+    .btn-secondary { background: #e94560; }
+    .btn-tertiary { background: #0ea5e9; }
+    .results {
+      margin-top: 16px; padding: 12px; background: #161b22;
+      border: 1px solid #2a1a5e; border-radius: 8px; min-height: 60px;
+      font-size: 12px; line-height: 1.6; white-space: pre-wrap;
+      word-break: break-word; display: none;
+    }
+    .results.active { display: block; }
+    .history-section { margin-top: 16px; }
+    .history-item {
+      background: #161b22; border: 1px solid #2a1a5e; border-radius: 6px;
+      padding: 8px 10px; margin-bottom: 6px; font-size: 11px;
+    }
+    .history-item .model-badge {
+      display: inline-block; padding: 2px 8px; border-radius: 10px;
+      background: #5b21b6; color: #e0e0ff; font-size: 10px; font-weight: 700;
+      margin-right: 6px;
+    }
+    .history-item .prompt-text { color: #aaa; }
+    .status-bar {
+      padding: 8px 16px; background: #161b22; border-top: 1px solid #222;
+      font-size: 10px; color: #666; display: flex; justify-content: space-between;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-icon">📡</div>
+    <div>
+      <h1>Model Router Adapter</h1>
+      <p>Phi-weighted intelligence routing — EXT-036</p>
+    </div>
+  </div>
+  <div class="content">
+    <div class="model-chips">
+      <span class="chip">GPT</span>
+      <span class="chip">Claude</span>
+      <span class="chip">Gemini</span>
+      <span class="chip">Phi</span>
+      <span class="chip">Llama</span>
+    </div>
+    <div class="section-label">Task or Prompt</div>
+    <textarea id="promptInput" placeholder="Describe your task — the adapter routes it to the optimal model..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="routeBtn">📡 Route</button>
+      <button class="btn btn-secondary" id="compareBtn">⚖️ Compare</button>
+      <button class="btn btn-tertiary" id="historyBtn">📋 History</button>
+    </div>
+    <div class="results" id="resultsArea"></div>
+    <div class="history-section" id="historySection" style="display:none">
+      <div class="section-label" style="margin-top:12px">Recent Routes</div>
+      <div id="historyList"></div>
+    </div>
+  </div>
+  <div class="status-bar">
+    <span id="statusText">Ready — Sovereign Ring</span>
+    <span>Model Router Adapter &bull; EXT-036</span>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+      var promptInput = document.getElementById('promptInput');
+      var routeBtn = document.getElementById('routeBtn');
+      var compareBtn = document.getElementById('compareBtn');
+      var historyBtn = document.getElementById('historyBtn');
+      var resultsArea = document.getElementById('resultsArea');
+      var statusText = document.getElementById('statusText');
+      var historySection = document.getElementById('historySection');
+      var historyList = document.getElementById('historyList');
+
+      function show(data) {
+        resultsArea.className = 'results active';
+        resultsArea.textContent = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+      }
+
+      function status(text) { statusText.textContent = text; }
+
+      routeBtn.addEventListener('click', function () {
+        var p = promptInput.value.trim();
+        if (!p) { show('Enter a task to route.'); return; }
+        show('📡 Routing to optimal model...');
+        status('Routing...');
+        chrome.runtime.sendMessage({ action: 'route', prompt: p }, function (r) {
+          if (chrome.runtime.lastError) { show('Error: ' + chrome.runtime.lastError.message); return; }
+          show(r);
+          status('Routed → ' + (r.modelName || r.model));
+        });
+      });
+
+      compareBtn.addEventListener('click', function () {
+        var p = promptInput.value.trim();
+        if (!p) { show('Enter a task to compare.'); return; }
+        show('⚖️ Comparing all models...');
+        status('Comparing...');
+        chrome.runtime.sendMessage({ action: 'compare', prompt: p }, function (r) {
+          if (chrome.runtime.lastError) { show('Error: ' + chrome.runtime.lastError.message); return; }
+          show(r);
+          status('Winner: ' + (r.winnerName || r.winner));
+        });
+      });
+
+      historyBtn.addEventListener('click', function () {
+        var visible = historySection.style.display !== 'none';
+        if (visible) { historySection.style.display = 'none'; return; }
+        chrome.runtime.sendMessage({ action: 'getHistory', n: 10 }, function (r) {
+          if (chrome.runtime.lastError) { show('Error: ' + chrome.runtime.lastError.message); return; }
+          historyList.innerHTML = '';
+          if (!Array.isArray(r) || r.length === 0) {
+            historyList.innerHTML = '<div style="color:#666;font-size:12px">No routes yet.</div>';
+          } else {
+            r.forEach(function (entry) {
+              var el = document.createElement('div');
+              el.className = 'history-item';
+              el.innerHTML = '<span class="model-badge">' + entry.model + '</span>' +
+                '<span class="prompt-text">' + (entry.prompt || '').substring(0, 60) + '</span>';
+              historyList.appendChild(el);
+            });
+          }
+          historySection.style.display = 'block';
+        });
+      });
+
+      chrome.runtime.sendMessage({ action: 'getState' }, function (r) {
+        if (r && r.healthy) status('Engine healthy — ' + (r.totalRoutes || 0) + ' routes');
+      });
+    })();
+  </script>
+</body>
+</html>

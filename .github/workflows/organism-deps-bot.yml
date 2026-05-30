@@ -1,0 +1,68 @@
+# ============================================================================
+# organism-deps-bot — Dependency Scanner, Updater & Staleness Reporter
+#
+# The organism's own Dependabot + Renovate hybrid. Scans every package.json
+# across all SDK modules, extensions, desktop apps, and the root project.
+# Checks npm registry for outdated / vulnerable packages. Reports staleness,
+# flags security advisories, and can auto-create issues for critical updates.
+#
+# Identity: organism-deps-bot <organism-deps-bot@users.noreply.github.com>
+# ============================================================================
+
+name: "🔄 Dependency Scanner & Updater"
+
+on:
+  schedule:
+    - cron: '0 8 * * 1,4'  # Monday & Thursday 8am UTC
+  push:
+    branches: [main]
+    paths:
+      - '**/package.json'
+      - '**/package-lock.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  scan-dependencies:
+    name: "🔄 Scan & Report Dependencies"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Scan all package.json files for outdated deps
+        run: node scripts/scan-dependencies.js --scan
+
+      - name: Check for known vulnerabilities
+        run: node scripts/scan-dependencies.js --audit
+
+      - name: Generate dependency freshness report
+        run: node scripts/scan-dependencies.js --report
+
+      - name: Create issues for critical updates
+        if: github.ref == 'refs/heads/main'
+        run: node scripts/scan-dependencies.js --issues
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Commit dependency report
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "organism-deps-bot"
+          git config user.email "organism-deps-bot@users.noreply.github.com"
+          git add docs/
+          if git diff --cached --quiet; then
+            echo "No dependency report changes to commit"
+          else
+            git commit -m "🔄 Deps-bot: dependency freshness report updated"
+            git push
+          fi

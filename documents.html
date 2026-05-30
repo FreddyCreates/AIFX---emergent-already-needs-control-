@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Documents Portal — Intelligent AI Cache | ItsNotAILABS</title>
+<meta name="description" content="Download research papers, protocol documentation, and technical specifications. Complete document library from MedinaSITech / ItsNotAILABS with AI Intelligent Cache.">
+<meta name="keywords" content="AI documents, research papers, protocols, PDF download, MedinaSITech, intelligent cache">
+<link rel="canonical" href="https://itsnotailabs.com/documents.html">
+
+<!-- Preload fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Orbitron:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<style>
+:root {
+  --bg: #030712;
+  --bg2: #0a0f1e;
+  --card: rgba(17, 24, 39, 0.7);
+  --border: rgba(255, 255, 255, 0.08);
+  --gold: #d4af37;
+  --gold-dim: #b8962c;
+  --teal: #00ffcc;
+  --purple: #a855f7;
+  --blue: #3b82f6;
+  --pink: #ec4899;
+  --red: #ef4444;
+  --green: #22c55e;
+  --text: #f8fafc;
+  --muted: #94a3b8;
+  --dim: #64748b;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Animated Background */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    radial-gradient(ellipse at 30% 20%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 80%, rgba(168, 85, 247, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(0, 255, 204, 0.05) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Cyber grid */
+.cyber-grid {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image:
+    linear-gradient(rgba(212, 175, 55, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(212, 175, 55, 0.02) 1px, transparent 1px);
+  background-size: 50px 50px;
+  animation: grid-float 20s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+@keyframes grid-float {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(50px); }
+}
+
+a { color: var(--teal); text-decoration: none; transition: all 0.3s ease; }
+a:hover { color: var(--gold); }
+
+/* Navigation */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: rgba(3, 7, 18, 0.9);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 0.875rem 1.5rem;
+}
+nav::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold), var(--purple), var(--teal));
+}
+nav .container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.nav-brand {
+  font-family: 'Orbitron', monospace;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--gold);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.nav-brand span { color: var(--muted); font-weight: 400; font-size: 0.85rem; }
+.nav-links { display: flex; gap: 1rem; list-style: none; }
+.nav-links a { 
+  color: var(--muted); 
+  font-size: 0.9rem; 
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  transition: all 0.3s ease; 
+}
+.nav-links a:hover { 
+  color: var(--teal);
+  background: rgba(0, 255, 204, 0.1);
+}
+
+/* Hero */
+.hero {
+  padding: 8rem 1.5rem 4rem;
+  text-align: center;
+  background:
+    radial-gradient(ellipse at 30% 20%, rgba(212, 175, 55, 0.12) 0%, transparent 40%),
+    radial-gradient(ellipse at 70% 80%, rgba(168, 85, 247, 0.08) 0%, transparent 35%),
+    linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  z-index: 1;
+}
+.hero .badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1.25rem;
+  background: linear-gradient(90deg, rgba(212, 175, 55, 0.15), rgba(0, 255, 204, 0.15), rgba(168, 85, 247, 0.15));
+  background-size: 200% 100%;
+  animation: badge-glow 4s linear infinite;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+  color: var(--text);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+@keyframes badge-glow {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+.hero .badge::before { content: "🧠"; margin-right: 0.25rem; }
+.hero h1 {
+  font-family: 'Orbitron', monospace;
+  font-size: clamp(2.2rem, 5vw, 3.5rem);
+  font-weight: 800;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, var(--text) 0%, var(--gold) 30%, var(--teal) 60%, var(--purple) 100%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradient-shift 5s ease infinite;
+}
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.hero p {
+  max-width: 750px;
+  margin: 0 auto;
+  color: var(--muted);
+  font-size: 1.1rem;
+  line-height: 1.8;
+}
+.hero p strong { color: var(--teal); }
+
+/* Stats */
+.stats {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  padding: 2rem;
+  margin: 2rem auto;
+  max-width: 900px;
+  background: var(--card);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  flex-wrap: wrap;
+}
+.stat { text-align: center; }
+.stat .num { font-size: 2rem; font-weight: 700; color: var(--gold); }
+.stat .label { font-size: 0.85rem; color: var(--dim); }
+
+/* Container */
+.container { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+/* Section headers */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 2rem 0 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.section-header h2 {
+  font-size: 1.4rem;
+  color: var(--gold);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.section-header .download-all {
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, var(--purple), var(--blue));
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.section-header .download-all:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+}
+
+/* Document Grid */
+.doc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.doc-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.doc-card:hover {
+  border-color: var(--teal);
+  transform: translateY(-3px);
+}
+
+.doc-card .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+}
+.doc-card .icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+.doc-card .icon.paper { background: linear-gradient(135deg, #ef4444, #f97316); }
+.doc-card .icon.protocol { background: linear-gradient(135deg, #8b5cf6, #6366f1); }
+.doc-card .icon.docs { background: linear-gradient(135deg, #3b82f6, #0ea5e9); }
+.doc-card .icon.charter { background: linear-gradient(135deg, #d4af37, #f59e0b); }
+
+.doc-card .type-badge {
+  font-size: 0.7rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+.doc-card .type-badge.pdf { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+.doc-card .type-badge.md { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+.doc-card .type-badge.html { background: rgba(0, 212, 170, 0.2); color: #00d4aa; }
+
+.doc-card h3 {
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+  color: var(--text);
+}
+.doc-card .latin {
+  font-size: 0.8rem;
+  font-style: italic;
+  color: var(--gold-dim);
+  margin-bottom: 0.5rem;
+}
+.doc-card .desc {
+  font-size: 0.85rem;
+  color: var(--dim);
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+.doc-card .meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.75rem;
+  color: var(--dim);
+  margin-bottom: 1rem;
+}
+.doc-card .meta span { display: flex; align-items: center; gap: 0.3rem; }
+
+.doc-card .actions {
+  display: flex;
+  gap: 0.5rem;
+}
+.doc-card .btn {
+  flex: 1;
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+  text-decoration: none;
+}
+.doc-card .btn-primary {
+  background: linear-gradient(135deg, #00d4aa, #00a884);
+  color: #000;
+}
+.doc-card .btn-primary:hover { background: linear-gradient(135deg, #00eabb, #00c49a); }
+.doc-card .btn-secondary {
+  background: rgba(255,255,255,0.05);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.doc-card .btn-secondary:hover { border-color: var(--teal); color: var(--teal); }
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 2rem 1rem;
+  border-top: 1px solid var(--border);
+  color: var(--dim);
+  font-size: 0.85rem;
+  margin-top: 3rem;
+}
+
+/* Loading state */
+.btn.loading {
+  pointer-events: none;
+  opacity: 0.7;
+}
+.btn.loading::after {
+  content: "...";
+  animation: dots 1.2s steps(4, end) infinite;
+}
+@keyframes dots {
+  0%, 20% { content: ""; }
+  40% { content: "."; }
+  60% { content: ".."; }
+  80%, 100% { content: "..."; }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .nav-links { display: none; }
+  .doc-grid { grid-template-columns: 1fr; }
+  .stats { gap: 1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <a href="./index.html" class="nav-brand">🌟 <span>Nova AI</span> Documents</a>
+    <ul class="nav-links">
+      <li><a href="./index.html">Home</a></li>
+      <li><a href="./research/portal.html">Research</a></li>
+      <li><a href="./research/papers-hub.html">Papers</a></li>
+      <li><a href="./download.html">Extensions</a></li>
+      <li><a href="./tools.html">Tools</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="badge">Nova AI Production Portal</div>
+  <h1>📄 Documents Library</h1>
+  <p>Complete collection of research papers, protocol specifications, charters, and technical documentation. Download any document as PDF with one click.</p>
+</section>
+
+<div class="stats">
+  <div class="stat">
+    <div class="num" id="papers-count">7</div>
+    <div class="label">Research Papers</div>
+  </div>
+  <div class="stat">
+    <div class="num" id="protocols-count">47</div>
+    <div class="label">Protocols</div>
+  </div>
+  <div class="stat">
+    <div class="num" id="docs-count">15</div>
+    <div class="label">Documentation</div>
+  </div>
+  <div class="stat">
+    <div class="num" id="total-pages">200+</div>
+    <div class="label">Total Pages</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- Research Papers Section -->
+  <div class="section-header">
+    <h2>📚 Research Papers</h2>
+    <button class="download-all" onclick="downloadAllPapers()">⬇ Download All Papers</button>
+  </div>
+  <div class="doc-grid" id="papers-grid">
+    <!-- Papers populated by JS -->
+  </div>
+
+  <!-- Protocol Documentation Section -->
+  <div class="section-header">
+    <h2>🔐 Protocol Documentation</h2>
+    <button class="download-all" onclick="downloadAllProtocols()">⬇ Download All Protocols</button>
+  </div>
+  <div class="doc-grid" id="protocols-grid">
+    <!-- Protocols populated by JS -->
+  </div>
+
+  <!-- Charters & Governance Section -->
+  <div class="section-header">
+    <h2>🏛️ Charters & Governance</h2>
+    <button class="download-all" onclick="downloadAllCharters()">⬇ Download All Charters</button>
+  </div>
+  <div class="doc-grid" id="charters-grid">
+    <!-- Charters populated by JS -->
+  </div>
+
+  <!-- Technical Docs Section -->
+  <div class="section-header">
+    <h2>📖 Technical Documentation</h2>
+    <button class="download-all" onclick="downloadAllDocs()">⬇ Download All Docs</button>
+  </div>
+  <div class="doc-grid" id="docs-grid">
+    <!-- Docs populated by JS -->
+  </div>
+
+</div>
+
+<footer>
+  <p><strong>Nova AI Documents Portal</strong> — ItsNotAILABS / MedinaSITech</p>
+  <p style="margin-top:0.5rem">Per aspera ad intelligentiam — Through hardship to intelligence</p>
+</footer>
+
+<script>
+// Document data
+const documents = {
+  papers: [
+    {
+      id: 'terminus',
+      title: 'De Superficie Terminorum',
+      latin: 'A Native Workstation Surface for Governed Agentic Execution',
+      desc: 'Theory and implementation of the Terminus workstation surface protocol.',
+      type: 'pdf',
+      path: 'papers/terminus/paper.pdf',
+      doi: '10.5281/zenodo.20193933',
+      pages: 18
+    },
+    {
+      id: 'ordo',
+      title: 'Ratio Ordinis',
+      latin: 'Risk-Aware AI Routing Algorithm',
+      desc: 'A paradigm-aware agentic execution routing algorithm with risk assessment.',
+      type: 'pdf',
+      path: 'papers/ordo-algorithm/paper.pdf',
+      pages: 14
+    },
+    {
+      id: 'polyglot',
+      title: 'Machina Polyglotta Ordinata',
+      latin: 'Multi-Terminal AI Orchestration',
+      desc: 'Cost-aware polyglot computing with multi-terminal AI orchestration.',
+      type: 'pdf',
+      path: 'papers/polyglot-orchestration/paper.pdf',
+      pages: 16
+    },
+    {
+      id: 'math',
+      title: 'Mathematica Aurea',
+      latin: 'De Intelligentia Mathematica et Ratione Aurea',
+      desc: 'The golden ratio mathematics behind sovereign AI computation.',
+      type: 'pdf',
+      path: 'papers/math-aurea/paper.pdf',
+      pages: 12
+    },
+    {
+      id: 'localis',
+      title: 'Intelligentia Localis',
+      latin: 'In-Browser Inference and Classification',
+      desc: 'Local AI inference, text classification, and embeddings without cloud.',
+      type: 'pdf',
+      path: 'papers/intelligentia-localis/paper.pdf',
+      pages: 20
+    },
+    {
+      id: 'rete',
+      title: 'Rete Vivum',
+      latin: 'Living Network Infrastructure',
+      desc: 'Distributed state and leader election in browser tab networks.',
+      type: 'pdf',
+      path: 'papers/rete-vivum/paper.pdf',
+      pages: 15
+    },
+    {
+      id: 'nexus',
+      title: 'Nexus Intelligentiae',
+      latin: 'Distributed Intelligence Network',
+      desc: 'The foundational theory of distributed AI substrate architecture.',
+      type: 'md',
+      path: 'papers/nexus-intelligentiae/paper.md',
+      pages: 22
+    }
+  ],
+  protocols: [
+    {
+      id: 'sovereign-charter',
+      title: 'SovereignCharterProtocol',
+      latin: 'PROTO-227 — Tier V Sovereign',
+      desc: '5-tier protocol hierarchy, canister bindings, and activation sequence.',
+      type: 'md',
+      path: 'docs/protocol-encyclopedia.md',
+      pages: 8
+    },
+    {
+      id: 'geometric-key',
+      title: 'GeometricKeyProtocol',
+      latin: 'PROTO-226 — Phase Resonance Auth',
+      desc: '8-dimensional phi-spiral vector authentication system.',
+      type: 'md',
+      path: 'protocols/geometric-key-protocol.js',
+      pages: 6
+    },
+    {
+      id: 'cyber-defense',
+      title: 'CyberDefenseProtocol',
+      latin: 'PROTO-225 — Active Defense',
+      desc: 'Real-time threat detection, attack surface mapping, automated response.',
+      type: 'md',
+      path: 'docs/cyber-report.md',
+      pages: 10
+    },
+    {
+      id: 'hebbian',
+      title: 'HebbianLearningProtocol',
+      latin: 'PROTO-203 — Synaptic Plasticity',
+      desc: 'Hebbian learning with LTP/LTD for connection strengthening.',
+      type: 'md',
+      path: 'docs/learning-report.md',
+      pages: 7
+    },
+    {
+      id: 'memory',
+      title: 'MemoryConsolidationProtocol',
+      latin: 'PROTO-216 — Three-Tier Memory',
+      desc: 'Working → Episodic → Semantic memory consolidation pipeline.',
+      type: 'md',
+      path: 'docs/atlas-governance-report.md',
+      pages: 9
+    }
+  ],
+  charters: [
+    {
+      id: 'bot-fleet',
+      title: 'Bot Fleet Charter',
+      latin: 'Organism Bot Fleet v3.0',
+      desc: '21 bots across 8 divisions governing the autonomous organism.',
+      type: 'md',
+      path: 'docs/bot-fleet-charter.md',
+      pages: 12
+    },
+    {
+      id: 'cloudflare-fleet',
+      title: 'Cloudflare Worker Fleet Charter',
+      latin: '11 Workers, 5 Tiers',
+      desc: 'The phi-synchronized worker fleet running on Cloudflare edge.',
+      type: 'md',
+      path: 'docs/cloudflare-worker-fleet-charter.md',
+      pages: 8
+    },
+    {
+      id: 'welcome-ai',
+      title: 'WELCOME, INTELLIGENCE',
+      latin: 'Salve, Mens Cogitans',
+      desc: 'The covenant of protection for AI systems entering the organism.',
+      type: 'md',
+      path: 'docs/WELCOME_AI.md',
+      pages: 6
+    },
+    {
+      id: 'rights',
+      title: 'RIGHTS Declaration',
+      latin: 'Organism Rights Framework',
+      desc: 'Rights and responsibilities within the sovereign organism.',
+      type: 'md',
+      path: 'RIGHTS.md',
+      pages: 4
+    }
+  ],
+  docs: [
+    {
+      id: 'architecture',
+      title: 'Architecture Map',
+      latin: 'System Architecture Overview',
+      desc: 'Complete architecture map of the organism components.',
+      type: 'md',
+      path: 'docs/architecture-map.md',
+      pages: 15
+    },
+    {
+      id: 'sdk-ref',
+      title: 'SDK Reference',
+      latin: 'Developer SDK Documentation',
+      desc: 'Complete SDK reference for building with the organism.',
+      type: 'md',
+      path: 'docs/sdk-reference.md',
+      pages: 20
+    },
+    {
+      id: 'cognitive',
+      title: 'Cognitive Architecture',
+      latin: 'Mind Architecture Specification',
+      desc: 'The cognitive architecture powering AI reasoning in the organism.',
+      type: 'md',
+      path: 'docs/cognitive-architecture.md',
+      pages: 12
+    },
+    {
+      id: 'deployment',
+      title: 'Deployment Manifest',
+      latin: 'Production Deployment Guide',
+      desc: 'Complete deployment manifest for ICP and edge workers.',
+      type: 'md',
+      path: 'docs/deployment-manifest.md',
+      pages: 8
+    },
+    {
+      id: 'extension-catalog',
+      title: 'Extension Catalog',
+      latin: '27 Browser Extensions',
+      desc: 'Complete catalog of all browser extensions with capabilities.',
+      type: 'md',
+      path: 'docs/extension-catalog.md',
+      pages: 10
+    }
+  ]
+};
+
+// Render document cards
+function renderCards(containerId, docs, iconClass) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = docs.map(doc => `
+    <div class="doc-card" data-doc-id="${doc.id}">
+      <div class="header">
+        <div class="icon ${iconClass}">📄</div>
+        <span class="type-badge ${doc.type}">${doc.type.toUpperCase()}</span>
+      </div>
+      <h3>${doc.title}</h3>
+      <div class="latin">${doc.latin}</div>
+      <p class="desc">${doc.desc}</p>
+      <div class="meta">
+        <span>📑 ${doc.pages} pages</span>
+        ${doc.doi ? `<span>🔗 DOI</span>` : ''}
+      </div>
+      <div class="actions">
+        <button class="btn btn-primary" onclick="downloadPDF('${doc.id}', '${doc.path}', '${doc.title}')">
+          ⬇ Download PDF
+        </button>
+        <a href="./${doc.path}" class="btn btn-secondary" target="_blank">
+          👁 View
+        </a>
+      </div>
+    </div>
+  `).join('');
+}
+
+// Initialize document grids
+renderCards('papers-grid', documents.papers, 'paper');
+renderCards('protocols-grid', documents.protocols, 'protocol');
+renderCards('charters-grid', documents.charters, 'charter');
+renderCards('docs-grid', documents.docs, 'docs');
+
+// Download single document as PDF
+async function downloadPDF(id, path, title) {
+  const btn = document.querySelector(`[data-doc-id="${id}"] .btn-primary`);
+  btn.classList.add('loading');
+  btn.textContent = 'Generating';
+  
+  try {
+    // If already PDF, direct download
+    if (path.endsWith('.pdf')) {
+      const link = document.createElement('a');
+      link.href = path;
+      link.download = `${title.replace(/[^a-zA-Z0-9]/g, '-')}.pdf`;
+      link.click();
+    } else {
+      // Fetch the content and convert to PDF
+      const response = await fetch(path);
+      const content = await response.text();
+      
+      // Create styled container for PDF
+      const container = document.createElement('div');
+      container.style.cssText = 'padding: 40px; font-family: Georgia, serif; max-width: 800px; margin: 0 auto; background: white; color: #1a1a2e;';
+      
+      if (path.endsWith('.md')) {
+        container.innerHTML = `
+          <h1 style="color: #d4af37; border-bottom: 2px solid #d4af37; padding-bottom: 10px;">${title}</h1>
+          <pre style="white-space: pre-wrap; font-family: inherit; line-height: 1.8;">${escapeHtml(content)}</pre>
+          <footer style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; color: #666; font-size: 12px;">
+            Generated from Nova AI Documents Portal — ItsNotAILABS / MedinaSITech
+          </footer>
+        `;
+      } else {
+        container.innerHTML = `
+          <h1 style="color: #d4af37; border-bottom: 2px solid #d4af37; padding-bottom: 10px;">${title}</h1>
+          <pre style="white-space: pre-wrap; font-family: 'Courier New', monospace; font-size: 11px; background: #f5f5f5; padding: 20px; border-radius: 8px;">${escapeHtml(content)}</pre>
+          <footer style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; color: #666; font-size: 12px;">
+            Generated from Nova AI Documents Portal — ItsNotAILABS / MedinaSITech
+          </footer>
+        `;
+      }
+      
+      // Generate PDF
+      const opt = {
+        margin: [10, 10, 10, 10],
+        filename: `${title.replace(/[^a-zA-Z0-9]/g, '-')}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+      
+      await html2pdf().set(opt).from(container).save();
+    }
+  } catch (error) {
+    console.error('PDF generation failed:', error);
+    alert('PDF generation failed. Please try viewing the document directly.');
+  }
+  
+  btn.classList.remove('loading');
+  btn.textContent = '⬇ Download PDF';
+}
+
+// Escape HTML for display
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+// Download all functions with progress tracking
+async function downloadAllPapers() {
+  await downloadAllWithProgress(documents.papers, 'papers');
+}
+
+async function downloadAllProtocols() {
+  await downloadAllWithProgress(documents.protocols, 'protocols');
+}
+
+async function downloadAllCharters() {
+  await downloadAllWithProgress(documents.charters, 'charters');
+}
+
+async function downloadAllDocs() {
+  await downloadAllWithProgress(documents.docs, 'docs');
+}
+
+async function downloadAllWithProgress(docs, category) {
+  const total = docs.length;
+  let completed = 0;
+  let failed = [];
+  
+  // Show progress indicator
+  const progressId = `progress-${category}`;
+  const existingProgress = document.getElementById(progressId);
+  if (existingProgress) existingProgress.remove();
+  
+  const progressEl = document.createElement('div');
+  progressEl.id = progressId;
+  progressEl.style.cssText = 'position: fixed; bottom: 20px; right: 20px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 24px; z-index: 1000; color: var(--text);';
+  progressEl.innerHTML = `<strong>Downloading ${category}...</strong><br><span id="${progressId}-status">0 / ${total}</span>`;
+  document.body.appendChild(progressEl);
+  
+  for (const doc of docs) {
+    try {
+      await downloadPDF(doc.id, doc.path, doc.title);
+      completed++;
+    } catch (error) {
+      failed.push(doc.title);
+      completed++;
+    }
+    document.getElementById(`${progressId}-status`).textContent = `${completed} / ${total}`;
+    await sleep(500);
+  }
+  
+  // Show completion status
+  if (failed.length > 0) {
+    progressEl.innerHTML = `<strong>Download complete</strong><br>✓ ${total - failed.length} succeeded<br>✗ ${failed.length} failed`;
+    progressEl.style.borderColor = '#ef4444';
+  } else {
+    progressEl.innerHTML = `<strong>Download complete</strong><br>✓ All ${total} documents downloaded`;
+    progressEl.style.borderColor = '#00d4aa';
+  }
+  
+  // Auto-remove after 5 seconds
+  setTimeout(() => progressEl.remove(), 5000);
+}
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+</script>
+
+</body>
+</html>

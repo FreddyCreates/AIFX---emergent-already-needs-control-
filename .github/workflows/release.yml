@@ -1,0 +1,44 @@
+name: Release Extensions
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build & Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Generate icons
+        run: node scripts/generate-icons.js
+
+      - name: Run tests
+        run: node --test test/**/*.test.js
+
+      - name: Build extension zips
+        run: bash build-extensions.sh
+
+      - name: Build standalone release bundle
+        run: node scripts/bundle-release.js
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/extensions/*.zip
+            dist/sovereign-organism-*.tar.gz
+            dist/sovereign-organism-*.zip
+          generate_release_notes: true
+          draft: false
+          prerelease: false

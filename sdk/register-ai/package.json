@@ -1,0 +1,37 @@
+{
+  "name": "@medina/register-ai",
+  "version": "1.0.0",
+  "description": "Register AI — Builder Family SDK. The organism's native build intelligence: scans, validates, packages, and deploys extensions via autonomous in-browser AI with Web Workers and browser Observers.",
+  "type": "module",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./worker": "./src/register-worker.js",
+    "./observer": "./src/register-observer.js"
+  },
+  "license": "MIT",
+  "author": "Medina",
+  "keywords": [
+    "register-ai",
+    "builder",
+    "extension-builder",
+    "web-worker",
+    "observer",
+    "organism",
+    "sovereign"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "src/"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FreddyCreates/potential-succotash.git",
+    "directory": "sdk/register-ai"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

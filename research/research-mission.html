@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Medina Research Mission — Code-Grounded Program</title>
+<meta name="description" content="A code-grounded research mission for the Medina / Organism repository: missions, packaging, protocols, governance, and autonomous research surfaces.">
+<style>
+  :root {
+    --bg: #070914;
+    --bg2: #0f1324;
+    --card: #151a2e;
+    --border: #242c4a;
+    --gold: #d4af37;
+    --gold-dim: #b8962c;
+    --teal: #00d4aa;
+    --text: #e8eaf3;
+    --dim: #9aa0b5;
+    --paper: #f8f6f0;
+    --ink: #1a1f33;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: linear-gradient(180deg, #070914 0%, #0c1020 100%);
+    color: var(--text);
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+  a { color: var(--teal); text-decoration: none; }
+  a:hover { color: var(--gold); }
+
+  .hero {
+    padding: 4.5rem 1.5rem 3rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    background:
+      radial-gradient(circle at top, rgba(212,175,55,0.12), transparent 35%),
+      linear-gradient(135deg, #070914 0%, #11172a 45%, #0a0d18 100%);
+  }
+  .hero .badge {
+    display: inline-block;
+    padding: 0.25rem 0.9rem;
+    border: 1px solid rgba(212,175,55,0.35);
+    border-radius: 999px;
+    color: var(--gold);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    color: var(--gold);
+    letter-spacing: 0.04em;
+    margin-bottom: 0.8rem;
+  }
+  .hero p {
+    max-width: 840px;
+    margin: 0 auto 1.25rem;
+    color: var(--dim);
+    font-size: 1.05rem;
+  }
+  .hero-links {
+    display: flex;
+    gap: 0.9rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .hero-links a {
+    padding: 0.7rem 1.1rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.02);
+  }
+
+  .wrap {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  .section {
+    margin-top: 2rem;
+  }
+  .section h2 {
+    color: var(--gold);
+    font-size: 1.45rem;
+    margin-bottom: 0.8rem;
+  }
+  .section > p {
+    color: var(--dim);
+    margin-bottom: 1.25rem;
+    max-width: 900px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.15rem;
+  }
+  .card h3 {
+    color: var(--text);
+    font-size: 1rem;
+    margin-bottom: 0.55rem;
+  }
+  .card p, .card li {
+    color: var(--dim);
+    font-size: 0.93rem;
+  }
+  .card ul {
+    padding-left: 1rem;
+    margin-top: 0.5rem;
+  }
+  .kicker {
+    display: inline-block;
+    color: var(--gold-dim);
+    font-size: 0.74rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 0.45rem;
+  }
+
+  .paper {
+    margin-top: 1.25rem;
+    background: var(--paper);
+    color: var(--ink);
+    border-radius: 12px;
+    border: 1px solid rgba(212,175,55,0.22);
+    overflow: hidden;
+  }
+  .paper .paper-inner {
+    padding: 2rem;
+  }
+  .paper h3 {
+    color: #30216b;
+    margin-bottom: 0.8rem;
+  }
+  .paper p, .paper li {
+    color: #3f4762;
+  }
+  .paper ul {
+    padding-left: 1.2rem;
+    margin-top: 0.7rem;
+  }
+
+  .evidence-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    font-size: 0.92rem;
+  }
+  .evidence-table th,
+  .evidence-table td {
+    padding: 0.8rem;
+    text-align: left;
+    border-bottom: 1px solid #d9d3c8;
+    vertical-align: top;
+  }
+  .evidence-table th {
+    color: #30216b;
+    background: #f1ece0;
+  }
+  code {
+    font-family: "Courier New", monospace;
+    background: rgba(48,33,107,0.08);
+    border-radius: 4px;
+    padding: 0.1rem 0.35rem;
+    color: #30216b;
+  }
+
+  .footer {
+    text-align: center;
+    color: var(--dim);
+    padding: 2rem 1rem 3rem;
+    border-top: 1px solid var(--border);
+    margin-top: 3rem;
+  }
+
+  @media (max-width: 700px) {
+    .paper .paper-inner { padding: 1.25rem; }
+    .evidence-table, .evidence-table tbody, .evidence-table tr, .evidence-table td, .evidence-table th {
+      display: block;
+      width: 100%;
+    }
+    .evidence-table thead { display: none; }
+    .evidence-table td { padding: 0.55rem 0.8rem; }
+  }
+</style>
+</head>
+<body>
+  <header class="hero">
+    <div class="badge">Code-grounded research</div>
+    <h1>Medina Research Mission</h1>
+    <p>
+      This mission pulls directly from the repository itself: mission dispatch, cited research tooling,
+      packaging infrastructure, protocol exports, governance loops, and autonomous microbot support.
+      The goal is to make our research program traceable to live code instead of treating research as a separate narrative layer.
+    </p>
+    <div class="hero-links">
+      <a href="../index.html" style="color:#d4af37;">← Lab Home</a>
+      <a href="portal.html">Research Portal</a>
+      <a href="papers-hub.html">Papers Hub</a>
+      <a href="auro-charter.html">AURO Charter</a>
+      <a href="protocol-papers.html">Protocol Papers</a>
+      <a href="../docs/sovereign-thinking-theory-paper.md">Theory Paper</a>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="section">
+      <h2>Mission Thesis</h2>
+      <p>
+        Our research mission is to turn the repository into a verifiable organism: a system that can
+        define missions, perform cited research, package its own surfaces, govern itself, and document
+        its protocol layer as a coherent scientific program. Every new paper, package, or public page
+        should map back to one or more working code surfaces.
+      </p>
+
+      <div class="grid">
+        <article class="card">
+          <span class="kicker">Track 01</span>
+          <h3>Mission execution</h3>
+          <p>Research should begin from runnable mission routing, not abstract claims.</p>
+          <ul>
+            <li>Natural-language mission dispatch</li>
+            <li>Structured result logging</li>
+            <li>Domain-specific AI routing</li>
+          </ul>
+        </article>
+        <article class="card">
+          <span class="kicker">Track 02</span>
+          <h3>Evidence-backed research</h3>
+          <p>Research outputs should stay tied to cited synthesis and source-aware tooling.</p>
+          <ul>
+            <li>Cited multi-source synthesis</li>
+            <li>Page and tab context</li>
+            <li>Repeatable extension workflows</li>
+          </ul>
+        </article>
+        <article class="card">
+          <span class="kicker">Track 03</span>
+          <h3>Packaging and release</h3>
+          <p>Research artifacts need a packaging path so papers and pages align with distributable software.</p>
+          <ul>
+            <li>Extension scan and validation</li>
+            <li>Artifact bundling</li>
+            <li>Download-link generation</li>
+          </ul>
+        </article>
+        <article class="card">
+          <span class="kicker">Track 04</span>
+          <h3>Governed protocol science</h3>
+          <p>The protocol layer is part of the research mission only when it is governed, indexed, and reviewable.</p>
+          <ul>
+            <li>Exported protocol surface</li>
+            <li>Atlas governance cycle</li>
+            <li>Microbot support for learning and mapping</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section paper">
+      <div class="paper-inner">
+        <h3>What the code already proves</h3>
+        <p>
+          The current repository already contains the primitives required for a research mission. The
+          missing step was to state them in one place and tie them together.
+        </p>
+
+        <table class="evidence-table">
+          <thead>
+            <tr>
+              <th>Surface</th>
+              <th>What it contributes to the research mission</th>
+              <th>Repository anchor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Mission routing</strong></td>
+              <td>
+                <code>MissionEngine</code> validates licensing, classifies missions, dispatches work,
+                records mission history, and reports status across six domain AIs.
+              </td>
+              <td><code>extensions/jarvis/src/background/mission-engine.ts</code></td>
+            </tr>
+            <tr>
+              <td><strong>Cited research UX</strong></td>
+              <td>
+                Research Nexus is already positioned as a cited multi-source research surface with popup,
+                side panel, tabs, storage, and alarm support.
+              </td>
+              <td><code>extensions/research-nexus/manifest.json</code></td>
+            </tr>
+            <tr>
+              <td><strong>Packaging pipeline</strong></td>
+              <td>
+                Register scans the extension registry, validates packages, generates artifacts,
+                and prepares download links — the exact bridge from code to distributable research surfaces.
+              </td>
+              <td><code>extensions/register/background.js</code></td>
+            </tr>
+            <tr>
+              <td><strong>Protocol research layer</strong></td>
+              <td>
+                The protocol index currently exports <strong>43 protocol modules</strong>, spanning the original
+                wire set plus the newer learning, cyber, geometric, and charter layers through PROTO-227.
+              </td>
+              <td><code>protocols/index.js</code></td>
+            </tr>
+            <tr>
+              <td><strong>Governance runtime</strong></td>
+              <td>
+                Atlas governance gives the repository an internal policy-and-memory loop for events,
+                law evaluation, pipeline execution, and reporting.
+              </td>
+              <td><code>sdk/governance/index.js</code>, <code>scripts/atlas-governance-cycle.js</code></td>
+            </tr>
+            <tr>
+              <td><strong>Autonomous support bots</strong></td>
+              <td>
+                The microbot registry adds focused helpers for learning and crawler operations,
+                which supports continuous research collection and structural analysis.
+              </td>
+              <td><code>sdk/microbots/index.js</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Immediate research priorities</h2>
+      <div class="grid">
+        <article class="card">
+          <h3>1. Pull new papers from live modules</h3>
+          <p>Use the mission engine, governance SDK, packaging pipeline, and protocol index as the canonical sources for future paper additions.</p>
+        </article>
+        <article class="card">
+          <h3>2. Keep package claims aligned with validation</h3>
+          <p>Public pages and research surfaces should reference the currently validated package surface, not older extension counts that still exist in legacy copy.</p>
+        </article>
+        <article class="card">
+          <h3>3. Treat governance as research infrastructure</h3>
+          <p>Research outputs should include governance, evidence, and release framing so they can move from concept to package and publication cleanly.</p>
+        </article>
+        <article class="card">
+          <h3>4. Tie autonomy claims to runnable code</h3>
+          <p>Autonomy papers should keep pointing back to actual workers, microbots, mission routing, and runtime orchestration paths in the repository.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Interpretive paper</h2>
+      <p>
+        A full theory paper now accompanies this mission and explains what happened, why the mission was
+        pulled from live code, and how that pattern supports sovereign human-AI collaboration.
+      </p>
+      <div class="paper">
+        <div class="paper-inner">
+          <ul>
+            <li><a href="../docs/sovereign-thinking-theory-paper.md">Sovereign Thinking with Humans and AI</a> — a full paper on the recent repository work, the theory behind code-grounded research, and the broader implications for AI.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Repository anchors for future additions</h2>
+      <div class="paper">
+        <div class="paper-inner">
+          <ul>
+            <li><code>/research/</code> — long-form papers, charter pages, and mission framing</li>
+            <li><code>/docs/sovereign-thinking-theory-paper.md</code> — theory interpretation of the mission-building workflow</li>
+            <li><code>/protocols/</code> — protocol inventory and future protocol-linked papers</li>
+            <li><code>/extensions/research-nexus/</code> — cited research experience</li>
+            <li><code>/extensions/register/</code> — package and release bridge</li>
+            <li><code>/sdk/governance/</code> — research governance substrate</li>
+            <li><code>/sdk/microbots/</code> — continuous collection and analysis helpers</li>
+            <li><code>/papers/</code> and <code>/schemas/</code> — publication lineage and machine-readable evidence</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>
+      Medina Research Mission · grounded in repository code ·
+      <a href="../index.html">Lab Home</a> ·
+      <a href="portal.html">Portal</a> ·
+      <a href="papers-hub.html">Papers Hub</a> ·
+      <a href="auro-charter.html">Charter</a>
+    </p>
+  </footer>
+</body>
+</html>

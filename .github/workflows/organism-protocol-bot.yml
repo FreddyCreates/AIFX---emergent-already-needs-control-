@@ -1,0 +1,59 @@
+# ============================================================================
+# organism-protocol-bot — Protocol Linting, Dependency Graph & Integration
+#
+# Validates all 38 protocols in protocols/, checks export signatures,
+# builds a protocol dependency graph, verifies cross-protocol bindings
+# (synapse-binding ↔ memory-consolidation ↔ hebbian-learning etc.),
+# and ensures no circular dependencies or orphaned protocols.
+#
+# Identity: organism-protocol-bot <organism-protocol-bot@users.noreply.github.com>
+# ============================================================================
+
+name: "🔬 Protocol Integrity Scanner"
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'protocols/**'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'protocols/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  scan-protocols:
+    name: Lint & Graph Protocols
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Lint protocol exports & signatures
+        run: node scripts/lint-protocols.js
+
+      - name: Build protocol dependency graph
+        run: node scripts/lint-protocols.js --graph
+
+      - name: Commit protocol report
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: |
+          git config user.name "organism-protocol-bot"
+          git config user.email "organism-protocol-bot@users.noreply.github.com"
+          git add docs/ dist/
+          if git diff --cached --quiet; then
+            echo "No protocol changes to commit"
+          else
+            git commit -m "🔬 Protocol-bot: protocol integrity verified & dependency graph updated"
+            git push
+          fi

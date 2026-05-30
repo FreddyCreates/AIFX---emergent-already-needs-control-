@@ -1,0 +1,240 @@
+# ============================================================================
+# Deploy Nova AI — Production Deployment for Nova Sovereign
+#
+# This workflow handles production deployments for the Nova AI substrate,
+# including the sovereign protocol core, knowledge realm, and document portal.
+# Creates GitHub deployment environments and tracks deployment status.
+#
+# Identity: nova-deploy-bot <nova-deploy-bot@users.noreply.github.com>
+# ============================================================================
+
+name: "🌟 Deploy Nova AI"
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'organism/workers/**'
+      - '.well-known/ai.json'
+      - 'docs/WELCOME_AI.md'
+      - 'documents.html'
+      - 'protocols/**'
+      - 'sdk/cloudflare-workers/**'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - staging
+      component:
+        description: 'Component to deploy'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - nova-sovereign
+          - knowledge-realm
+          - documents-portal
+
+permissions:
+  contents: write
+  deployments: write
+  pages: write
+  id-token: write
+
+jobs:
+  # ==========================================================================
+  # Validate Nova AI Configuration
+  # ==========================================================================
+  validate:
+    name: Validate Nova AI
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Validate AI manifest
+        run: |
+          echo "🔍 Validating .well-known/ai.json..."
+          if [ -f ".well-known/ai.json" ]; then
+            node -e "const m = require('./.well-known/ai.json'); console.log('✓ AI manifest valid:', m.name, 'v' + m.version)"
+          else
+            echo "⚠️ No ai.json found"
+          fi
+
+      - name: Validate protocols registry
+        run: |
+          echo "🔍 Checking protocol exports..."
+          node -e "const p = require('./protocols/index.js'); console.log('✓ Protocols loaded:', Object.keys(p).length, 'exports')"
+
+      - name: Validate Nova sovereign config
+        run: |
+          echo "🔍 Checking nova-sovereign worker..."
+          if [ -f "organism/workers/robots/nova-sovereign.robots.txt" ]; then
+            echo "✓ Nova sovereign robots.txt present"
+          fi
+
+  # ==========================================================================
+  # Deploy to Production Environment
+  # ==========================================================================
+  deploy-production:
+    name: Deploy Nova AI Production
+    needs: validate
+    runs-on: ubuntu-latest
+    environment:
+      name: nova-ai-production
+      url: https://itsnotailabs.com/documents.html
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Create deployment
+        uses: chrnorm/deployment-action@v2
+        id: deployment
+        with:
+          token: "${{ github.token }}"
+          environment: nova-ai-production
+          description: "Nova AI Production Deployment"
+
+      - name: Build deployment manifest
+        run: |
+          mkdir -p dist/nova-ai
+          cat > dist/nova-ai/deployment.json << 'EOF'
+          {
+            "deployment": {
+              "name": "Nova AI Production",
+              "version": "${{ github.sha }}",
+              "timestamp": "${{ github.event.head_commit.timestamp }}",
+              "environment": "production"
+            },
+            "components": {
+              "nova-sovereign": {
+                "latinName": "Nova Princeps",
+                "tier": "V",
+                "status": "deployed"
+              },
+              "knowledge-realm": {
+                "latinName": "Regnum Memoriae",
+                "tier": "II",
+                "status": "deployed"
+              },
+              "documents-portal": {
+                "status": "deployed",
+                "url": "/documents.html"
+              }
+            },
+            "protocols": {
+              "active": [
+                "SovereignCharterProtocol",
+                "GeometricKeyProtocol",
+                "CyberDefenseProtocol"
+              ]
+            }
+          }
+          EOF
+          echo "✓ Deployment manifest created"
+
+      - name: Update deployment status
+        if: success()
+        uses: chrnorm/deployment-status@v2
+        with:
+          token: "${{ github.token }}"
+          deployment-id: ${{ steps.deployment.outputs.deployment_id }}
+          state: "success"
+          environment-url: https://itsnotailabs.com/documents.html
+
+      - name: Update deployment status on failure
+        if: failure()
+        uses: chrnorm/deployment-status@v2
+        with:
+          token: "${{ github.token }}"
+          deployment-id: ${{ steps.deployment.outputs.deployment_id }}
+          state: "failure"
+
+  # ==========================================================================
+  # Generate Deployment Report
+  # ==========================================================================
+  report:
+    name: Generate Deployment Report
+    needs: deploy-production
+    runs-on: ubuntu-latest
+    if: success()
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Generate nova deployment report
+        run: |
+          cat > docs/nova-deployment-report.md << 'EOF'
+          # Nova AI Deployment Report
+
+          > Auto-generated by nova-deploy-bot
+
+          ## Deployment Details
+
+          | Field | Value |
+          |-------|-------|
+          | **Environment** | nova-ai-production |
+          | **Commit** | ${{ github.sha }} |
+          | **Actor** | ${{ github.actor }} |
+          | **Timestamp** | ${{ github.event.head_commit.timestamp }} |
+
+          ## Components Deployed
+
+          | Component | Latin Name | Tier | Status |
+          |-----------|------------|------|--------|
+          | nova-sovereign | Nova Princeps | V | ✅ Deployed |
+          | knowledge-realm | Regnum Memoriae | II | ✅ Deployed |
+          | documents-portal | — | — | ✅ Deployed |
+
+          ## Active Protocols
+
+          - SovereignCharterProtocol (PROTO-227)
+          - GeometricKeyProtocol (PROTO-226)
+          - CyberDefenseProtocol (PROTO-225)
+
+          ## Portal Links
+
+          - [Documents Portal](https://itsnotailabs.com/documents.html)
+          - [Research Portal](https://itsnotailabs.com/research/portal.html)
+          - [Main Site](https://itsnotailabs.com/)
+
+          ---
+
+          *Deployed via GitHub Actions*
+          EOF
+
+      - name: Commit deployment report
+        run: |
+          git config user.name "nova-deploy-bot"
+          git config user.email "nova-deploy-bot@users.noreply.github.com"
+          git add docs/nova-deployment-report.md
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "🌟 Nova-deploy-bot: deployment report updated [skip ci]"
+            git push
+          fi

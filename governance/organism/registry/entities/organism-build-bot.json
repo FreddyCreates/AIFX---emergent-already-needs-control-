@@ -1,0 +1,18 @@
+{
+  "id": "atlas://bot/organism-build-bot",
+  "name": "organism-build-bot",
+  "class": "Bot",
+  "division": "Build & Package",
+  "divisionNum": "I",
+  "emoji": "🧬",
+  "domain": "Extension packaging",
+  "triggers": ["push:extensions/"],
+  "capabilities": ["build", "package", "artifact"],
+  "languages": ["atlas://language/cil"],
+  "governance_pipeline": "pipeline://governance/bot_cycle",
+  "ocl_ref": "atlas://organism/bot-fleet",
+  "script": "scripts/build-all.sh",
+  "workflow": ".github/workflows/build-extensions.yml",
+  "report": "docs/build-report.md",
+  "microbots": []
+}

@@ -1,0 +1,40 @@
+{
+  "name": "@medina/cloud-glade",
+  "version": "1.0.0",
+  "description": "Cloud Glade Security Biome SDK — Phantom-powered AI security primitives for stealth routing, encryption weave, key rotation, and threat defense",
+  "license": "MIT",
+  "type": "module",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./phantom-integration": "./src/phantom-integration.js",
+    "./biome-engine": "./src/biome-engine.js"
+  },
+  "keywords": [
+    "security",
+    "biome",
+    "phantom",
+    "stealth",
+    "encryption",
+    "key-rotation",
+    "decoy-traffic",
+    "threat-detection",
+    "ai-security",
+    "sovereign"
+  ],
+  "files": [
+    "src/"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FreddyCreates/potential-succotash.git",
+    "directory": "sdk/cloud-glade"
+  },
+  "author": "Medina",
+  "publishConfig": {
+    "access": "public"
+  }
+}

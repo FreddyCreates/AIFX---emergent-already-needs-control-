@@ -1,0 +1,24 @@
+{
+  "folders": [
+    { "path": ".", "name": "Memory Palace" }
+  ],
+  "settings": {
+    "editor.theme": "Default Dark+",
+    "files.exclude": { "**/.git": true },
+    "search.exclude": { "**/icons": true }
+  },
+  "extensions": {
+    "recommendations": ["nicolo-ribaudo.chrome-extension-tools"]
+  },
+  "launch": {
+    "configurations": [
+      {
+        "type": "chrome",
+        "request": "launch",
+        "name": "Launch Memory Palace",
+        "url": "chrome://extensions",
+        "webRoot": "${workspaceFolder}"
+      }
+    ]
+  }
+}

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Signal Relay Adapter</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{width:380px;background:#1a1a2e;color:#c8c8e0;font-family:'Segoe UI',system-ui,sans-serif;font-size:13px}
+  .popup{display:flex;flex-direction:column;padding:16px;gap:12px}
+  .hdr{display:flex;align-items:center;gap:10px}
+  .phi{font-size:22px;color:#e94560;font-weight:700}
+  .hdr h1{font-size:16px;font-weight:600;color:#e0e0ff;flex:1}
+  .status{display:flex;align-items:center;gap:6px;font-size:11px;color:#888}
+  .status-dot{width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 4px #22c55e80}
+  .pulse-row{display:flex;align-items:center;gap:8px;background:#1a0a10;border:1px solid #e9456033;border-radius:6px;padding:8px 10px}
+  .pdot{width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 6px #22c55e;animation:p 0.873s ease-in-out infinite}
+  @keyframes p{0%,100%{opacity:1}50%{opacity:.3}}
+  .pulse-text{font-size:11px;color:#aaa}
+  .stats-row{display:flex;gap:6px}
+  .stat{flex:1;background:#1a0a10;border:1px solid #e9456033;border-radius:6px;padding:8px;text-align:center}
+  .stat .v{font-size:16px;font-weight:700;color:#e94560;font-family:'Courier New',monospace}
+  .stat .l{font-size:10px;color:#555;margin-top:2px}
+  .response-area{background:#1a0a10;border:1px solid #3a1a20;border-radius:6px;padding:10px;min-height:60px;max-height:120px;overflow-y:auto;font-family:'Courier New',monospace;font-size:11px;color:#d08090;line-height:1.5}
+  .btn-row{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  .btn{background:#0e0e22;color:#c8c8e0;border:1px solid #3a1a20;border-radius:6px;padding:10px;font-size:12px;cursor:pointer;font-weight:500;transition:all .15s;text-align:center}
+  .btn:hover{border-color:#e94560;color:#e94560;background:#e9456011}
+  .btn-primary{background:#e94560;color:#fff;border-color:#e94560}
+  .btn-primary:hover{background:#c41c3c;color:#fff}
+  .side-panel-btn{width:100%;background:#e9456022;color:#e94560;border:1px solid #e9456044;border-radius:6px;padding:8px;font-weight:600;cursor:pointer;font-size:12px;transition:all .15s}
+  .side-panel-btn:hover{background:#e9456044}
+  .footer{display:flex;justify-content:space-between;align-items:center;font-size:10px;color:#555;padding-top:4px;border-top:1px solid #3a1a20}
+</style>
+</head>
+<body>
+<div class="popup">
+  <div class="hdr">
+    <span class="phi">φ</span>
+    <h1>Signal Relay Adapter</h1>
+    <div class="status"><span class="status-dot" id="statusDot"></span><span id="statusText">Connecting…</span></div>
+  </div>
+  <div class="pulse-row">
+    <div class="pdot"></div>
+    <span class="pulse-text">φ-pulse relay active — <span id="phiPhase">0°</span></span>
+  </div>
+  <div class="stats-row">
+    <div class="stat"><div class="v" id="sSig">0</div><div class="l">Signals</div></div>
+    <div class="stat"><div class="v" id="sRel">0</div><div class="l">Relayed</div></div>
+    <div class="stat"><div class="v" id="sPend">0</div><div class="l">Pending</div></div>
+    <div class="stat"><div class="v" id="sPulse">0</div><div class="l">Pulses</div></div>
+  </div>
+  <div class="response-area" id="responseArea">Relay active. Signals captured from all adapter extensions and relayed via φ-pulse.</div>
+  <div class="btn-row">
+    <button class="btn btn-primary" id="relayBtn">🔄 Relay Now</button>
+    <button class="btn" id="pendingBtn">📥 Pending</button>
+    <button class="btn" id="channelsBtn">📡 Channels</button>
+    <button class="btn" id="logBtn">📋 Log</button>
+  </div>
+  <button class="side-panel-btn" id="sidePanelBtn">Open Side Panel</button>
+  <div class="footer">
+    <span>v1.0.0 — Signal Relay Adapter EXT-040</span>
+    <span id="hbFooter">HB: 0</span>
+  </div>
+</div>
+<script>
+(function(){
+  const responseArea=document.getElementById('responseArea');
+  const relayBtn=document.getElementById('relayBtn');
+  const pendingBtn=document.getElementById('pendingBtn');
+  const channelsBtn=document.getElementById('channelsBtn');
+  const logBtn=document.getElementById('logBtn');
+  const statusDot=document.getElementById('statusDot');
+  const statusText=document.getElementById('statusText');
+  const hbFooter=document.getElementById('hbFooter');
+  const phiPhase=document.getElementById('phiPhase');
+  const sSig=document.getElementById('sSig'),sRel=document.getElementById('sRel'),sPend=document.getElementById('sPend'),sPulse=document.getElementById('sPulse');
+  let hb=0;
+
+  function show(data){responseArea.textContent=typeof data==='string'?data:JSON.stringify(data,null,2);}
+
+  relayBtn.addEventListener('click',function(){
+    show('🔄 Relaying...');
+    chrome.runtime.sendMessage({action:'relay'},function(r){
+      if(chrome.runtime.lastError){show('Error: '+chrome.runtime.lastError.message);return;}
+      show(r);
+    });
+  });
+
+  pendingBtn.addEventListener('click',function(){
+    chrome.runtime.sendMessage({action:'getPending',n:20},function(r){show(r);});
+  });
+
+  channelsBtn.addEventListener('click',function(){
+    chrome.runtime.sendMessage({action:'getChannelStats'},function(r){show(r);});
+  });
+
+  logBtn.addEventListener('click',function(){
+    chrome.runtime.sendMessage({action:'getRelayLog',n:10},function(r){show(r);});
+  });
+
+  document.getElementById('sidePanelBtn').addEventListener('click',function(){try{chrome.runtime.sendMessage({action:'getState'},function(){});}catch(e){}});
+
+  function hbeat(){
+    try{chrome.runtime.sendMessage({action:'getState'},function(r){
+      hb++;hbFooter.textContent='HB: '+hb;statusDot.style.background='#22c55e';
+      if(r){sSig.textContent=r.totalSignals||0;sRel.textContent=r.totalRelays||0;sPend.textContent=r.pendingSignals||0;sPulse.textContent=r.pulseCount||0;phiPhase.textContent=(r.phiPhase||0)+'°';statusText.textContent='HB #'+r.heartbeatCount;}
+    });}catch(e){statusDot.style.background='#f87171';statusText.textContent='Offline';}
+  }
+  hbeat();setInterval(hbeat,873);
+})();
+</script>
+</body>
+</html>

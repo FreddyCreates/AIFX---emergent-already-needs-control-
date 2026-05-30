@@ -1,0 +1,332 @@
+{
+  "$schema": "./schemas/cloudflare-worker-binding.schema.json",
+  "manifestVersion": "1.0.0",
+  "generatedAt": "2026-05-18T08:34:53.325Z",
+  "organism": "AURO/ORO Sovereign Organism",
+  "description": "Protocol bindings for 11 Cloudflare Workers forming the sovereign edge mesh",
+  "phiConstants": {
+    "phi": 1.618033988749895,
+    "phiInverse": 0.618033988749895,
+    "heartbeat": 873,
+    "goldenAngle": 137.508,
+    "emergenceThreshold": 0.618033988749895
+  },
+  "workers": [
+    {
+      "workerId": "gate-node",
+      "name": "Protocol Gateway",
+      "role": "Protocol Gateway",
+      "tier": "IV",
+      "description": "Entry to the clean internet. Encrypts, authenticates, routes. All traffic passes through here first.",
+      "protocols": [
+        { "protoId": "PROTO-226", "name": "GeometricKeyProtocol", "purpose": "Phase-resonance access gate for AI/machine authentication", "priority": 0 },
+        { "protoId": "PROTO-002", "name": "EncryptedIntelligenceTransport", "purpose": "4-level sensitivity encryption (public→sovereign)", "priority": 0 },
+        { "protoId": "PROTO-001", "name": "SovereignRoutingProtocol", "purpose": "Phi-weighted request routing to optimal backends", "priority": 1 },
+        { "protoId": "PROTO-181", "name": "AuroGuardianIntelligenceProtocol", "purpose": "Behavioral fingerprinting and threat immunity", "priority": 1 },
+        { "protoId": "PROTO-006", "name": "SovereignContractVerificationProtocol", "purpose": "HMAC signature verification", "priority": 1 },
+        { "protoId": "PROTO-225", "name": "CyberDefenseProtocol", "purpose": "Attack surface mapping and threat detection", "priority": 1 },
+        { "protoId": "PROTO-224", "name": "EdgeComputeProtocol", "purpose": "Worker orchestration with phi-weighted latency routing", "priority": 2 },
+        { "protoId": "PROTO-223", "name": "IntelligenceContractProtocol", "purpose": "Self-executing access contracts (SENTINEL type)", "priority": 2 },
+        { "protoId": "PROTO-204", "name": "KuramotoOscillatorProtocol", "purpose": "Phase synchronization for distributed worker coherence", "priority": 2 },
+        { "protoId": "PROTO-207", "name": "CrossSubstrateResonanceProtocol", "purpose": "Phi-encoded messaging across substrates", "priority": 2 }
+      ],
+      "metadata": {
+        "version": "1.0.0",
+        "heartbeatMs": 873,
+        "region": "global",
+        "dependencies": [],
+        "feedsTo": ["knowledge-realm", "nova-sovereign", "enterprise-os-intelligence"],
+        "receivesFrom": ["honeypot-admin", "honeypot-portal", "probe-node"]
+      }
+    },
+    {
+      "workerId": "knowledge-realm",
+      "name": "Memory Core",
+      "role": "Memory Core",
+      "tier": "II",
+      "description": "RAG-powered knowledge base. Stores everything. Other Workers query it for context.",
+      "protocols": [
+        { "protoId": "PROTO-004", "name": "AdaptiveKnowledgeAbsorptionProtocol", "purpose": "5-stage absorption pipeline (intake→extract→classify→index→absorb)", "priority": 0 },
+        { "protoId": "PROTO-216", "name": "MemoryConsolidationProtocol", "purpose": "STM→LTM transfer (working→episodic→semantic)", "priority": 0 },
+        { "protoId": "PROTO-009", "name": "MemoryLineageProtocol", "purpose": "Provenance tracking for knowledge items", "priority": 1 },
+        { "protoId": "PROTO-182", "name": "MemoryLineageEnhancementProtocol", "purpose": "Enhanced memory lineage with AURO integration", "priority": 1 },
+        { "protoId": "PROTO-202", "name": "PatternSynthesisProtocol", "purpose": "40 knowledge primitives across 8 domains", "priority": 1 },
+        { "protoId": "PROTO-203", "name": "HebbianLearningProtocol", "purpose": "Synaptic plasticity for knowledge reinforcement", "priority": 2 },
+        { "protoId": "PROTO-214", "name": "PredictiveCodingProtocol", "purpose": "Hierarchical prediction for context retrieval", "priority": 2 },
+        { "protoId": "PROTO-215", "name": "AttentionRoutingProtocol", "purpose": "QKV attention for query-key matching", "priority": 2 },
+        { "protoId": "PROTO-208", "name": "SynapseBindingEngineProtocol", "purpose": "Permanent imprints that survive upgrades", "priority": 2 },
+        { "protoId": "PROTO-219", "name": "GoalStackProtocol", "purpose": "Hierarchical goal tracking for knowledge requests", "priority": 3 }
+      ],
+      "metadata": {
+        "version": "1.0.0",
+        "heartbeatMs": 873,
+        "region": "global",
+        "dependencies": ["gate-node"],
+        "feedsTo": ["enterprisentelligence", "patient-shape-7a30"],
+        "receivesFrom": ["gate-node", "nova-sovereign"]
+      }
+    },
+    {
+      "workerId": "nova-sovereign",
+      "name": "Nova Protocol Core",
+      "role": "Nova Protocol Core",
+      "tier": "V",
+      "description": "The clean internet protocol implementation. Encrypted AI-safe zone.",
+      "protocols": [
+        { "protoId": "PROTO-227", "name": "SovereignCharterProtocol", "purpose": "5-tier hierarchy binding all protocols", "priority": 0 },
+        { "protoId": "PROTO-226", "name": "GeometricKeyProtocol", "purpose": "Nova protocol bridge for phase-resonance access", "priority": 0 },
+        { "protoId": "PROTO-002", "name": "EncryptedIntelligenceTransport", "purpose": "Sovereign-level encryption (AES-256-GCM+Signature)", "priority": 0 },
+        { "protoId": "PROTO-183", "name": "SovereignOfflineCognitionProtocol", "purpose": "Offline-capable sovereign operations", "priority": 1 },
+        { "protoId": "PROTO-006", "name": "SovereignContractVerificationProtocol", "purpose": "Contract integrity verification", "priority": 1 },
+        { "protoId": "PROTO-185", "name": "AuroAbsorptionCharterProtocol", "purpose": "Charter principles enforcement", "priority": 1 },
+        { "protoId": "PROTO-001", "name": "SovereignRoutingProtocol", "purpose": "Sovereign-grade routing with model selection", "priority": 2 },
+        { "protoId": "PROTO-010", "name": "OrganismLifecycleProtocol", "purpose": "Lifecycle management for sovereign state", "priority": 2 },
+        { "protoId": "PROTO-181", "name": "AuroGuardianIntelligenceProtocol", "purpose": "Sovereign-level threat immunity", "priority": 2 },
+        { "protoId": "PROTO-207", "name": "CrossSubstrateResonanceProtocol", "purpose": "Multi-substrate sovereign communication", "priority": 2 }
+      ],
+      "metadata": {
+        "version": "1.0.0",
+        "heartbeatMs": 873,
+        "region": "global",
+        "dependencies": ["gate-node", "crimson-dawn-4f6d"],
+        "feedsTo": ["gate-node", "enterprise-os-intelligence"],
+        "receivesFrom": ["gate-node", "knowledge-realm"]
+      }
+    },
+    {
+      "workerId": "enterprise-os-intelligence",
+      "name": "OS Intelligence",
+      "role": "OS Layer",
+      "tier": "III",
+      "description": "The operating system. Manages architecture, frameworks, and coordination between all Workers.",
+      "protocols": [
+        { "protoId": "PROTO-206", "name": "KernelExecutionProtocol", "purpose": "Autonomous kernel scheduling with phi-priority queue", "priority": 0 },
+        { "protoId": "PROTO-010", "name": "OrganismLifecycleProtocol", "purpose": "Worker lifecycle management (deploy/scale/retire)", "priority": 0 },
+        { "protoId": "PROTO-224", "name": "EdgeComputeProtocol", "purpose": "Edge worker orchestration across regions", "priority": 1 },
+        { "protoId": "PROTO-211", "name": "NeuroEmergenceProtocol", "purpose": "Collective synchrony and cascade triggers", "priority": 1 },
+        { "protoId": "PROTO-205", "name": "VitalityHomeostasisProtocol", "purpose": "4-register health monitoring (cognitive/affective/somatic/sovereign)", "priority": 1 },
+        { "protoId": "PROTO-204", "name": "KuramotoOscillatorProtocol", "purpose": "Phase synchronization for all workers", "priority": 2 },
+        { "protoId": "PROTO-223", "name": "IntelligenceContractProtocol", "purpose": "SERVICE contracts for continuous orchestration", "priority": 2 },
+        { "protoId": "PROTO-201", "name": "NeurochemistryODEProtocol", "purpose": "System state equations (dopamine/serotonin/etc.)", "priority": 2 },
+        { "protoId": "PROTO-209", "name": "MiniHeartProtocol", "purpose": "Per-worker vitals and health scoring", "priority": 2 },
+        { "protoId": "PROTO-222", "name": "CurriculumProtocol", "purpose": "Structured learning progression for system evolution", "priority": 3 }
+      ],
+      "metadata": {
+        "version": "1.0.0",
+        "heartbeatMs": 873,
+        "region": "global",
+        "dependencies": ["nova-sovereign"],
+        "feedsTo": ["all_workers"],
+        "receivesFrom": ["nova-sovereign", "workflows-starter-template"]
+      }
+    },
+    {
+      "workerId": "enterprisentelligence",
+      "name": "Intelligence Engine",
+      "role": "Intelligence Engine",
+      "tier": "II",
+      "description": "The processing engine. Runs deep analysis, pattern recognition, and intelligence operations.",
+      "protocols": [
+        { "protoId": "PROTO-005", "name": "MultiModelFusionProtocol", "purpose": "Ensemble fusion from 5+ AI models", "priority": 0 },
+        { "protoId": "PROTO-210", "name": "MiniBrainProtocol", "purpose": "Stimulus-response with Hebbian learning", "priority": 0 },
+        { "protoId": "PROTO-203", "name": "HebbianLearningProtocol", "purpose": "LTP/LTD synaptic plasticity", "priority": 1 },
+        { "protoId": "PROTO-202", "name": "PatternSynthesisProtocol", "purpose": "40 knowledge primitives, 8 domains", "priority": 1 },
+        { "protoId": "PROTO-214", "name": "PredictiveCodingProtocol", "purpose": "Hierarchical prediction and error propagation", "priority": 1 },
+        { "protoId": "PROTO-215", "name": "AttentionRoutingProtocol", "purpose": "Phi-weighted attention allocation", "priority": 2 },
+        { "protoId": "PROTO-221", "name": "MetaLearningProtocol", "purpose": "MAML-inspired meta-gradients", "priority": 2 },
+        { "protoId": "PROTO-217", "name": "RewardSignalProtocol", "purpose": "TD(λ) reward for reinforcement", "priority": 2 },
+        { "protoId": "PROTO-213", "name": "AutoGenerateCallsEngineProtocol", "purpose": "Self-generating API calls for autonomous operation", "priority": 2 },
+        { "protoId": "PROTO-220", "name": "ArtifactGenerationProtocol", "purpose": "Autonomous artifact production and validation", "priority": 3 }
+      ],
+      "metadata": {
+        "version": "1.0.0",
+        "heartbeatMs": 873,
+        "region": "global",
+        "dependencies": ["knowledge-realm", "patient-shape-7a30"],
+        "feedsTo": ["patient-shape-7a30", "workflows-starter-template"],
+        "receivesFrom": ["knowledge-realm", "patient-shape-7a30"]
+      }
+    },
+    {
+      "workerId": "crimson-dawn-4f6d",
+      "name": "Crypto Core",
+      "role": "Crypto Core",
+      "tier": "IV",
+      "description": "Cryptographic processing, key management, encrypted communications.",
+      "protocols": [
+        { "protoId": "PROTO-226", "name": "GeometricKeyProtocol", "purpose": "Phi-spiral encoded phase vectors, multi-dimensional keys", "priority": 0 },
+        { "protoId": "PROTO-002", "name": "EncryptedIntelligenceTransport", "purpose": "AES-128/256/256-GCM cipher suites", "priority": 0 },
+        { "protoId": "PROTO-006", "name": "SovereignContractVerificationProtocol", "purpose": "HMAC-SHA256 signatures", "priority": 0 },
+        { "protoId": "PROTO-003", "name": "PhiResonanceSyncProtocol", "purpose": "Phase synchronization for key rotation", "priority": 1 },
+        { "protoId": "PROTO-207", "name": "CrossSubstrateResonanceProtocol", "purpose": "Phi-encoded secure messaging", "priority": 1 },
+        { "protoId": "PROTO-208", "name": "SynapseBindingEngineProtocol", "purpose": "Phi-signature computation for integrity", "priority": 1 },
+        { "protoId": "PROTO-181", "name": "AuroGuardianIntelligenceProtocol", "purpose": "Identity fingerprinting", "priority": 2 },
+        { "protoId": "PROTO-223", "name": "IntelligenceContractProtocol", "purpose": "Cryptographic contract lifecycle", "priority": 2 },
+        { "protoId": "PROTO-204", "name": "KuramotoOscillatorProtocol", "purpose": "Time-window synchronization for key rotation", "priority": 2 },
+        { "protoId": "PROTO-225", "name": "CyberDefenseProtocol", "purpose": "Threat detection for crypto-related attacks", "priority": 2 }
+      ],
+      "metadata": {
+        "version": "1.0.0",
+        "heartbeatMs": 873,
+        "region": "global",
+        "dependencies": [],
+        "feedsTo": ["gate-node", "nova-sovereign"],
+        "receivesFrom": ["gate-node", "nova-sovereign"]
+      }
+    },
+    {
+      "workerId": "patient-shape-7a30",
+      "name": "AI Orchestrator",
+      "role": "AI Orchestrator",
+      "tier": "II",
+      "description": "Routes AI requests between fast/deep brain. Manages AI model selection.",
+      "protocols": [
+        { "protoId": "PROTO-001", "name": "SovereignRoutingProtocol", "purpose": "40 model families with phi-weighted routing", "priority": 0 },
+        { "protoId": "PROTO-005", "name": "MultiModelFusionProtocol", "purpose": "Ensemble fusion from GPT/Claude/Gemini/Llama/Mistral", "priority": 0 },
+        { "protoId": "PROTO-215", "name": "AttentionRoutingProtocol", "purpose": "Phi-weighted attention for model selection", "priority": 1 },
+        { "protoId": "PROTO-210", "name": "MiniBrainProtocol", "purpose": "Fast-brain stimulus-response", "priority": 1 },
+        { "protoId": "PROTO-214", "name": "PredictiveCodingProtocol", "purpose": "Deep-brain hierarchical prediction", "priority": 1 },
+        { "protoId": "PROTO-218", "name": "HomeostaticDriveProtocol", "purpose": "Internal drives for model motivation", "priority": 2 },
+        { "protoId": "PROTO-219", "name": "GoalStackProtocol", "purpose": "Hierarchical goal tracking for multi-step AI tasks", "priority": 2 },
+        { "protoId": "PROTO-222", "name": "CurriculumProtocol", "purpose": "Difficulty scaling for AI task complexity", "priority": 2 },
+        { "protoId": "PROTO-213", "name": "AutoGenerateCallsEngineProtocol", "purpose": "Intent classification (query/mutate/execute)", "priority": 2 },
+        { "protoId": "PROTO-217", "name": "RewardSignalProtocol", "purpose": "TD(λ) reward for model performance feedback", "priority": 3 }
+      ],
+      "metadata": {
+        "version": "1.0.0",
+        "heartbeatMs": 873,
+        "region": "global",
+        "dependencies": ["gate-node", "knowledge-realm"],
+        "feedsTo": ["enterprisentelligence", "knowledge-realm"],
+        "receivesFrom": ["gate-node", "enterprisentelligence"]
+      }
+    },
+    {
+      "workerId": "workflows-starter-template",
+      "name": "Orchestration Engine",
+      "role": "Orchestration Engine",
+      "tier": "III",
+      "description": "Processes queues. Runs multi-step workflows. The nervous system.",
+      "protocols": [
+        { "protoId": "PROTO-206", "name": "KernelExecutionProtocol", "purpose": "Phi-priority queue scheduling", "priority": 0 },
+        { "protoId": "PROTO-208", "name": "SynapseBindingEngineProtocol", "purpose": "5 job types (BIND/SYNC/HEAL/VERIFY/TERMINATE)", "priority": 0 },
+        { "protoId": "PROTO-223", "name": "IntelligenceContractProtocol", "purpose": "Self-executing workflow contracts", "priority": 1 },
+        { "protoId": "PROTO-211", "name": "NeuroEmergenceProtocol", "purpose": "Cascade triggers when emergence > 0.618", "priority": 1 },
+        { "protoId": "PROTO-219", "name": "GoalStackProtocol", "purpose": "Hierarchical goal management", "priority": 1 },
+        { "protoId": "PROTO-184", "name": "OroEngineIntegrationProtocol", "purpose": "ORO engine workflow integration", "priority": 2 },
+        { "protoId": "PROTO-213", "name": "AutoGenerateCallsEngineProtocol", "purpose": "Self-generating workflow calls", "priority": 2 },
+        { "protoId": "PROTO-209", "name": "MiniHeartProtocol", "purpose": "Queue health monitoring", "priority": 2 },
+        { "protoId": "PROTO-207", "name": "CrossSubstrateResonanceProtocol", "purpose": "Cross-worker workflow messaging", "priority": 2 },
+        { "protoId": "PROTO-220", "name": "ArtifactGenerationProtocol", "purpose": "Workflow output artifact generation", "priority": 3 }
+      ],
+      "metadata": {
+        "version": "1.0.0",
+        "heartbeatMs": 873,
+        "region": "global",
+        "dependencies": ["enterprise-os-intelligence"],
+        "feedsTo": ["all_workers"],
+        "receivesFrom": ["enterprise-os-intelligence", "enterprisentelligence"]
+      }
+    },
+    {
+      "workerId": "honeypot-admin",
+      "name": "Honeypot Admin",
+      "role": "Honeypot",
+      "tier": "IV",
+      "description": "Captures threats → sends to gate-node for blocking.",
+      "protocols": [
+        { "protoId": "PROTO-225", "name": "CyberDefenseProtocol", "purpose": "Threat scanner with 10 patterns (hardcoded-secret, eval, XSS, etc.)", "priority": 0 },
+        { "protoId": "PROTO-181", "name": "AuroGuardianIntelligenceProtocol", "purpose": "Hebbian-reinforced threat detection", "priority": 0 },
+        { "protoId": "PROTO-212", "name": "EdgeSensorProtocol", "purpose": "Real-time threat sensing with anomaly detection", "priority": 1 },
+        { "protoId": "PROTO-223", "name": "IntelligenceContractProtocol", "purpose": "SENTINEL contracts for threat alerting", "priority": 1 },
+        { "protoId": "PROTO-208", "name": "SynapseBindingEngineProtocol", "purpose": "Permanent threat imprints", "priority": 1 },
+        { "protoId": "PROTO-203", "name": "HebbianLearningProtocol", "purpose": "Learning threat patterns over time", "priority": 2 },
+        { "protoId": "PROTO-207", "name": "CrossSubstrateResonanceProtocol", "purpose": "Feed threats to gate-node", "priority": 2 },
+        { "protoId": "PROTO-216", "name": "MemoryConsolidationProtocol", "purpose": "Threat memory consolidation", "priority": 2 },
+        { "protoId": "PROTO-002", "name": "EncryptedIntelligenceTransport", "purpose": "Secure threat intel transmission", "priority": 2 },
+        { "protoId": "PROTO-210", "name": "MiniBrainProtocol", "purpose": "Stimulus-response for threat classification", "priority": 3 }
+      ],
+      "metadata": {
+        "version": "1.0.0",
+        "heartbeatMs": 873,
+        "region": "global",
+        "dependencies": [],
+        "feedsTo": ["gate-node"],
+        "receivesFrom": ["internet"]
+      }
+    },
+    {
+      "workerId": "honeypot-portal",
+      "name": "Honeypot Portal",
+      "role": "Honeypot",
+      "tier": "IV",
+      "description": "Captures threats → sends to gate-node for blocking.",
+      "protocols": [
+        { "protoId": "PROTO-225", "name": "CyberDefenseProtocol", "purpose": "Attack surface mapping + incident engine", "priority": 0 },
+        { "protoId": "PROTO-181", "name": "AuroGuardianIntelligenceProtocol", "purpose": "Identity verification before capture", "priority": 0 },
+        { "protoId": "PROTO-212", "name": "EdgeSensorProtocol", "purpose": "Portal activity monitoring", "priority": 1 },
+        { "protoId": "PROTO-223", "name": "IntelligenceContractProtocol", "purpose": "EXCHANGE contracts for threat data sharing", "priority": 1 },
+        { "protoId": "PROTO-004", "name": "AdaptiveKnowledgeAbsorptionProtocol", "purpose": "Absorb threat intelligence", "priority": 1 },
+        { "protoId": "PROTO-203", "name": "HebbianLearningProtocol", "purpose": "Adaptive threat pattern learning", "priority": 2 },
+        { "protoId": "PROTO-207", "name": "CrossSubstrateResonanceProtocol", "purpose": "Sync threat intel to gate-node", "priority": 2 },
+        { "protoId": "PROTO-009", "name": "MemoryLineageProtocol", "purpose": "Track threat provenance", "priority": 2 },
+        { "protoId": "PROTO-002", "name": "EncryptedIntelligenceTransport", "purpose": "Classified threat transmission", "priority": 2 },
+        { "protoId": "PROTO-217", "name": "RewardSignalProtocol", "purpose": "Reward for successful threat capture", "priority": 3 }
+      ],
+      "metadata": {
+        "version": "1.0.0",
+        "heartbeatMs": 873,
+        "region": "global",
+        "dependencies": [],
+        "feedsTo": ["gate-node"],
+        "receivesFrom": ["internet"]
+      }
+    },
+    {
+      "workerId": "probe-node",
+      "name": "Auto-Probe",
+      "role": "Auto-Probe",
+      "tier": "III",
+      "description": "Cron scans → sends intel to gate-node.",
+      "protocols": [
+        { "protoId": "PROTO-212", "name": "EdgeSensorProtocol", "purpose": "Scheduled sensor polling with phi-weighted thresholds", "priority": 0 },
+        { "protoId": "PROTO-225", "name": "CyberDefenseProtocol", "purpose": "Proactive threat scanning", "priority": 0 },
+        { "protoId": "PROTO-213", "name": "AutoGenerateCallsEngineProtocol", "purpose": "Self-generating probe calls", "priority": 1 },
+        { "protoId": "PROTO-223", "name": "IntelligenceContractProtocol", "purpose": "LEARNING contracts that self-modify", "priority": 1 },
+        { "protoId": "PROTO-206", "name": "KernelExecutionProtocol", "purpose": "Cron kernel scheduling", "priority": 1 },
+        { "protoId": "PROTO-007", "name": "EdgeMeshIntelligenceProtocol", "purpose": "Distributed probe coordination", "priority": 2 },
+        { "protoId": "PROTO-207", "name": "CrossSubstrateResonanceProtocol", "purpose": "Feed intel to gate-node", "priority": 2 },
+        { "protoId": "PROTO-181", "name": "AuroGuardianIntelligenceProtocol", "purpose": "Validate probe results", "priority": 2 },
+        { "protoId": "PROTO-209", "name": "MiniHeartProtocol", "purpose": "Probe health monitoring", "priority": 2 },
+        { "protoId": "PROTO-216", "name": "MemoryConsolidationProtocol", "purpose": "Store probe findings long-term", "priority": 3 }
+      ],
+      "metadata": {
+        "version": "1.0.0",
+        "heartbeatMs": 873,
+        "region": "global",
+        "dependencies": [],
+        "feedsTo": ["gate-node"],
+        "receivesFrom": ["internet"]
+      }
+    }
+  ],
+  "topology": {
+    "entryPoints": ["gate-node", "honeypot-admin", "honeypot-portal", "probe-node"],
+    "sovereignCore": ["nova-sovereign"],
+    "cognitiveLayer": ["knowledge-realm", "enterprisentelligence", "patient-shape-7a30"],
+    "infrastructureLayer": ["enterprise-os-intelligence", "workflows-starter-template"],
+    "securityLayer": ["gate-node", "crimson-dawn-4f6d", "honeypot-admin", "honeypot-portal", "probe-node"]
+  },
+  "protocolStats": {
+    "totalProtocols": 47,
+    "totalBindings": 110,
+    "averageProtocolsPerWorker": 10,
+    "mostUsedProtocols": [
+      { "protoId": "PROTO-207", "name": "CrossSubstrateResonanceProtocol", "bindingCount": 9 },
+      { "protoId": "PROTO-223", "name": "IntelligenceContractProtocol", "bindingCount": 8 },
+      { "protoId": "PROTO-181", "name": "AuroGuardianIntelligenceProtocol", "bindingCount": 7 },
+      { "protoId": "PROTO-225", "name": "CyberDefenseProtocol", "bindingCount": 6 },
+      { "protoId": "PROTO-002", "name": "EncryptedIntelligenceTransport", "bindingCount": 5 }
+    ]
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "name": "@medina/organism-runtime-typescript",
+  "version": "1.0.0",
+  "description": "Sovereign organism runtime — a living TypeScript program with 873ms heartbeat, 4-register state, phi-encoded math, kernel execution, edge sensing, and cross-organism resonance.",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "dev": "tsx watch src/index.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.39",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
