@@ -1,0 +1,146 @@
+# ════════════════════════════════════════════════════════════════════════════
+# CPL-P (Control Protocol Language — Pipeline)
+# id: pipeline://governance/bot_cycle
+# version: 1.0.0
+#
+# The governance pipeline for the Sovereign Organism Bot Fleet.
+# Runs on every bot event: collect state → apply laws → route escalations.
+#
+# Pipeline steps are resolved to real functions in the governance engine
+# (scripts/governance-engine.js) via the `use` symbol bindings.
+#
+# Context flows through all steps, accumulating:
+#   - bot_state: current bot health, findings, metrics
+#   - law_decisions: FORBID/REQUIRE/ALLOW/ESCALATE decisions from CPL-L
+#   - escalations: items requiring human attention
+#   - risk_score: float 0-1
+# ════════════════════════════════════════════════════════════════════════════
+
+id: "pipeline://governance/bot_cycle"
+version: "1.0.0"
+updated: "2026-05-03"
+ocl_ref: "atlas://organism/bot-fleet"
+
+# ── Main Pipeline Steps ───────────────────────────────────────────────────────
+steps:
+
+  - id: "collect_state"
+    description: "Gather current state of all bots from their reports"
+    use: "governance.collect_bot_state"
+    outputs:
+      - bot_reports   # parsed docs/*.md reports from all 20 bots
+      - fleet_health  # "green" | "yellow" | "red"
+      - risk_score    # float 0-1, phi-weighted composite
+    on_error: "continue"  # never let state collection failure stop governance
+
+  - id: "enrich_context"
+    description: "Enrich event context with fleet state and protocol data"
+    use: "governance.enrich_context"
+    inputs:
+      - bot_reports
+      - event           # the incoming bot event
+    outputs:
+      - enriched_context  # event + fleet state + protocol metrics
+    on_error: "continue"
+
+  - id: "apply_laws"
+    description: "Evaluate all CPL-L rules against enriched context"
+    use: "governance.apply_cpl_l"
+    inputs:
+      - enriched_context
+    outputs:
+      - law_decisions   # array of { rule, action, target, reason }
+      - blocked         # boolean: was the bot blocked?
+      - required_items  # things the bot MUST do before proceeding
+    on_error: "stop"    # law evaluation failure is critical
+
+  - id: "record_decisions"
+    description: "Record all decisions to the governance audit log"
+    use: "governance.record_decisions"
+    inputs:
+      - law_decisions
+      - enriched_context
+    outputs:
+      - audit_entry_id
+    on_error: "continue"
+
+  - id: "route_escalations"
+    description: "Route human escalations and create GitHub issues for them"
+    use: "governance.route_escalations"
+    inputs:
+      - law_decisions
+      - enriched_context
+    outputs:
+      - escalations   # array of escalation targets + reasons
+    on_error: "continue"
+
+  - id: "update_meta"
+    description: "Feed law stats and pipeline metrics to the meta engine"
+    use: "governance.update_meta_stats"
+    inputs:
+      - law_decisions
+      - blocked
+      - escalations
+      - enriched_context
+    outputs:
+      - meta_proposals  # optimization proposals from meta engine
+    on_error: "continue"
+
+  - id: "generate_governance_report"
+    description: "Write governance cycle report to docs/"
+    use: "governance.generate_report"
+    inputs:
+      - law_decisions
+      - escalations
+      - meta_proposals
+      - audit_entry_id
+    outputs:
+      - report_path
+    on_error: "continue"
+
+# ── Branches (conditional routing) ───────────────────────────────────────────
+branches:
+
+  - id: "if_high_risk"
+    description: "High-risk events go directly to human escalation"
+    when: "context.risk_score > 0.7"
+    then:
+      type: "ESCALATE"
+      target: "human://operator"
+      additional_steps:
+        - id: "emergency_lockdown_check"
+          use: "governance.emergency_lockdown_check"
+          description: "Check if full fleet lockdown is warranted"
+
+  - id: "if_all_clear"
+    description: "All-clear events just update stats and exit"
+    when: "context.risk_score < 0.2 && !context.blocked"
+    then:
+      type: "ALLOW"
+      skip_steps: ["route_escalations"]
+
+  - id: "if_law_conflict"
+    description: "Handle conflicting decisions from different rules"
+    when: "context.law_decisions.filter(d => d.action === 'FORBID').length > 0 && context.law_decisions.filter(d => d.action === 'ALLOW').length > 0"
+    then:
+      type: "ESCALATE"
+      target: "human://operator"
+      description: "FORBID and ALLOW both triggered — human must resolve conflict"
+
+# ── Step Function Bindings ────────────────────────────────────────────────────
+# Maps `use` symbols → real module paths in governance engine
+bindings:
+  "governance.collect_bot_state":       "modules/collect-bot-state.js"
+  "governance.enrich_context":          "modules/enrich-context.js"
+  "governance.apply_cpl_l":            "modules/apply-cpl-l.js"
+  "governance.record_decisions":        "modules/record-decisions.js"
+  "governance.route_escalations":       "modules/route-escalations.js"
+  "governance.update_meta_stats":       "modules/update-meta-stats.js"
+  "governance.generate_report":         "modules/generate-report.js"
+  "governance.emergency_lockdown_check": "modules/emergency-lockdown-check.js"
+
+# ── Audit Trail ───────────────────────────────────────────────────────────────
+audit:
+  log_path: "dist/governance/audit-log.jsonl"
+  feedback_path: "governance/feedback/"
+  report_path: "docs/governance-report.md"

@@ -1,0 +1,35 @@
+{
+  "name": "@medina/organism-arms",
+  "version": "1.0.0",
+  "description": "Extensions as organism arms — the organism invokes its own extensions as motor and sensory capabilities",
+  "license": "MIT",
+  "type": "module",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./arm-registry": "./src/arm-registry.js",
+    "./arm-executor": "./src/arm-executor.js",
+    "./sense-act-loop": "./src/sense-act-loop.js",
+    "./bidirectional-relay": "./src/bidirectional-relay.js"
+  },
+  "keywords": [
+    "organism",
+    "arms",
+    "extensions",
+    "autonomous",
+    "sense-act",
+    "motor",
+    "sensory",
+    "phi"
+  ],
+  "files": [
+    "src/"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "author": "Medina",
+  "publishConfig": {
+    "access": "public"
+  }
+}

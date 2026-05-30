@@ -1,0 +1,18 @@
+{
+  "id": "atlas://bot/organism-protocol-bot",
+  "name": "organism-protocol-bot",
+  "class": "Bot",
+  "division": "Validate & Test",
+  "divisionNum": "II",
+  "emoji": "🔬",
+  "domain": "Protocol integrity",
+  "triggers": ["push:protocols/"],
+  "capabilities": ["lint", "graph", "circular_dep_detect"],
+  "languages": ["atlas://language/ocl", "atlas://language/cil"],
+  "governance_pipeline": "pipeline://governance/bot_cycle",
+  "ocl_ref": "atlas://organism/bot-fleet",
+  "script": "scripts/lint-protocols.js",
+  "workflow": ".github/workflows/organism-protocol-bot.yml",
+  "report": "docs/protocol-lint-report.md",
+  "microbots": []
+}

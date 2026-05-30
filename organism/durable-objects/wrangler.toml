@@ -1,0 +1,136 @@
+name = "cognitive-organism"
+main = "index.js"
+compatibility_date = "2024-01-01"
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# COGNITIVE CORE — Neural computation, memory, and consciousness
+# ═══════════════════════════════════════════════════════════════════════════════
+
+[[durable_objects.bindings]]
+name = "NEURON_CLUSTER"
+class_name = "NeuronCluster"
+
+[[durable_objects.bindings]]
+name = "MEMORY_VAULT"
+class_name = "MemoryVault"
+
+[[durable_objects.bindings]]
+name = "CONSCIOUSNESS_STREAM"
+class_name = "ConsciousnessStream"
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# SECURITY TRIAD — Wraith/Ghost/Phantom protection layers
+# ═══════════════════════════════════════════════════════════════════════════════
+
+[[durable_objects.bindings]]
+name = "WRAITH_GUARD"
+class_name = "WraithGuard"
+
+[[durable_objects.bindings]]
+name = "GHOST_HONEYPOT"
+class_name = "GhostHoneypot"
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# KNOWLEDGE LAYER — RAG pipeline and document corpus
+# ═══════════════════════════════════════════════════════════════════════════════
+
+[[durable_objects.bindings]]
+name = "KNOWLEDGE_CORPUS"
+class_name = "KnowledgeCorpus"
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# DURABLE OBJECT MIGRATIONS
+# ═══════════════════════════════════════════════════════════════════════════════
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["NeuronCluster", "MemoryVault", "ConsciousnessStream"]
+
+[[migrations]]
+tag = "v2"
+new_sqlite_classes = ["WraithGuard", "GhostHoneypot", "KnowledgeCorpus"]
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# ENVIRONMENT VARIABLES
+# ═══════════════════════════════════════════════════════════════════════════════
+
+[vars]
+PHI = "1.618033988749895"
+HEARTBEAT = "873"
+SERVICE_NAME = "cognitive-organism"
+VERSION = "2.0.0"
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# DEVELOPMENT ENVIRONMENT
+# ═══════════════════════════════════════════════════════════════════════════════
+
+[env.development]
+name = "cognitive-organism-dev"
+
+# Cognitive Core
+[[env.development.durable_objects.bindings]]
+name = "NEURON_CLUSTER"
+class_name = "NeuronCluster"
+
+[[env.development.durable_objects.bindings]]
+name = "MEMORY_VAULT"
+class_name = "MemoryVault"
+
+[[env.development.durable_objects.bindings]]
+name = "CONSCIOUSNESS_STREAM"
+class_name = "ConsciousnessStream"
+
+# Security Triad
+[[env.development.durable_objects.bindings]]
+name = "WRAITH_GUARD"
+class_name = "WraithGuard"
+
+[[env.development.durable_objects.bindings]]
+name = "GHOST_HONEYPOT"
+class_name = "GhostHoneypot"
+
+# Knowledge Layer
+[[env.development.durable_objects.bindings]]
+name = "KNOWLEDGE_CORPUS"
+class_name = "KnowledgeCorpus"
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# PRODUCTION ENVIRONMENT
+# ═══════════════════════════════════════════════════════════════════════════════
+
+[env.production]
+name = "cognitive-organism"
+
+# Cognitive Core
+[[env.production.durable_objects.bindings]]
+name = "NEURON_CLUSTER"
+class_name = "NeuronCluster"
+
+[[env.production.durable_objects.bindings]]
+name = "MEMORY_VAULT"
+class_name = "MemoryVault"
+
+[[env.production.durable_objects.bindings]]
+name = "CONSCIOUSNESS_STREAM"
+class_name = "ConsciousnessStream"
+
+# Security Triad
+[[env.production.durable_objects.bindings]]
+name = "WRAITH_GUARD"
+class_name = "WraithGuard"
+
+[[env.production.durable_objects.bindings]]
+name = "GHOST_HONEYPOT"
+class_name = "GhostHoneypot"
+
+# Knowledge Layer
+[[env.production.durable_objects.bindings]]
+name = "KNOWLEDGE_CORPUS"
+class_name = "KnowledgeCorpus"
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# OBSERVABILITY
+# ═══════════════════════════════════════════════════════════════════════════════
+
+[observability.logs]
+enabled = true

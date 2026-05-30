@@ -1,0 +1,19 @@
+{
+  "id": "atlas://bot/organism-sentinel-bot",
+  "name": "organism-sentinel-bot",
+  "class": "Bot",
+  "division": "Secure & Monitor",
+  "divisionNum": "III",
+  "emoji": "🛡️",
+  "domain": "Security scanning",
+  "triggers": ["schedule:weekly", "push:*"],
+  "capabilities": ["security_audit", "csp_check", "secrets_scan", "block_merge"],
+  "languages": ["atlas://language/cpl-l", "atlas://language/err"],
+  "governance_pipeline": "pipeline://governance/bot_cycle",
+  "ocl_ref": "atlas://organism/bot-fleet",
+  "law_refs": ["governance://law/BOT_FLEET_SAFETY#BLOCK_SECRETS"],
+  "script": "scripts/sentinel-scan.js",
+  "workflow": ".github/workflows/organism-sentinel-bot.yml",
+  "report": "docs/security-report.md",
+  "microbots": []
+}

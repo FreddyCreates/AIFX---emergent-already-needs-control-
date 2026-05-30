@@ -1,0 +1,61 @@
+{
+  "name": "release:pipeline",
+  "description": "Full release pipeline — preflight, validate, build, package, changelog, publish, notify. Orchestrated by Release Pipeline Agent.",
+  "version": "1.0.0",
+  "agent": "RELEASE-PIPELINE-AGENT",
+  "steps": [
+    {
+      "action": "validate:manifests",
+      "payload": { "path": "extensions" },
+      "agent": "PREFLIGHT",
+      "failFast": true
+    },
+    {
+      "action": "run:tests",
+      "payload": { "pattern": "test/**/*.test.js" },
+      "agent": "VALIDATE",
+      "failFast": false
+    },
+    {
+      "action": "build:extension",
+      "payload": { "path": "extensions/jarvis", "version": "1.0.0" },
+      "agent": "BUILD",
+      "failFast": false
+    },
+    {
+      "action": "package:all-extensions",
+      "payload": {
+        "source": "extensions",
+        "dest": "dist/extensions/all-extensions.zip",
+        "skip": ["jarvis", "windows"]
+      },
+      "agent": "PACKAGE",
+      "failFast": false
+    },
+    {
+      "action": "generate:download-manifest",
+      "payload": {
+        "outputFile": "VIGIL_DOWNLOADS.md",
+        "baseUrl": "https://raw.githubusercontent.com/ItsNotAILABS/PRODUCTION-/main"
+      },
+      "agent": "NOTIFY",
+      "failFast": false
+    }
+  ],
+  "pipeline": {
+    "stages": ["preflight", "validate", "build", "package", "changelog", "publish", "notify"],
+    "description": "Complete release pipeline orchestrated by Release Pipeline Agent",
+    "triggers": {
+      "manual": "node scripts/deploy-release-pipeline.js",
+      "dryRun": "node scripts/deploy-release-pipeline.js --dry-run",
+      "ci": "Push tag v* triggers .github/workflows/organism-release-bot.yml"
+    },
+    "artifacts": {
+      "bundles": ["dist/sovereign-organism-v*.tar.gz", "dist/sovereign-organism-v*.zip"],
+      "extensions": ["dist/extensions/*.zip"],
+      "sdks": ["dist/sdks/*.tgz"],
+      "alphaOne": ["dist/alpha-one-v*/"],
+      "reports": ["dist/release-pipeline-report.json", "dist/CHANGELOG.md"]
+    }
+  }
+}

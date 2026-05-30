@@ -1,0 +1,32 @@
+{
+  "cycles": 7260,
+  "domains": {
+    "learning": {
+      "cycles": 7260,
+      "blocked": 7260,
+      "escalated": 7260,
+      "total_decisions": 14520
+    }
+  },
+  "entities": {
+    "atlas://bot/organism-learning-bot": {
+      "blocked": 7260,
+      "allowed": 0,
+      "escalated": 7260,
+      "rules_triggered": 14520,
+      "domain": "learning"
+    }
+  },
+  "rules": {
+    "governance://law/learning-stability#HALT_ON_REWARD_DIVERGENCE": {
+      "triggered": 14520,
+      "entities": [
+        "atlas://bot/organism-learning-bot"
+      ],
+      "domains": [
+        "learning"
+      ]
+    }
+  },
+  "updated_at": "2026-05-21T22:18:08.886Z"
+}

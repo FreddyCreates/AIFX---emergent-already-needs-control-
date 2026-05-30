@@ -1,0 +1,3575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ItsNotAILABS — Scientific Computing & AI Research Platform</title>
+  <meta name="description" content="Advanced scientific computing platform featuring JULIA/MOTOKO and JULIA/PYTHON bridges with embedded CPL (Cognitive Protocol Language). High-performance AI research infrastructure.">
+  <meta name="keywords" content="Julia, Motoko, Python, CPL, scientific computing, AI research, machine learning, decentralized AI, cognitive protocols">
+  <meta name="author" content="ItsNotAILABS Research">
+  <link rel="canonical" href="https://itsnotailabs.com/">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="ItsNotAILABS — Scientific Computing Platform">
+  <meta property="og:description" content="JULIA/MOTOKO & JULIA/PYTHON bridges with CPL embedded. Advanced scientific computing for AI research.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://itsnotailabs.com/">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-primary: #030712;
+      --bg-secondary: #0a0f1e;
+      --bg-tertiary: #111827;
+      --bg-card: rgba(17, 24, 39, 0.8);
+      --bg-glass: rgba(255, 255, 255, 0.03);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-glow: rgba(0, 212, 170, 0.4);
+      
+      /* Scientific Color Palette */
+      --accent-julia: #9558B2;      /* Julia purple */
+      --accent-motoko: #29ABE2;     /* Motoko cyan */
+      --accent-python: #3776AB;     /* Python blue */
+      --accent-cpl: #00D4AA;        /* CPL teal */
+      --accent-gold: #D4AF37;       /* Research gold */
+      --accent-data: #22D3EE;       /* Data cyan */
+      --accent-compute: #A855F7;    /* Compute purple */
+      
+      --text-primary: #F8FAFC;
+      --text-secondary: #94A3B8;
+      --text-dim: #64748B;
+      
+      --gradient-julia: linear-gradient(135deg, #9558B2 0%, #CB3C33 100%);
+      --gradient-scientific: linear-gradient(135deg, #00D4AA 0%, #3776AB 50%, #9558B2 100%);
+      --gradient-data: linear-gradient(135deg, #22D3EE 0%, #A855F7 100%);
+      
+      --shadow-glow: 0 0 60px rgba(0, 212, 170, 0.15);
+      --shadow-card: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+    
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.7;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-primary); }
+    ::-webkit-scrollbar-thumb { 
+      background: linear-gradient(180deg, var(--accent-cpl), var(--accent-julia)); 
+      border-radius: 4px;
+    }
+    
+    a { color: var(--accent-cpl); text-decoration: none; transition: all 0.3s ease; }
+    a:hover { color: var(--accent-gold); }
+    
+    .container { max-width: 1400px; margin: 0 auto; padding: 0 2rem; }
+    
+    /* ═══════════════════════════════════════════════════════════════════════════
+       NAVIGATION
+       ═══════════════════════════════════════════════════════════════════════════ */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(3, 7, 18, 0.9);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 0;
+    }
+    nav.scrolled {
+      background: rgba(3, 7, 18, 0.98);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+    }
+    nav .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .nav-brand {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent-cpl);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      letter-spacing: 0.05em;
+    }
+    .nav-brand .logo-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      background: var(--gradient-scientific);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      animation: pulse-glow 3s ease-in-out infinite;
+    }
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(0, 212, 170, 0.4); }
+      50% { box-shadow: 0 0 40px rgba(0, 212, 170, 0.7); }
+    }
+    .nav-brand .brand-sub {
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      font-weight: 400;
+      display: block;
+      letter-spacing: 0.1em;
+    }
+    .nav-links {
+      display: flex;
+      gap: 0.25rem;
+      list-style: none;
+      align-items: center;
+    }
+    .nav-links a {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+    .nav-links a:hover {
+      color: var(--text-primary);
+      background: var(--bg-glass);
+    }
+    .nav-links a.active {
+      color: var(--accent-cpl);
+      background: rgba(0, 212, 170, 0.1);
+    }
+    .nav-cta {
+      background: var(--gradient-scientific) !important;
+      color: var(--bg-primary) !important;
+      font-weight: 600 !important;
+      padding: 0.6rem 1.5rem !important;
+    }
+    .nav-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0, 212, 170, 0.3);
+    }
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text-primary);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    
+    /* ═══════════════════════════════════════════════════════════════════════════
+       HERO SECTION
+       ═══════════════════════════════════════════════════════════════════════════ */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 8rem 0 6rem;
+      background: 
+        radial-gradient(ellipse at 20% 20%, rgba(149, 88, 178, 0.12) 0%, transparent 40%),
+        radial-gradient(ellipse at 80% 30%, rgba(41, 171, 226, 0.1) 0%, transparent 40%),
+        radial-gradient(ellipse at 50% 80%, rgba(0, 212, 170, 0.08) 0%, transparent 50%),
+        linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+      overflow: hidden;
+    }
+    
+    /* Scientific Grid Background */
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        linear-gradient(rgba(0, 212, 170, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 212, 170, 0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      animation: grid-pulse 15s linear infinite;
+    }
+    @keyframes grid-pulse {
+      0% { opacity: 0.5; }
+      50% { opacity: 1; }
+      100% { opacity: 0.5; }
+    }
+    
+    /* Floating Data Particles */
+    .hero-particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 1;
+    }
+    .particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: var(--accent-cpl);
+      border-radius: 50%;
+      opacity: 0.6;
+      animation: float-particle 20s linear infinite;
+    }
+    .particle:nth-child(2n) { background: var(--accent-julia); animation-duration: 25s; }
+    .particle:nth-child(3n) { background: var(--accent-motoko); animation-duration: 30s; }
+    @keyframes float-particle {
+      0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+      10% { opacity: 0.6; }
+      90% { opacity: 0.6; }
+      100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
+    }
+    
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      max-width: 1100px;
+    }
+    
+    /* Language Bridge Visualization */
+    .language-bridge-visual {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+    .lang-node {
+      width: 100px;
+      height: 100px;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 0.9rem;
+      position: relative;
+      transition: all 0.4s ease;
+    }
+    .lang-node:hover {
+      transform: scale(1.1);
+    }
+    .lang-node.julia {
+      background: linear-gradient(135deg, rgba(149, 88, 178, 0.3), rgba(203, 60, 51, 0.2));
+      border: 2px solid var(--accent-julia);
+      color: var(--accent-julia);
+      box-shadow: 0 0 40px rgba(149, 88, 178, 0.3);
+    }
+    .lang-node.motoko {
+      background: linear-gradient(135deg, rgba(41, 171, 226, 0.3), rgba(41, 171, 226, 0.1));
+      border: 2px solid var(--accent-motoko);
+      color: var(--accent-motoko);
+      box-shadow: 0 0 40px rgba(41, 171, 226, 0.3);
+    }
+    .lang-node.python {
+      background: linear-gradient(135deg, rgba(55, 118, 171, 0.3), rgba(255, 212, 59, 0.1));
+      border: 2px solid var(--accent-python);
+      color: var(--accent-python);
+      box-shadow: 0 0 40px rgba(55, 118, 171, 0.3);
+    }
+    .lang-node.cpl {
+      background: linear-gradient(135deg, rgba(0, 212, 170, 0.3), rgba(0, 212, 170, 0.1));
+      border: 2px solid var(--accent-cpl);
+      color: var(--accent-cpl);
+      box-shadow: 0 0 40px rgba(0, 212, 170, 0.3);
+      width: 120px;
+      height: 120px;
+    }
+    .lang-node .icon {
+      font-size: 2rem;
+      margin-bottom: 0.3rem;
+    }
+    .bridge-connector {
+      width: 60px;
+      height: 4px;
+      background: var(--gradient-scientific);
+      border-radius: 2px;
+      position: relative;
+      animation: bridge-pulse 2s ease-in-out infinite;
+    }
+    .bridge-connector::before {
+      content: '⚡';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1rem;
+      animation: spark 1s ease-in-out infinite;
+    }
+    @keyframes bridge-pulse {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; box-shadow: 0 0 20px rgba(0, 212, 170, 0.5); }
+    }
+    @keyframes spark {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.6rem 1.5rem;
+      border: 1px solid rgba(0, 212, 170, 0.4);
+      border-radius: 999px;
+      color: var(--accent-cpl);
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      background: rgba(0, 212, 170, 0.08);
+      backdrop-filter: blur(10px);
+    }
+    .hero-badge .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--accent-cpl);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.5); }
+    }
+    
+    .hero h1 {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 1.5rem;
+    }
+    .hero h1 .gradient-text {
+      background: var(--gradient-scientific);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradient-shift 4s ease infinite;
+    }
+    @keyframes gradient-shift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .hero h1 .line-2 {
+      font-size: 0.55em;
+      color: var(--text-secondary);
+      display: block;
+      margin-top: 0.75rem;
+      font-weight: 500;
+    }
+    
+    .hero-subtitle {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      max-width: 800px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.9;
+    }
+    .hero-subtitle strong {
+      color: var(--accent-cpl);
+      font-weight: 600;
+    }
+    .hero-subtitle .lang-tag {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85em;
+      font-weight: 600;
+    }
+    .hero-subtitle .lang-tag.julia { background: rgba(149, 88, 178, 0.2); color: var(--accent-julia); }
+    .hero-subtitle .lang-tag.motoko { background: rgba(41, 171, 226, 0.2); color: var(--accent-motoko); }
+    .hero-subtitle .lang-tag.python { background: rgba(55, 118, 171, 0.2); color: var(--accent-python); }
+    .hero-subtitle .lang-tag.cpl { background: rgba(0, 212, 170, 0.2); color: var(--accent-cpl); }
+    
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 3rem;
+    }
+    
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+    .btn:hover::before { left: 100%; }
+    
+    .btn-primary {
+      background: var(--gradient-scientific);
+      color: var(--bg-primary);
+      box-shadow: 0 4px 20px rgba(0, 212, 170, 0.3);
+    }
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 40px rgba(0, 212, 170, 0.4);
+      color: var(--bg-primary);
+    }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      backdrop-filter: blur(10px);
+    }
+    .btn-secondary:hover {
+      border-color: var(--accent-julia);
+      color: var(--accent-julia);
+      background: rgba(149, 88, 178, 0.1);
+      transform: translateY(-3px);
+    }
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--accent-cpl);
+      color: var(--accent-cpl);
+    }
+    .btn-outline:hover {
+      background: var(--accent-cpl);
+      color: var(--bg-primary);
+      box-shadow: 0 0 30px rgba(0, 212, 170, 0.4);
+    }
+    
+    /* Hero Stats */
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      flex-wrap: wrap;
+    }
+    .hero-stat {
+      text-align: center;
+    }
+    .hero-stat .value {
+      font-family: 'Orbitron', monospace;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--accent-cpl);
+    }
+    .hero-stat .label {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    
+    /* ═══════════════════════════════════════════════════════════════════════════
+       STATS SECTION
+       ═══════════════════════════════════════════════════════════════════════════ */
+    .stats-section {
+      position: relative;
+      padding: 5rem 0;
+      background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+    }
+    .stats-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent-cpl), transparent);
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1.5rem;
+    }
+    .stat-card {
+      text-align: center;
+      padding: 2rem 1rem;
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      backdrop-filter: blur(10px);
+      transition: all 0.4s ease;
+    }
+    .stat-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(0, 212, 170, 0.4);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 60px rgba(0, 212, 170, 0.1);
+    }
+    .stat-card .icon {
+      font-size: 2rem;
+      margin-bottom: 0.75rem;
+    }
+    .stat-card .value {
+      font-family: 'Orbitron', monospace;
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: var(--gradient-scientific);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .stat-card .label {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+    }
+    
+    /* ═══════════════════════════════════════════════════════════════════════════
+       SECTION COMMON STYLES
+       ═══════════════════════════════════════════════════════════════════════════ */
+    section {
+      position: relative;
+      padding: 6rem 0;
+    }
+    .section-dark { background: var(--bg-secondary); }
+    .section-gradient {
+      background: 
+        radial-gradient(ellipse at 30% 0%, rgba(149, 88, 178, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 100%, rgba(0, 212, 170, 0.06) 0%, transparent 50%),
+        var(--bg-primary);
+    }
+    .section-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+    .section-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 1rem;
+      background: rgba(0, 212, 170, 0.1);
+      border: 1px solid rgba(0, 212, 170, 0.3);
+      border-radius: 999px;
+      color: var(--accent-cpl);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .section-header h2 {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(1.75rem, 4vw, 2.75rem);
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+    }
+    .section-header h2 .highlight {
+      color: var(--accent-cpl);
+    }
+    .section-header p {
+      color: var(--text-secondary);
+      max-width: 700px;
+      margin: 0 auto;
+      font-size: 1.1rem;
+      line-height: 1.8;
+    }
+    
+    /* ═══════════════════════════════════════════════════════════════════════════
+       LANGUAGE BRIDGES SECTION
+       ═══════════════════════════════════════════════════════════════════════════ */
+    .bridges-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+    }
+    .bridge-card {
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 2.5rem;
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .bridge-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--gradient-scientific);
+      transform: scaleX(0);
+      transition: transform 0.4s ease;
+    }
+    .bridge-card:hover::before { transform: scaleX(1); }
+    .bridge-card:hover {
+      border-color: rgba(0, 212, 170, 0.4);
+      transform: translateY(-8px);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3), 0 0 80px rgba(0, 212, 170, 0.1);
+    }
+    .bridge-header {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .bridge-langs {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .bridge-lang {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 0.75rem;
+    }
+    .bridge-lang.julia {
+      background: rgba(149, 88, 178, 0.2);
+      border: 1px solid var(--accent-julia);
+      color: var(--accent-julia);
+    }
+    .bridge-lang.motoko {
+      background: rgba(41, 171, 226, 0.2);
+      border: 1px solid var(--accent-motoko);
+      color: var(--accent-motoko);
+    }
+    .bridge-lang.python {
+      background: rgba(55, 118, 171, 0.2);
+      border: 1px solid var(--accent-python);
+      color: var(--accent-python);
+    }
+    .bridge-connector-small {
+      width: 30px;
+      height: 3px;
+      background: var(--gradient-scientific);
+      border-radius: 2px;
+    }
+    .bridge-card h3 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    .bridge-card p {
+      color: var(--text-secondary);
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+    }
+    .bridge-features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .bridge-feature {
+      padding: 0.4rem 0.8rem;
+      background: rgba(0, 212, 170, 0.1);
+      border: 1px solid rgba(0, 212, 170, 0.2);
+      border-radius: 6px;
+      font-size: 0.8rem;
+      color: var(--accent-cpl);
+    }
+    .bridge-code {
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 12px;
+      padding: 1rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      overflow-x: auto;
+    }
+    .bridge-code .comment { color: var(--text-dim); }
+    .bridge-code .keyword { color: var(--accent-julia); }
+    .bridge-code .string { color: var(--accent-cpl); }
+    .bridge-code .function { color: var(--accent-motoko); }
+    
+    /* ═══════════════════════════════════════════════════════════════════════════
+       CPL SECTION
+       ═══════════════════════════════════════════════════════════════════════════ */
+    .cpl-section {
+      background: 
+        radial-gradient(ellipse at 50% 0%, rgba(0, 212, 170, 0.12) 0%, transparent 50%),
+        var(--bg-secondary);
+    }
+    .cpl-hero {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+    .cpl-content h3 {
+      font-family: 'Orbitron', monospace;
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+    }
+    .cpl-content h3 .cpl-highlight {
+      color: var(--accent-cpl);
+    }
+    .cpl-content p {
+      color: var(--text-secondary);
+      line-height: 1.9;
+      margin-bottom: 2rem;
+    }
+    .cpl-features-list {
+      list-style: none;
+      margin-bottom: 2rem;
+    }
+    .cpl-features-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .cpl-features-list li:last-child { border-bottom: none; }
+    .cpl-features-list .icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: rgba(0, 212, 170, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+    .cpl-features-list .text h4 {
+      font-size: 1rem;
+      margin-bottom: 0.25rem;
+    }
+    .cpl-features-list .text p {
+      font-size: 0.9rem;
+      margin-bottom: 0;
+      color: var(--text-dim);
+    }
+    
+    .cpl-visual {
+      position: relative;
+    }
+    .cpl-terminal {
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .cpl-terminal-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      background: rgba(255, 255, 255, 0.03);
+      border-bottom: 1px solid var(--border);
+    }
+    .terminal-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    .terminal-dot.red { background: #ff5f56; }
+    .terminal-dot.yellow { background: #ffbd2e; }
+    .terminal-dot.green { background: #27ca3f; }
+    .terminal-title {
+      margin-left: 0.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+    }
+    .cpl-terminal-body {
+      padding: 1.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      line-height: 1.8;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .cpl-line {
+      margin-bottom: 0.75rem;
+    }
+    .cpl-prompt { color: var(--accent-cpl); }
+    .cpl-command { color: var(--text-primary); }
+    .cpl-output { color: var(--text-dim); padding-left: 1rem; }
+    .cpl-success { color: #27ca3f; }
+    .cpl-cursor {
+      display: inline-block;
+      width: 8px;
+      height: 16px;
+      background: var(--accent-cpl);
+      animation: blink 1s infinite;
+      vertical-align: middle;
+    }
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+    
+    /* ═══════════════════════════════════════════════════════════════════════════
+       MODELS PLAYGROUND SECTION
+       ═══════════════════════════════════════════════════════════════════════════ */
+    .models-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+    .model-card {
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2rem;
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .model-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--gradient-data);
+      transform: scaleX(0);
+      transition: transform 0.4s ease;
+    }
+    .model-card:hover::before { transform: scaleX(1); }
+    .model-card:hover {
+      border-color: rgba(168, 85, 247, 0.4);
+      transform: translateY(-8px);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+    }
+    .model-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+    .model-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(34, 211, 238, 0.1));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+    }
+    .model-status {
+      padding: 0.3rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .model-status.live {
+      background: rgba(39, 202, 63, 0.2);
+      color: #27ca3f;
+    }
+    .model-status.beta {
+      background: rgba(255, 189, 46, 0.2);
+      color: #ffbd2e;
+    }
+    .model-card h3 {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+    .model-card .model-type {
+      font-size: 0.8rem;
+      color: var(--accent-compute);
+      margin-bottom: 1rem;
+    }
+    .model-card p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+    }
+    .model-specs {
+      display: flex;
+      gap: 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      margin-bottom: 1.5rem;
+    }
+    .model-spec {
+      text-align: center;
+    }
+    .model-spec .value {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent-data);
+    }
+    .model-spec .label {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+    }
+    .model-actions {
+      display: flex;
+      gap: 0.75rem;
+    }
+    .model-btn {
+      flex: 1;
+      padding: 0.6rem 1rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: none;
+    }
+    .model-btn.primary {
+      background: var(--gradient-scientific);
+      color: var(--bg-primary);
+    }
+    .model-btn.primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 212, 170, 0.3);
+    }
+    .model-btn.secondary {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+    .model-btn.secondary:hover {
+      border-color: var(--accent-data);
+      color: var(--accent-data);
+    }
+    
+    /* ═══════════════════════════════════════════════════════════════════════════
+       USE CASES SECTION
+       ═══════════════════════════════════════════════════════════════════════════ */
+    .usecases-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+    }
+    .usecase-card {
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2rem;
+      transition: all 0.4s ease;
+      position: relative;
+    }
+    .usecase-card:hover {
+      border-color: var(--accent-gold);
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+    .usecase-icon {
+      width: 70px;
+      height: 70px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(212, 175, 55, 0.05));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+    }
+    .usecase-card h3 {
+      font-size: 1.25rem;
+      margin-bottom: 0.75rem;
+    }
+    .usecase-card p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+    }
+    .usecase-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .usecase-tag {
+      padding: 0.3rem 0.75rem;
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      border-radius: 6px;
+      font-size: 0.75rem;
+      color: var(--accent-gold);
+    }
+    
+    /* ═══════════════════════════════════════════════════════════════════════════
+       ONLINE TOOLS SECTION
+       ═══════════════════════════════════════════════════════════════════════════ */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .tool-card {
+      background: linear-gradient(135deg, var(--bg-glass), rgba(59, 130, 246, 0.03));
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 1.75rem;
+      text-align: center;
+      transition: all 0.4s ease;
+      position: relative;
+    }
+    .tool-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--gradient-data);
+      transform: scaleX(0);
+      transition: transform 0.4s ease;
+    }
+    .tool-card:hover::before { transform: scaleX(1); }
+    .tool-card:hover {
+      border-color: rgba(59, 130, 246, 0.4);
+      transform: translateY(-8px);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+    }
+    .tool-icon {
+      width: 70px;
+      height: 70px;
+      margin: 0 auto 1.25rem;
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(168, 85, 247, 0.1));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+    }
+    .tool-card h4 {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+    .tool-card p {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      line-height: 1.7;
+      margin-bottom: 1.25rem;
+    }
+    .tool-badge {
+      display: inline-block;
+      padding: 0.3rem 0.75rem;
+      background: rgba(0, 212, 170, 0.15);
+      border-radius: 999px;
+      font-size: 0.7rem;
+      color: var(--accent-cpl);
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .tool-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1.25rem;
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--accent-data);
+      transition: all 0.3s ease;
+    }
+    .tool-link:hover {
+      background: var(--accent-data);
+      color: var(--bg-primary);
+      transform: translateY(-2px);
+    }
+    
+    /* ═══════════════════════════════════════════════════════════════════════════
+       RESEARCH & PAPERS SECTION
+       ═══════════════════════════════════════════════════════════════════════════ */
+    .papers-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+    }
+    .paper-card {
+      display: flex;
+      gap: 1.5rem;
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2rem;
+      transition: all 0.4s ease;
+    }
+    .paper-card:hover {
+      border-color: var(--accent-gold);
+      transform: translateX(8px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+    .paper-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(212, 175, 55, 0.05));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      flex-shrink: 0;
+    }
+    .paper-content h4 {
+      font-size: 1.15rem;
+      margin-bottom: 0.5rem;
+    }
+    .paper-content h4 .arxiv {
+      font-size: 0.8rem;
+      color: var(--accent-gold);
+      font-weight: 500;
+    }
+    .paper-content p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+    .paper-links {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .paper-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.4rem 0.9rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+    .paper-link:hover {
+      border-color: var(--accent-cpl);
+      color: var(--accent-cpl);
+      background: rgba(0, 212, 170, 0.1);
+    }
+    
+    /* ═══════════════════════════════════════════════════════════════════════════
+       PROTOCOLS SECTION
+       ═══════════════════════════════════════════════════════════════════════════ */
+    .protocols-showcase {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+    }
+    .protocol-card {
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+    .protocol-card:hover {
+      border-color: var(--accent-julia);
+      transform: translateY(-5px);
+    }
+    .protocol-id {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--accent-julia);
+      margin-bottom: 0.5rem;
+    }
+    .protocol-card h4 {
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }
+    .protocol-card p {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+    }
+    
+    /* ═══════════════════════════════════════════════════════════════════════════
+       API PLAYGROUND SECTION
+       ═══════════════════════════════════════════════════════════════════════════ */
+    .api-playground {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+    .api-request, .api-response {
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .api-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1rem;
+      background: rgba(255, 255, 255, 0.03);
+      border-bottom: 1px solid var(--border);
+    }
+    .api-header .method {
+      padding: 0.25rem 0.75rem;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .api-header .method.post { background: rgba(39, 202, 63, 0.2); color: #27ca3f; }
+    .api-header .method.get { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+    .api-header .endpoint {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+    .api-body {
+      padding: 1.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      line-height: 1.8;
+      overflow-x: auto;
+    }
+    .api-body .key { color: var(--accent-data); }
+    .api-body .string { color: var(--accent-cpl); }
+    .api-body .number { color: var(--accent-julia); }
+    .api-body .boolean { color: var(--accent-gold); }
+    
+    /* ═══════════════════════════════════════════════════════════════════════════
+       FOOTER
+       ═══════════════════════════════════════════════════════════════════════════ */
+    footer {
+      position: relative;
+      padding: 5rem 0 2rem;
+      background: var(--bg-primary);
+      border-top: 1px solid var(--border);
+    }
+    footer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent-cpl), transparent);
+    }
+    .footer-content {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 3rem;
+    }
+    .footer-brand h3 {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.25rem;
+      color: var(--accent-cpl);
+      margin-bottom: 1rem;
+    }
+    .footer-brand p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.8;
+      max-width: 320px;
+    }
+    .footer-column h4 {
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-primary);
+      margin-bottom: 1.5rem;
+    }
+    .footer-column ul { list-style: none; }
+    .footer-column li { margin-bottom: 0.75rem; }
+    .footer-column a {
+      color: var(--text-dim);
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+    }
+    .footer-column a:hover {
+      color: var(--accent-cpl);
+      padding-left: 5px;
+    }
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+    .footer-copy {
+      color: var(--text-dim);
+      font-size: 0.85rem;
+    }
+    .footer-social {
+      display: flex;
+      gap: 1rem;
+    }
+    .footer-social a {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text-secondary);
+      transition: all 0.3s ease;
+    }
+    .footer-social a:hover {
+      border-color: var(--accent-cpl);
+      color: var(--accent-cpl);
+      transform: translateY(-3px);
+    }
+    
+    /* ═══════════════════════════════════════════════════════════════════════════
+       RESPONSIVE
+       ═══════════════════════════════════════════════════════════════════════════ */
+    @media (max-width: 1200px) {
+      .stats-grid { grid-template-columns: repeat(3, 1fr); }
+      .models-grid { grid-template-columns: repeat(2, 1fr); }
+      .protocols-showcase { grid-template-columns: repeat(3, 1fr); }
+      .footer-content { grid-template-columns: repeat(3, 1fr); }
+    }
+    
+    @media (max-width: 992px) {
+      .bridges-grid { grid-template-columns: 1fr; }
+      .cpl-hero { grid-template-columns: 1fr; }
+      .papers-grid { grid-template-columns: 1fr; }
+      .api-playground { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .protocols-showcase { grid-template-columns: repeat(2, 1fr); }
+    }
+    
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .mobile-menu-btn { display: block; }
+      
+      .hero { padding: 6rem 0 4rem; min-height: auto; }
+      .language-bridge-visual { flex-wrap: wrap; gap: 1rem; }
+      .lang-node { width: 70px; height: 70px; font-size: 0.7rem; }
+      .lang-node.cpl { width: 90px; height: 90px; }
+      .bridge-connector { width: 30px; }
+      
+      .hero h1 { font-size: 1.8rem; }
+      .hero-subtitle { font-size: 1rem; }
+      .hero-cta { flex-direction: column; align-items: center; }
+      .btn { width: 100%; max-width: 280px; justify-content: center; }
+      
+      .stats-grid { grid-template-columns: 1fr 1fr; gap: 1rem; }
+      .stat-card { padding: 1.5rem 1rem; }
+      .stat-card .value { font-size: 2rem; }
+      
+      .models-grid { grid-template-columns: 1fr; }
+      .protocols-showcase { grid-template-columns: 1fr; }
+      .tools-grid { grid-template-columns: 1fr; }
+      
+      .footer-content { grid-template-columns: 1fr; text-align: center; }
+      .footer-brand p { max-width: none; }
+      .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; }
+    }
+    
+    /* Animations */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    /* Glowing text effect */
+    .glow-text {
+      text-shadow: 
+        0 0 10px rgba(212, 175, 55, 0.5),
+        0 0 20px rgba(212, 175, 55, 0.3),
+        0 0 30px rgba(212, 175, 55, 0.2);
+    }
+    
+    /* Typing animation */
+    .typing-effect {
+      overflow: hidden;
+      border-right: 3px solid var(--accent-teal);
+      white-space: nowrap;
+      animation: typing 3s steps(30) 1s forwards, blink-caret 0.75s step-end infinite;
+    }
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+    @keyframes blink-caret {
+      from, to { border-color: transparent; }
+      50% { border-color: var(--accent-teal); }
+    }
+    
+    /* ═══════════════════════════════════════════════════════════════════════════════
+       CUTTING-EDGE AI INTELLIGENT CACHE SECTION
+       ═══════════════════════════════════════════════════════════════════════════════ */
+    
+    /* AI Cache Section - Holographic Theme */
+    .ai-cache-section {
+      position: relative;
+      padding: 8rem 0;
+      background: 
+        radial-gradient(ellipse at 30% 20%, rgba(0, 255, 204, 0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 80%, rgba(168, 85, 247, 0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(212, 175, 55, 0.05) 0%, transparent 70%),
+        linear-gradient(180deg, var(--bg-primary) 0%, #050816 50%, var(--bg-primary) 100%);
+      overflow: hidden;
+    }
+    
+    /* Neural Network Background Animation */
+    .neural-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+    
+    #neuralCanvas {
+      width: 100%;
+      height: 100%;
+      opacity: 0.6;
+    }
+    
+    /* Holographic Card Effect */
+    .holo-card {
+      position: relative;
+      background: linear-gradient(
+        135deg,
+        rgba(0, 255, 204, 0.08) 0%,
+        rgba(168, 85, 247, 0.08) 25%,
+        rgba(212, 175, 55, 0.08) 50%,
+        rgba(59, 130, 246, 0.08) 75%,
+        rgba(0, 255, 204, 0.08) 100%
+      );
+      background-size: 400% 400%;
+      animation: holo-gradient 15s ease infinite;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      overflow: hidden;
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .holo-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(
+        45deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.05) 50%,
+        transparent 70%
+      );
+      background-size: 200% 200%;
+      animation: shimmer 3s ease-in-out infinite;
+      pointer-events: none;
+    }
+    
+    .holo-card::after {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(
+        135deg,
+        rgba(0, 255, 204, 0.3),
+        rgba(168, 85, 247, 0.3),
+        rgba(212, 175, 55, 0.3),
+        rgba(59, 130, 246, 0.3)
+      );
+      background-size: 300% 300%;
+      animation: border-glow 8s ease infinite;
+      border-radius: 26px;
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .holo-card:hover::after {
+      opacity: 1;
+    }
+    
+    @keyframes holo-gradient {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+    
+    @keyframes border-glow {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    
+    /* AI Cache Dashboard */
+    .cache-dashboard {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 2rem;
+      position: relative;
+      z-index: 10;
+    }
+    
+    @media (max-width: 1024px) {
+      .cache-dashboard {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    /* Cache Agent Cards */
+    .cache-agents-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+    
+    @media (max-width: 600px) {
+      .cache-agents-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .cache-agent-card {
+      position: relative;
+      padding: 1.25rem;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
+    }
+    
+    .cache-agent-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--agent-color, var(--accent-teal));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s ease;
+    }
+    
+    .cache-agent-card:hover::before {
+      transform: scaleX(1);
+    }
+    
+    .cache-agent-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--agent-color, var(--accent-teal));
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4),
+                  0 0 40px rgba(var(--agent-color-rgb, 0, 255, 204), 0.2);
+    }
+    
+    .cache-agent-card.sentinel { --agent-color: #00ffcc; --agent-color-rgb: 0, 255, 204; }
+    .cache-agent-card.keeper { --agent-color: #d4af37; --agent-color-rgb: 212, 175, 55; }
+    .cache-agent-card.router { --agent-color: #3b82f6; --agent-color-rgb: 59, 130, 246; }
+    .cache-agent-card.context { --agent-color: #ec4899; --agent-color-rgb: 236, 72, 153; }
+    .cache-agent-card.predictor { --agent-color: #a855f7; --agent-color-rgb: 168, 85, 247; }
+    .cache-agent-card.healer { --agent-color: #22c55e; --agent-color-rgb: 34, 197, 94; }
+    
+    .cache-agent-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    
+    .cache-agent-icon {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      background: rgba(var(--agent-color-rgb, 0, 255, 204), 0.15);
+      border-radius: 12px;
+      border: 1px solid rgba(var(--agent-color-rgb, 0, 255, 204), 0.3);
+    }
+    
+    .cache-agent-name {
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+    }
+    
+    .cache-agent-state {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.2rem 0.6rem;
+      background: rgba(var(--agent-color-rgb, 0, 255, 204), 0.15);
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--agent-color);
+      margin-left: auto;
+    }
+    
+    .state-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      animation: state-pulse 2s ease-in-out infinite;
+    }
+    
+    @keyframes state-pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.3); }
+    }
+    
+    .cache-agent-stats {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+    
+    .cache-stat {
+      text-align: center;
+      flex: 1;
+    }
+    
+    .cache-stat .value {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--agent-color);
+    }
+    
+    .cache-stat .label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-dim);
+      margin-top: 0.15rem;
+    }
+    
+    /* Cache Metrics Panel */
+    .cache-metrics-panel {
+      padding: 2rem;
+    }
+    
+    .metrics-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+    }
+    
+    .metrics-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .metrics-title h3 {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    
+    .live-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.35rem 0.75rem;
+      background: rgba(34, 197, 94, 0.15);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #22c55e;
+    }
+    
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #22c55e;
+      animation: live-pulse 1.5s ease-in-out infinite;
+    }
+    
+    @keyframes live-pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+      50% { box-shadow: 0 0 0 8px rgba(34, 197, 94, 0); }
+    }
+    
+    /* Metrics Grid */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+    @media (max-width: 768px) {
+      .metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    .metric-box {
+      padding: 1.25rem;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+    
+    .metric-box:hover {
+      border-color: var(--accent-gold);
+      transform: translateY(-3px);
+    }
+    
+    .metric-value {
+      font-family: 'Orbitron', monospace;
+      font-size: 2rem;
+      font-weight: 800;
+      background: var(--gradient-aurora);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .metric-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+      margin-top: 0.5rem;
+    }
+    
+    /* Cache Prediction Visualization */
+    .prediction-visual {
+      position: relative;
+      height: 180px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    
+    #predictionCanvas {
+      width: 100%;
+      height: 100%;
+    }
+    
+    .prediction-overlay {
+      position: absolute;
+      bottom: 1rem;
+      left: 1rem;
+      right: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    
+    .prediction-stat {
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(10px);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+    }
+    
+    .prediction-stat .label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+    }
+    
+    .prediction-stat .value {
+      font-family: 'Orbitron', monospace;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--accent-purple);
+    }
+    
+    /* 3D Floating Elements */
+    .floating-element {
+      position: absolute;
+      pointer-events: none;
+      animation: float-3d 6s ease-in-out infinite;
+    }
+    
+    .floating-element:nth-child(1) { animation-delay: 0s; }
+    .floating-element:nth-child(2) { animation-delay: 1s; }
+    .floating-element:nth-child(3) { animation-delay: 2s; }
+    
+    @keyframes float-3d {
+      0%, 100% {
+        transform: translateY(0) rotateX(0) rotateY(0);
+      }
+      25% {
+        transform: translateY(-15px) rotateX(5deg) rotateY(5deg);
+      }
+      50% {
+        transform: translateY(-25px) rotateX(0) rotateY(-5deg);
+      }
+      75% {
+        transform: translateY(-10px) rotateX(-5deg) rotateY(0);
+      }
+    }
+    
+    /* Morphing Gradient Badge */
+    .morph-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1.25rem;
+      background: linear-gradient(
+        90deg,
+        rgba(0, 255, 204, 0.2),
+        rgba(168, 85, 247, 0.2),
+        rgba(212, 175, 55, 0.2),
+        rgba(0, 255, 204, 0.2)
+      );
+      background-size: 300% 100%;
+      animation: morph-bg 5s linear infinite;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    
+    @keyframes morph-bg {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 300% 50%; }
+    }
+    
+    /* AI Brain Icon Animation */
+    .ai-brain-icon {
+      position: relative;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+    }
+    
+    .ai-brain-icon::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border: 2px solid rgba(0, 255, 204, 0.3);
+      border-radius: 50%;
+      animation: brain-pulse 2s ease-in-out infinite;
+    }
+    
+    .ai-brain-icon::after {
+      content: '';
+      position: absolute;
+      width: 120%;
+      height: 120%;
+      border: 1px dashed rgba(168, 85, 247, 0.3);
+      border-radius: 50%;
+      animation: brain-rotate 10s linear infinite;
+    }
+    
+    @keyframes brain-pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.1); opacity: 0.5; }
+    }
+    
+    @keyframes brain-rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Glitch Text Effect */
+    .glitch-text {
+      position: relative;
+      animation: glitch 2s infinite;
+    }
+    
+    .glitch-text::before,
+    .glitch-text::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    
+    .glitch-text::before {
+      animation: glitch-1 0.3s infinite linear alternate-reverse;
+      color: var(--accent-teal);
+      z-index: -1;
+    }
+    
+    .glitch-text::after {
+      animation: glitch-2 0.3s infinite linear alternate-reverse;
+      color: var(--accent-purple);
+      z-index: -2;
+    }
+    
+    @keyframes glitch-1 {
+      0% { clip-path: inset(20% 0 60% 0); transform: translate(-2px, 0); }
+      20% { clip-path: inset(60% 0 20% 0); transform: translate(2px, 0); }
+      40% { clip-path: inset(40% 0 40% 0); transform: translate(-1px, 0); }
+      60% { clip-path: inset(80% 0 10% 0); transform: translate(1px, 0); }
+      80% { clip-path: inset(10% 0 80% 0); transform: translate(-2px, 0); }
+      100% { clip-path: inset(50% 0 30% 0); transform: translate(2px, 0); }
+    }
+    
+    @keyframes glitch-2 {
+      0% { clip-path: inset(70% 0 10% 0); transform: translate(2px, 0); }
+      20% { clip-path: inset(10% 0 70% 0); transform: translate(-2px, 0); }
+      40% { clip-path: inset(30% 0 50% 0); transform: translate(1px, 0); }
+      60% { clip-path: inset(50% 0 30% 0); transform: translate(-1px, 0); }
+      80% { clip-path: inset(20% 0 60% 0); transform: translate(2px, 0); }
+      100% { clip-path: inset(60% 0 20% 0); transform: translate(-2px, 0); }
+    }
+    
+    /* Cyber Grid Background */
+    .cyber-grid {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        linear-gradient(rgba(0, 255, 204, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 204, 0.03) 1px, transparent 1px),
+        linear-gradient(rgba(168, 85, 247, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(168, 85, 247, 0.02) 1px, transparent 1px);
+      background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+      animation: cyber-grid-move 20s linear infinite;
+      pointer-events: none;
+    }
+    
+    @keyframes cyber-grid-move {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(100px); }
+    }
+    
+    /* Data Flow Lines */
+    .data-flow {
+      position: absolute;
+      width: 2px;
+      height: 100px;
+      background: linear-gradient(to bottom, transparent, var(--accent-teal), transparent);
+      animation: data-flow 3s linear infinite;
+      opacity: 0.5;
+    }
+    
+    @keyframes data-flow {
+      0% { transform: translateY(-100%); opacity: 0; }
+      50% { opacity: 0.5; }
+      100% { transform: translateY(100vh); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     NAVIGATION
+     ═══════════════════════════════════════════════════════════════════════════ -->
+<nav id="navbar">
+  <div class="container">
+    <a href="#" class="nav-brand">
+      <div class="logo-icon">⚛</div>
+      <div>
+        ItsNotAILABS
+        <span class="brand-sub">Scientific Computing Platform</span>
+      </div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#platform" class="active">Platform</a></li>
+      <li><a href="#bridges">Bridges</a></li>
+      <li><a href="#cpl">CPL</a></li>
+      <li><a href="#models">Models</a></li>
+      <li><a href="#research">Research</a></li>
+      <li><a href="#ai-cache">AI Cache</a></li>
+      <li><a href="#papers">Papers</a></li>
+      <li><a href="#ledger">Ledger</a></li>
+      <li><a href="./documents.html">Documents</a></li>
+      <li><a href="./research/portal.html">Portal</a></li>
+      <li><a href="#tools">Tools</a></li>
+      <li><a href="#research">Research</a></li>
+      <li><a href="docs.html">Docs</a></li>
+      <li><a href="#api" class="nav-cta">Try API →</a></li>
+    </ul>
+    <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     HERO SECTION
+     ═══════════════════════════════════════════════════════════════════════════ -->
+<section class="hero" id="platform">
+  <!-- Floating Particles -->
+  <div class="hero-particles">
+    <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+    <div class="particle" style="left: 20%; animation-delay: 2s;"></div>
+    <div class="particle" style="left: 30%; animation-delay: 4s;"></div>
+    <div class="particle" style="left: 40%; animation-delay: 1s;"></div>
+    <div class="particle" style="left: 50%; animation-delay: 3s;"></div>
+    <div class="particle" style="left: 60%; animation-delay: 5s;"></div>
+    <div class="particle" style="left: 70%; animation-delay: 2.5s;"></div>
+    <div class="particle" style="left: 80%; animation-delay: 4.5s;"></div>
+    <div class="particle" style="left: 90%; animation-delay: 1.5s;"></div>
+  </div>
+  
+  <div class="container">
+    <div class="hero-content">
+      <!-- Language Bridge Visualization -->
+      <div class="language-bridge-visual">
+        <div class="lang-node julia">
+          <span class="icon">📐</span>
+          JULIA
+        </div>
+        <div class="bridge-connector"></div>
+        <div class="lang-node cpl">
+          <span class="icon">🧠</span>
+          CPL
+        </div>
+        <div class="bridge-connector"></div>
+        <div class="lang-node motoko">
+          <span class="icon">∞</span>
+          MOTOKO
+        </div>
+      </div>
+      
+      <div class="hero-badge">
+        <span class="pulse-dot"></span>
+        Scientific Computing Infrastructure
+      </div>
+      
+      <h1>
+        <span class="gradient-text">Scientific Computing</span>
+        <span class="line-2">JULIA/MOTOKO · JULIA/PYTHON · CPL Embedded</span>
+      </h1>
+      
+      <p class="hero-subtitle">
+        High-performance <strong>cross-language bridges</strong> uniting 
+        <span class="lang-tag julia">Julia</span>'s scientific computing with 
+        <span class="lang-tag motoko">Motoko</span>'s decentralized execution and 
+        <span class="lang-tag python">Python</span>'s ML ecosystem — all orchestrated through 
+        <span class="lang-tag cpl">CPL</span> (Cognitive Protocol Language).
+      </p>
+      
+      <div class="hero-cta">
+        <a href="#api" class="btn btn-primary">⚡ Try Live API</a>
+        <a href="#models" class="btn btn-secondary">🧪 Explore Models</a>
+        <a href="docs.html" class="btn btn-outline">📖 Documentation</a>
+      </div>
+      
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="value">234</div>
+          <div class="label">Protocols</div>
+        </div>
+        <div class="hero-stat">
+          <div class="value">42</div>
+          <div class="label">Extensions</div>
+        </div>
+        <div class="hero-stat">
+          <div class="value">12</div>
+          <div class="label">SDKs</div>
+        </div>
+        <div class="hero-stat">
+          <div class="value">∞</div>
+          <div class="label">Compute Scale</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     STATS SECTION
+     ═══════════════════════════════════════════════════════════════════════════ -->
+<section class="stats-section">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-card fade-in">
+        <span class="icon">📐</span>
+        <div class="value">Julia</div>
+        <div class="label">High-Performance Numerics</div>
+      </div>
+      <div class="stat-card fade-in">
+        <span class="icon">∞</span>
+        <div class="value">Motoko</div>
+        <div class="label">Internet Computer Native</div>
+      </div>
+      <div class="stat-card fade-in">
+        <span class="icon">🐍</span>
+        <div class="value">Python</div>
+        <div class="label">ML & Data Science</div>
+      </div>
+      <div class="stat-card fade-in">
+        <span class="icon">🧠</span>
+        <div class="value">CPL</div>
+        <div class="label">Cognitive Protocols</div>
+      </div>
+      <div class="stat-card fade-in">
+        <span class="icon">⚡</span>
+        <div class="value">φ</div>
+        <div class="label">Golden Ratio Optimization</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     LANGUAGE BRIDGES SECTION
+     ═══════════════════════════════════════════════════════════════════════════ -->
+<section class="section-gradient" id="bridges">
+<!-- ═══════════════════════════════════════════════════════════════════════════════
+     AI INTELLIGENT CACHE SECTION — Smart Agents as Living Memory
+     ═══════════════════════════════════════════════════════════════════════════════ -->
+<section id="ai-cache" class="ai-cache-section">
+  <!-- Neural Network Background -->
+  <div class="neural-bg">
+    <canvas id="neuralCanvas"></canvas>
+  </div>
+  
+  <!-- Cyber Grid Overlay -->
+  <div class="cyber-grid"></div>
+  
+  <!-- Data Flow Lines -->
+  <div class="data-flow" style="left: 10%; animation-delay: 0s;"></div>
+  <div class="data-flow" style="left: 30%; animation-delay: 1s;"></div>
+  <div class="data-flow" style="left: 50%; animation-delay: 2s;"></div>
+  <div class="data-flow" style="left: 70%; animation-delay: 1.5s;"></div>
+  <div class="data-flow" style="left: 90%; animation-delay: 0.5s;"></div>
+  
+  <div class="container">
+    <div class="section-header fade-in" style="position: relative; z-index: 10;">
+      <div class="morph-badge">
+        <div class="ai-brain-icon">🧠</div>
+        Intelligent Memory System
+      </div>
+      <h2 style="margin-top: 1.5rem;">
+        <span class="glitch-text" data-text="AI Intelligent Cache">AI Intelligent Cache</span>
+      </h2>
+      <p style="max-width: 800px;">
+        Smart agents that <strong style="color: var(--accent-teal);">remember patterns</strong>, 
+        <strong style="color: var(--accent-purple);">predict needs</strong>, 
+        <strong style="color: var(--accent-gold);">self-heal</strong>, and 
+        <strong style="color: var(--accent-pink);">share knowledge</strong> across the network. 
+        These aren't dumb caches — they're <em>living memory systems</em>.
+      </p>
+    </div>
+    
+    <div class="cache-dashboard fade-in">
+      <!-- Cache Agents Grid -->
+      <div class="cache-agents-grid">
+        <div class="cache-agent-card sentinel">
+          <div class="cache-agent-header">
+            <div class="cache-agent-icon">🛡️</div>
+            <div class="cache-agent-name">Memory Sentinel</div>
+            <div class="cache-agent-state">
+              <span class="state-dot"></span>
+              HOT
+            </div>
+          </div>
+          <div class="cache-agent-stats">
+            <div class="cache-stat">
+              <div class="value" id="sentinel-hits">94%</div>
+              <div class="label">Hit Rate</div>
+            </div>
+            <div class="cache-stat">
+              <div class="value" id="sentinel-entries">8.2K</div>
+              <div class="label">Entries</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="cache-agent-card keeper">
+          <div class="cache-agent-header">
+            <div class="cache-agent-icon">📖</div>
+            <div class="cache-agent-name">Knowledge Keeper</div>
+            <div class="cache-agent-state">
+              <span class="state-dot"></span>
+              WARM
+            </div>
+          </div>
+          <div class="cache-agent-stats">
+            <div class="cache-stat">
+              <div class="value" id="keeper-hits">97%</div>
+              <div class="label">Hit Rate</div>
+            </div>
+            <div class="cache-stat">
+              <div class="value" id="keeper-entries">4.1K</div>
+              <div class="label">Entries</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="cache-agent-card router">
+          <div class="cache-agent-header">
+            <div class="cache-agent-icon">🧭</div>
+            <div class="cache-agent-name">Route Rememberer</div>
+            <div class="cache-agent-state">
+              <span class="state-dot"></span>
+              LEARNING
+            </div>
+          </div>
+          <div class="cache-agent-stats">
+            <div class="cache-stat">
+              <div class="value" id="router-hits">87%</div>
+              <div class="label">Hit Rate</div>
+            </div>
+            <div class="cache-stat">
+              <div class="value" id="router-entries">1.8K</div>
+              <div class="label">Entries</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="cache-agent-card context">
+          <div class="cache-agent-header">
+            <div class="cache-agent-icon">🎯</div>
+            <div class="cache-agent-name">Context Holder</div>
+            <div class="cache-agent-state">
+              <span class="state-dot"></span>
+              HOT
+            </div>
+          </div>
+          <div class="cache-agent-stats">
+            <div class="cache-stat">
+              <div class="value" id="context-hits">99%</div>
+              <div class="label">Hit Rate</div>
+            </div>
+            <div class="cache-stat">
+              <div class="value" id="context-entries">892</div>
+              <div class="label">Entries</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="cache-agent-card predictor">
+          <div class="cache-agent-header">
+            <div class="cache-agent-icon">🔮</div>
+            <div class="cache-agent-name">Prediction Cache</div>
+            <div class="cache-agent-state">
+              <span class="state-dot"></span>
+              PREDICTING
+            </div>
+          </div>
+          <div class="cache-agent-stats">
+            <div class="cache-stat">
+              <div class="value" id="predictor-hits">78%</div>
+              <div class="label">Accuracy</div>
+            </div>
+            <div class="cache-stat">
+              <div class="value" id="predictor-entries">2.4K</div>
+              <div class="label">Patterns</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="cache-agent-card healer">
+          <div class="cache-agent-header">
+            <div class="cache-agent-icon">💊</div>
+            <div class="cache-agent-name">Healing Cache</div>
+            <div class="cache-agent-state">
+              <span class="state-dot"></span>
+              HEALTHY
+            </div>
+          </div>
+          <div class="cache-agent-stats">
+            <div class="cache-stat">
+              <div class="value" id="healer-integrity">100%</div>
+              <div class="label">Integrity</div>
+            </div>
+            <div class="cache-stat">
+              <div class="value" id="healer-healed">47</div>
+              <div class="label">Healed</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Cache Metrics Panel -->
+      <div class="holo-card cache-metrics-panel">
+        <div class="metrics-header">
+          <div class="metrics-title">
+            <h3>Cache Network Intelligence</h3>
+          </div>
+          <div class="live-indicator">
+            <span class="live-dot"></span>
+            LIVE
+          </div>
+        </div>
+        
+        <div class="metrics-grid">
+          <div class="metric-box">
+            <div class="metric-value" id="total-entries">17.4K</div>
+            <div class="metric-label">Total Entries</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-value" id="overall-hit-rate">93%</div>
+            <div class="metric-label">Hit Rate</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-value" id="patterns-learned">1.2K</div>
+            <div class="metric-label">Patterns</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-value" id="predictions-made">847</div>
+            <div class="metric-label">Predictions</div>
+          </div>
+        </div>
+        
+        <!-- Prediction Visualization -->
+        <div class="prediction-visual">
+          <canvas id="predictionCanvas"></canvas>
+          <div class="prediction-overlay">
+            <div class="prediction-stat">
+              <div class="label">Prediction Accuracy</div>
+              <div class="value" id="pred-accuracy">78.3%</div>
+            </div>
+            <div class="prediction-stat">
+              <div class="label">φ-Decay Factor</div>
+              <div class="value">1.618</div>
+            </div>
+            <div class="prediction-stat">
+              <div class="label">Network Sync</div>
+              <div class="value" id="network-sync">100%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Cache Features Cards -->
+    <div class="cards-grid" style="margin-top: 3rem; position: relative; z-index: 10;">
+      <div class="card fade-in" style="border-color: rgba(0, 255, 204, 0.2);">
+        <div class="card-icon" style="background: linear-gradient(135deg, rgba(0, 255, 204, 0.2), rgba(0, 255, 204, 0.05));">🧠</div>
+        <h3>Pattern Learning</h3>
+        <p>Intelligent agents learn access patterns and automatically optimize cache strategies using φ-weighted algorithms.</p>
+        <a href="./sdk/ai-kingdom/src/intelligent-cache.js" class="card-link">View Implementation</a>
+      </div>
+      <div class="card fade-in" style="border-color: rgba(168, 85, 247, 0.2);">
+        <div class="card-icon" style="background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(168, 85, 247, 0.05));">🔮</div>
+        <h3>Predictive Caching</h3>
+        <p>Cache agents predict future requests based on learned patterns and pre-fetch data before it's needed.</p>
+        <a href="./docs/intelligent-cache-guide.md" class="card-link">Learn More</a>
+      </div>
+      <div class="card fade-in" style="border-color: rgba(34, 197, 94, 0.2);">
+        <div class="card-icon" style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(34, 197, 94, 0.05));">💊</div>
+        <h3>Self-Healing</h3>
+        <p>Corrupted cache entries are automatically detected and repaired using integrity checksums and healing protocols.</p>
+        <a href="./protocols/cache-healing-protocol.js" class="card-link">View Protocol</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Research Areas -->
+<section id="research" class="section-gradient">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-badge">🔗 Cross-Language Computing</span>
+      <h2>Language <span class="highlight">Bridges</span></h2>
+      <p>Seamlessly connect Julia's scientific computing power with Motoko's decentralized runtime and Python's extensive ML ecosystem.</p>
+    </div>
+    
+    <div class="bridges-grid">
+      <!-- JULIA ↔ MOTOKO Bridge -->
+      <div class="bridge-card fade-in">
+        <div class="bridge-header">
+          <div class="bridge-langs">
+            <div class="bridge-lang julia">Julia</div>
+            <div class="bridge-connector-small"></div>
+            <div class="bridge-lang motoko">Motoko</div>
+          </div>
+        </div>
+        <h3>Julia ↔ Motoko Bridge</h3>
+        <p>Execute Julia's high-performance numerical computations on the Internet Computer's decentralized infrastructure. Perfect for scientific workflows requiring both speed and trustless execution.</p>
+        <div class="bridge-features">
+          <span class="bridge-feature">Zero-Knowledge Proofs</span>
+          <span class="bridge-feature">Canister Integration</span>
+          <span class="bridge-feature">Stable Memory</span>
+          <span class="bridge-feature">φ-Optimized</span>
+        </div>
+        <div class="bridge-code">
+          <div><span class="comment"># Julia computation → Motoko canister</span></div>
+          <div><span class="keyword">using</span> MotokoBinding</div>
+          <div></div>
+          <div><span class="function">@motoko_canister</span> <span class="keyword">function</span> compute_phi(x)</div>
+          <div>    <span class="keyword">return</span> x * <span class="number">1.618033988749</span></div>
+          <div><span class="keyword">end</span></div>
+        </div>
+      </div>
+      
+      <!-- JULIA ↔ PYTHON Bridge -->
+      <div class="bridge-card fade-in">
+        <div class="bridge-header">
+          <div class="bridge-langs">
+            <div class="bridge-lang julia">Julia</div>
+            <div class="bridge-connector-small"></div>
+            <div class="bridge-lang python">Python</div>
+          </div>
+        </div>
+        <h3>Julia ↔ Python Bridge</h3>
+        <p>Leverage Python's vast ML ecosystem (PyTorch, TensorFlow, HuggingFace) with Julia's performance. Run training in Python, inference in Julia — or vice versa.</p>
+        <div class="bridge-features">
+          <span class="bridge-feature">PyCall.jl</span>
+          <span class="bridge-feature">Zero-Copy Arrays</span>
+          <span class="bridge-feature">GPU Passthrough</span>
+          <span class="bridge-feature">Async I/O</span>
+        </div>
+        <div class="bridge-code">
+          <div><span class="comment"># Seamless Python ML in Julia</span></div>
+          <div><span class="keyword">using</span> PyCall</div>
+          <div>torch = <span class="function">pyimport</span>(<span class="string">"torch"</span>)</div>
+          <div></div>
+          <div>model = torch.hub.<span class="function">load</span>(<span class="string">"pytorch/vision"</span>,</div>
+          <div>    <span class="string">"resnet50"</span>, pretrained=<span class="boolean">true</span>)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     CPL SECTION
+     ═══════════════════════════════════════════════════════════════════════════ -->
+<section class="cpl-section section-dark" id="cpl">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-badge">🧠 Cognitive Intelligence</span>
+      <h2>CPL — <span class="highlight">Cognitive Protocol Language</span></h2>
+      <p>A domain-specific language for orchestrating AI cognition, memory consolidation, and multi-agent coordination across distributed systems.</p>
+    </div>
+    
+    <div class="cpl-hero">
+      <div class="cpl-content">
+        <h3>The <span class="cpl-highlight">Brain</span> of the Organism</h3>
+        <p>CPL (Cognitive Protocol Language) is the orchestration layer that coordinates all cognitive functions — from memory consolidation to attention routing, from reward signals to predictive coding.</p>
+        
+        <ul class="cpl-features-list">
+          <li>
+            <span class="icon">🧬</span>
+            <div class="text">
+              <h4>Hebbian Learning Protocol</h4>
+              <p>Neural plasticity through "neurons that fire together, wire together"</p>
+            </div>
+          </li>
+          <li>
+            <span class="icon">💾</span>
+            <div class="text">
+              <h4>Memory Consolidation</h4>
+              <p>Short-term to long-term memory transfer with φ-optimized compression</p>
+            </div>
+          </li>
+          <li>
+            <span class="icon">🎯</span>
+            <div class="text">
+              <h4>Attention Routing</h4>
+              <p>Dynamic attention allocation across cognitive subsystems</p>
+            </div>
+          </li>
+          <li>
+            <span class="icon">🌊</span>
+            <div class="text">
+              <h4>Kuramoto Oscillators</h4>
+              <p>Phase synchronization for distributed cognition</p>
+            </div>
+          </li>
+        </ul>
+        
+        <a href="protocols.html" class="btn btn-primary">Explore All Protocols →</a>
+      </div>
+      
+      <div class="cpl-visual">
+        <div class="cpl-terminal">
+          <div class="cpl-terminal-header">
+            <span class="terminal-dot red"></span>
+            <span class="terminal-dot yellow"></span>
+            <span class="terminal-dot green"></span>
+            <span class="terminal-title">cpl-repl — Cognitive Protocol Language</span>
+          </div>
+          <div class="cpl-terminal-body">
+            <div class="cpl-line">
+              <span class="cpl-prompt">cpl&gt;</span>
+              <span class="cpl-command"> init_organism("sovereign-alpha")</span>
+            </div>
+            <div class="cpl-line cpl-output">
+              <span class="cpl-success">✓</span> Organism initialized with φ=1.618033988749
+            </div>
+            <div class="cpl-line">
+              <span class="cpl-prompt">cpl&gt;</span>
+              <span class="cpl-command"> load_protocol("hebbian-learning")</span>
+            </div>
+            <div class="cpl-line cpl-output">
+              <span class="cpl-success">✓</span> PROTO-024 HebbianLearning loaded
+            </div>
+            <div class="cpl-line">
+              <span class="cpl-prompt">cpl&gt;</span>
+              <span class="cpl-command"> load_protocol("memory-consolidation")</span>
+            </div>
+            <div class="cpl-line cpl-output">
+              <span class="cpl-success">✓</span> PROTO-031 MemoryConsolidation loaded
+            </div>
+            <div class="cpl-line">
+              <span class="cpl-prompt">cpl&gt;</span>
+              <span class="cpl-command"> run_cognitive_cycle()</span>
+            </div>
+            <div class="cpl-line cpl-output">
+              ⚡ Executing cognitive cycle...
+            </div>
+            <div class="cpl-line cpl-output">
+              📊 Attention: 0.87 | Memory: 0.92 | φ-sync: 0.99
+            </div>
+            <div class="cpl-line cpl-output">
+              <span class="cpl-success">✓</span> Cycle complete in 12.4ms
+            </div>
+            <div class="cpl-line">
+              <span class="cpl-prompt">cpl&gt;</span>
+              <span class="cpl-cursor"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     MODELS PLAYGROUND SECTION
+     ═══════════════════════════════════════════════════════════════════════════ -->
+<section class="section-gradient" id="models">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-badge">🧪 AI Models</span>
+      <h2>Models <span class="highlight">Playground</span></h2>
+      <p>Run state-of-the-art AI models directly in your browser or via API. No downloads, no setup — just compute.</p>
+    </div>
+    
+    <div class="models-grid">
+      <!-- Model 1 -->
+      <div class="model-card fade-in">
+        <div class="model-header">
+          <div class="model-icon">🧠</div>
+          <span class="model-status live">Live</span>
+        </div>
+        <h3>Sovereign Mind</h3>
+        <div class="model-type">Reasoning & Logic</div>
+        <p>Advanced reasoning model with chain-of-thought capabilities and φ-optimized attention mechanisms.</p>
+        <div class="model-specs">
+          <div class="model-spec">
+            <div class="value">7B</div>
+            <div class="label">Parameters</div>
+          </div>
+          <div class="model-spec">
+            <div class="value">128K</div>
+            <div class="label">Context</div>
+          </div>
+          <div class="model-spec">
+            <div class="value">12ms</div>
+            <div class="label">Latency</div>
+          </div>
+        </div>
+        <div class="model-actions">
+          <button class="model-btn primary">Try Now</button>
+          <button class="model-btn secondary">API Docs</button>
+        </div>
+      </div>
+      
+      <!-- Model 2 -->
+      <div class="model-card fade-in">
+        <div class="model-header">
+          <div class="model-icon">👁️</div>
+          <span class="model-status live">Live</span>
+        </div>
+        <h3>Vision Weaver</h3>
+        <div class="model-type">Multimodal Vision</div>
+        <p>Image understanding, generation, and scene analysis with cross-modal attention fusion.</p>
+        <div class="model-specs">
+          <div class="model-spec">
+            <div class="value">13B</div>
+            <div class="label">Parameters</div>
+          </div>
+          <div class="model-spec">
+            <div class="value">4K</div>
+            <div class="label">Resolution</div>
+          </div>
+          <div class="model-spec">
+            <div class="value">45ms</div>
+            <div class="label">Latency</div>
+          </div>
+        </div>
+        <div class="model-actions">
+          <button class="model-btn primary">Try Now</button>
+          <button class="model-btn secondary">API Docs</button>
+        </div>
+      </div>
+      
+      <!-- Model 3 -->
+      <div class="model-card fade-in">
+        <div class="model-header">
+          <div class="model-icon">🎤</div>
+          <span class="model-status live">Live</span>
+        </div>
+        <h3>Voice Forge</h3>
+        <div class="model-type">Speech & Audio</div>
+        <p>Real-time speech recognition, synthesis, and voice cloning with natural prosody.</p>
+        <div class="model-specs">
+          <div class="model-spec">
+            <div class="value">2B</div>
+            <div class="label">Parameters</div>
+          </div>
+          <div class="model-spec">
+            <div class="value">32</div>
+            <div class="label">Languages</div>
+          </div>
+          <div class="model-spec">
+            <div class="value">RT</div>
+            <div class="label">Streaming</div>
+          </div>
+        </div>
+        <div class="model-actions">
+          <button class="model-btn primary">Try Now</button>
+          <button class="model-btn secondary">API Docs</button>
+        </div>
+      </div>
+      
+      <!-- Model 4 -->
+      <div class="model-card fade-in">
+        <div class="model-header">
+          <div class="model-icon">💻</div>
+          <span class="model-status beta">Beta</span>
+        </div>
+        <h3>Code Sovereign</h3>
+        <div class="model-type">Code Generation</div>
+        <p>Multi-language code generation, debugging, and optimization with AST-aware architecture.</p>
+        <div class="model-specs">
+          <div class="model-spec">
+            <div class="value">34B</div>
+            <div class="label">Parameters</div>
+          </div>
+          <div class="model-spec">
+            <div class="value">50+</div>
+            <div class="label">Languages</div>
+          </div>
+          <div class="model-spec">
+            <div class="value">95%</div>
+            <div class="label">HumanEval</div>
+          </div>
+        </div>
+        <div class="model-actions">
+          <button class="model-btn primary">Try Now</button>
+          <button class="model-btn secondary">API Docs</button>
+        </div>
+      </div>
+      
+      <!-- Model 5 -->
+      <div class="model-card fade-in">
+        <div class="model-header">
+          <div class="model-icon">📊</div>
+          <span class="model-status live">Live</span>
+        </div>
+        <h3>Data Alchemist</h3>
+        <div class="model-type">Data Analysis</div>
+        <p>Automated EDA, feature engineering, and insight extraction with natural language queries.</p>
+        <div class="model-specs">
+          <div class="model-spec">
+            <div class="value">5B</div>
+            <div class="label">Parameters</div>
+          </div>
+          <div class="model-spec">
+            <div class="value">SQL</div>
+            <div class="label">Native</div>
+          </div>
+          <div class="model-spec">
+            <div class="value">∞</div>
+            <div class="label">Tables</div>
+          </div>
+        </div>
+        <div class="model-actions">
+          <button class="model-btn primary">Try Now</button>
+          <button class="model-btn secondary">API Docs</button>
+        </div>
+      </div>
+      
+      <!-- Model 6 -->
+      <div class="model-card fade-in">
+        <div class="model-header">
+          <div class="model-icon">🔬</div>
+          <span class="model-status beta">Beta</span>
+        </div>
+        <h3>Research Nexus</h3>
+        <div class="model-type">Scientific Research</div>
+        <p>Literature review, hypothesis generation, and experimental design with citation-aware reasoning.</p>
+        <div class="model-specs">
+          <div class="model-spec">
+            <div class="value">20B</div>
+            <div class="label">Parameters</div>
+          </div>
+          <div class="model-spec">
+            <div class="value">1M+</div>
+            <div class="label">Papers</div>
+          </div>
+          <div class="model-spec">
+            <div class="value">arXiv</div>
+            <div class="label">Connected</div>
+          </div>
+        </div>
+        <div class="model-actions">
+          <button class="model-btn primary">Try Now</button>
+          <button class="model-btn secondary">API Docs</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     USE CASES SECTION
+     ═══════════════════════════════════════════════════════════════════════════ -->
+<section class="section-dark" id="usecases">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-badge">💡 Applications</span>
+      <h2>Scientific <span class="highlight">Use Cases</span></h2>
+      <p>From quantum chemistry to financial modeling, our platform powers cutting-edge research across domains.</p>
+    </div>
+    
+    <div class="usecases-grid">
+      <div class="usecase-card fade-in">
+        <div class="usecase-icon">🧬</div>
+        <h3>Computational Biology</h3>
+        <p>Protein folding, genomic analysis, and drug discovery pipelines with Julia's BioJulia ecosystem running on decentralized compute.</p>
+        <div class="usecase-tags">
+          <span class="usecase-tag">Protein Folding</span>
+          <span class="usecase-tag">Genomics</span>
+          <span class="usecase-tag">Drug Discovery</span>
+        </div>
+      </div>
+      
+      <div class="usecase-card fade-in">
+        <div class="usecase-icon">⚛️</div>
+        <h3>Quantum Computing</h3>
+        <p>Quantum circuit simulation, variational algorithms, and hybrid classical-quantum workflows with Motoko smart contracts.</p>
+        <div class="usecase-tags">
+          <span class="usecase-tag">VQE</span>
+          <span class="usecase-tag">QAOA</span>
+          <span class="usecase-tag">Error Correction</span>
+        </div>
+      </div>
+      
+      <div class="usecase-card fade-in">
+        <div class="usecase-icon">📈</div>
+        <h3>Quantitative Finance</h3>
+        <p>High-frequency trading algorithms, risk modeling, and portfolio optimization with microsecond latency execution.</p>
+        <div class="usecase-tags">
+          <span class="usecase-tag">Options Pricing</span>
+          <span class="usecase-tag">Risk Models</span>
+          <span class="usecase-tag">HFT</span>
+        </div>
+      </div>
+      
+      <div class="usecase-card fade-in">
+        <div class="usecase-icon">🌍</div>
+        <h3>Climate Modeling</h3>
+        <p>Earth system simulations, weather prediction, and climate change analysis with petascale computation.</p>
+        <div class="usecase-tags">
+          <span class="usecase-tag">GCMs</span>
+          <span class="usecase-tag">NWP</span>
+          <span class="usecase-tag">Carbon Cycle</span>
+        </div>
+      </div>
+      
+      <div class="usecase-card fade-in">
+        <div class="usecase-icon">🚀</div>
+        <h3>Aerospace Engineering</h3>
+        <p>CFD simulations, trajectory optimization, and structural analysis for next-generation spacecraft design.</p>
+        <div class="usecase-tags">
+          <span class="usecase-tag">CFD</span>
+          <span class="usecase-tag">FEM</span>
+          <span class="usecase-tag">Optimization</span>
+        </div>
+      </div>
+      
+      <div class="usecase-card fade-in">
+        <div class="usecase-icon">🧪</div>
+        <h3>Materials Science</h3>
+        <p>DFT calculations, molecular dynamics, and materials discovery with AI-accelerated screening.</p>
+        <div class="usecase-tags">
+          <span class="usecase-tag">DFT</span>
+          <span class="usecase-tag">MD</span>
+          <span class="usecase-tag">ML Potentials</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     ONLINE TOOLS SECTION
+     ═══════════════════════════════════════════════════════════════════════════ -->
+<section class="section-gradient" id="tools">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-badge">🛠️ Online Tools</span>
+      <h2>Scientific <span class="highlight">Tools</span></h2>
+      <p>Browser-based tools for data analysis, visualization, and computation — no installation required.</p>
+    </div>
+    
+    <div class="tools-grid">
+      <div class="tool-card fade-in">
+        <div class="tool-icon">📊</div>
+        <span class="tool-badge">Free</span>
+        <h4>Data Visualizer</h4>
+        <p>Interactive 2D/3D plotting with support for 50+ chart types. Export to SVG, PNG, or interactive HTML.</p>
+        <a href="#" class="tool-link">Launch Tool →</a>
+      </div>
+      
+      <div class="tool-card fade-in">
+        <div class="tool-icon">🧮</div>
+        <span class="tool-badge">Free</span>
+        <h4>Matrix Calculator</h4>
+        <p>Linear algebra operations with symbolic support. Eigenvalues, SVD, LU decomposition, and more.</p>
+        <a href="#" class="tool-link">Launch Tool →</a>
+      </div>
+      
+      <div class="tool-card fade-in">
+        <div class="tool-icon">📐</div>
+        <span class="tool-badge">Pro</span>
+        <h4>Julia Playground</h4>
+        <p>Full Julia REPL in your browser with pre-installed packages. Jupyter-style notebooks included.</p>
+        <a href="#" class="tool-link">Launch Tool →</a>
+      </div>
+      
+      <div class="tool-card fade-in">
+        <div class="tool-icon">🔄</div>
+        <span class="tool-badge">Free</span>
+        <h4>Data Converter</h4>
+        <p>Convert between CSV, JSON, Parquet, Arrow, HDF5, and 20+ other data formats instantly.</p>
+        <a href="#" class="tool-link">Launch Tool →</a>
+      </div>
+      
+      <div class="tool-card fade-in">
+        <div class="tool-icon">📈</div>
+        <span class="tool-badge">Pro</span>
+        <h4>Statistical Analyzer</h4>
+        <p>Hypothesis testing, regression analysis, ANOVA, and Bayesian inference with one-click reports.</p>
+        <a href="#" class="tool-link">Launch Tool →</a>
+      </div>
+      
+      <div class="tool-card fade-in">
+        <div class="tool-icon">🧠</div>
+        <span class="tool-badge">Free</span>
+        <h4>ML Model Trainer</h4>
+        <p>Train and evaluate ML models with AutoML. Supports tabular, image, and text data.</p>
+        <a href="#" class="tool-link">Launch Tool →</a>
+      </div>
+      
+      <div class="tool-card fade-in">
+        <div class="tool-icon">🔍</div>
+        <span class="tool-badge">Free</span>
+        <h4>Regex Tester</h4>
+        <p>Test and debug regular expressions with real-time matching, explanations, and cheat sheets.</p>
+        <a href="#" class="tool-link">Launch Tool →</a>
+      </div>
+      
+      <div class="tool-card fade-in">
+        <div class="tool-icon">🌐</div>
+        <span class="tool-badge">Pro</span>
+        <h4>API Tester</h4>
+        <p>Test REST, GraphQL, and gRPC APIs with authentication, environments, and test suites.</p>
+        <a href="#" class="tool-link">Launch Tool →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     RESEARCH & PAPERS SECTION
+     ═══════════════════════════════════════════════════════════════════════════ -->
+<section class="section-dark" id="research">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-badge">📚 Research</span>
+      <h2>Papers & <span class="highlight">Publications</span></h2>
+      <p>Peer-reviewed research advancing the frontiers of AI, distributed computing, and scientific software.</p>
+    </div>
+    
+    <div class="papers-grid">
+      <div class="paper-card fade-in">
+        <div class="paper-icon">📄</div>
+        <div class="paper-content">
+          <h4>Intelligentia Localis <span class="arxiv">Preprint</span></h4>
+          <p>On-device AI inference with φ-optimized attention mechanisms for resource-constrained environments.</p>
+          <div class="paper-links">
+            <a href="#" class="paper-link">📖 PDF</a>
+            <a href="#" class="paper-link">💻 Code</a>
+            <a href="#" class="paper-link">🗄️ Dataset</a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="paper-card fade-in">
+        <div class="paper-icon">📄</div>
+        <div class="paper-content">
+          <h4>Rete Vivum <span class="arxiv">Preprint</span></h4>
+          <p>Mesh-based distributed cognition networks with Kuramoto oscillator synchronization.</p>
+          <div class="paper-links">
+            <a href="#" class="paper-link">📖 PDF</a>
+            <a href="#" class="paper-link">💻 Code</a>
+            <a href="#" class="paper-link">🎮 Demo</a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="paper-card fade-in">
+        <div class="paper-icon">📄</div>
+        <div class="paper-content">
+          <h4>Math Aurea <span class="arxiv">Preprint</span></h4>
+          <p>Golden ratio optimization in neural architecture search and hyperparameter tuning.</p>
+          <div class="paper-links">
+            <a href="#" class="paper-link">📖 PDF</a>
+            <a href="#" class="paper-link">💻 Code</a>
+            <a href="#" class="paper-link">📊 Results</a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="paper-card fade-in">
+        <div class="paper-icon">📄</div>
+        <div class="paper-content">
+          <h4>Custos Intelligentiae <span class="arxiv">Preprint</span></h4>
+          <p>Guardian protocols for safe and aligned AI systems with interpretable decision boundaries.</p>
+          <div class="paper-links">
+            <a href="#" class="paper-link">📖 PDF</a>
+            <a href="#" class="paper-link">💻 Code</a>
+            <a href="#" class="paper-link">🛡️ Safety</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div style="text-align: center; margin-top: 3rem;">
+      <a href="research/papers-hub.html" class="btn btn-secondary">View All Publications →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     API PLAYGROUND SECTION
+     ═══════════════════════════════════════════════════════════════════════════ -->
+<section class="section-gradient" id="api">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-badge">⚡ Live API</span>
+      <h2>API <span class="highlight">Playground</span></h2>
+      <p>Test our APIs directly in your browser. Full REST, GraphQL, and WebSocket support.</p>
+    </div>
+    
+    <div class="api-playground">
+      <div class="api-request">
+        <div class="api-header">
+          <span class="method post">POST</span>
+          <span class="endpoint">/v1/models/sovereign-mind/generate</span>
+        </div>
+        <div class="api-body">
+<pre>{
+  <span class="key">"prompt"</span>: <span class="string">"Explain quantum entanglement"</span>,
+  <span class="key">"max_tokens"</span>: <span class="number">256</span>,
+  <span class="key">"temperature"</span>: <span class="number">0.7</span>,
+  <span class="key">"phi_optimization"</span>: <span class="boolean">true</span>,
+  <span class="key">"stream"</span>: <span class="boolean">false</span>
+}</pre>
+        </div>
+      </div>
+      
+      <div class="api-response">
+        <div class="api-header">
+          <span class="method get">200</span>
+          <span class="endpoint">Response</span>
+        </div>
+        <div class="api-body">
+<pre>{
+  <span class="key">"id"</span>: <span class="string">"gen_abc123xyz"</span>,
+  <span class="key">"model"</span>: <span class="string">"sovereign-mind-7b"</span>,
+  <span class="key">"text"</span>: <span class="string">"Quantum entanglement is a phenomenon where two or more particles become correlated..."</span>,
+  <span class="key">"tokens"</span>: <span class="number">189</span>,
+  <span class="key">"latency_ms"</span>: <span class="number">12.4</span>,
+  <span class="key">"phi_score"</span>: <span class="number">0.9823</span>
+}</pre>
+        </div>
+      </div>
+    </div>
+    
+    <div style="text-align: center; margin-top: 2rem;">
+      <a href="#" class="btn btn-primary">Get API Key (Free Tier) →</a>
+      <a href="docs.html" class="btn btn-secondary" style="margin-left: 1rem;">Full API Docs →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     PROTOCOLS PREVIEW SECTION
+     ═══════════════════════════════════════════════════════════════════════════ -->
+<section class="section-dark">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-badge">🔌 Protocols</span>
+      <h2>234 <span class="highlight">Cognitive Protocols</span></h2>
+      <p>Modular building blocks for intelligent systems — from attention routing to memory consolidation.</p>
+    </div>
+    
+    <div class="protocols-showcase">
+      <div class="protocol-card fade-in">
+        <div class="protocol-id">PROTO-024</div>
+        <h4>Hebbian Learning</h4>
+        <p>Neural plasticity</p>
+      </div>
+      <div class="protocol-card fade-in">
+        <div class="protocol-id">PROTO-031</div>
+        <h4>Memory Consolidation</h4>
+        <p>STM → LTM transfer</p>
+      </div>
+      <div class="protocol-card fade-in">
+        <div class="protocol-id">PROTO-047</div>
+        <h4>Attention Routing</h4>
+        <p>Dynamic allocation</p>
+      </div>
+      <div class="protocol-card fade-in">
+        <div class="protocol-id">PROTO-089</div>
+        <h4>Predictive Coding</h4>
+        <p>Error minimization</p>
+      </div>
+      <div class="protocol-card fade-in">
+        <div class="protocol-id">PROTO-112</div>
+        <h4>Reward Signal</h4>
+        <p>Reinforcement</p>
+      </div>
+      <div class="protocol-card fade-in">
+        <div class="protocol-id">PROTO-156</div>
+        <h4>Kuramoto Sync</h4>
+        <p>Phase alignment</p>
+      </div>
+      <div class="protocol-card fade-in">
+        <div class="protocol-id">PROTO-201</div>
+        <h4>Goal Stack</h4>
+        <p>Task hierarchy</p>
+      </div>
+      <div class="protocol-card fade-in">
+        <div class="protocol-id">PROTO-227</div>
+        <h4>Sovereign Charter</h4>
+        <p>Governance</p>
+      </div>
+    </div>
+    
+    <div style="text-align: center; margin-top: 3rem;">
+      <a href="protocols.html" class="btn btn-outline">Explore All Protocols →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     FOOTER
+     ═══════════════════════════════════════════════════════════════════════════ -->
+<footer>
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <h3>⚛ ItsNotAILABS</h3>
+        <p>Advancing scientific computing through cross-language bridges, cognitive protocols, and decentralized AI infrastructure. Building the future of research software.</p>
+      </div>
+      
+      <div class="footer-column">
+        <h4>Platform</h4>
+        <ul>
+          <li><a href="#bridges">Language Bridges</a></li>
+          <li><a href="#cpl">CPL Language</a></li>
+          <li><a href="#models">AI Models</a></li>
+          <li><a href="#api">Live API</a></li>
+          <li><a href="download.html">Extensions</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-column">
+        <h4>Research</h4>
+        <ul>
+          <li><a href="research/papers-hub.html">Publications</a></li>
+          <li><a href="arxiv/">arXiv Papers</a></li>
+          <li><a href="research/portal.html">Research Portal</a></li>
+          <li><a href="protocols.html">Protocols</a></li>
+          <li><a href="osf/">Open Science</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-column">
+        <h4>Tools</h4>
+        <ul>
+          <li><a href="tools.html">Online Tools</a></li>
+          <li><a href="sandbox-labs.html">Sandbox Labs</a></li>
+          <li><a href="docs.html">Documentation</a></li>
+          <li><a href="#">API Reference</a></li>
+          <li><a href="#">SDKs</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-column">
+        <h4>Community</h4>
+        <ul>
+          <li><a href="https://github.com/ItsNotAILABS">GitHub</a></li>
+          <li><a href="#">Discord</a></li>
+          <li><a href="#">Twitter</a></li>
+          <li><a href="CONTRIBUTING.md">Contribute</a></li>
+          <li><a href="licenses/">Licenses</a></li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <div class="footer-copy">
+        © 2024 ItsNotAILABS — MedinaSITech Research Laboratory. All rights reserved.
+      </div>
+      <div class="footer-social">
+        <a href="https://github.com/ItsNotAILABS" title="GitHub">🔗</a>
+        <a href="#" title="Twitter">🐦</a>
+        <a href="#" title="Discord">💬</a>
+        <a href="#" title="LinkedIn">💼</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     JAVASCRIPT
+     ═══════════════════════════════════════════════════════════════════════════ -->
+<script>
+// Navigation scroll effect
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 50) {
+    navbar.classList.add('scrolled');
+  } else {
+    navbar.classList.remove('scrolled');
+  }
+});
+
+// Mobile menu toggle
+function toggleMobileMenu() {
+  const navLinks = document.querySelector('.nav-links');
+  navLinks.classList.toggle('mobile-open');
+}
+
+// Intersection Observer for fade-in animations
+const observerOptions = {
+  threshold: 0.1,
+  rootMargin: '0px 0px -50px 0px'
+};
+
+const fadeObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, observerOptions);
+
+document.querySelectorAll('.fade-in').forEach(el => {
+  fadeObserver.observe(el);
+});
+
+// Smooth scroll for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+
+// Active nav link highlighting
+const sections = document.querySelectorAll('section[id]');
+const navLinksItems = document.querySelectorAll('.nav-links a[href^="#"]');
+
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(section => {
+    const sectionTop = section.offsetTop - 100;
+    if (window.scrollY >= sectionTop) {
+      current = section.getAttribute('id');
+    }
+  });
+  
+  navLinksItems.forEach(link => {
+    link.classList.remove('active');
+    if (link.getAttribute('href') === `#${current}`) {
+      link.classList.add('active');
+    }
+  });
+});
+
+// Typing effect for terminal
+function typeWriter(element, text, speed = 50) {
+  let i = 0;
+  function type() {
+    if (i < text.length) {
+      element.innerHTML += text.charAt(i);
+      i++;
+      setTimeout(type, speed);
+    }
+  }
+  type();
+}
+
+// Console log for curious developers
+console.log('%c⚛ ItsNotAILABS', 'color: #00D4AA; font-size: 24px; font-weight: bold;');
+console.log('%cScientific Computing Platform', 'color: #9558B2; font-size: 14px;');
+console.log('%cJulia ↔ Motoko ↔ Python with CPL Embedded', 'color: #64748B; font-size: 12px;');
+console.log('%c\nInterested in joining? https://github.com/ItsNotAILABS', 'color: #3776AB; font-size: 12px;');
+// Smooth scroll for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    const href = this.getAttribute('href');
+    const target = document.querySelector(href);
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// AI INTELLIGENT CACHE VISUALIZATION
+// ═══════════════════════════════════════════════════════════════════════════════
+
+// Neural Network Background Animation for AI Cache Section
+const neuralCanvas = document.getElementById('neuralCanvas');
+if (neuralCanvas) {
+  const nCtx = neuralCanvas.getContext('2d');
+  
+  function resizeNeuralCanvas() {
+    neuralCanvas.width = neuralCanvas.parentElement.offsetWidth;
+    neuralCanvas.height = neuralCanvas.parentElement.offsetHeight;
+  }
+  resizeNeuralCanvas();
+  window.addEventListener('resize', resizeNeuralCanvas);
+  
+  // Neural nodes
+  const neuralNodes = [];
+  const neuralNodeCount = 60;
+  
+  class NeuralNode {
+    constructor() {
+      this.x = Math.random() * neuralCanvas.width;
+      this.y = Math.random() * neuralCanvas.height;
+      this.vx = (Math.random() - 0.5) * 0.3;
+      this.vy = (Math.random() - 0.5) * 0.3;
+      this.radius = Math.random() * 3 + 1;
+      this.pulsePhase = Math.random() * Math.PI * 2;
+      this.pulseSpeed = 0.02 + Math.random() * 0.02;
+      const colors = [
+        { r: 0, g: 255, b: 204 },    // teal
+        { r: 168, g: 85, b: 247 },   // purple
+        { r: 212, g: 175, b: 55 },   // gold
+        { r: 59, g: 130, b: 246 },   // blue
+        { r: 236, g: 72, b: 153 },   // pink
+      ];
+      this.color = colors[Math.floor(Math.random() * colors.length)];
+      this.activity = Math.random();
+    }
+    
+    update() {
+      this.x += this.vx;
+      this.y += this.vy;
+      
+      if (this.x < 0 || this.x > neuralCanvas.width) this.vx *= -1;
+      if (this.y < 0 || this.y > neuralCanvas.height) this.vy *= -1;
+      
+      this.pulsePhase += this.pulseSpeed;
+      this.activity = 0.3 + Math.sin(this.pulsePhase) * 0.7;
+    }
+    
+    draw() {
+      const alpha = 0.3 + this.activity * 0.5;
+      nCtx.fillStyle = `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${alpha})`;
+      nCtx.shadowColor = `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, 0.5)`;
+      nCtx.shadowBlur = 15;
+      nCtx.beginPath();
+      nCtx.arc(this.x, this.y, this.radius * (0.8 + this.activity * 0.4), 0, Math.PI * 2);
+      nCtx.fill();
+      nCtx.shadowBlur = 0;
+    }
+  }
+  
+  for (let i = 0; i < neuralNodeCount; i++) {
+    neuralNodes.push(new NeuralNode());
+  }
+  
+  // Signal pulses traveling along connections
+  const signals = [];
+  
+  class Signal {
+    constructor(node1, node2) {
+      this.start = { x: node1.x, y: node1.y };
+      this.end = { x: node2.x, y: node2.y };
+      this.progress = 0;
+      this.speed = 0.02 + Math.random() * 0.02;
+      this.color = node1.color;
+    }
+    
+    update() {
+      this.progress += this.speed;
+      return this.progress < 1;
+    }
+    
+    draw() {
+      const x = this.start.x + (this.end.x - this.start.x) * this.progress;
+      const y = this.start.y + (this.end.y - this.start.y) * this.progress;
+      
+      nCtx.fillStyle = `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${1 - this.progress})`;
+      nCtx.shadowColor = `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, 0.8)`;
+      nCtx.shadowBlur = 10;
+      nCtx.beginPath();
+      nCtx.arc(x, y, 3, 0, Math.PI * 2);
+      nCtx.fill();
+      nCtx.shadowBlur = 0;
+    }
+  }
+  
+  function animateNeural() {
+    nCtx.fillStyle = 'rgba(5, 8, 22, 0.1)';
+    nCtx.fillRect(0, 0, neuralCanvas.width, neuralCanvas.height);
+    
+    // Update and draw nodes
+    neuralNodes.forEach(node => {
+      node.update();
+      node.draw();
+    });
+    
+    // Draw connections and occasionally spawn signals
+    neuralNodes.forEach((n1, i) => {
+      neuralNodes.slice(i + 1).forEach(n2 => {
+        const dx = n1.x - n2.x;
+        const dy = n1.y - n2.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        if (distance < 150) {
+          const alpha = 0.15 * (1 - distance / 150);
+          const avgColor = {
+            r: (n1.color.r + n2.color.r) / 2,
+            g: (n1.color.g + n2.color.g) / 2,
+            b: (n1.color.b + n2.color.b) / 2
+          };
+          nCtx.strokeStyle = `rgba(${avgColor.r}, ${avgColor.g}, ${avgColor.b}, ${alpha})`;
+          nCtx.lineWidth = 1;
+          nCtx.beginPath();
+          nCtx.moveTo(n1.x, n1.y);
+          nCtx.lineTo(n2.x, n2.y);
+          nCtx.stroke();
+          
+          // Randomly spawn signals
+          if (Math.random() < 0.001 && signals.length < 20) {
+            signals.push(new Signal(n1, n2));
+          }
+        }
+      });
+    });
+    
+    // Update and draw signals
+    for (let i = signals.length - 1; i >= 0; i--) {
+      if (!signals[i].update()) {
+        signals.splice(i, 1);
+      } else {
+        signals[i].draw();
+      }
+    }
+    
+    requestAnimationFrame(animateNeural);
+  }
+  
+  animateNeural();
+}
+
+// Prediction Wave Visualization
+const predictionCanvas = document.getElementById('predictionCanvas');
+if (predictionCanvas) {
+  const predictionCtx = predictionCanvas.getContext('2d');
+  
+  function resizePredictionCanvas() {
+    predictionCanvas.width = predictionCanvas.parentElement.offsetWidth;
+    predictionCanvas.height = predictionCanvas.parentElement.offsetHeight;
+  }
+  resizePredictionCanvas();
+  window.addEventListener('resize', resizePredictionCanvas);
+  
+  let time = 0;
+  
+  function animatePrediction() {
+    predictionCtx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+    predictionCtx.fillRect(0, 0, predictionCanvas.width, predictionCanvas.height);
+    
+    // Draw multiple waves representing prediction patterns
+    const waves = [
+      { color: '0, 255, 204', amplitude: 30, frequency: 0.02, speed: 0.03, offset: 0 },
+      { color: '168, 85, 247', amplitude: 20, frequency: 0.03, speed: 0.02, offset: 2 },
+      { color: '212, 175, 55', amplitude: 25, frequency: 0.015, speed: 0.025, offset: 4 },
+    ];
+    
+    waves.forEach((wave, index) => {
+      predictionCtx.strokeStyle = `rgba(${wave.color}, 0.6)`;
+      predictionCtx.lineWidth = 2;
+      predictionCtx.beginPath();
+      
+      const baseY = predictionCanvas.height / 2 + (index - 1) * 15;
+      
+      for (let x = 0; x < predictionCanvas.width; x++) {
+        const y = baseY + 
+          Math.sin(x * wave.frequency + time * wave.speed + wave.offset) * wave.amplitude +
+          Math.sin(x * wave.frequency * 2 + time * wave.speed * 1.5) * (wave.amplitude * 0.3);
+        
+        if (x === 0) {
+          predictionCtx.moveTo(x, y);
+        } else {
+          predictionCtx.lineTo(x, y);
+        }
+      }
+      
+      predictionCtx.stroke();
+      
+      // Add glow effect
+      predictionCtx.strokeStyle = `rgba(${wave.color}, 0.2)`;
+      predictionCtx.lineWidth = 6;
+      predictionCtx.stroke();
+    });
+    
+    // Draw prediction confidence bars
+    const barWidth = 4;
+    const barSpacing = 8;
+    const startX = 20;
+    
+    for (let i = 0; i < 10; i++) {
+      const x = startX + i * barSpacing;
+      const height = 20 + Math.sin(time * 0.05 + i * 0.5) * 15;
+      const hue = 170 + i * 10;
+      
+      predictionCtx.fillStyle = `hsla(${hue}, 100%, 70%, 0.6)`;
+      predictionCtx.fillRect(x, predictionCanvas.height - height - 10, barWidth, height);
+    }
+    
+    time++;
+    requestAnimationFrame(animatePrediction);
+  }
+  
+  animatePrediction();
+}
+
+// AI Cache Metrics Simulation
+// Uses φ (phi) for golden-ratio weighted calculations
+function animateCacheMetrics() {
+  const PHI = 1.618033988749895;
+  
+  // Simulate cache agent stats with φ-weighted variance
+  function updateMetric(elementId, baseValue, variance, isPercent = false) {
+    const element = document.getElementById(elementId);
+    if (element) {
+      // Apply φ-weighted random variation for more natural-looking fluctuations
+      const phiVariation = (Math.random() - 0.5) * variance * (1 / PHI);
+      let value = baseValue + phiVariation;
+      if (isPercent) {
+        value = Math.min(100, Math.max(0, value));
+        element.textContent = Math.round(value) + '%';
+      } else if (value >= 1000) {
+        element.textContent = (value / 1000).toFixed(1) + 'K';
+      } else {
+        element.textContent = Math.round(value);
+      }
+    }
+  }
+  
+  // Update stats periodically
+  setInterval(() => {
+    // Cache agent hit rates
+    updateMetric('sentinel-hits', 94, 3, true);
+    updateMetric('keeper-hits', 97, 2, true);
+    updateMetric('router-hits', 87, 4, true);
+    updateMetric('context-hits', 99, 1, true);
+    updateMetric('predictor-hits', 78, 5, true);
+    updateMetric('healer-integrity', 100, 0.5, true);
+    
+    // Cache agent entries
+    updateMetric('sentinel-entries', 8200, 300);
+    updateMetric('keeper-entries', 4100, 150);
+    updateMetric('router-entries', 1800, 100);
+    updateMetric('context-entries', 892, 50);
+    updateMetric('predictor-entries', 2400, 120);
+    updateMetric('healer-healed', 47, 5);
+    
+    // Overall metrics
+    updateMetric('total-entries', 17400, 500);
+    updateMetric('overall-hit-rate', 93, 2, true);
+    updateMetric('patterns-learned', 1200, 50);
+    updateMetric('predictions-made', 847, 30);
+    updateMetric('pred-accuracy', 78.3, 2, true);
+    updateMetric('network-sync', 100, 1, true);
+  }, 2000);
+}
+
+animateCacheMetrics();
+</script>
+
+</body>
+</html>

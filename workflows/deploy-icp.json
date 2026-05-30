@@ -1,0 +1,53 @@
+{
+  "name": "vigil:deploy-icp",
+  "description": "Deploy PWA to Internet Computer Protocol. Canistrum agent routes to ICP runtime directly.",
+  "version": "19.0.0",
+  "requires": ["dfx >= 0.22.0"],
+  "steps": [
+    {
+      "action": "check:dfx",
+      "payload": { "minVersion": "0.22.0" },
+      "agent": "CANISTRUM",
+      "failFast": true
+    },
+    {
+      "action": "build:extension",
+      "payload": { "path": "extensions/jarvis" },
+      "agent": "SUBSTRATUM",
+      "failFast": true
+    },
+    {
+      "action": "icp:start-local",
+      "payload": { "port": 4943, "network": "local" },
+      "agent": "CANISTRUM",
+      "failFast": false,
+      "condition": "network === 'local'"
+    },
+    {
+      "action": "icp:deploy-canister",
+      "payload": {
+        "canister": "vigil_frontend",
+        "network": "ic",
+        "dfxJson": "dfx.json",
+        "source": "."
+      },
+      "agent": "CANISTRUM",
+      "failFast": true
+    },
+    {
+      "action": "icp:get-url",
+      "payload": { "canister": "vigil_frontend", "network": "ic" },
+      "agent": "CANISTRUM",
+      "failFast": false
+    },
+    {
+      "action": "generate:download-manifest",
+      "payload": {
+        "outputFile": "VIGIL_DOWNLOADS.md",
+        "includeIcpUrl": true
+      },
+      "agent": "PROTOCOLLUM",
+      "failFast": false
+    }
+  ]
+}

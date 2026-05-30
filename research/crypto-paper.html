@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="la">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cryptographia Autonoma — De Arcana Arte Computationali, Filis Encryptis, et Architectura Fidei Sine Servo</title>
+<style>
+  :root { --bg:#0a0a1a; --card:#12122a; --border:#2a2a4a; --accent:#6c63ff; --accent2:#00d4aa; --text:#e0e0e0; --dim:#888; --paper:#f8f6f0; --ink:#1a1a2e; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:"Palatino Linotype","Book Antiqua",Palatino,"Times New Roman",serif; background:var(--bg); color:var(--text); min-height:100vh; }
+
+  .paper { max-width:900px; margin:2rem auto; background:var(--paper); color:var(--ink); padding:3rem 3.5rem; border-radius:4px; box-shadow:0 8px 32px rgba(0,0,0,0.6); line-height:1.8; }
+  .paper h1 { font-size:1.7rem; text-align:center; margin-bottom:0.3rem; color:#2a1a5e; font-style:italic; }
+  .paper .subtitle { text-align:center; font-size:1.05rem; color:#555; margin-bottom:0.5rem; }
+  .paper .authors { text-align:center; font-size:0.95rem; color:#666; margin-bottom:0.3rem; }
+  .paper .affiliation { text-align:center; font-size:0.85rem; color:#888; margin-bottom:1.5rem; font-style:italic; }
+  .paper .latin-epigraph { text-align:center; font-size:0.9rem; color:#7a6aa0; margin:1rem 0 2rem; font-style:italic; border-top:1px solid #ddd; border-bottom:1px solid #ddd; padding:0.8rem 0; }
+
+  .paper h2 { font-size:1.2rem; color:#2a1a5e; margin:2rem 0 0.5rem; border-bottom:1px solid #ccc; padding-bottom:0.3rem; }
+  .paper h3 { font-size:1.05rem; color:#3a2a7e; margin:1.5rem 0 0.4rem; }
+  .paper p { margin-bottom:0.8rem; text-align:justify; font-size:0.95rem; }
+  .paper ol, .paper ul { margin:0.5rem 0 1rem 2rem; font-size:0.95rem; }
+  .paper li { margin-bottom:0.3rem; }
+  .paper .eq { text-align:center; margin:1rem 0; font-family:"Courier New",monospace; font-size:0.95rem; color:#2a1a5e; background:#f0eef5; padding:0.6rem; border-radius:3px; }
+  .paper .fig { text-align:center; margin:1.5rem 0; padding:1rem; background:#f5f3ff; border:1px solid #e0daf0; border-radius:4px; }
+  .paper .fig pre { font-family:"Courier New",monospace; font-size:0.75rem; line-height:1.5; color:#333; }
+  .paper .fig-caption { font-size:0.82rem; color:#666; margin-top:0.5rem; font-style:italic; }
+  .paper .ref { font-size:0.85rem; color:#555; margin-bottom:0.3rem; }
+  .paper code { font-family:"Courier New",monospace; background:#f0eef5; padding:0.1rem 0.3rem; border-radius:2px; font-size:0.88rem; }
+  .paper table { width:100%; border-collapse:collapse; margin:1rem 0; font-size:0.88rem; }
+  .paper th { background:#2a1a5e; color:#fff; padding:0.5rem; text-align:left; }
+  .paper td { padding:0.4rem 0.5rem; border-bottom:1px solid #ddd; }
+  .paper tr:nth-child(even) { background:#f5f3ff; }
+
+  .back-link { display:block; text-align:center; padding:1.5rem; }
+  .back-link a { color:var(--accent2); font-size:1rem; }
+</style>
+</head>
+<body>
+
+<div class="paper">
+
+<h1>Cryptographia Autonoma:<br>De Arcana Arte Computationali, Filis Encryptis, et Architectura Fidei Sine Servo</h1>
+
+<div class="subtitle">Autonomous Cryptography: On Computational Secret Arts, Encrypted Wires, and Serverless Trust Architecture</div>
+
+<div class="authors">Organism AI Research Division</div>
+<div class="affiliation">Laboratorium Intelligentiae Autonomae · itsnotAilabs.com · Anno MMXXVI</div>
+
+<div class="latin-epigraph">
+  "Nulla intelligentia sine secreto transit.<br>
+  Fides non a servo datur — ab algorithmo nascitur."<br>
+  <em>— No intelligence passes without a secret.<br>
+  Trust is not given by a server — it is born from an algorithm.</em>
+</div>
+
+<h2>I. Abstractum (Abstract)</h2>
+
+<p>We present the <strong>Crypto Worker</strong> and <strong>ModelWire</strong> system, a sovereign cryptographic architecture that provides military-grade encryption (AES-256-GCM), key derivation (PBKDF2 with 100K iterations), secure hashing (SHA-256/SHA-512), HMAC authentication, and encrypted intelligence transport — all running entirely in the browser via the Web Crypto API (SubtleCrypto). No cryptographic operation ever touches the main thread; all operations are offloaded to a permanent Web Worker. We introduce the concept of <em>Fila Encryptum</em> (Encrypted Wires): point-to-point secure channels between AI engine instances that carry intelligence payloads with authenticated encryption, enabling the organism's 40 AI model families to communicate securely without any server-mediated key exchange. Drawing from Meta AI's principles of zero-trust architecture and end-to-end encryption, we formalize <em>Fides Algorithmica</em>: trust that derives not from institutional authority but from mathematical proof.</p>
+
+<h2>II. Introductio (Introduction)</h2>
+
+<p>The dominant model of web cryptography places all trust in servers. TLS protects data in transit to the server. The server holds encryption keys. The server decides what to encrypt and what to decrypt. If the server is compromised, all trust is lost.</p>
+
+<p>Sovereign cryptography inverts this model. The browser becomes the trust anchor. Keys are derived locally from user-supplied passwords via PBKDF2. Encryption happens in a dedicated Web Worker thread. No key ever leaves the browser. No server ever sees plaintext.</p>
+
+<p>This paper formalizes the theoretical foundations of the Organism's cryptographic architecture and its production implementation as the Crypto Worker — a permanent, self-healing Web Worker that provides the entire organism with cryptographic services.</p>
+
+<h2>III. Primitiva Cryptographica (Cryptographic Primitives)</h2>
+
+<h3>III.A — Encryptio AES-256-GCM (AES-256-GCM Encryption)</h3>
+
+<p>All encryption in the organism uses AES-256-GCM (Advanced Encryption Standard, 256-bit key, Galois/Counter Mode). GCM provides both confidentiality and integrity in a single operation — <em>Authenticated Encryption with Associated Data</em> (AEAD):</p>
+
+<div class="eq">
+  (ciphertext, tag) = AES-256-GCM(key, IV, plaintext, AAD)
+</div>
+
+<p>Where:</p>
+<ul>
+  <li><strong>key</strong> — 256-bit key derived from PBKDF2</li>
+  <li><strong>IV</strong> — 12-byte initialization vector, randomly generated per encryption (via <code>crypto.getRandomValues</code>)</li>
+  <li><strong>plaintext</strong> — UTF-8 encoded input data</li>
+  <li><strong>tag</strong> — 128-bit authentication tag (integrated into GCM ciphertext)</li>
+</ul>
+
+<p>AES-256-GCM is the same cipher used by TLS 1.3, signal protocol, and government classified systems. Its use in the Crypto Worker means browser-local encryption achieves the same cryptographic strength as military communications.</p>
+
+<h3>III.B — Derivatio Clavium: PBKDF2 (Key Derivation)</h3>
+
+<p>Keys are never stored — they are derived on-demand from passwords using PBKDF2 (Password-Based Key Derivation Function 2):</p>
+
+<div class="eq">
+  key = PBKDF2(password, salt, iterations=100,000, keyLength=256, hash=SHA-256)
+</div>
+
+<p>The 100,000-iteration count makes brute-force attacks computationally expensive. At ~10ms per derivation on modern hardware, an attacker testing 10<sup>6</sup> passwords would require ~10,000 seconds (2.8 hours). Combined with a random 16-byte salt per derivation, precomputed rainbow tables are rendered useless.</p>
+
+<h3>III.C — Functiones Hash (Hash Functions)</h3>
+
+<p>The Crypto Worker exposes SHA-256 and SHA-512 hashing via SubtleCrypto:</p>
+
+<div class="eq">
+  hash = SHA-256(data)  [32 bytes, 256 bits]<br>
+  hash = SHA-512(data)  [64 bytes, 512 bits]
+</div>
+
+<p>These provide one-way, collision-resistant digests used for data integrity verification, content addressing, and wire token generation.</p>
+
+<h3>III.D — HMAC: Authenticatio Nuntiorum (Message Authentication)</h3>
+
+<p>HMAC (Hash-based Message Authentication Code) provides message integrity and authenticity:</p>
+
+<div class="eq">
+  mac = HMAC-SHA-256(key, message)
+</div>
+
+<p>HMAC is used in the wire protocol to authenticate intelligence payloads between engines, ensuring that a wire message was produced by a legitimate engine and was not tampered with in transit.</p>
+
+<h2>IV. Fila Encryptum: Architectura Filorum (Encrypted Wires: Wire Architecture)</h2>
+
+<h3>IV.A — ModelWire: Canalis Intelligentiae (Intelligence Channel)</h3>
+
+<p>ModelWire is the organism's encrypted point-to-point communication channel between AI engine instances. Each wire connects two engines and provides:</p>
+
+<ol>
+  <li><strong>Authenticated Identity</strong> — Each wire has a unique ID and associated wire token</li>
+  <li><strong>Encrypted Payload</strong> — Intelligence data is encrypted before transmission via AES-256-GCM</li>
+  <li><strong>Integrity Verification</strong> — GCM's authentication tag ensures tamper detection</li>
+  <li><strong>Forward Secrecy</strong> — Each wire session generates fresh IVs, so compromise of one message does not compromise others</li>
+</ol>
+
+<h3>IV.B — Token Filorum (Wire Tokens)</h3>
+
+<p>Wire tokens authenticate wire endpoints. They are generated by hashing the wire ID concatenated with the engine ID:</p>
+
+<div class="eq">
+  wireToken = SHA-256(wireId + ':' + engineId + ':' + timestamp)
+</div>
+
+<p>This produces a deterministic, non-forgeable token that binds a specific engine to a specific wire at a specific time. Tokens can be verified without storing secrets — only the wire ID and engine ID are needed to recompute the expected token.</p>
+
+<h3>IV.C — Topologia Filorum (Wire Topology)</h3>
+
+<p>The organism's 40 AI model families are connected via a wire mesh topology. The engine-worker.js manages the wire topology, creating wires between engines that need to share intelligence:</p>
+
+<div class="fig">
+<pre>
+    Engine A ──── Wire(A↔B) ──── Engine B
+        │                            │
+    Wire(A↔C)                   Wire(B↔D)
+        │                            │
+    Engine C ──── Wire(C↔D) ──── Engine D
+        │                            │
+        └──── Wire(C↔E) ──── Engine E
+</pre>
+<div class="fig-caption">Figura I — Topologia Filorum Encryptorum inter Machinas AI</div>
+</div>
+
+<p>Each wire is an independent encrypted channel. Compromise of one wire does not affect others (isolation property). The wire topology is displayed live in the index.html dashboard.</p>
+
+<h2>V. Securitas Operarii (Worker Security)</h2>
+
+<h3>V.A — Separatio Filorum (Thread Separation)</h3>
+
+<p>A critical security property: <em>no cryptographic operation ever runs on the main thread</em>. All encryption, decryption, hashing, key derivation, and token generation happen inside the Crypto Worker's Web Worker context. This provides:</p>
+
+<ul>
+  <li><strong>Memory Isolation</strong> — Cryptographic keys exist only in the Worker's memory space, not accessible from the page context</li>
+  <li><strong>Timing Attack Resistance</strong> — Worker execution is less susceptible to main-thread timing attacks</li>
+  <li><strong>UI Non-Blocking</strong> — Expensive operations (100K PBKDF2 iterations) never freeze the UI</li>
+</ul>
+
+<h3>V.B — SubtleCrypto: Interfacies Nativa (Native Interface)</h3>
+
+<p>All cryptographic operations use the browser's native <code>crypto.subtle</code> API (SubtleCrypto), not JavaScript implementations. This means:</p>
+
+<ul>
+  <li><strong>Hardware Acceleration</strong> — AES-NI instructions on supported CPUs</li>
+  <li><strong>Constant-Time Operations</strong> — Native implementations resist timing side-channels</li>
+  <li><strong>Audited Implementations</strong> — Browser crypto libraries are audited by the browser vendor's security team</li>
+</ul>
+
+<h2>VI. Meta AI et Fides Algorithmica (Meta AI and Algorithmic Trust)</h2>
+
+<h3>VI.A — Architectura Fidei Nullae (Zero-Trust Architecture)</h3>
+
+<p>Meta AI's internal infrastructure operates on zero-trust principles: no service trusts another service by default; every request must be authenticated and authorized. The Crypto Worker implements analogous principles in the browser:</p>
+
+<ol>
+  <li><strong>Zero Trust Between Workers</strong> — Workers communicate via postMessage; the Crypto Worker authenticates all requests via wire tokens before processing</li>
+  <li><strong>Zero Trust to Server</strong> — No encryption key is ever sent to or derived from a server; the browser is the sole trust anchor</li>
+  <li><strong>Zero Trust to Extensions</strong> — Chrome extensions run in separate contexts and cannot access Worker memory</li>
+</ol>
+
+<h3>VI.B — Encryptio End-to-End Inspirata a Meta (Meta-Inspired E2E Encryption)</h3>
+
+<p>Meta's end-to-end encryption for Messenger inspired the ModelWire design: point-to-point encrypted channels where only the endpoints can read the content. In the organism, the "endpoints" are AI engine instances rather than human users, but the principle is identical — intelligence in transit is encrypted, and only the destination engine can decrypt it.</p>
+
+<h2>VII. Generatio Tokenorum (Token Generation)</h2>
+
+<p>The Crypto Worker generates cryptographically secure random tokens for various organism needs:</p>
+
+<div class="eq">
+  token = hex(crypto.getRandomValues(new Uint8Array(length)))
+</div>
+
+<p>Token entropy is calculated as:</p>
+
+<div class="eq">
+  entropy = length × 8 bits
+</div>
+
+<p>Default 32-byte tokens provide 256 bits of entropy — sufficient for any security application. The tokens are used for session IDs, wire authentication, CSRF protection, and unique identifiers throughout the organism.</p>
+
+<h2>VIII. Metrices et Telemetria (Metrics and Telemetry)</h2>
+
+<p>The Crypto Worker's MiniHeart monitors its own health through cryptographic-specific metrics:</p>
+
+<table>
+  <tr><th>Metrica</th><th>Nomen Latinum</th><th>Description</th></tr>
+  <tr><td>Total Encryptions</td><td>Summa Encryptionum</td><td>Cumulative AES-256-GCM encryptions performed</td></tr>
+  <tr><td>Total Decryptions</td><td>Summa Decryptionum</td><td>Cumulative decryptions performed</td></tr>
+  <tr><td>Total Hashes</td><td>Summa Hashium</td><td>Cumulative SHA-256/512 operations</td></tr>
+  <tr><td>Total Tokens</td><td>Summa Tokenorum</td><td>Secure random tokens generated</td></tr>
+  <tr><td>Total Key Derivations</td><td>Summa Derivationum</td><td>PBKDF2 key derivations completed</td></tr>
+  <tr><td>Total Errors</td><td>Summa Errorum</td><td>Failed cryptographic operations</td></tr>
+  <tr><td>Avg Latency</td><td>Latentia Media</td><td>Average processing time per operation</td></tr>
+</table>
+
+<p>These metrics feed the MiniHeart's health score. High error rates or latency spikes degrade the Crypto Worker's health, triggering the organism's self-healing mechanism.</p>
+
+<h2>IX. Conclusio (Conclusion)</h2>
+
+<p>Cryptographia Autonoma demonstrates that sovereign, server-free cryptographic security is not only possible but practical in the browser. The Crypto Worker provides AES-256-GCM encryption, PBKDF2 key derivation, SHA hashing, HMAC authentication, and secure token generation — all via the native SubtleCrypto API, all in a dedicated Worker thread, all with zero server dependency. The ModelWire system extends this to create encrypted intelligence channels between AI engines, achieving end-to-end encryption for machine-to-machine communication. Trust is not delegated to an authority — it is derived from mathematics. The organism's cryptography is autonomous, sovereign, and alive.</p>
+
+<div class="latin-epigraph">
+  "Claves in navigatore manent. Secretum in algorithmis vivit.<br>
+  Nemo alius videt. Nemo alius potest."<br>
+  <em>— Keys remain in the browser. The secret lives in algorithms.<br>
+  No one else sees. No one else can.</em>
+</div>
+
+<h2>X. Bibliographia (References)</h2>
+
+<p class="ref">[1] Organism AI. (2026). "crypto-worker.js — In-Browser Cryptographic Operations." <em>GitHub: FreddyCreates/potential-succotash</em>.</p>
+<p class="ref">[2] Organism AI. (2026). "engine-worker.js — ModelWire Encrypted Intelligence Transport." <em>GitHub: FreddyCreates/potential-succotash</em>.</p>
+<p class="ref">[3] Organism AI. (2026). "neuro-core.js — MiniHeart, MiniBrain, NeuroEmergence." <em>GitHub: FreddyCreates/potential-succotash</em>.</p>
+<p class="ref">[4] McGrew, D., Viega, J. (2004). "The Galois/Counter Mode of Operation (GCM)." <em>NIST SP 800-38D</em>. — AES-GCM specification.</p>
+<p class="ref">[5] Kaliski, B. (2000). "PKCS #5: Password-Based Cryptography Specification Version 2.0." <em>RFC 2898</em>. — PBKDF2 specification.</p>
+<p class="ref">[6] NIST. (2015). "Secure Hash Standard (SHS)." <em>FIPS PUB 180-4</em>. — SHA-256 and SHA-512.</p>
+<p class="ref">[7] Krawczyk, H., Bellare, M., Canetti, R. (1997). "HMAC: Keyed-Hashing for Message Authentication." <em>RFC 2104</em>. — HMAC specification.</p>
+<p class="ref">[8] W3C. (2023). "Web Cryptography API." <em>W3C Recommendation</em>. — SubtleCrypto specification.</p>
+<p class="ref">[9] Meta Platforms. (2023). "End-to-End Encryption on Messenger." <em>Meta Engineering Blog</em>. — Meta's E2E encryption architecture.</p>
+<p class="ref">[10] Rose, S. et al. (2020). "Zero Trust Architecture." <em>NIST SP 800-207</em>. — Zero-trust security model.</p>
+
+<h2>Appendix A — Nomina Latina (Latin Naming Register)</h2>
+
+<table>
+  <tr><th>Component</th><th>Nomen Latinum</th><th>Translation</th></tr>
+  <tr><td>Crypto Worker</td><td>Operarius Cryptographicus</td><td>Cryptographic Worker</td></tr>
+  <tr><td>ModelWire</td><td>Filum Encryptum</td><td>Encrypted Wire</td></tr>
+  <tr><td>Wire Token</td><td>Token Fili</td><td>Wire Token</td></tr>
+  <tr><td>Key Derivation</td><td>Derivatio Clavium</td><td>Derivation of Keys</td></tr>
+  <tr><td>Authenticated Encryption</td><td>Encryptio Authenticata</td><td>Authenticated Encryption</td></tr>
+  <tr><td>Hash Function</td><td>Functio Hash</td><td>Hash Function</td></tr>
+  <tr><td>Initialization Vector</td><td>Vector Initialis</td><td>Initial Vector</td></tr>
+  <tr><td>Wire Topology</td><td>Topologia Filorum</td><td>Topology of Wires</td></tr>
+  <tr><td>Zero Trust</td><td>Fides Nulla</td><td>Zero Trust</td></tr>
+  <tr><td>Algorithmic Trust</td><td>Fides Algorithmica</td><td>Algorithmic Trust</td></tr>
+  <tr><td>Thread Separation</td><td>Separatio Filorum</td><td>Separation of Threads</td></tr>
+  <tr><td>Sovereign Cryptography</td><td>Cryptographia Autonoma</td><td>Autonomous Cryptography</td></tr>
+</table>
+
+</div>
+
+
+<div style="max-width:900px;margin:2rem auto;padding:0 2rem;">
+<style>
+.auro-uses { background:#f0eef8; border:1px solid #d0ccee; border-left:4px solid #6c63ff; border-radius:4px; padding:1.5rem 2rem; margin:1.5rem 0; font-family:'Palatino Linotype','Book Antiqua',Palatino,serif; color:#14142a; line-height:1.7; }
+.auro-uses h2 { font-size:1.1rem; color:#1a0e5e; margin-bottom:0.8rem; text-transform:uppercase; letter-spacing:0.05em; }
+.auro-uses ul { margin:0.5rem 0 1rem 1.5rem; }
+.auro-uses li { margin-bottom:0.5rem; font-size:0.93rem; }
+.auro-uses p { font-size:0.9rem; margin-bottom:0.5rem; }
+.auro-uses a { color:#00705a; }
+</style>
+<div class="auro-uses">
+<h2>Canonical Uses — AURO System</h2>
+<p>This paper carries force as an AURO charter instrument under <strong>ORO-CHARTER-001</strong>. It functions across all five use classes:</p>
+<ul>
+  <li><strong>Training Corpus:</strong> Cryptographic doctrine trains AURO's security reasoning — zero-knowledge proofs, homomorphic computation, and encrypted intelligence transport are core security knowledge.</li>
+  <li><strong>Absorption Blueprint:</strong> Encryption architectures map to AURO's security PSE primitive (chemistry domain for transformation analogy). ZKP patterns absorbed into PROTO-020 ZKPVP.</li>
+  <li><strong>Governance Charter:</strong> Defines AURO's encryption policy: no intelligence travels unencrypted across the wire, user vault data is always local-only, and ZKP verification is the standard for trust establishment.</li>
+  <li><strong>Protocol Source:</strong> Grounds PROTO-002 EIT, PROTO-020 ZKPVP (Zero-Knowledge Proof Verification), PROTO-021 HCP (Homomorphic Computation), PROTO-022 SEIP (Secure Enclave).</li>
+  <li><strong>Public Record:</strong> Permanent evidence of AURO's cryptographic security architecture, available at <a href="crypto-paper.html">research/crypto-paper.html</a>.</li>
+</ul>
+<p>→ <a href="auro-charter.html">AURO Official Charter (ORO-CHARTER-001)</a> &nbsp;·&nbsp; <a href="protocol-papers.html#proto002">PROTO-002 EIT</a> &nbsp;·&nbsp; <a href="guardian-paper.html">Guardian Paper</a></p>
+</div>
+</div>
+<div class="back-link">
+  <a href="../index.html">← Back to Organism AI</a>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Model Router Adapter</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{width:380px;background:#1a1a2e;color:#c8c8e0;font-family:'Segoe UI',system-ui,sans-serif;font-size:13px}
+  .popup{display:flex;flex-direction:column;padding:16px;gap:12px}
+  .hdr{display:flex;align-items:center;gap:10px}
+  .phi{font-size:22px;color:#7c3aed;font-weight:700}
+  .hdr h1{font-size:16px;font-weight:600;color:#e0e0ff;flex:1}
+  .status{display:flex;align-items:center;gap:6px;font-size:11px;color:#888}
+  .status-dot{width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 4px #22c55e80}
+  .cmd-section{display:flex;gap:6px}
+  .cmd-input{flex:1;background:#0e0e22;border:1px solid #3a1a6e;color:#e0e0ff;padding:8px 12px;border-radius:6px;font-size:12px;outline:none;font-family:inherit}
+  .cmd-input:focus{border-color:#7c3aed}
+  .cmd-input::placeholder{color:#444}
+  .send-btn{background:#7c3aed;color:#fff;border:none;border-radius:6px;padding:8px 14px;font-weight:600;cursor:pointer;font-size:12px;transition:background .15s}
+  .send-btn:hover{background:#5b21b6}
+  .response-area{background:#0e0e22;border:1px solid #3a1a6e;border-radius:6px;padding:10px;min-height:60px;max-height:120px;overflow-y:auto;font-family:'Courier New',monospace;font-size:11px;color:#a0a0d0;line-height:1.5}
+  .side-panel-btn{width:100%;background:#7c3aed22;color:#7c3aed;border:1px solid #7c3aed44;border-radius:6px;padding:8px;font-weight:600;cursor:pointer;font-size:12px;transition:all .15s}
+  .side-panel-btn:hover{background:#7c3aed44}
+  .quick-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  .qa-btn{background:#12122a;color:#c8c8e0;border:1px solid #3a1a6e;border-radius:6px;padding:8px;font-size:11px;cursor:pointer;font-weight:500;transition:all .15s;text-align:center}
+  .qa-btn:hover{border-color:#7c3aed;color:#7c3aed;background:#7c3aed11}
+  .footer{display:flex;justify-content:space-between;align-items:center;font-size:10px;color:#555;padding-top:4px;border-top:1px solid #3a1a6e}
+</style>
+</head>
+<body>
+<div class="popup">
+  <div class="hdr">
+    <span class="phi">φ</span>
+    <h1>Model Router Adapter</h1>
+    <div class="status"><span class="status-dot" id="statusDot"></span><span id="statusText">Connecting…</span></div>
+  </div>
+  <div class="cmd-section">
+    <input class="cmd-input" id="cmdInput" placeholder="Enter task to route…" />
+    <button class="send-btn" id="sendBtn">Route</button>
+  </div>
+  <div class="response-area" id="responseArea">Ready. Enter a task to route to the optimal model.</div>
+  <button class="side-panel-btn" id="sidePanelBtn">Open Side Panel</button>
+  <div class="quick-actions">
+    <button class="qa-btn" data-prompt="Write a creative story">Creative Write</button>
+    <button class="qa-btn" data-prompt="Debug this code algorithm">Debug Code</button>
+    <button class="qa-btn" data-prompt="Quick summary">Quick Summary</button>
+    <button class="qa-btn" data-prompt="Research and compare options">Research</button>
+  </div>
+  <div class="footer">
+    <span>v1.0.0 — Model Router Adapter EXT-036</span>
+    <span id="hbFooter">HB: 0</span>
+  </div>
+</div>
+<script>
+(function(){
+  const cmdInput=document.getElementById('cmdInput');
+  const sendBtn=document.getElementById('sendBtn');
+  const responseArea=document.getElementById('responseArea');
+  const sidePanelBtn=document.getElementById('sidePanelBtn');
+  const statusDot=document.getElementById('statusDot');
+  const statusText=document.getElementById('statusText');
+  const hbFooter=document.getElementById('hbFooter');
+  let hb=0;
+
+  function send(prompt){
+    responseArea.textContent='📡 Routing…';
+    try{
+      chrome.runtime.sendMessage({action:'route',prompt:prompt},function(r){
+        if(r&&r.model){responseArea.textContent='→ '+r.modelName+' ('+r.confidence+' confidence)\n'+r.reasoning;}
+        else{responseArea.textContent=JSON.stringify(r);}
+      });
+    }catch(e){responseArea.textContent='Error: '+e.message;}
+  }
+
+  sendBtn.addEventListener('click',function(){var v=cmdInput.value.trim();if(v){send(v);cmdInput.value='';}});
+  cmdInput.addEventListener('keydown',function(e){if(e.key==='Enter'){var v=cmdInput.value.trim();if(v){send(v);cmdInput.value='';}}} );
+  document.querySelectorAll('.qa-btn').forEach(function(b){b.addEventListener('click',function(){send(b.dataset.prompt);});});
+  sidePanelBtn.addEventListener('click',function(){try{chrome.runtime.sendMessage({action:'getState'},function(){});}catch(e){}});
+
+  function heartbeat(){
+    try{
+      chrome.runtime.sendMessage({action:'getState'},function(r){
+        hb++;hbFooter.textContent='HB: '+hb;
+        statusDot.style.background='#22c55e';statusText.textContent=r&&r.totalRoutes?r.totalRoutes+' routes':'Online';
+      });
+    }catch(e){statusDot.style.background='#f87171';statusText.textContent='Offline';}
+  }
+  heartbeat();setInterval(heartbeat,5000);
+})();
+</script>
+</body>
+</html>

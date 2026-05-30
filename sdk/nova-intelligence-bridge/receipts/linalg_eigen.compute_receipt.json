@@ -1,0 +1,27 @@
+{
+  "receipt_id": "rcpt_nova_eigen_001",
+  "contract_id": "ic_linalg_eigen_001",
+  "function_signature": "linalg.eigen",
+  "hashes": {
+    "input": "a7f3bc21e",
+    "output": "d4e8f91ab",
+    "wrapper": "c3b7a2f8d",
+    "candid": "e1f9b3c7a",
+    "runtime": "b8c2d4e6f"
+  },
+  "result_summary": {
+    "eigenvalues": [
+      { "re": 5.372, "im": 0 },
+      { "re": -0.372, "im": 0.618 },
+      { "re": -0.372, "im": -0.618 }
+    ],
+    "eigenvectors_shape": [3, 3],
+    "computation_time_ms": 1.2,
+    "julia_version": "1.10.0"
+  },
+  "phi_seal": 1.618033988749895,
+  "timestamp": "2026-05-21T04:00:01.200Z",
+  "verified": true,
+  "verification_agent": "proof_agent",
+  "storage_location": "motoko_canister://sovereign_memory/eigen_results/001"
+}

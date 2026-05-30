@@ -1,0 +1,37 @@
+{
+  "name": "@auro/geometry-lock",
+  "version": "1.0.0",
+  "description": "Geometry Lock SDK — phi-resonance access gate and Nova protocol bridge for sovereign organism calls",
+  "type": "module",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./sdk": "./src/geometry-lock-sdk.js",
+    "./bridge": "./src/geometry-bridge.js"
+  },
+  "files": [
+    "src/**/*"
+  ],
+  "keywords": [
+    "geometry-lock",
+    "geometric-key",
+    "phi-resonance",
+    "nova-protocol",
+    "access-gate",
+    "kuramoto",
+    "organism"
+  ],
+  "author": "ORO Systems",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ItsNotAILABS/PRODUCTION-.git",
+    "directory": "sdk/geometry-lock"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

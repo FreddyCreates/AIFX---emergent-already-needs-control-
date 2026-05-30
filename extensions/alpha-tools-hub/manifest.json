@@ -1,0 +1,39 @@
+{
+  "manifest_version": 3,
+  "name": "Alpha Tools Hub",
+  "version": "1.0.0",
+  "description": "Production Alpha Tools — 5 tool categories (Transform, Analyze, Generate, Connect, Automate), 5 plugins, 5 adapters. User-facing tool dashboard with phi-enhanced orchestration.",
+  "permissions": [
+    "sidePanel",
+    "activeTab",
+    "storage",
+    "alarms",
+    "scripting"
+  ],
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "minimum_chrome_version": "114",
+  "action": {
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png"
+    },
+    "default_popup": "popup.html"
+  },
+  "devtools_page": "devtools.html"
+}

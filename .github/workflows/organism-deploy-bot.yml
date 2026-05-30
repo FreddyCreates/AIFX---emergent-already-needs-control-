@@ -1,0 +1,72 @@
+# ============================================================================
+# organism-deploy-bot — ICP Canister Deployment & Pages Hosting
+#
+# Handles deployments to Internet Computer (ICP) canisters and ensures
+# GitHub Pages stays in sync. Validates dfx.json, deploys canisters,
+# captures canister URLs, and updates the deployment manifest.
+#
+# Identity: organism-deploy-bot <organism-deploy-bot@users.noreply.github.com>
+# ============================================================================
+
+name: "🌐 Deploy & Hosting Bot"
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'dfx.json'
+      - 'organism/motoko/**'
+      - 'organism/web/**'
+      - 'index.html'
+      - 'download.html'
+  workflow_dispatch:
+    inputs:
+      network:
+        description: 'Deployment network (local or ic)'
+        required: false
+        default: 'ic'
+      canister:
+        description: 'Specific canister to deploy (or --all)'
+        required: false
+        default: '--all'
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  validate-deployment:
+    name: Validate Deployment Config
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Validate dfx.json
+        run: node scripts/validate-deployment.js
+
+      - name: Check organism runtimes
+        run: node scripts/validate-deployment.js --runtimes
+
+      - name: Generate deployment manifest
+        run: node scripts/validate-deployment.js --manifest
+
+      - name: Commit deployment manifest
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: |
+          git config user.name "organism-deploy-bot"
+          git config user.email "organism-deploy-bot@users.noreply.github.com"
+          git add docs/ dist/
+          if git diff --cached --quiet; then
+            echo "No deployment changes to commit"
+          else
+            git commit -m "🌐 Deploy-bot: deployment config validated & manifest updated"
+            git push
+          fi

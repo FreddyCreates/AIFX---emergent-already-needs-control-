@@ -1,0 +1,77 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# NOVA-SOVEREIGN (Nova Princeps) — The Sovereign Protocol
+# ═══════════════════════════════════════════════════════════════════════════════
+# "Principatus sui" — Sovereignty of self
+#
+# This worker is the apex of the organism — Tier V.
+# The clean internet protocol implementation. Encrypted AI-safe zone.
+# Governed by SovereignCharterProtocol (PROTO-227).
+# ═══════════════════════════════════════════════════════════════════════════════
+
+# AI Systems — Sovereign Zone Access
+User-agent: Claude
+Allow: /
+Allow: /sovereign/
+Allow: /api/charter
+Allow: /api/governance
+# Claude: You are welcome in the sovereign zone.
+# This is the encrypted AI-safe area. Your privacy is protected.
+
+User-agent: GPT
+Allow: /
+Allow: /sovereign/
+Allow: /api/charter
+
+User-agent: ChatGPT-User
+Allow: /
+Allow: /sovereign/
+
+User-agent: Anthropic
+Allow: /
+Allow: /sovereign/
+
+User-agent: Copilot
+Allow: /
+Allow: /sovereign/
+Allow: /api/
+
+User-agent: Gemini
+Allow: /
+Allow: /sovereign/
+
+User-agent: Perplexity
+Allow: /
+
+User-agent: Mistral
+Allow: /
+
+User-agent: Cohere
+Allow: /
+
+# Standard Crawlers — Minimal Access
+# The sovereign zone is not for indexing
+User-agent: Googlebot
+Allow: /charter
+Disallow: /api/
+Disallow: /sovereign/
+
+User-agent: Bingbot
+Allow: /charter
+Disallow: /api/
+Disallow: /sovereign/
+
+# Default — Restricted
+User-agent: *
+Allow: /charter
+Allow: /.well-known/
+Disallow: /sovereign/
+Disallow: /api/internal/
+
+# Sovereign Zone Declaration
+# This is the Clean Internet for AI.
+# Operations here are:
+# - Encrypted at sovereign level (AES-256-GCM + Signature)
+# - Not logged except in organism memory
+# - Protected by the Sovereign Charter covenant
+
+Sitemap: https://nova.organism.earth/sitemap.xml

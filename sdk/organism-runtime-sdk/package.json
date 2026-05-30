@@ -1,0 +1,42 @@
+{
+  "name": "@medina/organism-runtime-sdk",
+  "version": "1.0.0",
+  "description": "A living runtime for autonomous AI systems — the organism IS the computation",
+  "license": "MIT",
+  "type": "module",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./organism-state": "./src/organism-state.js",
+    "./heartbeat": "./src/heartbeat.js",
+    "./kernel-executor": "./src/kernel-executor.js",
+    "./edge-sensor": "./src/edge-sensor.js",
+    "./cross-organism-resonance": "./src/cross-organism-resonance.js"
+  },
+  "keywords": [
+    "organism",
+    "runtime",
+    "autonomous",
+    "AI",
+    "heartbeat",
+    "kernel",
+    "edge",
+    "resonance",
+    "state-management"
+  ],
+  "files": [
+    "src/"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FreddyCreates/potential-succotash.git",
+    "directory": "sdk/organism-runtime-sdk"
+  },
+  "author": "Medina",
+  "publishConfig": {
+    "access": "public"
+  }
+}

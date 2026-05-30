@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="la">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mathematica Aurea — De Intelligentia Mathematica, Ratione Aurea, et Computatione Soverena</title>
+<style>
+  :root { --bg:#0a0a1a; --card:#12122a; --border:#2a2a4a; --accent:#6c63ff; --accent2:#00d4aa; --text:#e0e0e0; --dim:#888; --paper:#f8f6f0; --ink:#1a1a2e; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:"Palatino Linotype","Book Antiqua",Palatino,"Times New Roman",serif; background:var(--bg); color:var(--text); min-height:100vh; }
+
+  .paper { max-width:900px; margin:2rem auto; background:var(--paper); color:var(--ink); padding:3rem 3.5rem; border-radius:4px; box-shadow:0 8px 32px rgba(0,0,0,0.6); line-height:1.8; }
+  .paper h1 { font-size:1.7rem; text-align:center; margin-bottom:0.3rem; color:#2a1a5e; font-style:italic; }
+  .paper .subtitle { text-align:center; font-size:1.05rem; color:#555; margin-bottom:0.5rem; }
+  .paper .authors { text-align:center; font-size:0.95rem; color:#666; margin-bottom:0.3rem; }
+  .paper .affiliation { text-align:center; font-size:0.85rem; color:#888; margin-bottom:1.5rem; font-style:italic; }
+  .paper .latin-epigraph { text-align:center; font-size:0.9rem; color:#7a6aa0; margin:1rem 0 2rem; font-style:italic; border-top:1px solid #ddd; border-bottom:1px solid #ddd; padding:0.8rem 0; }
+  .paper h2 { font-size:1.2rem; color:#2a1a5e; margin:2rem 0 0.5rem; border-bottom:1px solid #ccc; padding-bottom:0.3rem; }
+  .paper h3 { font-size:1.05rem; color:#3a2a7e; margin:1.5rem 0 0.4rem; }
+  .paper p { margin-bottom:0.8rem; text-align:justify; font-size:0.95rem; }
+  .paper ol, .paper ul { margin:0.5rem 0 1rem 2rem; font-size:0.95rem; }
+  .paper li { margin-bottom:0.3rem; }
+  .paper .eq { text-align:center; margin:1rem 0; font-family:"Courier New",monospace; font-size:0.95rem; color:#2a1a5e; background:#f0eef5; padding:0.6rem; border-radius:3px; }
+  .paper .fig { text-align:center; margin:1.5rem 0; padding:1rem; background:#f5f3ff; border:1px solid #e0daf0; border-radius:4px; }
+  .paper .fig pre { font-family:"Courier New",monospace; font-size:0.75rem; line-height:1.5; color:#333; }
+  .paper .fig-caption { font-size:0.82rem; color:#666; margin-top:0.5rem; font-style:italic; }
+  .paper .ref { font-size:0.85rem; color:#555; margin-bottom:0.3rem; }
+  .paper code { font-family:"Courier New",monospace; background:#f0eef5; padding:0.1rem 0.3rem; border-radius:2px; font-size:0.88rem; }
+  .paper table { width:100%; border-collapse:collapse; margin:1rem 0; font-size:0.88rem; }
+  .paper th { background:#2a1a5e; color:#fff; padding:0.5rem; text-align:left; }
+  .paper td { padding:0.4rem 0.5rem; border-bottom:1px solid #ddd; }
+  .paper tr:nth-child(even) { background:#f5f3ff; }
+  .back-link { display:block; text-align:center; padding:1.5rem; }
+  .back-link a { color:var(--accent2); font-size:1rem; }
+</style>
+</head>
+<body>
+
+<div class="paper">
+
+<h1>Mathematica Aurea:<br>De Intelligentia Mathematica, Ratione Aurea, et Computatione Soverena</h1>
+
+<div class="subtitle">Golden Mathematics: On Mathematical Intelligence, the Golden Ratio, and Sovereign Computation</div>
+
+<div class="authors">Organism AI Research Division</div>
+<div class="affiliation">Laboratorium Intelligentiae Autonomae · itsnotAilabs.com · Anno MMXXVI</div>
+
+<div class="latin-epigraph">
+  "Natura numeros loquitur; φ est lingua eius.<br>
+  Qui φ intelligit, universum intelligit."<br>
+  — <em>Nature speaks in numbers; φ is her language.<br>
+  Who understands φ, understands the universe.</em>
+</div>
+
+<h2>I. Abstractum</h2>
+
+<p>We present <strong>Math Worker</strong>, a sovereign mathematical intelligence engine that runs as a permanent Web Worker inside the Organism AI architecture. The worker provides real-time mathematical computation entirely within the browser — matrix algebra, statistical analysis, Fibonacci/golden-ratio algorithms, discrete Fourier transforms, probability distributions, optimization via golden-section search, linear regression, and number theory. All computation is local, requires no server, and integrates with the organism's neuroemergence substrate via the NeuroCore protocol.</p>
+
+<p>The Math Worker is the 15th permanent worker in the organism, assigned to the Brain Division alongside the Engine, Inference, Orchestrator, and Twin Alpha workers. It heartbeats at the organism's canonical 873ms interval and participates in Kuramoto phase coupling with all other workers.</p>
+
+<h2>II. Architectura</h2>
+
+<h3>2.1 Worker Placement</h3>
+
+<p>The Math Worker occupies position 15 in the organism's worker ring, integrated into the Brain Division. It receives tasks via <code>postMessage</code> from the OrganismBridge and returns results as typed messages. Like all organism workers, it imports <code>neuro-core.js</code> and maintains its own MiniHeart (health monitoring), MiniBrain (Hebbian learning), and NeuroEmergence (Kuramoto phase coupling) instances.</p>
+
+<div class="fig">
+<pre>
+┌─────────────────────────────────────────────────────┐
+│                   BRAIN DIVISION                      │
+│  ┌──────────┐ ┌──────────┐ ┌──────────────┐         │
+│  │  Engine   │ │Inference │ │ Orchestrator │         │
+│  │ 40 models │ │ ML/NLP   │ │  Decompose   │         │
+│  └────┬─────┘ └────┬─────┘ └──────┬───────┘         │
+│       │            │              │                   │
+│  ┌────┴─────┐ ┌────┴─────┐                          │
+│  │Twin Alpha│ │   Math   │  ← NEW: 15th worker      │
+│  │User proxy│ │ φ-engine │                          │
+│  └──────────┘ └──────────┘                          │
+└─────────────────────────────────────────────────────┘
+</pre>
+<div class="fig-caption">Figure 1. Brain Division with Math Worker as the 15th permanent worker.</div>
+</div>
+
+<h3>2.2 Capabilities</h3>
+
+<table>
+<tr><th>Domain</th><th>Operations</th><th>Message Type</th></tr>
+<tr><td>Matrix Algebra</td><td>Multiply, transpose, determinant, trace, identity</td><td><code>matrix-multiply</code>, <code>matrix-transpose</code>, <code>matrix-determinant</code></td></tr>
+<tr><td>Statistics</td><td>Mean, median, variance, std-dev, skewness, kurtosis, IQR, coefficient of variation</td><td><code>compute-stats</code></td></tr>
+<tr><td>Correlation</td><td>Pearson correlation coefficient with strength classification</td><td><code>correlation</code></td></tr>
+<tr><td>Regression</td><td>Linear regression with R², residuals, standard error</td><td><code>regression</code></td></tr>
+<tr><td>Golden Ratio</td><td>Fibonacci sequence, phi convergence, golden-angle spiral, phi powers</td><td><code>phi-sequence</code>, <code>phi-spiral</code>, <code>phi-power</code></td></tr>
+<tr><td>Fourier Analysis</td><td>Discrete Fourier Transform, spectral decomposition, dominant frequency</td><td><code>fourier</code></td></tr>
+<tr><td>Probability</td><td>Normal PDF/CDF, Poisson PMF, Bayesian updates</td><td><code>probability</code></td></tr>
+<tr><td>Optimization</td><td>Golden-section search for function minimization</td><td><code>optimize</code></td></tr>
+<tr><td>Number Theory</td><td>Primality testing, prime factorization, GCD, phi connections</td><td><code>prime-check</code></td></tr>
+</table>
+
+<h2>III. Ratio Aurea — The Golden Foundation</h2>
+
+<p>The golden ratio φ = 1.618033988749895 is the mathematical foundation of the entire organism. The organism's heartbeat (873ms) is derived from φ. The NeuroCore emergence threshold is φ⁻¹ = 0.618. Worker restarts use φ-backoff. The Math Worker makes this foundation explicit and computable.</p>
+
+<div class="eq">φ = (1 + √5) / 2 ≈ 1.618033988749895</div>
+
+<div class="eq">φ⁻¹ = φ - 1 = (√5 - 1) / 2 ≈ 0.618033988749895</div>
+
+<div class="eq">φ² = φ + 1 ≈ 2.618033988749895</div>
+
+<h3>3.1 Fibonacci Convergence</h3>
+
+<p>The <code>phi-sequence</code> operation generates the Fibonacci sequence and tracks the ratio F(n)/F(n-1) as it converges to φ. This convergence is one of the deepest properties of φ: the ratio of consecutive Fibonacci numbers approaches the golden ratio as n → ∞.</p>
+
+<div class="eq">lim(n→∞) F(n+1)/F(n) = φ</div>
+
+<h3>3.2 Golden-Angle Spiral</h3>
+
+<p>The <code>phi-spiral</code> operation generates points arranged by the golden angle (≈137.508°), producing the same sunflower-like patterns found in phyllotaxis throughout nature. Each point is placed at angle = n × 2π × φ⁻¹ with radius = √n × φ.</p>
+
+<h3>3.3 Golden-Section Optimization</h3>
+
+<p>The <code>optimize</code> operation implements golden-section search — a direct application of φ to function minimization. The interval is divided by the golden ratio at each step, guaranteeing logarithmic convergence. The organism uses this same principle in its φ-backoff restart strategy.</p>
+
+<div class="eq">c = b - φ⁻¹(b - a), &nbsp; d = a + φ⁻¹(b - a)</div>
+
+<h2>IV. Matrix Algebra</h2>
+
+<p>The Math Worker implements full matrix operations for the organism's internal linear algebra needs. Matrix multiplication uses the standard O(n³) algorithm. Determinant computation uses Laplace expansion with cofactor recursion. All operations return structured results with dimension metadata.</p>
+
+<h3>4.1 Operations</h3>
+<ul>
+<li><strong>Multiply:</strong> A × B with dimension checking</li>
+<li><strong>Transpose:</strong> A^T</li>
+<li><strong>Determinant:</strong> det(A) via cofactor expansion</li>
+<li><strong>Trace:</strong> tr(A) = Σ aᵢᵢ</li>
+<li><strong>Identity:</strong> I_n generation</li>
+</ul>
+
+<h2>V. Statistical Analysis</h2>
+
+<p>The <code>compute-stats</code> operation provides comprehensive descriptive statistics including all four moments of the distribution (mean, variance, skewness, kurtosis), robust statistics (median, IQR), and the coefficient of variation.</p>
+
+<div class="eq">σ = √(Σ(xᵢ - μ)² / n)</div>
+
+<div class="eq">skewness = (Σ(xᵢ - μ)³ / n) / σ³</div>
+
+<div class="eq">kurtosis = (Σ(xᵢ - μ)⁴ / n) / σ⁴ - 3</div>
+
+<h2>VI. Fourier Analysis</h2>
+
+<p>The Discrete Fourier Transform decomposes any signal into its frequency components. The Math Worker computes the full DFT spectrum, identifies the dominant frequency, and returns magnitude and phase for each frequency bin.</p>
+
+<div class="eq">X(k) = Σ x(n) · e^(-i2πkn/N) &nbsp; for k = 0, 1, …, N-1</div>
+
+<p>This capability enables the organism to analyze periodic patterns in its own heartbeat data, telemetry signals, and any user-supplied time series.</p>
+
+<h2>VII. Probability & Bayesian Reasoning</h2>
+
+<p>The Math Worker supports three probability models:</p>
+
+<ol>
+<li><strong>Normal Distribution:</strong> PDF and CDF computation with Abramowitz-Stegun approximation for the error function</li>
+<li><strong>Poisson Distribution:</strong> PMF computation for count data modeling</li>
+<li><strong>Bayesian Update:</strong> Posterior = (Likelihood × Prior) / Evidence, with Bayes factor computation</li>
+</ol>
+
+<div class="eq">P(H|E) = P(E|H) · P(H) / P(E)</div>
+
+<h2>VIII. Linear Regression</h2>
+
+<p>The <code>regression</code> operation fits a linear model y = mx + b using ordinary least squares. It returns the slope, intercept, Pearson correlation coefficient (r), coefficient of determination (R²), residuals, and standard error of the estimate.</p>
+
+<div class="eq">m = (nΣxy - ΣxΣy) / (nΣx² - (Σx)²)</div>
+
+<h2>IX. Number Theory</h2>
+
+<p>The <code>prime-check</code> operation tests primality using trial division optimized with the 6k±1 pattern. For composite numbers, it returns the complete prime factorization. It also computes the nearest primes (above and below), the GCD with the nearest Fibonacci number, and the phi-connection n/φ — revealing how every number relates to the golden ratio.</p>
+
+<h2>X. Integration with the Organism</h2>
+
+<p>The Math Worker participates fully in the organism's autonomic nervous system:</p>
+
+<ul>
+<li><strong>NeuroCore:</strong> MiniHeart monitors computational load; MiniBrain learns which operations are most frequently requested; NeuroEmergence synchronizes phase with all 14 other workers via Kuramoto coupling.</li>
+<li><strong>Heartbeat:</strong> Every 873ms, the worker reports its vital signs including total operations per category and cumulative compute time.</li>
+<li><strong>Self-Healing:</strong> If the Math Worker crashes, the OrganismBridge auto-restarts it with φ-backoff delay.</li>
+<li><strong>Division Reporting:</strong> Math Worker health contributes to the Brain Division's aggregate health score.</li>
+</ul>
+
+<h2>XI. Metrics</h2>
+
+<table>
+<tr><th>Metric</th><th>Description</th></tr>
+<tr><td>totalMatrixOps</td><td>Count of matrix operations (multiply, transpose, determinant)</td></tr>
+<tr><td>totalStatOps</td><td>Count of statistical analysis operations</td></tr>
+<tr><td>totalPhiOps</td><td>Count of golden ratio computations (sequence, spiral, power)</td></tr>
+<tr><td>totalFourierOps</td><td>Count of DFT operations</td></tr>
+<tr><td>totalOptimizations</td><td>Count of golden-section search runs</td></tr>
+<tr><td>totalProbabilityOps</td><td>Count of probability distribution evaluations</td></tr>
+<tr><td>totalRegressions</td><td>Count of linear regression fits</td></tr>
+<tr><td>totalPrimeChecks</td><td>Count of primality tests</td></tr>
+<tr><td>totalComputeTimeMs</td><td>Cumulative computation time in milliseconds</td></tr>
+</table>
+
+<h2>XII. Conclusio</h2>
+
+<p>The Math Worker transforms the Organism AI from a text-processing intelligence into a full mathematical reasoning engine. By embedding matrix algebra, statistics, Fourier analysis, optimization, and number theory directly into the browser's Web Worker infrastructure, we enable sovereign mathematical computation that requires no server, no API, and no cloud. The golden ratio — already the organism's heartbeat, its emergence threshold, and its restart strategy — now has a dedicated computational engine that makes its properties explicit and available to every user interaction.</p>
+
+<p style="text-align:center;margin-top:2rem;font-style:italic;color:#7a6aa0;">
+"Numeri non mentiuntur. Φ semper vincit."<br>
+<em>Numbers do not lie. φ always prevails.</em>
+</p>
+
+<h2>References</h2>
+
+<p class="ref">[1] Livio, M. (2002). <em>The Golden Ratio: The Story of PHI, the World's Most Astonishing Number.</em> Broadway Books.</p>
+<p class="ref">[2] Strang, G. (2016). <em>Introduction to Linear Algebra.</em> 5th Edition. Wellesley-Cambridge Press.</p>
+<p class="ref">[3] Cooley, J.W. & Tukey, J.W. (1965). "An Algorithm for the Machine Calculation of Complex Fourier Series." <em>Mathematics of Computation</em>, 19(90), pp.297-301.</p>
+<p class="ref">[4] Kiefer, J. (1953). "Sequential Minimax Search for a Maximum." <em>Proceedings of the American Mathematical Society</em>, 4(3), pp.502-506.</p>
+<p class="ref">[5] Organism AI (2026). "Neuro-Core Architecture: MiniHeart, MiniBrain, and NeuroEmergence." <em>Organism Research Papers</em>, Paper I.</p>
+
+</div>
+
+
+<div style="max-width:900px;margin:2rem auto;padding:0 2rem;">
+<style>
+.auro-uses { background:#f0eef8; border:1px solid #d0ccee; border-left:4px solid #6c63ff; border-radius:4px; padding:1.5rem 2rem; margin:1.5rem 0; font-family:'Palatino Linotype','Book Antiqua',Palatino,serif; color:#14142a; line-height:1.7; }
+.auro-uses h2 { font-size:1.1rem; color:#1a0e5e; margin-bottom:0.8rem; text-transform:uppercase; letter-spacing:0.05em; }
+.auro-uses ul { margin:0.5rem 0 1rem 1.5rem; }
+.auro-uses li { margin-bottom:0.5rem; font-size:0.93rem; }
+.auro-uses p { font-size:0.9rem; margin-bottom:0.5rem; }
+.auro-uses a { color:#00705a; }
+</style>
+<div class="auro-uses">
+<h2>Canonical Uses — AURO System</h2>
+<p>This paper carries force as an AURO charter instrument under <strong>ORO-CHARTER-001</strong>. It functions across all five use classes:</p>
+<ul>
+  <li><strong>Training Corpus:</strong> Mathematical foundations train AURO's quantitative reasoning — phi, Fibonacci, Kuramoto coupling, and harmonic convergence are the mathematical language of AURO.</li>
+  <li><strong>Absorption Blueprint:</strong> Mathematical structures map to AURO's math PSE primitive. Phi-decay functions, convergence proofs, and harmonic equations absorbed into all protocol weight systems.</li>
+  <li><strong>Governance Charter:</strong> Defines AURO's computational basis (Article VII, §5 of the AURO Charter): φ = 1.6180339887… governs heartbeat (873ms), decay rates, priority weights, and all convergence functions.</li>
+  <li><strong>Protocol Source:</strong> Grounds PROTO-052 FTIP (Fourier), PROTO-053 WAP (Wavelet), PROTO-054 SDEP (Spectral), PROTO-055 KCP (Kuramoto), and all phi-math protocol series (056–060).</li>
+  <li><strong>Public Record:</strong> Permanent evidence of AURO's mathematical foundation, available at <a href="math-paper.html">research/math-paper.html</a>.</li>
+</ul>
+<p>→ <a href="auro-charter.html">AURO Official Charter (ORO-CHARTER-001)</a> &nbsp;·&nbsp; <a href="protocol-papers.html#proto052">PROTO-052 FTIP</a> &nbsp;·&nbsp; <a href="scheduler-paper.html">Scheduler Paper</a> &nbsp;·&nbsp; <a href="neuro-paper.html">NeuroCore Paper</a></p>
+</div>
+</div>
+<div class="back-link">
+  <a href="../index.html">← Back to Organism AI</a>
+</div>
+
+</body>
+</html>

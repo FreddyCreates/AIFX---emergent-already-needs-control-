@@ -1,0 +1,161 @@
+# ============================================================================
+# organism-governance-bot — Sovereign Governance Engine
+#
+# Runs the full governance cycle for the entire bot fleet:
+#   1. Load Atlas entity registry (all 20 bots)
+#   2. Collect fleet state from all bot reports
+#   3. Apply CPL-L safety laws against current context
+#   4. Run CPL-P governance pipeline (collect → apply → route → update → report)
+#   5. Run Meta Engine to detect patterns and emit proposals
+#   6. Create GitHub Issues for escalations
+#   7. Commit governance report and audit log
+#
+# References:
+#   OCL:   governance/organism/bot-fleet.ocl
+#   CPL-L: governance/laws/bot-fleet.cpl-l
+#   CPL-P: governance/pipelines/bot-governance.cpl-p
+#
+# Identity: organism-governance-bot <organism-governance-bot@users.noreply.github.com>
+# ============================================================================
+
+name: "🏛️ Governance Engine"
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'governance/**'
+      - 'docs/**'
+      - 'protocols/**'
+      - 'sdk/**'
+  schedule:
+    - cron: '0 */3 * * *'  # Every 3 hours — governance heartbeat
+  workflow_dispatch:
+    inputs:
+      event_json:
+        description: 'Bot event JSON to process (optional)'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  governance-cycle:
+    name: "🏛️ Governance Cycle"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: "Phase 1 — Run full governance cycle"
+        run: node scripts/governance-engine.js --full-cycle
+
+      - name: "Phase 2 — Generate governance report"
+        run: node scripts/governance-engine.js --report
+
+      - name: "Phase 3 — Run meta engine analysis"
+        run: node scripts/governance-meta-engine.js --analyze --report
+
+      - name: "Phase 4 — Process specific event (if provided)"
+        if: ${{ github.event.inputs.event_json != '' }}
+        run: |
+          echo '${{ github.event.inputs.event_json }}' > /tmp/gov-event.json
+          node scripts/governance-engine.js --event @/tmp/gov-event.json
+
+      - name: "Phase 5 — Emit governance events for all entities"
+        run: node scripts/atlas-governance-cycle.js --emit-events
+
+      - name: "Phase 6 — Run universal Atlas governance cycle (all domains)"
+        run: node scripts/atlas-governance-cycle.js --cycle
+
+      - name: "Phase 7 — Print audit summary"
+        run: node scripts/governance-engine.js --audit
+
+      - name: Commit governance outputs
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "organism-governance-bot"
+          git config user.email "organism-governance-bot@users.noreply.github.com"
+          git add docs/governance-report.md docs/governance-meta-report.md docs/atlas-governance-report.md dist/governance/ || true
+          if git diff --cached --quiet; then
+            echo "No governance changes to commit"
+          else
+            git commit -m "🏛️ Governance-bot: universal Atlas governance cycle — CPL-L/CPL-P all domains"
+            git push
+          fi
+
+      - name: Create escalation issues
+        if: github.ref == 'refs/heads/main'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const auditDir = 'dist/governance';
+            const auditFile = `${auditDir}/audit-log.jsonl`;
+
+            if (!fs.existsSync(auditFile)) {
+              console.log('No audit log found');
+              return;
+            }
+
+            const lines = fs.readFileSync(auditFile, 'utf8')
+              .trim().split('\n').filter(Boolean);
+
+            // Get entries from the last 10 minutes
+            const cutoff = Date.now() - 10 * 60 * 1000;
+            const recent = lines
+              .map(l => { try { return JSON.parse(l); } catch { return null; } })
+              .filter(e => e && new Date(e.at).getTime() > cutoff);
+
+            const escalations = recent.flatMap(e =>
+              (e.decisions || [])
+                .filter(d => d.action === 'ESCALATE')
+                .map(d => ({ entity: e.entity, ...d }))
+            );
+
+            for (const esc of escalations) {
+              const botName = esc.entity.replace('atlas://bot/', '');
+              const title   = `🏛️ Governance Escalation: ${esc.rule} — ${botName}`;
+              const body    = [
+                `## Governance Escalation`,
+                ``,
+                `**Bot:** \`${botName}\``,
+                `**Rule:** \`${esc.rule}\``,
+                `**Action:** ${esc.action}`,
+                `**Target:** ${esc.target}`,
+                `**Reason:** ${esc.reason}`,
+                ``,
+                `### What to do`,
+                `1. Review the governance report: \`docs/governance-report.md\``,
+                `2. If this escalation is incorrect, create a feedback file in \`governance/feedback/\``,
+                `3. See \`governance/feedback/TEMPLATE.yaml\` for the override format`,
+                ``,
+                `### Governance References`,
+                `- OCL: \`governance/organism/bot-fleet.ocl\``,
+                `- Laws: \`governance/laws/bot-fleet.cpl-l\``,
+                `- Pipeline: \`governance/pipelines/bot-governance.cpl-p\``,
+                ``,
+                `*Auto-created by organism-governance-bot*`,
+              ].join('\n');
+
+              try {
+                await github.rest.issues.create({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  title,
+                  body,
+                  labels: ['governance', 'escalation'],
+                });
+                console.log(`Created issue: ${title}`);
+              } catch (e) {
+                console.log(`Could not create issue (label may not exist): ${e.message}`);
+              }
+            }

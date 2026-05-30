@@ -1,0 +1,24 @@
+{
+  "canisters": {
+    "dallas_isd_organism": {
+      "type": "motoko",
+      "main": "DallasISDOrganism.mo"
+    }
+  },
+  "networks": {
+    "local": {
+      "bind": "127.0.0.1:4945",
+      "type": "ephemeral"
+    },
+    "ic": {
+      "providers": ["https://icp-api.io"],
+      "type": "persistent"
+    }
+  },
+  "defaults": {
+    "build": {
+      "packtool": ""
+    }
+  },
+  "version": 1
+}

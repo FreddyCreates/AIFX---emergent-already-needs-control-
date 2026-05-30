@@ -1,0 +1,57 @@
+{
+  "id": "MEDINA-CHARTER-INDEX-V1",
+  "status": "active",
+  "version": "1.0.0",
+  "owner": [
+    "Alfredo Medina Hernandez",
+    "MedinaTech Research",
+    "MedinaSITech",
+    "ItsNotAILABS"
+  ],
+  "foundational_lock": [
+    "AURO speaks.",
+    "ORIGO builds.",
+    "THESIS proves, protects, captures, hashes, notarizes, and publishes.",
+    "ORO orients.",
+    "ORDO orders.",
+    "TERMINUS executes and organizes.",
+    "MEMORIA remembers.",
+    "REGISTRUM records.",
+    "ARTIFACTA bodies the output."
+  ],
+  "protocols": [
+    { "key": "AURO", "latin": "Protocolum Vocis Auri", "canonical_line": "AURO speaks Medina intelligence." },
+    { "key": "ORIGO", "latin": "Protocolum Originis Operum", "canonical_line": "ORIGO builds Medina systems." },
+    { "key": "THESIS", "latin": "Protocolum Thesis: De Probatione, Tutela, Publicatione et Notariatu", "canonical_line": "THESIS proves, protects, captures, hashes, notarizes, and publishes." },
+    { "key": "TERMINUS", "latin": "Protocolum Terminorum: De Superficie Stationis Nativae", "canonical_line": "TERMINUS executes and organizes." },
+    { "key": "RATIO_ORDINIS", "latin": "Ratio Ordinis: De Substratis Neuralibus et Reticularibus", "canonical_line": "ORO orients. ORDO orders." },
+    { "key": "MEMORIA", "latin": "Protocolum Memoriae: De Linea et Consequentia", "canonical_line": "MEMORIA remembers consequence." },
+    { "key": "REGISTRUM", "latin": "Protocolum Registri: De Signis, Schematibus et Tabulis Canonicis", "canonical_line": "REGISTRUM records canonical structure." },
+    { "key": "ARTIFACTA", "latin": "Protocolum Artifactorum: De Corporibus Durabilibus", "canonical_line": "ARTIFACTA gives output a body." },
+    { "key": "SVA", "latin": "Protocolum Validationis SVA: De Assertionibus et Evidentiis", "canonical_line": "SVA hardens claims before release." },
+    { "key": "AUTE", "latin": "Protocolum Experimentorum AUTE: De Probationibus et Tentaminibus", "canonical_line": "AUTE tests what THESIS cannot yet prove." },
+    { "key": "LICENSE_REGISTRY", "latin": "Registrum Licentiarum Medinae", "canonical_line": "Public release does not mean open license." },
+    { "key": "ZENODO_RELEASE", "latin": "Protocolum Editionis Zenodo: De DOI, Praeprintis et Provenientia", "canonical_line": "Each paper gets its own DOI; each version keeps its lineage." },
+    { "key": "REFERENCE_STREAM", "latin": "Flumen Referentiarum", "canonical_line": "Reference stream connects the record to its lineage." },
+    { "key": "PRODUCTION_REPOSITORY", "latin": "Protocolum Repositorii Productionis", "canonical_line": "PRODUCTION- stages implementation without surrendering rights." },
+    { "key": "MEDINA_JOURNAL", "latin": "Protocolum Diarii Medinae: De Articulis, Probationibus et Editione", "canonical_line": "Medina’s journal must be more disciplined than a blog." },
+    { "key": "GRANT_RADAR", "latin": "Specula Donorum: De Subventionibus et Aptitudine Medinae", "canonical_line": "THESIS must know which Medina systems can truthfully support the application." },
+    { "key": "EVIDENCE_GRAPH", "latin": "Graphum Evidentiae: De Radice Notaria", "canonical_line": "The notary should record the root of the evidence graph, not only the final file bundle." }
+  ],
+  "thesis_authority_states": [
+    "DRAFT",
+    "INTERNAL_RESEARCH",
+    "CLAIM_HARDENED",
+    "HASHED",
+    "NOTARY_READY",
+    "COUNSEL_READY",
+    "PUBLIC_SAFE",
+    "PRIVATE_VAULT",
+    "DEPLOYMENT_READY"
+  ],
+  "production_repository_requirements": {
+    "required_directories": ["/licenses", "/papers", "/protocols", "/schemas"],
+    "primary_language_for_ratio_ordinis": "TypeScript",
+    "reserved_python_scope": ["experiments", "scoring tests", "notebooks", "benchmarks"]
+  }
+}

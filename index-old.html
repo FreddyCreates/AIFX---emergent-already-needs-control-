@@ -1,0 +1,2363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ItsNotAILABS — MedinaSITech Research Laboratory</title>
+  <meta name="description" content="ItsNotAILABS (MedinaSITech) is a research laboratory advancing AI orchestration, decentralized computing, and open-source scientific software.">
+  <meta name="keywords" content="AI research, MedinaSITech, ItsNotAILABS, machine learning, decentralized AI, browser extensions, research papers">
+  <meta name="author" content="Alfredo Medina Hernandez">
+  <link rel="canonical" href="https://itsnotailabs.com/">
+  <meta property="og:title" content="ItsNotAILABS — MedinaSITech Research Laboratory">
+  <meta property="og:description" content="Advancing AI orchestration, decentralized computing, and open-source scientific software.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://itsnotailabs.com/">
+  
+  <!-- Preload fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-primary: #030712;
+      --bg-secondary: #0a0f1e;
+      --bg-tertiary: #111827;
+      --bg-card: rgba(17, 24, 39, 0.7);
+      --bg-glass: rgba(255, 255, 255, 0.03);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-glow: rgba(212, 175, 55, 0.3);
+      --accent-gold: #d4af37;
+      --accent-gold-light: #f5d77a;
+      --accent-teal: #00ffcc;
+      --accent-teal-dark: #00d4aa;
+      --accent-purple: #a855f7;
+      --accent-purple-light: #c084fc;
+      --accent-blue: #3b82f6;
+      --accent-cyan: #22d3ee;
+      --accent-pink: #ec4899;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-dim: #64748b;
+      --gradient-gold: linear-gradient(135deg, #d4af37 0%, #f5d77a 50%, #d4af37 100%);
+      --gradient-cosmic: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --gradient-aurora: linear-gradient(135deg, #00ffcc 0%, #3b82f6 50%, #a855f7 100%);
+      --shadow-glow: 0 0 60px rgba(212, 175, 55, 0.15);
+      --shadow-card: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+    
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    html { 
+      scroll-behavior: smooth; 
+      scroll-padding-top: 80px;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.7;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-primary); }
+    ::-webkit-scrollbar-thumb { 
+      background: linear-gradient(180deg, var(--accent-gold), var(--accent-purple)); 
+      border-radius: 4px;
+    }
+    
+    a { color: var(--accent-teal); text-decoration: none; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    a:hover { color: var(--accent-gold); }
+    
+    .container { max-width: 1400px; margin: 0 auto; padding: 0 2rem; }
+    
+    /* Particle Canvas Background */
+    #particles-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+    
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(3, 7, 18, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 0;
+      transition: all 0.3s ease;
+    }
+    nav.scrolled {
+      background: rgba(3, 7, 18, 0.95);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+    }
+    nav .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .nav-brand {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .nav-brand .logo-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--gradient-gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      animation: pulse-glow 2s ease-in-out infinite;
+    }
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.4); }
+      50% { box-shadow: 0 0 40px rgba(212, 175, 55, 0.7); }
+    }
+    .nav-brand span { color: var(--text-secondary); font-weight: 400; font-size: 0.8rem; }
+    .nav-links { display: flex; gap: 0.5rem; list-style: none; align-items: center; }
+    .nav-links a { 
+      color: var(--text-secondary); 
+      font-size: 0.85rem; 
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    .nav-links a:hover { 
+      color: var(--text-primary);
+      background: var(--bg-glass);
+    }
+    .nav-links a.active {
+      color: var(--accent-gold);
+      background: rgba(212, 175, 55, 0.1);
+    }
+    .nav-cta {
+      background: var(--gradient-gold) !important;
+      color: var(--bg-primary) !important;
+      font-weight: 600 !important;
+      padding: 0.6rem 1.2rem !important;
+    }
+    .nav-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+    }
+    
+    /* Mobile Menu */
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text-primary);
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0.5rem;
+    }
+    
+    /* Mobile Menu Styles */
+    @media (max-width: 768px) {
+      .nav-links.mobile-open {
+        display: flex !important;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: rgba(3, 7, 18, 0.98);
+        backdrop-filter: blur(20px);
+        padding: 1rem;
+        border-bottom: 1px solid var(--border);
+        gap: 0.5rem;
+      }
+      .nav-links.mobile-open li {
+        width: 100%;
+      }
+      .nav-links.mobile-open a {
+        display: block;
+        width: 100%;
+        text-align: center;
+        padding: 0.75rem 1rem;
+      }
+    }
+    
+    /* Progress Bar */
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: var(--gradient-aurora);
+      z-index: 1001;
+      width: 0%;
+      transition: width 0.1s ease-out;
+    }
+    
+    /* Hero Section */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 8rem 0 6rem;
+      background: 
+        radial-gradient(ellipse at 20% 20%, rgba(212, 175, 55, 0.08) 0%, transparent 40%),
+        radial-gradient(ellipse at 80% 80%, rgba(139, 92, 246, 0.08) 0%, transparent 40%),
+        radial-gradient(ellipse at 50% 50%, rgba(0, 255, 204, 0.03) 0%, transparent 60%),
+        linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+      overflow: hidden;
+    }
+    
+    /* Animated Grid Background */
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        linear-gradient(rgba(212, 175, 55, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(212, 175, 55, 0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+      animation: grid-move 20s linear infinite;
+    }
+    @keyframes grid-move {
+      0% { transform: perspective(500px) rotateX(60deg) translateY(0); }
+      100% { transform: perspective(500px) rotateX(60deg) translateY(50px); }
+    }
+    
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      max-width: 1000px;
+    }
+    
+    /* Video Logo Section */
+    .hero-video-logo {
+      position: relative;
+      width: 180px;
+      height: 180px;
+      margin: 0 auto 2rem;
+      border-radius: 30px;
+      overflow: hidden;
+      background: var(--gradient-gold);
+      box-shadow: 
+        0 0 80px rgba(212, 175, 55, 0.4),
+        0 0 160px rgba(212, 175, 55, 0.2),
+        inset 0 0 60px rgba(255, 255, 255, 0.1);
+      animation: float 6s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(2deg); }
+    }
+    .hero-video-logo video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .hero-video-logo .logo-fallback {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 5rem;
+      background: var(--gradient-gold);
+    }
+    
+    /* Orbiting Elements */
+    .orbit-ring {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border: 1px dashed rgba(212, 175, 55, 0.2);
+      border-radius: 50%;
+      animation: orbit-spin 30s linear infinite;
+    }
+    .orbit-ring:nth-child(1) { width: 250px; height: 250px; }
+    .orbit-ring:nth-child(2) { width: 320px; height: 320px; animation-duration: 40s; animation-direction: reverse; }
+    .orbit-ring:nth-child(3) { width: 400px; height: 400px; animation-duration: 50s; }
+    @keyframes orbit-spin {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+    .orbit-dot {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: var(--accent-teal);
+      border-radius: 50%;
+      box-shadow: 0 0 20px var(--accent-teal);
+    }
+    
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.5rem 1.25rem;
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      border-radius: 999px;
+      color: var(--accent-gold);
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      background: rgba(212, 175, 55, 0.05);
+      backdrop-filter: blur(10px);
+      animation: badge-glow 3s ease-in-out infinite;
+    }
+    @keyframes badge-glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.1); }
+      50% { box-shadow: 0 0 40px rgba(212, 175, 55, 0.2); }
+    }
+    .hero-badge .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--accent-teal);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.5); }
+    }
+    
+    .hero h1 {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+    .hero h1 .gradient-text {
+      background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-gold) 30%, var(--accent-teal) 60%, var(--accent-purple) 100%);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradient-shift 5s ease infinite;
+    }
+    @keyframes gradient-shift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .hero h1 .line-2 {
+      font-size: 0.65em;
+      color: var(--accent-teal);
+      display: block;
+      margin-top: 0.5rem;
+    }
+    
+    .hero-subtitle {
+      font-size: 1.25rem;
+      color: var(--text-secondary);
+      max-width: 750px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.8;
+    }
+    .hero-subtitle strong {
+      color: var(--accent-gold);
+      font-weight: 600;
+    }
+    
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 3rem;
+    }
+    
+    /* Advanced Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border: none;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+    .btn:hover::before {
+      left: 100%;
+    }
+    .btn-primary {
+      background: var(--gradient-gold);
+      color: var(--bg-primary);
+      box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
+    }
+    .btn-primary:hover { 
+      transform: translateY(-3px); 
+      box-shadow: 0 10px 40px rgba(212, 175, 55, 0.4);
+      color: var(--bg-primary);
+    }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      backdrop-filter: blur(10px);
+    }
+    .btn-secondary:hover { 
+      border-color: var(--accent-teal); 
+      color: var(--accent-teal);
+      background: rgba(0, 255, 204, 0.1);
+      transform: translateY(-3px);
+    }
+    .btn-glow {
+      background: transparent;
+      border: 2px solid var(--accent-purple);
+      color: var(--accent-purple);
+    }
+    .btn-glow:hover {
+      background: var(--accent-purple);
+      color: var(--bg-primary);
+      box-shadow: 0 0 30px rgba(168, 85, 247, 0.5);
+    }
+    
+    /* Scroll Indicator */
+    .scroll-indicator {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-dim);
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      animation: bounce 2s ease-in-out infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(10px); }
+    }
+    .scroll-indicator .mouse {
+      width: 24px;
+      height: 40px;
+      border: 2px solid var(--text-dim);
+      border-radius: 12px;
+      position: relative;
+    }
+    .scroll-indicator .mouse::before {
+      content: '';
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px;
+      height: 8px;
+      background: var(--accent-gold);
+      border-radius: 2px;
+      animation: scroll-wheel 2s ease-in-out infinite;
+    }
+    @keyframes scroll-wheel {
+      0%, 100% { opacity: 1; top: 8px; }
+      50% { opacity: 0.3; top: 20px; }
+    }
+    
+    /* Stats Section - Advanced */
+    .stats-section {
+      position: relative;
+      padding: 5rem 0;
+      background: 
+        linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+      overflow: hidden;
+    }
+    .stats-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2rem;
+    }
+    .stat-card {
+      position: relative;
+      text-align: center;
+      padding: 2.5rem 1.5rem;
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
+    }
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--gradient-aurora);
+      transform: scaleX(0);
+      transition: transform 0.4s ease;
+    }
+    .stat-card:hover::before {
+      transform: scaleX(1);
+    }
+    .stat-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(0, 255, 204, 0.3);
+      box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.3),
+        0 0 60px rgba(0, 255, 204, 0.1);
+    }
+    .stat-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+    .stat-value {
+      font-family: 'Orbitron', monospace;
+      font-size: 3.5rem;
+      font-weight: 800;
+      background: var(--gradient-aurora);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+      line-height: 1;
+    }
+    .stat-label {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .stat-trend {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      margin-top: 0.75rem;
+      padding: 0.25rem 0.75rem;
+      background: rgba(0, 255, 204, 0.1);
+      border-radius: 999px;
+      font-size: 0.75rem;
+      color: var(--accent-teal);
+    }
+    
+    /* Sections */
+    section { 
+      position: relative;
+      padding: 6rem 0;
+    }
+    .section-dark {
+      background: var(--bg-secondary);
+    }
+    .section-gradient {
+      background: 
+        radial-gradient(ellipse at 30% 0%, rgba(168, 85, 247, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 100%, rgba(0, 255, 204, 0.05) 0%, transparent 50%),
+        var(--bg-primary);
+    }
+    .section-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+    .section-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 1rem;
+      background: rgba(168, 85, 247, 0.1);
+      border: 1px solid rgba(168, 85, 247, 0.2);
+      border-radius: 999px;
+      color: var(--accent-purple);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .section-header h2 {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+    }
+    .section-header h2 .highlight {
+      color: var(--accent-teal);
+    }
+    .section-header p {
+      color: var(--text-secondary);
+      max-width: 650px;
+      margin: 0 auto;
+      font-size: 1.1rem;
+      line-height: 1.8;
+    }
+    
+    /* Advanced Cards Grid */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 2rem;
+    }
+    .card {
+      position: relative;
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 2rem;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .card::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(168, 85, 247, 0.1) 0%, transparent 50%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      pointer-events: none;
+    }
+    .card:hover::after {
+      opacity: 1;
+    }
+    .card:hover {
+      border-color: rgba(168, 85, 247, 0.4);
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 
+        0 25px 50px rgba(0, 0, 0, 0.3),
+        0 0 100px rgba(168, 85, 247, 0.15);
+    }
+    .card-icon {
+      width: 70px;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(0, 255, 204, 0.1));
+      border-radius: 16px;
+      margin-bottom: 1.5rem;
+      position: relative;
+      z-index: 1;
+    }
+    .card h3 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      color: var(--text-primary);
+      position: relative;
+      z-index: 1;
+    }
+    .card p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.7;
+      position: relative;
+      z-index: 1;
+    }
+    .card-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--accent-teal);
+      position: relative;
+      z-index: 1;
+      padding: 0.5rem 1rem;
+      background: rgba(0, 255, 204, 0.1);
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+    .card-link:hover {
+      background: var(--accent-teal);
+      color: var(--bg-primary);
+    }
+    .card-link::after { 
+      content: '→'; 
+      transition: transform 0.3s ease; 
+    }
+    .card-link:hover::after { 
+      transform: translateX(5px); 
+    }
+    
+    /* Papers Section - Timeline Style */
+    .papers-timeline {
+      position: relative;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .papers-timeline::before {
+      content: '';
+      position: absolute;
+      left: 30px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(180deg, var(--accent-gold), var(--accent-purple), var(--accent-teal));
+    }
+    .paper-item {
+      position: relative;
+      display: flex;
+      gap: 2rem;
+      padding: 2rem;
+      margin-left: 60px;
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      margin-bottom: 1.5rem;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      backdrop-filter: blur(10px);
+    }
+    .paper-item::before {
+      content: '';
+      position: absolute;
+      left: -42px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 24px;
+      height: 24px;
+      background: var(--bg-primary);
+      border: 3px solid var(--accent-gold);
+      border-radius: 50%;
+      z-index: 1;
+    }
+    .paper-item::after {
+      content: '';
+      position: absolute;
+      left: -30px;
+      top: 50%;
+      width: 30px;
+      height: 2px;
+      background: var(--accent-gold);
+    }
+    .paper-item:hover {
+      border-color: var(--accent-gold);
+      transform: translateX(10px);
+      box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.3),
+        0 0 60px rgba(212, 175, 55, 0.1);
+    }
+    .paper-icon {
+      font-size: 3rem;
+      flex-shrink: 0;
+      width: 80px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(212, 175, 55, 0.05));
+      border-radius: 16px;
+    }
+    .paper-content {
+      flex: 1;
+    }
+    .paper-content h4 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+    }
+    .paper-content h4 em {
+      color: var(--accent-gold);
+      font-style: normal;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+    .paper-content p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+      line-height: 1.6;
+    }
+    .paper-links {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .paper-links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.4rem 1rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+    .paper-links a:hover {
+      border-color: var(--accent-teal);
+      background: rgba(0, 255, 204, 0.1);
+      color: var(--accent-teal);
+    }
+    
+    /* Tools Section - Hexagonal Grid */
+    .tools-showcase {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+    .tool-card {
+      position: relative;
+      background: linear-gradient(135deg, var(--bg-glass), rgba(59, 130, 246, 0.05));
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 2rem;
+      text-align: center;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+    }
+    .tool-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--gradient-aurora);
+      transform: scaleX(0);
+      transition: transform 0.4s ease;
+    }
+    .tool-card:hover::before {
+      transform: scaleX(1);
+    }
+    .tool-card:hover {
+      border-color: rgba(59, 130, 246, 0.4);
+      transform: translateY(-10px);
+      box-shadow: 
+        0 25px 50px rgba(0, 0, 0, 0.3),
+        0 0 80px rgba(59, 130, 246, 0.15);
+    }
+    .tool-card .icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(168, 85, 247, 0.1));
+      border-radius: 20px;
+      position: relative;
+    }
+    .tool-card .icon::after {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 22px;
+      background: var(--gradient-aurora);
+      opacity: 0;
+      z-index: -1;
+      transition: opacity 0.3s ease;
+    }
+    .tool-card:hover .icon::after {
+      opacity: 0.3;
+    }
+    .tool-card h4 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      color: var(--text-primary);
+    }
+    .tool-card p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+    .tool-card .tool-stats {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+    .tool-card .tool-stats span {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+    }
+    .tool-card .tool-stats strong {
+      color: var(--accent-teal);
+      font-weight: 600;
+    }
+    
+    /* Ledger Dashboard Section */
+    .ledger-section {
+      background: 
+        radial-gradient(ellipse at 10% 20%, rgba(212, 175, 55, 0.08) 0%, transparent 40%),
+        radial-gradient(ellipse at 90% 80%, rgba(0, 255, 204, 0.05) 0%, transparent 40%),
+        var(--bg-primary);
+    }
+    .ledger-dashboard {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+    .ledger-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .ledger-card {
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+    .ledger-card:hover {
+      border-color: var(--accent-gold);
+    }
+    .ledger-card h4 {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent-gold);
+      margin-bottom: 1rem;
+    }
+    .ledger-card .value {
+      font-family: 'Orbitron', monospace;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .ledger-card .label {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      margin-top: 0.25rem;
+    }
+    
+    /* Live Terminal Display */
+    .terminal-display {
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .terminal-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      background: rgba(255, 255, 255, 0.03);
+      border-bottom: 1px solid var(--border);
+    }
+    .terminal-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    .terminal-dot.red { background: #ff5f56; }
+    .terminal-dot.yellow { background: #ffbd2e; }
+    .terminal-dot.green { background: #27ca3f; }
+    .terminal-title {
+      margin-left: 0.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+    }
+    .terminal-body {
+      padding: 1.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      line-height: 1.8;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .terminal-line {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+    .terminal-prompt {
+      color: var(--accent-teal);
+    }
+    .terminal-command {
+      color: var(--text-primary);
+    }
+    .terminal-output {
+      color: var(--text-dim);
+      padding-left: 1.5rem;
+    }
+    .terminal-success {
+      color: #27ca3f;
+    }
+    .terminal-info {
+      color: var(--accent-purple);
+    }
+    .terminal-cursor {
+      display: inline-block;
+      width: 8px;
+      height: 16px;
+      background: var(--accent-teal);
+      animation: cursor-blink 1s infinite;
+      vertical-align: middle;
+      margin-left: 2px;
+    }
+    @keyframes cursor-blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+    
+    /* Protocol Network Visualization */
+    .protocol-network {
+      position: relative;
+      height: 400px;
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      overflow: hidden;
+      margin-top: 3rem;
+    }
+    .network-canvas {
+      width: 100%;
+      height: 100%;
+    }
+    .network-stats {
+      position: absolute;
+      bottom: 1.5rem;
+      left: 1.5rem;
+      display: flex;
+      gap: 2rem;
+    }
+    .network-stat {
+      background: rgba(0, 0, 0, 0.7);
+      padding: 0.75rem 1.25rem;
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+    }
+    .network-stat .label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+    }
+    .network-stat .value {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--accent-teal);
+    }
+    
+    /* Video Showcase Section */
+    .video-showcase {
+      position: relative;
+      margin: 4rem 0;
+    }
+    .video-container {
+      position: relative;
+      border-radius: 24px;
+      overflow: hidden;
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      aspect-ratio: 16/9;
+    }
+    .video-container video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .video-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.4);
+      opacity: 1;
+      transition: opacity 0.3s ease;
+    }
+    .video-container:hover .video-overlay {
+      opacity: 0;
+    }
+    .play-button {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: var(--gradient-gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 60px rgba(212, 175, 55, 0.4);
+    }
+    .play-button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 100px rgba(212, 175, 55, 0.6);
+    }
+    
+    /* Mission Section */
+    .mission-section {
+      text-align: center;
+      padding: 8rem 0;
+      background: 
+        radial-gradient(ellipse at 50% 50%, rgba(212, 175, 55, 0.05) 0%, transparent 60%),
+        var(--bg-primary);
+    }
+    .mission-quote {
+      position: relative;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 3rem;
+    }
+    .mission-quote::before,
+    .mission-quote::after {
+      content: '"';
+      position: absolute;
+      font-family: Georgia, serif;
+      font-size: 8rem;
+      color: var(--accent-gold);
+      opacity: 0.2;
+    }
+    .mission-quote::before {
+      top: -1rem;
+      left: -1rem;
+    }
+    .mission-quote::after {
+      bottom: -4rem;
+      right: -1rem;
+    }
+    .mission-quote blockquote {
+      font-size: 1.5rem;
+      color: var(--text-secondary);
+      font-style: italic;
+      line-height: 2;
+      border: none;
+      padding: 0;
+    }
+    .mission-quote .author {
+      margin-top: 2rem;
+      color: var(--accent-gold);
+      font-size: 1rem;
+      font-weight: 600;
+    }
+    
+    /* Contact Section */
+    .contact-section {
+      background: var(--bg-secondary);
+    }
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2rem;
+    }
+    .contact-card {
+      text-align: center;
+      padding: 2rem;
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+    .contact-card:hover {
+      border-color: var(--accent-gold);
+      transform: translateY(-5px);
+    }
+    .contact-card .icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    .contact-card h4 {
+      color: var(--accent-gold);
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+    .contact-card p,
+    .contact-card a {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+    
+    /* Advanced Footer */
+    footer {
+      position: relative;
+      padding: 5rem 0 2rem;
+      background: var(--bg-primary);
+      border-top: 1px solid var(--border);
+    }
+    footer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+    }
+    .footer-content {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 3rem;
+    }
+    .footer-brand h3 {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.25rem;
+      color: var(--accent-gold);
+      margin-bottom: 1rem;
+    }
+    .footer-brand p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.8;
+      max-width: 300px;
+    }
+    .footer-column h4 {
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-primary);
+      margin-bottom: 1.5rem;
+    }
+    .footer-column ul {
+      list-style: none;
+    }
+    .footer-column li {
+      margin-bottom: 0.75rem;
+    }
+    .footer-column a {
+      color: var(--text-dim);
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+    }
+    .footer-column a:hover {
+      color: var(--accent-teal);
+      padding-left: 5px;
+    }
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+    .footer-copy {
+      color: var(--text-dim);
+      font-size: 0.85rem;
+    }
+    .footer-social {
+      display: flex;
+      gap: 1rem;
+    }
+    .footer-social a {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text-secondary);
+      transition: all 0.3s ease;
+    }
+    .footer-social a:hover {
+      border-color: var(--accent-gold);
+      color: var(--accent-gold);
+      transform: translateY(-3px);
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 1200px) {
+      .ledger-dashboard {
+        grid-template-columns: 1fr;
+      }
+      .footer-content {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    
+    @media (max-width: 992px) {
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .contact-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .mobile-menu-btn { display: block; }
+      
+      .hero {
+        padding: 6rem 0 4rem;
+        min-height: auto;
+      }
+      .hero-video-logo {
+        width: 120px;
+        height: 120px;
+        border-radius: 20px;
+      }
+      .hero h1 {
+        font-size: 1.75rem;
+      }
+      .hero-subtitle { 
+        font-size: 1rem; 
+        padding: 0 1rem;
+      }
+      .hero-cta {
+        flex-direction: column;
+        align-items: center;
+      }
+      .btn {
+        width: 100%;
+        max-width: 280px;
+        justify-content: center;
+      }
+      
+      .stats-grid { 
+        grid-template-columns: repeat(2, 1fr); 
+        gap: 1rem;
+      }
+      .stat-card {
+        padding: 1.5rem 1rem;
+      }
+      .stat-value { 
+        font-size: 2rem; 
+      }
+      
+      section { 
+        padding: 4rem 0; 
+      }
+      .section-header h2 { 
+        font-size: 1.5rem; 
+      }
+      
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .papers-timeline::before {
+        display: none;
+      }
+      .paper-item {
+        margin-left: 0;
+        flex-direction: column;
+      }
+      .paper-item::before,
+      .paper-item::after {
+        display: none;
+      }
+      
+      .tools-showcase {
+        grid-template-columns: 1fr;
+      }
+      
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .footer-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+      .footer-brand p {
+        max-width: none;
+      }
+      .footer-bottom {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+      }
+      
+      .mission-quote {
+        padding: 1.5rem;
+      }
+      .mission-quote::before,
+      .mission-quote::after {
+        font-size: 4rem;
+      }
+      .mission-quote blockquote {
+        font-size: 1.1rem;
+      }
+    }
+    
+    /* Animations on scroll */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    /* Glowing text effect */
+    .glow-text {
+      text-shadow: 
+        0 0 10px rgba(212, 175, 55, 0.5),
+        0 0 20px rgba(212, 175, 55, 0.3),
+        0 0 30px rgba(212, 175, 55, 0.2);
+    }
+    
+    /* Typing animation */
+    .typing-effect {
+      overflow: hidden;
+      border-right: 3px solid var(--accent-teal);
+      white-space: nowrap;
+      animation: typing 3s steps(30) 1s forwards, blink-caret 0.75s step-end infinite;
+    }
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+    @keyframes blink-caret {
+      from, to { border-color: transparent; }
+      50% { border-color: var(--accent-teal); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Scroll Progress Bar -->
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- Particle Background Canvas -->
+<canvas id="particles-canvas"></canvas>
+
+<!-- Navigation -->
+<nav id="mainNav">
+  <div class="container">
+    <a href="/" class="nav-brand">
+      <div class="logo-icon">🧬</div>
+      ItsNotAILABS
+      <span>/ MedinaSITech</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#research">Research</a></li>
+      <li><a href="#papers">Papers</a></li>
+      <li><a href="#ledger">Ledger</a></li>
+      <li><a href="./documents.html">Documents</a></li>
+      <li><a href="./research/portal.html">Portal</a></li>
+      <li><a href="#tools">Tools</a></li>
+      <li><a href="#protocols">Protocols</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li><a href="https://github.com/ItsNotAILABS/PRODUCTION-" target="_blank" class="nav-cta">GitHub →</a></li>
+    </ul>
+    <button class="mobile-menu-btn" aria-label="Menu">☰</button>
+  </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero">
+  <div class="hero-content">
+    <!-- Animated Logo with Video -->
+    <div class="hero-video-logo">
+      <div class="orbit-ring"><div class="orbit-dot" style="top: 0; left: 50%;"></div></div>
+      <div class="orbit-ring"><div class="orbit-dot" style="bottom: 0; right: 0;"></div></div>
+      <div class="orbit-ring"><div class="orbit-dot" style="top: 50%; left: 0;"></div></div>
+      <video autoplay muted loop playsinline poster="" aria-label="ItsNotAILABS animated logo - DNA helix symbolizing AI research">
+        <source src="./assets/logo-animation.mp4" type="video/mp4">
+      </video>
+      <div class="logo-fallback">🧬</div>
+    </div>
+    
+    <div class="hero-badge">
+      <span class="pulse-dot"></span>
+      Research Laboratory • Est. 2024 • Open Source
+    </div>
+    
+    <h1>
+      <span class="gradient-text">Advancing AI Orchestration</span>
+      <span class="line-2">& Decentralized Computing</span>
+    </h1>
+    
+    <p class="hero-subtitle">
+      <strong>MedinaSITech</strong> (ItsNotAILABS) is an independent research laboratory developing 
+      <strong>open-source AI systems</strong>, browser-native intelligence tools, and novel protocols 
+      for <strong>autonomous software agents</strong>.
+    </p>
+    
+    <div class="hero-cta">
+      <a href="#research" class="btn btn-primary">
+        <span>🔬</span> Explore Research
+      </a>
+      <a href="./research/portal.html" class="btn btn-secondary">
+        <span>🧬</span> Research Portal
+      </a>
+      <a href="./tools.html" class="btn btn-secondary">
+        <span>🛠</span> AI Tools
+      </a>
+      <a href="./download.html" class="btn btn-glow">
+        <span>⬇</span> Downloads
+      </a>
+    </div>
+  </div>
+  
+  <div class="scroll-indicator">
+    <div class="mouse"></div>
+    <span>Scroll to explore</span>
+  </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats-section">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-card fade-in">
+        <span class="stat-icon">📜</span>
+        <div class="stat-value" data-count="229">0</div>
+        <div class="stat-label">Protocols Published</div>
+        <div class="stat-trend">↑ Growing</div>
+      </div>
+      <div class="stat-card fade-in">
+        <span class="stat-icon">🧩</span>
+        <div class="stat-value" data-count="27">0</div>
+        <div class="stat-label">Browser Extensions</div>
+        <div class="stat-trend">↑ Active</div>
+      </div>
+      <div class="stat-card fade-in">
+        <span class="stat-icon">🤖</span>
+        <div class="stat-value" data-count="21">0</div>
+        <div class="stat-label">Autonomous Bots</div>
+        <div class="stat-trend">↑ Running</div>
+      </div>
+      <div class="stat-card fade-in">
+        <span class="stat-icon">📄</span>
+        <div class="stat-value" data-count="7">0</div>
+        <div class="stat-label">Research Papers</div>
+        <div class="stat-trend">↑ Published</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Research Areas -->
+<section id="research" class="section-gradient">
+  <div class="container">
+    <div class="section-header fade-in">
+      <div class="section-badge">🔬 Core Focus</div>
+      <h2>Research <span class="highlight">Areas</span></h2>
+      <p>Our laboratory focuses on practical, deployable AI systems that operate at the edge — in browsers, on devices, and across decentralized networks.</p>
+    </div>
+    <div class="cards-grid">
+      <div class="card fade-in">
+        <div class="card-icon">🧠</div>
+        <h3>Neural Orchestration</h3>
+        <p>Developing Hebbian learning protocols, adaptive weight evolution, and multi-model coordination for browser-native AI inference.</p>
+        <a href="./research/neuro-paper.html" class="card-link">Read Paper</a>
+      </div>
+      <div class="card fade-in">
+        <div class="card-icon">🔗</div>
+        <h3>Decentralized AI Mesh</h3>
+        <p>Building peer-to-peer AI networks with gossip protocols, distributed inference, and cryptographic coordination mechanisms.</p>
+        <a href="./research/mesh-paper.html" class="card-link">Read Paper</a>
+      </div>
+      <div class="card fade-in">
+        <div class="card-icon">🏛️</div>
+        <h3>AI Governance Systems</h3>
+        <p>Creating formal governance frameworks, charter-based bot coordination, and law-driven autonomous agent architectures.</p>
+        <a href="./research/guardian-paper.html" class="card-link">Read Paper</a>
+      </div>
+      <div class="card fade-in">
+        <div class="card-icon">⚡</div>
+        <h3>Edge Inference Pipelines</h3>
+        <p>Optimizing AI model execution for browser environments with WebGPU acceleration, model quantization, and adaptive scheduling.</p>
+        <a href="./research/inference-paper.html" class="card-link">Read Paper</a>
+      </div>
+      <div class="card fade-in">
+        <div class="card-icon">🔐</div>
+        <h3>Cryptographic AI Protocols</h3>
+        <p>Implementing secure multi-party computation, zero-knowledge proofs, and privacy-preserving AI inference systems.</p>
+        <a href="./research/crypto-paper.html" class="card-link">Read Paper</a>
+      </div>
+      <div class="card fade-in">
+        <div class="card-icon">📊</div>
+        <h3>Mathematical Foundations</h3>
+        <p>Exploring geometric deep learning, information theory, and formal methods for AI system verification and optimization.</p>
+        <a href="./research/math-paper.html" class="card-link">Read Paper</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Video Showcase Section -->
+<section class="section-dark">
+  <div class="container">
+    <div class="section-header fade-in">
+      <div class="section-badge">🎬 Introduction</div>
+      <h2>The <span class="highlight">Organism</span> Platform</h2>
+      <p>Watch how our sovereign AI infrastructure powers autonomous agents, browser extensions, and decentralized computing networks.</p>
+    </div>
+    <div class="video-showcase fade-in">
+      <div class="video-container">
+        <video poster="./assets/video-poster.jpg" id="introVideo" controls aria-label="Introduction to the Organism AI platform">
+          <source src="./assets/organism-intro.mp4" type="video/mp4">
+          <track kind="captions" src="./assets/organism-intro-captions.vtt" srclang="en" label="English">
+        </video>
+        <div class="video-overlay" id="videoOverlay">
+          <div class="play-button" onclick="playVideo()" role="button" aria-label="Play introduction video" tabindex="0" onkeydown="if(event.key==='Enter')playVideo()">▶</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Papers Section -->
+<section id="papers" class="section-gradient">
+  <div class="container">
+    <div class="section-header fade-in">
+      <div class="section-badge">📚 Publications</div>
+      <h2>Research <span class="highlight">Papers</span></h2>
+      <p>Preprints, technical reports, and formal specifications documenting our research findings and system designs.</p>
+    </div>
+    <div class="papers-timeline">
+      <div class="paper-item fade-in">
+        <div class="paper-icon">📜</div>
+        <div class="paper-content">
+          <h4>De Superficie Terminorum — <em>MSIT-RP-2026-001</em></h4>
+          <p>A Native Workstation Surface for Governed Agentic Execution. The foundational paper defining TERMINUS architecture.</p>
+          <div class="paper-links">
+            <a href="./papers/terminus/paper.pdf">📄 PDF</a>
+            <a href="./papers/terminus/">📁 Archive</a>
+            <a href="./zenodo/records/MSIT-RP-2026-001.md">🔗 Zenodo</a>
+          </div>
+        </div>
+      </div>
+      <div class="paper-item fade-in">
+        <div class="paper-icon">📜</div>
+        <div class="paper-content">
+          <h4>Ratio Ordinis — <em>MSIT-RP-2026-002</em></h4>
+          <p>A Risk-Aware AI Routing Algorithm for Paradigm-Aware Agentic Execution. Formalizes ORDO routing.</p>
+          <div class="paper-links">
+            <a href="./papers/ordo-algorithm/paper.pdf">📄 PDF</a>
+            <a href="./papers/ordo-algorithm/">📁 Archive</a>
+            <a href="./zenodo/records/MSIT-RP-2026-002.md">🔗 Zenodo</a>
+          </div>
+        </div>
+      </div>
+      <div class="paper-item fade-in">
+        <div class="paper-icon">📜</div>
+        <div class="paper-content">
+          <h4>Machina Polyglotta Ordinata — <em>MSIT-RP-2026-003</em></h4>
+          <p>Multi-Terminal AI Orchestration for Cost-Aware Polyglot Computing across heterogeneous runtimes.</p>
+          <div class="paper-links">
+            <a href="./research/pipeline-paper.html">🌐 HTML</a>
+            <a href="./papers/polyglot-orchestration/paper.pdf">📄 PDF</a>
+            <a href="./papers/polyglot-orchestration/">📁 Archive</a>
+          </div>
+        </div>
+      </div>
+      <div class="paper-item fade-in">
+        <div class="paper-icon">📜</div>
+        <div class="paper-content">
+          <h4>Mathematica Aurea — <em>MSIT-RP-2026-004</em></h4>
+          <p>De Intelligentia Mathematica, Ratione Aurea, et Computatione Soverena. Golden ratio mathematics.</p>
+          <div class="paper-links">
+            <a href="./research/math-paper.html">🌐 HTML</a>
+            <a href="./papers/math-aurea/paper.pdf">📄 PDF</a>
+            <a href="./papers/math-aurea/">📁 Archive</a>
+          </div>
+        </div>
+      </div>
+      <div class="paper-item fade-in">
+        <div class="paper-icon">📜</div>
+        <div class="paper-content">
+          <h4>Intelligentia Localis — <em>MSIT-RP-2026-005</em></h4>
+          <p>De Inferentia In-Navigatorio, Classificatione Textus, et Embeddingis Sine Nube. In-browser AI inference.</p>
+          <div class="paper-links">
+            <a href="./research/inference-paper.html">🌐 HTML</a>
+            <a href="./papers/intelligentia-localis/paper.pdf">📄 PDF</a>
+            <a href="./papers/intelligentia-localis/">📁 Archive</a>
+          </div>
+        </div>
+      </div>
+      <div class="paper-item fade-in">
+        <div class="paper-icon">📜</div>
+        <div class="paper-content">
+          <h4>Rete Vivum — <em>MSIT-RP-2026-006</em></h4>
+          <p>De Reticulis Infrastructurae, Electione Ducis, et Statu Distributo. Living network infrastructure.</p>
+          <div class="paper-links">
+            <a href="./research/mesh-paper.html">🌐 HTML</a>
+            <a href="./papers/rete-vivum/paper.pdf">📄 PDF</a>
+            <a href="./papers/rete-vivum/">📁 Archive</a>
+          </div>
+        </div>
+      </div>
+      <div class="paper-item fade-in">
+        <div class="paper-icon">📄</div>
+        <div class="paper-content">
+          <h4>De Autonomia Perpetua — Theory Paper</h4>
+          <p>On Perpetual Autonomy: Self-Healing and Autonomous Divisions in a Computational Organism.</p>
+          <div class="paper-links">
+            <a href="./research/autonomy-paper.html">🌐 HTML</a>
+            <a href="./docs/sovereign-thinking-theory-paper.md">📖 Theory</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="text-align: center; margin-top: 3rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+      <a href="./research/papers-hub.html" class="btn btn-primary">📚 Papers Hub</a>
+      <a href="./research/portal.html" class="btn btn-secondary">🧬 Research Portal</a>
+      <a href="./research/protocol-papers.html" class="btn btn-glow">Protocol Papers →</a>
+    </div>
+  </div>
+</section>
+
+<!-- Ledger Dashboard Section -->
+<section id="ledger" class="ledger-section">
+  <div class="container">
+    <div class="section-header fade-in">
+      <div class="section-badge">📊 Live Data</div>
+      <h2>Release <span class="highlight">Ledger</span></h2>
+      <p>Real-time tracking of public research releases, platform records, DOIs, versions, and rights management.</p>
+    </div>
+    <div class="ledger-dashboard">
+      <div class="ledger-sidebar">
+        <div class="ledger-card fade-in">
+          <h4>📜 Research Papers</h4>
+          <div class="value">7</div>
+          <div class="label">Published Preprints</div>
+        </div>
+        <div class="ledger-card fade-in">
+          <h4>🔗 DOI Records</h4>
+          <div class="value">6</div>
+          <div class="label">Zenodo Deposits</div>
+        </div>
+        <div class="ledger-card fade-in">
+          <h4>📦 Software Releases</h4>
+          <div class="value">3</div>
+          <div class="label">Archived Snapshots</div>
+        </div>
+        <div class="ledger-card fade-in">
+          <h4>⚖️ License Status</h4>
+          <div class="value">MIT</div>
+          <div class="label">Open Source</div>
+        </div>
+      </div>
+      <div class="terminal-display fade-in">
+        <div class="terminal-header">
+          <div class="terminal-dot red"></div>
+          <div class="terminal-dot yellow"></div>
+          <div class="terminal-dot green"></div>
+          <span class="terminal-title">organism-ledger-daemon — v2.0.0</span>
+        </div>
+        <div class="terminal-body">
+          <div class="terminal-line">
+            <span class="terminal-prompt">$</span>
+            <span class="terminal-command">organism ledger status</span>
+          </div>
+          <div class="terminal-output terminal-success">✓ Ledger daemon running</div>
+          <div class="terminal-output terminal-info">→ Monitoring 7 research papers</div>
+          <div class="terminal-output terminal-info">→ Tracking 229 protocols</div>
+          <div class="terminal-output">Last sync: 2026-05-20T08:00:00Z</div>
+          <br>
+          <div class="terminal-line">
+            <span class="terminal-prompt">$</span>
+            <span class="terminal-command">organism ledger list --format=json</span>
+          </div>
+          <div class="terminal-output">{</div>
+          <div class="terminal-output">  "papers": [</div>
+          <div class="terminal-output">    {"id": "MSIT-RP-2026-001", "status": "published"},</div>
+          <div class="terminal-output">    {"id": "MSIT-RP-2026-002", "status": "published"},</div>
+          <div class="terminal-output">    {"id": "MSIT-RP-2026-003", "status": "published"},</div>
+          <div class="terminal-output">    {"id": "MSIT-RP-2026-004", "status": "published"},</div>
+          <div class="terminal-output">    {"id": "MSIT-RP-2026-005", "status": "published"},</div>
+          <div class="terminal-output">    {"id": "MSIT-RP-2026-006", "status": "published"}</div>
+          <div class="terminal-output">  ],</div>
+          <div class="terminal-output">  "protocols": 229,</div>
+          <div class="terminal-output">  "extensions": 27,</div>
+          <div class="terminal-output">  "bots": 21</div>
+          <div class="terminal-output">}</div>
+          <br>
+          <div class="terminal-line">
+            <span class="terminal-prompt">$</span>
+            <span class="terminal-command"><span class="terminal-cursor"></span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Tools & Software -->
+<section id="tools" class="section-dark">
+  <div class="container">
+    <div class="section-header fade-in">
+      <div class="section-badge">🛠 Software</div>
+      <h2>Tools & <span class="highlight">Software</span></h2>
+      <p>Open-source AI tools, browser extensions, and software artifacts built from our research.</p>
+    </div>
+    <div class="tools-showcase">
+      <a href="./tools.html" class="tool-card fade-in">
+        <div class="icon">🧩</div>
+        <h4>AI Browser Extensions</h4>
+        <p>27 Chrome/Edge/Brave extensions for AI-powered browsing and intelligent automation.</p>
+        <div class="tool-stats">
+          <span><strong>27</strong> Extensions</span>
+          <span><strong>3</strong> Browsers</span>
+        </div>
+      </a>
+      <a href="./download.html" class="tool-card fade-in">
+        <div class="icon">📦</div>
+        <h4>Extension Downloads</h4>
+        <p>One-click installers for all Organism extensions with automatic updates.</p>
+        <div class="tool-stats">
+          <span><strong>1-Click</strong> Install</span>
+          <span><strong>Auto</strong> Updates</span>
+        </div>
+      </a>
+      <a href="./docs/sdk-reference.md" class="tool-card fade-in">
+        <div class="icon">📚</div>
+        <h4>SDK Reference</h4>
+        <p>Documentation for the Organism SDK, APIs, and integration patterns.</p>
+        <div class="tool-stats">
+          <span><strong>18</strong> Modules</span>
+          <span><strong>Full</strong> Docs</span>
+        </div>
+      </a>
+      <a href="./docs/bot-fleet-charter.md" class="tool-card fade-in">
+        <div class="icon">🤖</div>
+        <h4>Bot Fleet</h4>
+        <p>21 autonomous bots across 8 divisions handling governance, security, and ops.</p>
+        <div class="tool-stats">
+          <span><strong>21</strong> Bots</span>
+          <span><strong>8</strong> Divisions</span>
+        </div>
+      </a>
+      <a href="https://github.com/ItsNotAILABS/PRODUCTION-" class="tool-card fade-in" target="_blank">
+        <div class="icon">💻</div>
+        <h4>Source Code</h4>
+        <p>Full open-source repository on GitHub with complete source code access.</p>
+        <div class="tool-stats">
+          <span><strong>Open</strong> Source</span>
+          <span><strong>MIT</strong> License</span>
+        </div>
+      </a>
+      <a href="./docs/extension-catalog.md" class="tool-card fade-in">
+        <div class="icon">📋</div>
+        <h4>Extension Catalog</h4>
+        <p>Complete listing of all extensions, capabilities, and usage guides.</p>
+        <div class="tool-stats">
+          <span><strong>Full</strong> Catalog</span>
+          <span><strong>Guides</strong></span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Protocols Section -->
+<section id="protocols" class="section-gradient">
+  <div class="container">
+    <div class="section-header fade-in">
+      <div class="section-badge">📜 Protocols</div>
+      <h2>Protocol <span class="highlight">Library</span></h2>
+      <p>229+ published protocols defining system behaviors, governance rules, and coordination mechanisms.</p>
+    </div>
+    
+    <!-- Protocol Network Visualization -->
+    <div class="protocol-network fade-in">
+      <canvas class="network-canvas" id="protocolCanvas"></canvas>
+      <div class="network-stats">
+        <div class="network-stat">
+          <div class="label">Total Protocols</div>
+          <div class="value">229+</div>
+        </div>
+        <div class="network-stat">
+          <div class="label">Categories</div>
+          <div class="value">12</div>
+        </div>
+        <div class="network-stat">
+          <div class="label">Active</div>
+          <div class="value">100%</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="cards-grid" style="margin-top: 3rem;">
+      <div class="card fade-in">
+        <div class="card-icon">📜</div>
+        <h3>Protocol Encyclopedia</h3>
+        <p>Complete reference for all published protocols with dependency graphs, descriptions, and implementation notes.</p>
+        <a href="./docs/protocol-encyclopedia.md" class="card-link">Browse Encyclopedia</a>
+      </div>
+      <div class="card fade-in">
+        <div class="card-icon">⚖️</div>
+        <h3>Governance Protocols</h3>
+        <p>CPL-L laws, CPL-P pipelines, and OCL charters defining autonomous agent behavior and coordination rules.</p>
+        <a href="./docs/governance-report.md" class="card-link">View Governance</a>
+      </div>
+      <div class="card fade-in">
+        <div class="card-icon">🔬</div>
+        <h3>Research Protocols</h3>
+        <p>Experimental protocols for Hebbian learning, neural mesh networks, and adaptive inference systems.</p>
+        <a href="./research/protocol-papers.html" class="card-link">Explore Research</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Mission Section -->
+<section id="mission" class="mission-section">
+  <div class="container">
+    <div class="section-header fade-in">
+      <div class="section-badge">💡 Vision</div>
+      <h2>Our <span class="highlight">Mission</span></h2>
+    </div>
+    <div class="mission-quote fade-in">
+      <blockquote>
+        To democratize artificial intelligence by building open-source, browser-native, and decentralized AI systems 
+        that operate transparently, respect user privacy, and empower individuals with intelligent tools 
+        that they own and control.
+      </blockquote>
+      <p class="author">— Alfredo Medina Hernandez, Founder</p>
+    </div>
+  </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="contact-section">
+  <div class="container">
+    <div class="section-header fade-in">
+      <div class="section-badge">📬 Connect</div>
+      <h2>Get In <span class="highlight">Touch</span></h2>
+      <p>Collaborate, contribute, or learn more about our research.</p>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-card fade-in">
+        <div class="icon">📧</div>
+        <h4>Email</h4>
+        <p>research@itsnotailabs.com</p>
+      </div>
+      <div class="contact-card fade-in">
+        <div class="icon">💻</div>
+        <h4>GitHub</h4>
+        <a href="https://github.com/ItsNotAILABS" target="_blank">github.com/ItsNotAILABS</a>
+      </div>
+      <div class="contact-card fade-in">
+        <div class="icon">📚</div>
+        <h4>Research Archive</h4>
+        <a href="./research/research-mission.html">Research Mission</a>
+      </div>
+      <div class="contact-card fade-in">
+        <div class="icon">📖</div>
+        <h4>Citation</h4>
+        <a href="./CITATION.cff">CITATION.cff</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Advanced Footer -->
+<footer>
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <h3>🧬 ItsNotAILABS</h3>
+        <p>MedinaSITech Research Laboratory — Advancing AI orchestration, decentralized computing, and open-source scientific software since 2024.</p>
+      </div>
+      <div class="footer-column">
+        <h4>Research</h4>
+        <ul>
+          <li><a href="./research/portal.html">Research Portal</a></li>
+          <li><a href="./research/papers-hub.html">Papers Hub</a></li>
+          <li><a href="./research/protocol-papers.html">Protocol Papers</a></li>
+          <li><a href="./docs/protocol-encyclopedia.md">Encyclopedia</a></li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h4>Software</h4>
+        <ul>
+          <li><a href="./tools.html">AI Tools</a></li>
+          <li><a href="./download.html">Downloads</a></li>
+          <li><a href="./docs/sdk-reference.md">SDK Reference</a></li>
+          <li><a href="./docs/extension-catalog.md">Extensions</a></li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="./RIGHTS.md">Rights</a></li>
+          <li><a href="./CONTRIBUTING.md">Contributing</a></li>
+          <li><a href="./CITATION.cff">Citation</a></li>
+          <li><a href="https://github.com/ItsNotAILABS/PRODUCTION-">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copy">
+        © 2024–2026 MedinaSITech / ItsNotAILABS. Open Source Research Laboratory.
+        <br><small>🧬 Organism AI • Built with purpose.</small>
+      </p>
+      <div class="footer-social">
+        <a href="https://github.com/ItsNotAILABS" target="_blank" aria-label="GitHub">💻</a>
+        <a href="mailto:research@itsnotailabs.com" aria-label="Email">📧</a>
+        <a href="./research/portal.html" aria-label="Research Portal">🧬</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- JavaScript for Advanced Interactions -->
+<script>
+// Throttle function for scroll performance
+function throttle(func, limit) {
+  let inThrottle;
+  return function(...args) {
+    if (!inThrottle) {
+      func.apply(this, args);
+      inThrottle = true;
+      setTimeout(() => inThrottle = false, limit);
+    }
+  };
+}
+
+// Scroll Progress Bar (throttled for performance)
+const handleScroll = throttle(() => {
+  const scrollProgress = document.getElementById('scrollProgress');
+  const scrollTop = document.documentElement.scrollTop;
+  const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  const progress = (scrollTop / scrollHeight) * 100;
+  scrollProgress.style.width = progress + '%';
+  
+  // Nav scroll effect
+  const nav = document.getElementById('mainNav');
+  if (scrollTop > 50) {
+    nav.classList.add('scrolled');
+  } else {
+    nav.classList.remove('scrolled');
+  }
+}, 16);
+
+window.addEventListener('scroll', handleScroll);
+
+// Mobile Menu Toggle
+const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+const navLinks = document.querySelector('.nav-links');
+if (mobileMenuBtn && navLinks) {
+  mobileMenuBtn.addEventListener('click', () => {
+    navLinks.classList.toggle('mobile-open');
+    mobileMenuBtn.setAttribute('aria-expanded', navLinks.classList.contains('mobile-open'));
+  });
+}
+
+// Intersection Observer for fade-in animations
+const observerOptions = {
+  threshold: 0.1,
+  rootMargin: '0px 0px -50px 0px'
+};
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, observerOptions);
+
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+// Animated Counter for Stats
+function animateCounters() {
+  const counters = document.querySelectorAll('.stat-value[data-count]');
+  
+  counters.forEach(counter => {
+    const target = parseInt(counter.getAttribute('data-count'), 10);
+    const duration = 2000;
+    const step = target / (duration / 16);
+    let current = 0;
+    
+    const updateCounter = () => {
+      current += step;
+      if (current < target) {
+        counter.textContent = Math.floor(current) + '+';
+        requestAnimationFrame(updateCounter);
+      } else {
+        counter.textContent = target + '+';
+      }
+    };
+    
+    // Start animation when visible
+    const counterObserver = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        updateCounter();
+        counterObserver.disconnect();
+      }
+    }, { threshold: 0.5 });
+    
+    counterObserver.observe(counter);
+  });
+}
+
+animateCounters();
+
+// Video Play Function with error handling
+function playVideo() {
+  const video = document.getElementById('introVideo');
+  const overlay = document.getElementById('videoOverlay');
+  if (video) {
+    video.play()
+      .then(() => {
+        overlay.style.display = 'none';
+      })
+      .catch((error) => {
+        console.warn('Video playback failed:', error.message);
+        // Still hide overlay and show native controls
+        overlay.style.display = 'none';
+        video.controls = true;
+      });
+  }
+}
+
+// Particle Animation
+const canvas = document.getElementById('particles-canvas');
+const ctx = canvas.getContext('2d');
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+const particles = [];
+const particleCount = 80;
+
+class Particle {
+  constructor() {
+    this.reset();
+  }
+  
+  reset() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.size = Math.random() * 2 + 0.5;
+    this.speedX = (Math.random() - 0.5) * 0.5;
+    this.speedY = (Math.random() - 0.5) * 0.5;
+    this.opacity = Math.random() * 0.5 + 0.1;
+  }
+  
+  update() {
+    this.x += this.speedX;
+    this.y += this.speedY;
+    
+    if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+      this.reset();
+    }
+  }
+  
+  draw() {
+    ctx.fillStyle = `rgba(212, 175, 55, ${this.opacity})`;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
+for (let i = 0; i < particleCount; i++) {
+  particles.push(new Particle());
+}
+
+function animateParticles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  particles.forEach(particle => {
+    particle.update();
+    particle.draw();
+  });
+  
+  // Draw connections
+  particles.forEach((p1, i) => {
+    particles.slice(i + 1).forEach(p2 => {
+      const dx = p1.x - p2.x;
+      const dy = p1.y - p2.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      
+      if (distance < 150) {
+        ctx.strokeStyle = `rgba(212, 175, 55, ${0.1 * (1 - distance / 150)})`;
+        ctx.lineWidth = 0.5;
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.stroke();
+      }
+    });
+  });
+  
+  requestAnimationFrame(animateParticles);
+}
+
+animateParticles();
+
+// Protocol Network Visualization
+const protocolCanvas = document.getElementById('protocolCanvas');
+if (protocolCanvas) {
+  const pCtx = protocolCanvas.getContext('2d');
+  
+  function resizeProtocolCanvas() {
+    protocolCanvas.width = protocolCanvas.parentElement.offsetWidth;
+    protocolCanvas.height = protocolCanvas.parentElement.offsetHeight;
+  }
+  resizeProtocolCanvas();
+  window.addEventListener('resize', resizeProtocolCanvas);
+  
+  const nodes = [];
+  const nodeCount = 40;
+  
+  class Node {
+    constructor() {
+      this.x = Math.random() * protocolCanvas.width;
+      this.y = Math.random() * protocolCanvas.height;
+      this.vx = (Math.random() - 0.5) * 0.5;
+      this.vy = (Math.random() - 0.5) * 0.5;
+      this.radius = Math.random() * 4 + 2;
+      const colors = ['#d4af37', '#00ffcc', '#a855f7', '#3b82f6'];
+      this.color = colors[Math.floor(Math.random() * colors.length)];
+    }
+    
+    update() {
+      this.x += this.vx;
+      this.y += this.vy;
+      
+      if (this.x < 0 || this.x > protocolCanvas.width) this.vx *= -1;
+      if (this.y < 0 || this.y > protocolCanvas.height) this.vy *= -1;
+    }
+    
+    draw() {
+      pCtx.fillStyle = this.color;
+      pCtx.shadowColor = this.color;
+      pCtx.shadowBlur = 10;
+      pCtx.beginPath();
+      pCtx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+      pCtx.fill();
+      pCtx.shadowBlur = 0;
+    }
+  }
+  
+  for (let i = 0; i < nodeCount; i++) {
+    nodes.push(new Node());
+  }
+  
+  function animateNetwork() {
+    pCtx.fillStyle = 'rgba(3, 7, 18, 0.1)';
+    pCtx.fillRect(0, 0, protocolCanvas.width, protocolCanvas.height);
+    
+    nodes.forEach(node => {
+      node.update();
+      node.draw();
+    });
+    
+    // Draw connections
+    nodes.forEach((n1, i) => {
+      nodes.slice(i + 1).forEach(n2 => {
+        const dx = n1.x - n2.x;
+        const dy = n1.y - n2.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        if (distance < 120) {
+          pCtx.strokeStyle = `rgba(212, 175, 55, ${0.3 * (1 - distance / 120)})`;
+          pCtx.lineWidth = 1;
+          pCtx.beginPath();
+          pCtx.moveTo(n1.x, n1.y);
+          pCtx.lineTo(n2.x, n2.y);
+          pCtx.stroke();
+        }
+      });
+    });
+    
+    requestAnimationFrame(animateNetwork);
+  }
+  
+  animateNetwork();
+}
+
+// Smooth scroll for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    const href = this.getAttribute('href');
+    const target = document.querySelector(href);
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+});
+</script>
+
+</body>
+</html>

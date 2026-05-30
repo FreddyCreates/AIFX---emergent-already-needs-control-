@@ -1,0 +1,91 @@
+{
+  "name": "linalg_eigen",
+  "full_name": "linalg.eigen",
+  "category": "linear_algebra",
+  "version": "1.0.0",
+  
+  "description": {
+    "short": "Compute eigenvalues and eigenvectors of a matrix",
+    "long": "Computes the eigenvalue decomposition of a square matrix A, finding λ and v such that Av = λv. Returns complex eigenvalues (even for real matrices) and their corresponding eigenvectors.",
+    "mathematical": "Given A ∈ ℝ^(n×n), find {λᵢ, vᵢ} where Avᵢ = λᵢvᵢ"
+  },
+  
+  "julia_backend": {
+    "package": "LinearAlgebra",
+    "function": "eigen",
+    "signature": "eigen(A::Matrix{Float64}) -> Eigen{Float64, Vector{ComplexF64}, Matrix{ComplexF64}}"
+  },
+  
+  "input": {
+    "matrix": {
+      "type": "Matrix{Float64}",
+      "js_type": "number[][]",
+      "motoko_type": "[[Float]]",
+      "constraints": ["must be square", "n×n where n > 0"],
+      "example": [[4, 2], [2, 3]]
+    }
+  },
+  
+  "output": {
+    "type": "EigenResult",
+    "fields": {
+      "values": {
+        "type": "ComplexVector",
+        "description": "Eigenvalues (may be complex even for real input)",
+        "length": "n"
+      },
+      "vectors": {
+        "type": "ComplexMatrix",
+        "description": "Eigenvectors as columns (normalized)",
+        "shape": "n×n"
+      }
+    },
+    "example": {
+      "values": [{"real": 5.236, "imag": 0}, {"real": 1.764, "imag": 0}],
+      "vectors": [[{"real": 0.789, "imag": 0}, {"real": -0.615, "imag": 0}], [{"real": 0.615, "imag": 0}, {"real": 0.789, "imag": 0}]]
+    }
+  },
+  
+  "complexity": {
+    "time": "O(n³)",
+    "space": "O(n²)",
+    "algorithm": "LAPACK DGEEV (QR iteration)"
+  },
+  
+  "usage": {
+    "javascript": {
+      "code": "import { getJuliaCompute } from './protocols/PROTOCOL-JULIA.js'\nconst julia = getJuliaCompute()\nawait julia.initialize()\nconst result = await julia.eigen([[4, 2], [2, 3]])",
+      "output": "{ values: [...], vectors: [...] }"
+    },
+    "motoko": {
+      "code": "import JuliaCompute \"JuliaCompute\"\nlet matrix : [[Float]] = [[4.0, 2.0], [2.0, 3.0]];\nlet result = await JuliaCompute.linalg_eigen(matrix);",
+      "output": "#ok({ values = [...]; vectors = [...] })"
+    },
+    "cli": {
+      "code": "nova-julia call linalg.eigen --matrix '[[4,2],[2,3]]'",
+      "output": "JSON result with eigenvalues and eigenvectors"
+    }
+  },
+  
+  "special_cases": {
+    "symmetric_matrix": "Eigenvalues are real, eigenvectors are orthogonal",
+    "identity_matrix": "All eigenvalues are 1, eigenvectors form identity",
+    "diagonal_matrix": "Eigenvalues are diagonal entries",
+    "singular_matrix": "At least one eigenvalue is 0"
+  },
+  
+  "errors": {
+    "non_square": "Matrix must be square",
+    "empty": "Matrix cannot be empty",
+    "nan_values": "Matrix contains NaN values"
+  },
+  
+  "related_functions": ["linalg.svd", "linalg.qr", "linalg.cholesky"],
+  
+  "phi_notes": "Eigenvalues of phi-scaled matrices exhibit golden ratio relationships. The ratio of successive eigenvalues often approximates φ in natural systems.",
+  
+  "references": [
+    "LAPACK Users' Guide, 3rd Edition",
+    "Golub & Van Loan, Matrix Computations, 4th Edition"
+  ]
+}

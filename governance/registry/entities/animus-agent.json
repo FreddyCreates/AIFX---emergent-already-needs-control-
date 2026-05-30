@@ -1,0 +1,14 @@
+{
+  "id": "atlas://agent/animus",
+  "name": "animus",
+  "class": "Agent",
+  "division": "Cognitive Core",
+  "emoji": "🧿",
+  "domain": "Mind — reasoning, judgment, self-direction",
+  "events": ["reasoning_cycle_completed", "judgment_emitted", "self_model_updated"],
+  "capabilities": ["reason", "judge", "introspect", "direct"],
+  "governance_pipeline": "pipeline://governance/agent_cycle",
+  "ocl_ref": "atlas://organism/bot-fleet",
+  "law_refs": ["governance://law/agent-health"],
+  "script": "sdk/agents/animus-agent.js"
+}

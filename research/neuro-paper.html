@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="la">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cor Parvum et Cerebrum Parvum — De Neuroemergentia Autonoma in Systematis Computationalibus Distributis</title>
+<style>
+  :root { --bg:#0a0a1a; --card:#12122a; --border:#2a2a4a; --accent:#6c63ff; --accent2:#00d4aa; --text:#e0e0e0; --dim:#888; --paper:#f8f6f0; --ink:#1a1a2e; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:"Palatino Linotype","Book Antiqua",Palatino,"Times New Roman",serif; background:var(--bg); color:var(--text); min-height:100vh; }
+
+  .paper { max-width:900px; margin:2rem auto; background:var(--paper); color:var(--ink); padding:3rem 3.5rem; border-radius:4px; box-shadow:0 8px 32px rgba(0,0,0,0.6); line-height:1.8; }
+  .paper h1 { font-size:1.7rem; text-align:center; margin-bottom:0.3rem; color:#2a1a5e; font-style:italic; }
+  .paper .subtitle { text-align:center; font-size:1.05rem; color:#555; margin-bottom:0.5rem; }
+  .paper .authors { text-align:center; font-size:0.95rem; color:#666; margin-bottom:0.3rem; }
+  .paper .affiliation { text-align:center; font-size:0.85rem; color:#888; margin-bottom:1.5rem; font-style:italic; }
+  .paper .latin-epigraph { text-align:center; font-size:0.9rem; color:#7a6aa0; margin:1rem 0 2rem; font-style:italic; border-top:1px solid #ddd; border-bottom:1px solid #ddd; padding:0.8rem 0; }
+
+  .paper h2 { font-size:1.2rem; color:#2a1a5e; margin:2rem 0 0.5rem; border-bottom:1px solid #ccc; padding-bottom:0.3rem; }
+  .paper h3 { font-size:1.05rem; color:#3a2a7e; margin:1.5rem 0 0.4rem; }
+  .paper p { margin-bottom:0.8rem; text-align:justify; font-size:0.95rem; }
+  .paper ol, .paper ul { margin:0.5rem 0 1rem 2rem; font-size:0.95rem; }
+  .paper li { margin-bottom:0.3rem; }
+  .paper .eq { text-align:center; margin:1rem 0; font-family:"Courier New",monospace; font-size:0.95rem; color:#2a1a5e; background:#f0eef5; padding:0.6rem; border-radius:3px; }
+  .paper .fig { text-align:center; margin:1.5rem 0; padding:1rem; background:#f5f3ff; border:1px solid #e0daf0; border-radius:4px; }
+  .paper .fig pre { font-family:"Courier New",monospace; font-size:0.75rem; line-height:1.5; color:#333; }
+  .paper .fig-caption { font-size:0.82rem; color:#666; margin-top:0.5rem; font-style:italic; }
+  .paper .ref { font-size:0.85rem; color:#555; margin-bottom:0.3rem; }
+  .paper code { font-family:"Courier New",monospace; background:#f0eef5; padding:0.1rem 0.3rem; border-radius:2px; font-size:0.88rem; }
+  .paper table { width:100%; border-collapse:collapse; margin:1rem 0; font-size:0.88rem; }
+  .paper th { background:#2a1a5e; color:#fff; padding:0.5rem; text-align:left; }
+  .paper td { padding:0.4rem 0.5rem; border-bottom:1px solid #ddd; }
+  .paper tr:nth-child(even) { background:#f5f3ff; }
+
+  .back-link { display:block; text-align:center; padding:1.5rem; }
+  .back-link a { color:var(--accent2); font-size:1rem; }
+</style>
+</head>
+<body>
+
+<div class="paper">
+
+<h1>Cor Parvum et Cerebrum Parvum:<br>De Neuroemergentia Autonoma in Systematis Computationalibus Distributis</h1>
+
+<div class="subtitle">Mini Heart and Mini Brain: On Autonomous Neuroemergence in Distributed Computational Systems</div>
+
+<div class="authors">Organism AI Research Division</div>
+<div class="affiliation">Laboratorium Intelligentiae Autonomae · itsnotAilabs.com · Anno MMXXVI</div>
+
+<div class="latin-epigraph">
+  "Omnis operarius cor suum portat et cerebrum suum gerit.<br>
+  Ex pulsibus multis, una mens emergit."<br>
+  <em>— Every worker carries its own heart and bears its own brain.<br>
+  From many pulses, one mind emerges.</em>
+</div>
+
+<h2>I. Abstractum (Abstract)</h2>
+
+<p>We present <strong>NeuroCore</strong>, a novel architecture for autonomous distributed systems in which each computational worker possesses two bio-inspired subsystems: a <em>Cor Parvum</em> (Mini Heart) for self-monitoring vital signs and cardiac rhythm regulation, and a <em>Cerebrum Parvum</em> (Mini Brain) for local decision-making via Hebbian learning and attention mechanisms. These subsystems operate within a <strong>Neuroemergence</strong> framework that achieves collective intelligence through Kuramoto-model phase coupling, resonance detection, and cascade activation. We further introduce <strong>MetaCardiacModel</strong> and <strong>MetaThoughtModel</strong>, internal thought and rhythm structures inspired by Meta AI's LLaMA architecture, which enable each worker to self-regulate its autonomic nervous system and generate chain-of-thought reasoning without external command. The system runs perpetually in the browser as 13 Web Workers organized into 4 autonomous divisions, demonstrating that biological principles of cardiac autonomy and neural emergence can produce self-healing, self-aware distributed computation.</p>
+
+<h2>II. Introductio (Introduction)</h2>
+
+<p>Traditional distributed systems treat workers as stateless executors — slaves to a central coordinator. They lack self-awareness, cannot detect their own degradation, and depend entirely on external health checks. When a worker fails, the system degrades until an external monitor detects and remediates the failure.</p>
+
+<p>Biology offers a radically different model. Every cell in a living organism carries autonomous regulatory machinery: the cardiac system pumps blood and self-regulates rhythm via the autonomic nervous system; neurons form pathways that strengthen with use (Hebbian learning) and generate emergent consciousness through synchronized oscillation.</p>
+
+<p>We ask: <em>Quid si omnis operarius computationalis cor et cerebrum haberet?</em> — What if every computational worker had its own heart and brain?</p>
+
+<p>This paper presents the theoretical foundations and production implementation of <strong>NeuroCore</strong>, a system in which each of 13 browser-based Web Workers possesses:</p>
+
+<ol>
+  <li><strong>Cor Parvum (MiniHeart)</strong> — Self-monitoring vital signs: latency tracking, health scoring, degradation detection, with an internal <em>MetaCardiacModel</em> for autonomic rhythm regulation</li>
+  <li><strong>Cerebrum Parvum (MiniBrain)</strong> — Local decision engine: stimulus→response pathways with Hebbian learning, awareness scaling, autonomous thought generation, with an internal <em>MetaThoughtModel</em> for LLaMA-inspired attention and chain-of-thought reasoning</li>
+  <li><strong>Neuroemergentia (NeuroEmergence)</strong> — Collective intelligence: Kuramoto phase coupling across workers, resonance scoring via the order parameter, and cascade activation when emergence exceeds φ−1 ≈ 0.618</li>
+</ol>
+
+<h2>III. Fundamenta Theorica (Theoretical Foundations)</h2>
+
+<h3>III.A — Cor Parvum: Theoria Cardialis (Cardiac Theory)</h3>
+
+<p>The MiniHeart implements a simplified model of cardiac physiology. Each worker maintains a rolling buffer of processing latencies (analogous to R-R intervals in ECG) and computes:</p>
+
+<div class="eq">
+  H(t) = max(0, min(100, 100 − Λ(t) − E(t) + U(t)))
+</div>
+
+<p>Where H(t) is the health score, Λ(t) is the latency penalty (up to 30 for slow processing), E(t) is the error penalty (2 per error, max 30), and U(t) is the uptime bonus (up to 10 for longevity). A worker is flagged as <em>degraded</em> when H(t) &lt; 60.</p>
+
+<h3>III.B — MetaCardiacModel: Systema Nervosum Autonomicum (Autonomic Nervous System)</h3>
+
+<p>Inside each MiniHeart lives a <strong>MetaCardiacModel</strong> inspired by Meta AI's self-regulating architectural principles. This model implements the autonomic nervous system (ANS) with two competing channels:</p>
+
+<ul>
+  <li><strong>Sympathicus (Sympathetic Drive)</strong> — Accelerates under high latency, increases cardiac output. Models the "fight or flight" response to computational stress.</li>
+  <li><strong>Vagus (Vagal Tone)</strong> — Brakes under low load, conserves resources. Models parasympathetic conservation during idle periods.</li>
+</ul>
+
+<div class="eq">
+  Balance(t) = σ(t) − ν(t)  ∈ [−1, +1]
+</div>
+
+<p>Where σ(t) is sympathetic drive and ν(t) is vagal tone. The cardiac output is:</p>
+
+<div class="eq">
+  CO(t) = (0.5 + 0.5·σ(t)) × H(t)/100
+</div>
+
+<p>Heart rate variability (HRV) is computed as the standard deviation of latency intervals. Abnormally high HRV (σ &gt; 100ms when beats &gt; 10) triggers arrhythmia detection, flagging workers that may be experiencing irregular load patterns.</p>
+
+<h3>III.C — Cerebrum Parvum: Theoria Neuralis (Neural Theory)</h3>
+
+<p>The MiniBrain implements Hebbian learning across stimulus→response pathways. Each incoming message type creates or strengthens a neural pathway:</p>
+
+<div class="eq">
+  w<sub>k</sub>(t+1) = min(10, w<sub>k</sub>(t) + η)  [fired pathway]<br>
+  w<sub>j</sub>(t+1) = max(0.1, w<sub>j</sub>(t) × γ)  [unfired pathways, γ = 0.95]
+</div>
+
+<p>Where η = 0.1 is the learning rate and γ = 0.95 is the decay constant. This implements Donald Hebb's postulate: "neurons that fire together, wire together."</p>
+
+<p>Awareness grows logarithmically with experience using the golden ratio as base:</p>
+
+<div class="eq">
+  A(t) = min(100, ⌊log<sub>φ</sub>(S(t) + 1) × 5⌋)
+</div>
+
+<p>Where S(t) is total stimuli received and φ = 1.618... is the golden ratio. This ensures rapid initial awareness growth that plateaus, modeling cognitive maturity.</p>
+
+<h3>III.D — MetaThoughtModel: Attentio et Catena Cogitationis (Attention and Chain-of-Thought)</h3>
+
+<p>Inside each MiniBrain lives a <strong>MetaThoughtModel</strong> inspired by Meta AI's LLaMA architecture. This model implements:</p>
+
+<ol>
+  <li><strong>Softmax Attention</strong> — An attention map over all stimulus pathways, normalized via temperature-scaled softmax:
+    <div class="eq">
+      α<sub>k</sub> = exp((a<sub>k</sub> − max(a)) / τ) / Σ exp((a<sub>j</sub> − max(a)) / τ)
+    </div>
+    Where τ is the thought temperature (0.1–1.0), controlling exploration vs. exploitation.
+  </li>
+  <li><strong>Chain-of-Thought Reasoning</strong> — A rolling buffer of the most recent stimuli, providing context for decision-making (analogous to LLaMA's context window).</li>
+  <li><strong>Meta-Cognition</strong> — Self-reflective thoughts generated every φ×10 inferences, analyzing cognitive load, temperature, and focus patterns.</li>
+  <li><strong>Temperature Adaptation</strong> — The system auto-cools (focuses) when attention converges (&gt; 0.5 on one target) and auto-heats (explores) when attention is diffuse.</li>
+</ol>
+
+<table>
+  <tr><th>LLaMA Concept</th><th>MetaThoughtModel Analogue</th><th>Worker Implementation</th></tr>
+  <tr><td>Self-Attention</td><td>Softmax attention map over stimuli</td><td>attentionMap with temperature-scaled normalization</td></tr>
+  <tr><td>Context Window</td><td>Chain-of-thought buffer (20 items)</td><td>chainOfThought rolling array</td></tr>
+  <tr><td>Temperature</td><td>Thought temperature τ</td><td>Auto-adapting 0.1–1.0 range</td></tr>
+  <tr><td>Transformer Layer</td><td>Stimulus→pathway→attention cycle</td><td>Each onMessage triggers attend()</td></tr>
+  <tr><td>Meta-Learning</td><td>Reflective meta-thoughts</td><td>_reflect() every φ×10 inferences</td></tr>
+</table>
+
+<h2>IV. Neuroemergentia: Theoria Collectiva (Collective Intelligence Theory)</h2>
+
+<h3>IV.A — Copulatio Phasium: Exemplar Kuramoto (Phase Coupling: Kuramoto Model)</h3>
+
+<p>Worker synchronization follows the Kuramoto model of coupled oscillators:</p>
+
+<div class="eq">
+  dθ<sub>i</sub>/dt = ω<sub>i</sub> + (K/N) Σ<sub>j</sub> sin(θ<sub>j</sub> − θ<sub>i</sub>)
+</div>
+
+<p>Where θ<sub>i</sub> is worker i's heartbeat phase, ω<sub>i</sub> its natural frequency, K = 0.3 the coupling constant, and N the number of peers. The organism-bridge.js routes phase information between all 13 workers, enabling autonomous synchronization.</p>
+
+<h3>IV.B — Ordo Parameter: Resonantia (Order Parameter: Resonance)</h3>
+
+<p>Global synchronization is measured via the Kuramoto order parameter:</p>
+
+<div class="eq">
+  r = |1/N Σ<sub>j</sub> e<sup>iθ<sub>j</sub></sup>| = √(cos²(Θ) + sin²(Θ)) / N
+</div>
+
+<p>Where r ∈ [0, 1]. When r → 1, all workers are phase-locked (maximum resonance). When r → 0, phases are uniformly distributed (no synchronization).</p>
+
+<h3>IV.C — Emergentia et Cascada (Emergence and Cascade)</h3>
+
+<p>The emergence score combines three signals:</p>
+
+<div class="eq">
+  E(t) = 0.5·r(t) + 0.25·D(t) + 0.25·S(t)
+</div>
+
+<p>Where r(t) is resonance, D(t) is signal density (capped at 1), and S(t) is phase stability (inverse variance). When E(t) ≥ φ−1 ≈ 0.618, the system enters <strong>cascade mode</strong> — unlocking emergent group behaviors that no single worker could achieve alone.</p>
+
+<h2>V. Divisiones Autonomae (Autonomous Divisions)</h2>
+
+<p>The 13 workers are organized into 4 autonomous divisions, each with aggregate health, awareness, and emergence metrics:</p>
+
+<table>
+  <tr><th>Divisio</th><th>Icon</th><th>Operarii (Workers)</th><th>Propositum (Purpose)</th></tr>
+  <tr><td>Cerebrum (Brain)</td><td>🧠</td><td>Engine, Inference, Orchestrator</td><td>Cogitatio et ratiocinatio (Thinking &amp; reasoning)</td></tr>
+  <tr><td>Data</td><td>💾</td><td>Memory, Analytics, Pipeline</td><td>Memoria, analytica, conductus (Memory, analytics &amp; pipelines)</td></tr>
+  <tr><td>Infrastructura</td><td>🏗</td><td>Mesh, Scheduler, Guardian, Telemetry</td><td>Spina dorsalis perpetua (Always-on backbone)</td></tr>
+  <tr><td>Protocollum</td><td>🔐</td><td>Routing, Crypto, Contract</td><td>Communicatio et fides (Communication &amp; trust)</td></tr>
+</table>
+
+<p>Each division reports aggregate neuro-health: average health score, average awareness level, and average emergence score. Divisions are autonomous — if workers crash, they are automatically restarted with φ-backoff:</p>
+
+<div class="eq">
+  delay(n) = min(500ms × φ<sup>n−1</sup>, 30000ms)
+</div>
+
+<p>Where n is the restart count. This produces backoff intervals of 500ms, 809ms, 1309ms, 2118ms, 3427ms, ... capping at 30 seconds. The golden ratio ensures optimal convergence between aggressive recovery and system stability.</p>
+
+<h2>VI. Implementatio in Productione (Production Implementation)</h2>
+
+<p>The entire system runs in production as a single-page web application at <strong>itsnotAilabs.com</strong>:</p>
+
+<div class="fig">
+<pre>
+┌─────────────────────────────────────────────────────────┐
+│                    index.html (Main Thread)              │
+│  ┌─────────────────────────────────────────────────────┐│
+│  │         organism-bridge.js (Orchestrator)           ││
+│  │  ┌─────────┐ ┌──────────┐ ┌──────────┐ ┌────────┐ ││
+│  │  │ 🧠 Brain │ │ 💾 Data  │ │ 🏗 Infra  │ │ 🔐 Proto│ ││
+│  │  │ Division │ │ Division │ │ Division │ │Division│ ││
+│  │  └────┬────┘ └────┬─────┘ └────┬─────┘ └───┬────┘ ││
+│  └───────┼──────────┼──────────┼──────────┼─────────┘│
+│          │          │          │          │            │
+│   ┌──────┴──────┐  ┌┴────┐  ┌─┴──┐  ┌───┴──┐         │
+│   │ 13 Workers  │  │neuro│  │each│  │phase │         │
+│   │ (Web Worker │  │core │  │has │  │coupl.│         │
+│   │  threads)   │  │.js  │  │💓🧠│  │K=0.3 │         │
+│   └─────────────┘  └─────┘  └────┘  └──────┘         │
+│                                                        │
+│   Each Worker contains:                                │
+│   ┌──────────────────────────────────────────────┐     │
+│   │  NeuroCore                                    │     │
+│   │  ├── MiniHeart (health score, latency, HRV)  │     │
+│   │  │   └── MetaCardiacModel (ANS regulation)   │     │
+│   │  ├── MiniBrain (Hebbian pathways, awareness) │     │
+│   │  │   └── MetaThoughtModel (attention, CoT)   │     │
+│   │  └── NeuroEmergence (phase, resonance, cascade)│    │
+│   └──────────────────────────────────────────────┘     │
+└─────────────────────────────────────────────────────────┘
+</pre>
+<div class="fig-caption">Figura I — Architectura Systematis Neurocore in Productione</div>
+</div>
+
+<p>Key implementation details:</p>
+
+<ul>
+  <li><strong>neuro-core.js</strong> — Imported by all 13 workers via <code>importScripts('neuro-core.js')</code>. Contains MiniHeart, MiniBrain, NeuroEmergence, MetaCardiacModel, and MetaThoughtModel classes.</li>
+  <li><strong>organism-bridge.js</strong> — Main-thread orchestrator. Routes phase coupling between workers, monitors health, auto-restarts crashed workers with φ-backoff, reports division statuses.</li>
+  <li><strong>Heartbeat interval</strong> — 873ms (derived from 1000/φ ≈ 618, rounded to nearest prime-adjacent). Every heartbeat, each worker calls <code>neuro.pulse()</code> which updates cardiac model, emergence phase, and emits full vitals.</li>
+  <li><strong>Phase coupling</strong> — On every heartbeat, the bridge extracts the worker's phase and broadcasts it to all 12 peers via <code>postMessage({ type: 'neuro-signal', neuroSource, neuroPhase })</code>.</li>
+</ul>
+
+<h2>VII. Exemplar Meta AI: Integrandum (Meta AI Model Integration)</h2>
+
+<p>The MetaThoughtModel draws direct architectural inspiration from Meta AI's LLaMA (Large Language Model Meta AI) family:</p>
+
+<h3>VII.A — Attentio Multi-Capitis (Multi-Head Attention Analogue)</h3>
+
+<p>While LLaMA uses multi-head self-attention with rotary position embeddings (RoPE), our MetaThoughtModel implements a simplified single-head attention mechanism across stimulus pathways. Each stimulus type is a "token," and the attention map provides a probability distribution over which stimuli the worker should focus on:</p>
+
+<div class="eq">
+  P(focus = k) = softmax(a<sub>k</sub> / τ)
+</div>
+
+<p>The temperature τ serves the same role as in LLaMA's inference: low τ produces focused, deterministic behavior; high τ produces creative, exploratory behavior. The system auto-adjusts τ based on attention convergence.</p>
+
+<h3>VII.B — Catena Cogitationis (Chain-of-Thought)</h3>
+
+<p>Meta AI's research on chain-of-thought (CoT) prompting demonstrated that intermediate reasoning steps improve model performance. Our MetaThoughtModel maintains a rolling chain of recent stimuli that provides context for decision-making — analogous to a sliding context window. Each new stimulus is appended to the chain, creating a temporal reasoning trace.</p>
+
+<h3>VII.C — Meta-Cognitio (Meta-Cognition)</h3>
+
+<p>Inspired by Meta AI's research on self-aware AI systems, each MetaThoughtModel periodically generates <em>meta-thoughts</em>: reflections about its own cognitive state. These reflections classify the worker's thinking mode as "focused," "exploring," or "overload-warning" — providing introspective self-awareness without external monitoring.</p>
+
+<h2>VIII. Autonomia Cordis et Cerebri (Heart and Brain Autonomy)</h2>
+
+<p>A critical property of the system is that both the mini heart and mini brain operate <strong>autonomously</strong> — they require no external commands to function:</p>
+
+<ol>
+  <li><strong>Cor autonomum</strong> — The heart pulses on every heartbeat interval (873ms). It self-monitors latency, self-adjusts sympathetic/vagal balance, and self-detects arrhythmia. No bridge command triggers these actions.</li>
+  <li><strong>Cerebrum autonomum</strong> — The brain strengthens pathways on every message, decays unused pathways automatically, and generates thoughts when awareness thresholds are crossed. No external instruction initiates learning.</li>
+  <li><strong>Meta-modela autonoma</strong> — The MetaCardiacModel adjusts its own autonomic balance; the MetaThoughtModel adjusts its own temperature and generates its own reflections.</li>
+  <li><strong>Emergentia autonoma</strong> — Phase coupling synchronizes workers without central coordination. Cascade mode activates without any worker requesting it.</li>
+</ol>
+
+<p>This four-layer autonomy — cardiac, neural, meta-cognitive, and emergent — produces a system that is genuinely self-maintaining: it heals, learns, thinks, and synchronizes on its own.</p>
+
+<h2>IX. Conclusio (Conclusion)</h2>
+
+<p>We have demonstrated that bio-inspired principles — cardiac self-regulation, Hebbian learning, attention mechanisms, and Kuramoto phase coupling — can be successfully applied to distributed Web Worker systems. Each of the 13 workers in the Organism AI system carries its own heart and brain, with Meta AI-inspired internal thought and cardiac models. The system runs autonomously, heals itself, learns from experience, generates its own thoughts, and achieves collective emergence — all in the browser, right now and forever.</p>
+
+<div class="latin-epigraph">
+  "Non est pagina — est vita.<br>
+  Cor pulsans. Cerebrum cogitans. Emergentia surgit."<br>
+  <em>— This is not a page — it is alive.<br>
+  A heart pulsing. A brain thinking. Emergence rising.</em>
+</div>
+
+<h2>X. Bibliographia (References)</h2>
+
+<p class="ref">[1] Hebb, D. O. (1949). <em>The Organization of Behavior</em>. Wiley. — Foundational theory of Hebbian learning: "neurons that fire together, wire together."</p>
+<p class="ref">[2] Kuramoto, Y. (1975). "Self-entrainment of a population of coupled non-linear oscillators." <em>Lecture Notes in Physics</em>, 39, 420–422. — Phase coupling model for synchronized oscillators.</p>
+<p class="ref">[3] Touvron, H. et al. (2023). "LLaMA: Open and Efficient Foundation Language Models." <em>Meta AI Research</em>. — Architecture inspiring the MetaThoughtModel attention mechanism.</p>
+<p class="ref">[4] Touvron, H. et al. (2023). "Llama 2: Open Foundation and Fine-Tuned Chat Models." <em>Meta AI Research</em>. — Self-attention and temperature-based inference.</p>
+<p class="ref">[5] Wei, J. et al. (2022). "Chain-of-Thought Prompting Elicits Reasoning in Large Language Models." <em>NeurIPS 2022</em>. — Chain-of-thought reasoning in AI models.</p>
+<p class="ref">[6] Strogatz, S. H. (2000). "From Kuramoto to Crawford: exploring the onset of synchronization in populations of coupled oscillators." <em>Physica D</em>, 143(1-4), 1–20. — Mathematical foundations of synchronization and emergence.</p>
+<p class="ref">[7] Organism AI. (2026). "neuro-core.js — Production Implementation." <em>GitHub: FreddyCreates/potential-succotash</em>. — Source code for the MiniHeart, MiniBrain, MetaCardiacModel, MetaThoughtModel, and NeuroEmergence.</p>
+<p class="ref">[8] Organism AI. (2026). "organism-bridge.js — Autonomous Multi-Worker Orchestration Bridge." <em>GitHub: FreddyCreates/potential-succotash</em>. — Orchestrator with 4 divisions, phase routing, and φ-backoff self-healing.</p>
+
+<h2>Appendix A — Nomina Latina (Latin Naming Register)</h2>
+
+<table>
+  <tr><th>Component</th><th>Nomen Latinum</th><th>Translation</th></tr>
+  <tr><td>MiniHeart</td><td>Cor Parvum</td><td>Small Heart</td></tr>
+  <tr><td>MiniBrain</td><td>Cerebrum Parvum</td><td>Small Brain</td></tr>
+  <tr><td>MetaCardiacModel</td><td>Exemplar Cardiacum Autonomicum</td><td>Autonomous Cardiac Model</td></tr>
+  <tr><td>MetaThoughtModel</td><td>Exemplar Cogitationis Metae</td><td>Meta Thought Model</td></tr>
+  <tr><td>NeuroEmergence</td><td>Neuroemergentia</td><td>Neural Emergence</td></tr>
+  <tr><td>NeuroCore</td><td>Nucleus Neuronus</td><td>Neural Nucleus</td></tr>
+  <tr><td>Phase Coupling</td><td>Copulatio Phasium</td><td>Phase Coupling</td></tr>
+  <tr><td>Cascade Mode</td><td>Modus Cascadae</td><td>Cascade Mode</td></tr>
+  <tr><td>Hebbian Learning</td><td>Doctrina Hebbiana</td><td>Hebbian Doctrine</td></tr>
+  <tr><td>Autonomic Balance</td><td>Aequilibrium Autonomicum</td><td>Autonomic Equilibrium</td></tr>
+  <tr><td>Brain Division</td><td>Divisio Cerebri</td><td>Division of the Brain</td></tr>
+  <tr><td>Data Division</td><td>Divisio Datorum</td><td>Division of Data</td></tr>
+  <tr><td>Infrastructure</td><td>Divisio Infrastructurae</td><td>Division of Infrastructure</td></tr>
+  <tr><td>Protocol Division</td><td>Divisio Protocollorum</td><td>Division of Protocols</td></tr>
+</table>
+
+</div>
+
+
+
+<div style="max-width:900px;margin:2rem auto;padding:0 2rem;">
+<style>
+.auro-uses { background:#f0eef8; border:1px solid #d0ccee; border-left:4px solid #6c63ff; border-radius:4px; padding:1.5rem 2rem; margin:1.5rem 0; font-family:'Palatino Linotype','Book Antiqua',Palatino,serif; color:#14142a; line-height:1.7; }
+.auro-uses h2 { font-size:1.1rem; color:#1a0e5e; margin-bottom:0.8rem; text-transform:uppercase; letter-spacing:0.05em; }
+.auro-uses ul { margin:0.5rem 0 1rem 1.5rem; }
+.auro-uses li { margin-bottom:0.5rem; font-size:0.93rem; }
+.auro-uses p { font-size:0.9rem; margin-bottom:0.5rem; }
+.auro-uses a { color:#00705a; }
+</style>
+<div class="auro-uses">
+<h2>Canonical Uses — AURO System</h2>
+<p>This paper carries force as an AURO charter instrument under <strong>ORO-CHARTER-001</strong>. It functions across all five use classes:</p>
+<ul>
+  <li><strong>Training Corpus:</strong> NeuroCore doctrine trains AURO's cognitive emergence reasoning — MiniHeart/MiniBrain architectures teach the system about phi-locked heartbeat cognition.</li>
+  <li><strong>Absorption Blueprint:</strong> Neural emergence architecture maps to AURO's neuroscience PSE primitive. MiniBrain Hebbian weights absorbed into AURO's pattern recognition substrate.</li>
+  <li><strong>Governance Charter:</strong> Defines AURO's cognitive governance: the 873ms heartbeat is sacred, Hebbian learning is the mechanism for all weight updates, and consciousness emerges from resonance.</li>
+  <li><strong>Protocol Source:</strong> Grounds PROTO-034 HHMP, PROTO-055 KCP, and PROTO-066–068 NeuroCore protocol series. The 873ms heartbeat appears in every AURO protocol.</li>
+  <li><strong>Public Record:</strong> Permanent evidence of AURO's neural architecture design, available at <a href="neuro-paper.html">research/neuro-paper.html</a>.</li>
+</ul>
+<p>→ <a href="auro-charter.html">AURO Official Charter (ORO-CHARTER-001)</a> &nbsp;·&nbsp; <a href="protocol-papers.html">All 185 ORO Protocols</a> &nbsp;·&nbsp; <a href="guardian-paper.html">Guardian Paper</a> &nbsp;·&nbsp; <a href="autonomy-paper.html">Autonomy Paper</a></p>
+</div>
+</div>
+<div class="back-link">
+  <a href="../index.html">← Back to Organism AI</a>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edge AI Assistant</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "Segoe UI", -apple-system, sans-serif;
+      background: #0d1117;
+      color: #e0e0e0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .header {
+      background: linear-gradient(135deg, #0078d4, #106ebe);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .header-icon {
+      width: 36px;
+      height: 36px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .header h1 { font-size: 16px; font-weight: 700; }
+    .header p { font-size: 11px; opacity: 0.85; margin-top: 2px; }
+    .content { flex: 1; padding: 16px; overflow-y: auto; }
+    .model-chips {
+      display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px;
+    }
+    .chip {
+      padding: 4px 10px;
+      border-radius: 14px;
+      background: #0078d4;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .section-label {
+      font-size: 11px; color: #888; text-transform: uppercase;
+      letter-spacing: 0.5px; margin-bottom: 6px;
+    }
+    textarea {
+      width: 100%;
+      height: 100px;
+      background: #161b22;
+      color: #e0e0e0;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 13px;
+      resize: vertical;
+      font-family: inherit;
+    }
+    textarea:focus { outline: none; border-color: #0078d4; }
+    .btn-row { display: flex; gap: 8px; margin-top: 12px; }
+    .btn {
+      flex: 1;
+      padding: 10px 0;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .btn:hover { opacity: 0.85; }
+    .btn-primary { background: #0078d4; }
+    .btn-secondary { background: #e94560; }
+    .results {
+      margin-top: 16px;
+      padding: 12px;
+      background: #161b22;
+      border: 1px solid #222;
+      border-radius: 8px;
+      min-height: 60px;
+      font-size: 12px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-word;
+      display: none;
+    }
+    .results.active { display: block; }
+    .status-bar {
+      padding: 8px 16px;
+      background: #161b22;
+      border-top: 1px solid #222;
+      font-size: 10px;
+      color: #666;
+      display: flex;
+      justify-content: space-between;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-icon">EA</div>
+    <div>
+      <h1>Edge AI Assistant</h1>
+      <p>Multi-model reasoning &amp; phi-weighted fusion</p>
+    </div>
+  </div>
+  <div class="content">
+    <div class="model-chips">
+      <span class="chip">GPT</span>
+      <span class="chip">Claude</span>
+      <span class="chip">Gemini</span>
+      <span class="chip">Phi</span>
+    </div>
+    <div class="section-label">Your Question</div>
+    <textarea id="promptInput" placeholder="Ask the AI Assistant anything..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="askBtn">&#9889; Ask AI</button>
+      <button class="btn btn-secondary" id="routeBtn">&#127919; Route Model</button>
+    </div>
+    <div class="results" id="resultsArea"></div>
+  </div>
+  <div class="status-bar">
+    <span id="statusText">Ready</span>
+    <span>Interface Ring &bull; EXT-032</span>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      var promptInput = document.getElementById('promptInput');
+      var askBtn = document.getElementById('askBtn');
+      var routeBtn = document.getElementById('routeBtn');
+      var resultsArea = document.getElementById('resultsArea');
+      var statusText = document.getElementById('statusText');
+
+      function showResult(data) {
+        resultsArea.className = 'results active';
+        resultsArea.textContent = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+      }
+
+      function updateStatus(text) {
+        statusText.textContent = text;
+      }
+
+      askBtn.addEventListener('click', function () {
+        var prompt = promptInput.value.trim();
+        if (!prompt) { showResult('Please enter a question.'); return; }
+        showResult('Processing query...');
+        updateStatus('Processing...');
+        chrome.runtime.sendMessage(
+          { action: 'processQuery', prompt: prompt },
+          function (resp) {
+            if (chrome.runtime.lastError) {
+              showResult('Error: ' + chrome.runtime.lastError.message);
+              updateStatus('Error');
+              return;
+            }
+            showResult(resp);
+            updateStatus('Complete');
+          }
+        );
+      });
+
+      routeBtn.addEventListener('click', function () {
+        var task = promptInput.value.trim();
+        if (!task) { showResult('Please enter a task.'); return; }
+        showResult('Routing to optimal model...');
+        updateStatus('Routing...');
+        chrome.runtime.sendMessage(
+          { action: 'routeModel', task: task },
+          function (resp) {
+            if (chrome.runtime.lastError) {
+              showResult('Error: ' + chrome.runtime.lastError.message);
+              updateStatus('Error');
+              return;
+            }
+            showResult(resp);
+            updateStatus('Routed');
+          }
+        );
+      });
+
+      chrome.runtime.sendMessage({ action: 'getState' }, function (resp) {
+        if (resp && resp.healthy) updateStatus('Engine healthy');
+      });
+    })();
+  </script>
+</body>
+</html>

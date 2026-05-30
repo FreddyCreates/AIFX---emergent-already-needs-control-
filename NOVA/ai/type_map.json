@@ -1,0 +1,445 @@
+{
+  "name": "NOVA Type Isomorphism Map",
+  "version": "1.0.0",
+  "description": "Complete mapping of types across Julia, JavaScript, and Motoko substrates",
+  "purpose": "This type map serves as the 'passport system' for values crossing computational borders",
+  
+  "constants": {
+    "PHI": {
+      "value": 1.618033988749895,
+      "julia": "const PHI = 1.618033988749895",
+      "javascript": "export const PHI = 1.618033988749895;",
+      "motoko": "let PHI : Float = 1.618033988749895;"
+    },
+    "PHI_INV": {
+      "value": 0.618033988749895,
+      "julia": "const PHI_INV = 0.618033988749895",
+      "javascript": "export const PHI_INV = 0.618033988749895;",
+      "motoko": "let PHI_INV : Float = 0.618033988749895;"
+    },
+    "HEARTBEAT": {
+      "value": 873,
+      "julia": "const HEARTBEAT = 873",
+      "javascript": "export const HEARTBEAT = 873;",
+      "motoko": "let HEARTBEAT : Nat = 873;"
+    }
+  },
+  
+  "scalars": {
+    "Float64": {
+      "julia": {
+        "type": "Float64",
+        "example": "3.14159",
+        "size_bytes": 8
+      },
+      "javascript": {
+        "type": "number",
+        "example": "3.14159",
+        "typed_array": "Float64Array"
+      },
+      "motoko": {
+        "type": "Float",
+        "example": "3.14159",
+        "import": "mo:base/Float"
+      },
+      "candid": {
+        "type": "float64",
+        "wire_format": "IEEE 754 double"
+      },
+      "conversion": "direct",
+      "precision_notes": "All substrates use IEEE 754 double precision"
+    },
+    
+    "Int64": {
+      "julia": {
+        "type": "Int64",
+        "example": "42",
+        "size_bytes": 8
+      },
+      "javascript": {
+        "type": "bigint",
+        "example": "42n",
+        "typed_array": "BigInt64Array",
+        "note": "Use BigInt for full precision; Number loses precision above 2^53"
+      },
+      "motoko": {
+        "type": "Int",
+        "example": "42",
+        "import": "mo:base/Int"
+      },
+      "candid": {
+        "type": "int64",
+        "wire_format": "Two's complement"
+      },
+      "conversion": "direct",
+      "precision_notes": "JavaScript Number loses precision; use BigInt"
+    },
+    
+    "Bool": {
+      "julia": {
+        "type": "Bool",
+        "example": "true",
+        "size_bytes": 1
+      },
+      "javascript": {
+        "type": "boolean",
+        "example": "true"
+      },
+      "motoko": {
+        "type": "Bool",
+        "example": "true"
+      },
+      "candid": {
+        "type": "bool",
+        "wire_format": "Single byte"
+      },
+      "conversion": "direct"
+    },
+    
+    "String": {
+      "julia": {
+        "type": "String",
+        "example": "\"hello\"",
+        "encoding": "UTF-8"
+      },
+      "javascript": {
+        "type": "string",
+        "example": "\"hello\"",
+        "encoding": "UTF-16 internal, UTF-8 serialization"
+      },
+      "motoko": {
+        "type": "Text",
+        "example": "\"hello\"",
+        "import": "mo:base/Text"
+      },
+      "candid": {
+        "type": "text",
+        "wire_format": "UTF-8"
+      },
+      "conversion": "direct",
+      "encoding_notes": "All substrates handle Unicode; bridge ensures UTF-8 on wire"
+    }
+  },
+  
+  "vectors": {
+    "Vector{Float64}": {
+      "julia": {
+        "type": "Vector{Float64}",
+        "alias": "Array{Float64, 1}",
+        "example": "[1.0, 2.0, 3.0]",
+        "constructor": "Float64[1.0, 2.0, 3.0]"
+      },
+      "javascript": {
+        "type": "Float64Array",
+        "example": "new Float64Array([1.0, 2.0, 3.0])",
+        "fallback": "number[]"
+      },
+      "motoko": {
+        "type": "[Float]",
+        "example": "[1.0, 2.0, 3.0]",
+        "import": "mo:base/Array"
+      },
+      "candid": {
+        "type": "vec float64",
+        "wire_format": "Length-prefixed array"
+      },
+      "conversion": "array_copy",
+      "notes": "Memory layout is contiguous in all substrates"
+    },
+    
+    "Vector{Int64}": {
+      "julia": {
+        "type": "Vector{Int64}",
+        "alias": "Array{Int64, 1}",
+        "example": "[1, 2, 3]"
+      },
+      "javascript": {
+        "type": "BigInt64Array",
+        "example": "new BigInt64Array([1n, 2n, 3n])",
+        "fallback": "bigint[]"
+      },
+      "motoko": {
+        "type": "[Int]",
+        "example": "[1, 2, 3]"
+      },
+      "candid": {
+        "type": "vec int64",
+        "wire_format": "Length-prefixed array"
+      },
+      "conversion": "array_copy"
+    },
+    
+    "Vector{Bool}": {
+      "julia": {
+        "type": "BitVector",
+        "alias": "Vector{Bool}",
+        "example": "[true, false, true]"
+      },
+      "javascript": {
+        "type": "boolean[]",
+        "example": "[true, false, true]"
+      },
+      "motoko": {
+        "type": "[Bool]",
+        "example": "[true, false, true]"
+      },
+      "candid": {
+        "type": "vec bool",
+        "wire_format": "Length-prefixed array"
+      },
+      "conversion": "array_copy"
+    }
+  },
+  
+  "matrices": {
+    "Matrix{Float64}": {
+      "julia": {
+        "type": "Matrix{Float64}",
+        "alias": "Array{Float64, 2}",
+        "example": "[1.0 2.0; 3.0 4.0]",
+        "layout": "column_major",
+        "note": "Julia stores matrices column-by-column"
+      },
+      "javascript": {
+        "type": "Float64Array[]",
+        "example": "[[1.0, 2.0], [3.0, 4.0]]",
+        "layout": "row_major",
+        "note": "Array of rows, each row is Float64Array or number[]"
+      },
+      "motoko": {
+        "type": "[[Float]]",
+        "example": "[[1.0, 2.0], [3.0, 4.0]]",
+        "layout": "row_major"
+      },
+      "candid": {
+        "type": "vec vec float64",
+        "wire_format": "Nested length-prefixed arrays"
+      },
+      "conversion": "nested_array",
+      "layout_conversion": {
+        "julia_to_js": "transpose",
+        "js_to_julia": "transpose",
+        "js_to_motoko": "direct",
+        "motoko_to_js": "direct"
+      },
+      "critical_note": "Bridge automatically handles column-major ↔ row-major conversion"
+    }
+  },
+  
+  "complex_numbers": {
+    "ComplexF64": {
+      "julia": {
+        "type": "Complex{Float64}",
+        "alias": "ComplexF64",
+        "example": "1.0 + 2.0im",
+        "constructor": "Complex(1.0, 2.0)"
+      },
+      "javascript": {
+        "type": "{ real: number, imag: number }",
+        "example": "{ real: 1.0, imag: 2.0 }",
+        "class": "ComplexNum"
+      },
+      "motoko": {
+        "type": "record { real: Float; imag: Float }",
+        "example": "{ real = 1.0; imag = 2.0 }",
+        "typedef": "ComplexNum"
+      },
+      "candid": {
+        "type": "record { real: float64; imag: float64 }",
+        "wire_format": "Record with two float64 fields"
+      },
+      "conversion": "structured",
+      "notes": "Julia has native complex support; JS/Motoko use records"
+    },
+    
+    "Vector{ComplexF64}": {
+      "julia": {
+        "type": "Vector{ComplexF64}",
+        "example": "[1.0+2.0im, 3.0+4.0im]"
+      },
+      "javascript": {
+        "type": "ComplexNum[]",
+        "example": "[{real: 1, imag: 2}, {real: 3, imag: 4}]"
+      },
+      "motoko": {
+        "type": "[ComplexNum]",
+        "example": "[{real=1.0; imag=2.0}, {real=3.0; imag=4.0}]"
+      },
+      "candid": {
+        "type": "vec record { real: float64; imag: float64 }"
+      },
+      "conversion": "complex_array"
+    },
+    
+    "Matrix{ComplexF64}": {
+      "julia": {
+        "type": "Matrix{ComplexF64}",
+        "layout": "column_major"
+      },
+      "javascript": {
+        "type": "ComplexNum[][]",
+        "layout": "row_major"
+      },
+      "motoko": {
+        "type": "[[ComplexNum]]",
+        "layout": "row_major"
+      },
+      "candid": {
+        "type": "vec vec record { real: float64; imag: float64 }"
+      },
+      "conversion": "complex_nested",
+      "layout_conversion": "transpose required between Julia and JS/Motoko"
+    }
+  },
+  
+  "result_types": {
+    "EigenResult": {
+      "description": "Result of eigenvalue decomposition",
+      "julia": {
+        "type": "Eigen{T, V, S}",
+        "fields": {
+          "values": "Vector{ComplexF64}",
+          "vectors": "Matrix{ComplexF64}"
+        }
+      },
+      "javascript": {
+        "interface": "EigenResult",
+        "fields": {
+          "values": "ComplexNum[]",
+          "vectors": "ComplexNum[][]"
+        }
+      },
+      "motoko": {
+        "type": "EigenResult",
+        "fields": {
+          "values": "ComplexVector",
+          "vectors": "ComplexMatrix"
+        }
+      },
+      "candid": {
+        "type": "record { values: vec ComplexNum; vectors: vec vec ComplexNum }"
+      }
+    },
+    
+    "SVDResult": {
+      "description": "Result of singular value decomposition",
+      "julia": {
+        "type": "SVD{T, Tr, M}",
+        "fields": {
+          "U": "Matrix{Float64}",
+          "S": "Vector{Float64}",
+          "V": "Matrix{Float64}"
+        }
+      },
+      "javascript": {
+        "interface": "SVDResult",
+        "fields": {
+          "U": "number[][]",
+          "S": "number[]",
+          "V": "number[][]"
+        }
+      },
+      "motoko": {
+        "type": "SVDResult",
+        "fields": {
+          "U": "Matrix",
+          "S": "Vector",
+          "V": "Matrix"
+        }
+      }
+    },
+    
+    "OptimizationResult": {
+      "description": "Result of optimization",
+      "julia": {
+        "type": "Optim.OptimizationResults",
+        "fields": {
+          "minimum": "Float64",
+          "minimizer": "Vector{Float64}",
+          "converged": "Bool",
+          "iterations": "Int"
+        }
+      },
+      "javascript": {
+        "interface": "OptimizationResult",
+        "fields": {
+          "minimum": "number",
+          "minimizer": "number[]",
+          "converged": "boolean",
+          "iterations": "bigint"
+        }
+      },
+      "motoko": {
+        "type": "OptimizationResult",
+        "fields": {
+          "minimum": "Float",
+          "minimizer": "Vector",
+          "converged": "Bool",
+          "iterations": "Nat"
+        }
+      }
+    },
+    
+    "FFTResult": {
+      "description": "Result of Fast Fourier Transform",
+      "julia": {
+        "type": "Vector{ComplexF64}"
+      },
+      "javascript": {
+        "interface": "FFTResult",
+        "fields": {
+          "coefficients": "ComplexNum[]"
+        }
+      },
+      "motoko": {
+        "type": "FFTResult",
+        "fields": {
+          "coefficients": "ComplexVector"
+        }
+      }
+    }
+  },
+  
+  "conversion_functions": {
+    "julia_to_js": {
+      "scalar": "direct assignment",
+      "vector": "new Float64Array(julia_vector)",
+      "matrix": "julia_matrix.map(col => [...col]).transpose()",
+      "complex": "{ real: c.re, imag: c.im }"
+    },
+    "js_to_julia": {
+      "scalar": "direct assignment",
+      "vector": "collect(js_vector)",
+      "matrix": "transpose(hcat(js_matrix...))",
+      "complex": "Complex(c.real, c.imag)"
+    },
+    "js_to_motoko": {
+      "scalar": "direct via Candid",
+      "vector": "direct via Candid",
+      "matrix": "direct via Candid (both row-major)"
+    },
+    "motoko_to_js": {
+      "scalar": "direct via Candid",
+      "vector": "direct via Candid",
+      "matrix": "direct via Candid (both row-major)"
+    }
+  },
+  
+  "validation_rules": {
+    "matrix_square": {
+      "applies_to": ["linalg_eigen", "linalg_lu", "linalg_cholesky"],
+      "rule": "rows == cols",
+      "error": "Matrix must be square"
+    },
+    "matrix_positive_definite": {
+      "applies_to": ["linalg_cholesky"],
+      "rule": "All eigenvalues > 0",
+      "error": "Matrix must be positive definite"
+    },
+    "vector_non_empty": {
+      "applies_to": ["stats_mean", "stats_std", "signal_fft"],
+      "rule": "length > 0",
+      "error": "Vector must not be empty"
+    }
+  }
+}

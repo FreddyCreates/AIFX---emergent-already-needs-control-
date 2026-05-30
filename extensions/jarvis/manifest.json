@@ -1,0 +1,46 @@
+{
+  "manifest_version": 3,
+  "name": "Vigil AI",
+  "version": "19.0.0",
+  "description": "Vigil AI — Sovereign offline intelligence. Auro AI assistant, Codex code editor, Memory Palace, Agents, native Workflow Engine (CANISTRUM/SUBSTRATUM), ICP deploy.",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "alarms",
+    "tabs",
+    "scripting",
+    "sidePanel",
+    "downloads",
+    "notifications",
+    "tabCapture",
+    "desktopCapture"
+  ],
+  "host_permissions": [
+    "https://raw.githubusercontent.com/*"
+  ],
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ],
+  "minimum_chrome_version": "116",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png"
+    },
+    "default_title": "Open Vigil AI"
+  }
+}

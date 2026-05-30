@@ -1,0 +1,64 @@
+// AUTO-GENERATED Candid Interface
+// Contract: ic_linalg_eigen_001
+// Source: Julia linalg.eigen
+// Generated: 2026-05-21T04:00:01.500Z
+
+type Complex = record {
+  re : float64;
+  im : float64;
+};
+
+type MatrixFloat = vec vec float64;
+
+type EigenResult = record {
+  values : vec Complex;
+  vectors : MatrixFloat;
+  computation_time_ms : float64;
+};
+
+type ComputeReceipt = record {
+  receipt_id : text;
+  contract_id : text;
+  function_signature : text;
+  input_hash : text;
+  output_hash : text;
+  wrapper_hash : text;
+  candid_hash : text;
+  runtime_hash : text;
+  phi_seal : float64;
+  timestamp : int;
+  verified : bool;
+};
+
+type ContractStatus = variant {
+  proposed;
+  accepted;
+  executing;
+  executed;
+  verified;
+  disputed;
+  rejected;
+  stored;
+};
+
+type StoredResult = record {
+  contract_id : text;
+  result : EigenResult;
+  receipt : ComputeReceipt;
+  status : ContractStatus;
+  stored_at : int;
+};
+
+service : {
+  // Store a computed result from the Julia bridge
+  storeResult : (text, EigenResult, ComputeReceipt) -> (StoredResult);
+
+  // Query a stored result by contract ID
+  getResult : (text) -> (opt StoredResult) query;
+
+  // Get total number of stored results
+  getResultCount : () -> (nat) query;
+
+  // Execute linalg.eigen via the bridge
+  linalg_eigen : (MatrixFloat) -> (EigenResult);
+}

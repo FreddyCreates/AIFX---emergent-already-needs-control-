@@ -1,0 +1,66 @@
+# ============================================================================
+# organism-cloud-bot — Cloudflare Workers / Edge Compute Orchestrator
+#
+# Manages the organism's edge compute layer. Validates worker configurations,
+# generates CF Workers deployment manifests, monitors edge health across
+# regions, and reports on edge latency distribution.
+#
+# Microbots: worker-health, edge-latency, deploy-validator
+#
+# Identity: organism-cloud-bot <organism-cloud-bot@users.noreply.github.com>
+# ============================================================================
+
+name: "☁️ Cloud & Edge Compute Orchestrator"
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'protocols/edge-compute-protocol.js'
+      - 'sdk/**'
+      - 'extensions/**'
+  schedule:
+    - cron: '0 */4 * * *'  # Every 4 hours — edge health pulse
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  cloud-orchestrate:
+    name: "☁️ Edge Compute Cycle"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: "Phase 1 — Validate worker configurations"
+        run: node scripts/cloud-worker-deploy.js --validate
+
+      - name: "Phase 2 — Generate deployment manifests"
+        run: node scripts/cloud-worker-deploy.js --manifests
+
+      - name: "Phase 3 — Simulate edge health"
+        run: node scripts/cloud-worker-deploy.js --health
+
+      - name: "Phase 4 — Generate edge report"
+        run: node scripts/cloud-worker-deploy.js --report
+
+      - name: Commit cloud report
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "organism-cloud-bot"
+          git config user.email "organism-cloud-bot@users.noreply.github.com"
+          git add docs/ dist/
+          if git diff --cached --quiet; then
+            echo "No cloud report changes"
+          else
+            git commit -m "☁️ Cloud-bot: edge compute report updated"
+            git push
+          fi

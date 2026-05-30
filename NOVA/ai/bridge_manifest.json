@@ -1,0 +1,186 @@
+{
+  "name": "NOVA Julia-Motoko Bridge",
+  "version": "1.0.0",
+  "description": "A complete translation layer between Julia scientific computing and Motoko smart contracts on the Internet Computer",
+  "powered_by": "NOVA (Networked Omniscient Verified Architecture)",
+  
+  "architecture": {
+    "type": "bridge",
+    "analogy": "customs_office",
+    "explanation": "The bridge acts as a customs office between computational countries, checking the passport (type isomorphism) of every value crossing the border",
+    
+    "substrates": {
+      "julia": {
+        "description": "High-performance scientific computing",
+        "capabilities": ["Matrix{Float64}", "eigen", "FFT", "optimization"],
+        "execution": "Native or WASM compilation"
+      },
+      "javascript": {
+        "description": "Runtime and conversion layer",
+        "capabilities": ["WASM loading", "type conversion", "registry", "async coordination"],
+        "execution": "Browser or Node.js"
+      },
+      "motoko": {
+        "description": "Internet Computer smart contracts",
+        "capabilities": ["Float", "actor calls", "async", "canister storage", "Candid"],
+        "execution": "Internet Computer"
+      }
+    },
+    
+    "type_passport": {
+      "description": "Every value crossing the border carries a type passport",
+      "isomorphism_layer": "Ensures lossless conversion between type systems",
+      "validation": "Compile-time for Motoko/TypeScript, runtime for JavaScript"
+    }
+  },
+  
+  "interfaces": {
+    "human_developer": {
+      "entry_point": "./protocols/PROTOCOL-JULIA.js",
+      "method": "import { getJuliaCompute } from './protocols/PROTOCOL-JULIA.js'"
+    },
+    "smart_contract_developer": {
+      "entry_point": "./generated/JuliaCompute.mo",
+      "method": "import JuliaCompute \"JuliaCompute\""
+    },
+    "build_system": {
+      "entry_point": "./cli/nova-julia",
+      "method": "nova-julia call linalg.eigen --matrix matrix.json"
+    },
+    "ai_agent": {
+      "entry_points": ["/llms.txt", "/ai/bridge_manifest.json", "/ai/function_cards/"],
+      "method": "Read manifest, use function cards for validation and generation"
+    },
+    "research_reviewer": {
+      "entry_points": ["./docs/", "./ai/examples/"],
+      "method": "Review architecture documentation and examples"
+    }
+  },
+  
+  "phi_integration": {
+    "constant": 1.618033988749895,
+    "heartbeat": 873,
+    "golden_angle": 137.508,
+    "usage": [
+      "Learning rate adaptation in phi_gradient_descent",
+      "Frequency emphasis in phi_resonance_filter",
+      "Phase synchronization across substrates"
+    ]
+  },
+  
+  "function_categories": {
+    "linear_algebra": {
+      "prefix": "linalg",
+      "functions": ["eigen", "svd", "qr", "lu", "cholesky"],
+      "julia_package": "LinearAlgebra"
+    },
+    "signal_processing": {
+      "prefix": "signal",
+      "functions": ["fft", "ifft"],
+      "julia_package": "FFTW"
+    },
+    "statistics": {
+      "prefix": "stats",
+      "functions": ["mean", "std", "cov", "cor"],
+      "julia_package": "Statistics"
+    },
+    "optimization": {
+      "prefix": "optim",
+      "functions": ["minimize"],
+      "julia_package": "Optim"
+    },
+    "phi_enhanced": {
+      "prefix": "phi",
+      "functions": ["gradient_descent", "resonance_filter"],
+      "julia_package": "Custom NOVA implementation"
+    }
+  },
+  
+  "type_mappings": {
+    "scalars": {
+      "Float64": { "julia": "Float64", "js": "number", "motoko": "Float", "candid": "float64" },
+      "Int64": { "julia": "Int64", "js": "bigint", "motoko": "Int", "candid": "int64" },
+      "Bool": { "julia": "Bool", "js": "boolean", "motoko": "Bool", "candid": "bool" },
+      "String": { "julia": "String", "js": "string", "motoko": "Text", "candid": "text" }
+    },
+    "vectors": {
+      "Vector{Float64}": { "julia": "Vector{Float64}", "js": "Float64Array", "motoko": "[Float]", "candid": "vec float64" }
+    },
+    "matrices": {
+      "Matrix{Float64}": { 
+        "julia": "Matrix{Float64}", 
+        "js": "Float64Array[]", 
+        "motoko": "[[Float]]", 
+        "candid": "vec vec float64",
+        "layout_note": "Julia uses column-major, JS/Motoko use row-major - bridge handles conversion"
+      }
+    },
+    "complex": {
+      "ComplexF64": {
+        "julia": "Complex{Float64}",
+        "js": "{ real: number, imag: number }",
+        "motoko": "record { real: Float; imag: Float }",
+        "candid": "record { real: float64; imag: float64 }"
+      }
+    }
+  },
+  
+  "proof_system": {
+    "enabled": true,
+    "records": {
+      "id": "Unique computation identifier",
+      "function_name": "Called function",
+      "input_hash": "Hash of input data",
+      "output_hash": "Hash of output data",
+      "compute_time_ns": "Execution time in nanoseconds",
+      "timestamp": "Unix timestamp",
+      "phi_enhanced": "Whether phi optimization was used"
+    },
+    "storage": "Canister stable storage",
+    "max_history": 1000
+  },
+  
+  "files": {
+    "protocols/PROTOCOL-JULIA.js": "JavaScript SDK with JuliaCompute class",
+    "julia/NovaJulia.jl": "Julia module with bridge functions",
+    "generated/JuliaCompute.mo": "Motoko canister actor",
+    "generated/julia_compute.did": "Candid interface definition",
+    "generated/julia_compute_client.ts": "TypeScript client with full types",
+    "ai/bridge_manifest.json": "This file - AI-readable documentation",
+    "ai/type_map.json": "Detailed type isomorphism mappings",
+    "ai/function_cards/": "Per-function documentation cards",
+    "ai/examples/": "Usage examples",
+    "cli/nova-julia": "Command-line interface",
+    "tests/": "Test suite"
+  },
+  
+  "mcp_integration": {
+    "supported": true,
+    "tools": [
+      {
+        "name": "julia_compute",
+        "description": "Execute Julia computations through the bridge",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "function": { "type": "string", "description": "Function name (e.g., linalg.eigen)" },
+            "args": { "type": "array", "description": "Function arguments" }
+          },
+          "required": ["function", "args"]
+        }
+      },
+      {
+        "name": "julia_type_check",
+        "description": "Validate types across the bridge",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "value": { "description": "Value to check" },
+            "expected_type": { "type": "string", "description": "Expected Julia type" }
+          },
+          "required": ["value", "expected_type"]
+        }
+      }
+    ]
+  }
+}

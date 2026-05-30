@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edge Tab Analyzer</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "Segoe UI", -apple-system, sans-serif;
+      background: #0d1117;
+      color: #e0e0e0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .header {
+      background: linear-gradient(135deg, #8764b8, #6944a0);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .header-icon {
+      width: 36px;
+      height: 36px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .header h1 { font-size: 16px; font-weight: 700; }
+    .header p { font-size: 11px; opacity: 0.85; margin-top: 2px; }
+    .content { flex: 1; padding: 16px; overflow-y: auto; }
+    .model-chips {
+      display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px;
+    }
+    .chip {
+      padding: 4px 10px;
+      border-radius: 14px;
+      background: #8764b8;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .section-label {
+      font-size: 11px; color: #888; text-transform: uppercase;
+      letter-spacing: 0.5px; margin-bottom: 6px;
+    }
+    .btn-row { display: flex; gap: 8px; margin-top: 12px; }
+    .btn {
+      flex: 1;
+      padding: 10px 0;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .btn:hover { opacity: 0.85; }
+    .btn-primary { background: #8764b8; }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    .stat-card {
+      background: #161b22;
+      border: 1px solid #222;
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+    }
+    .stat-value {
+      font-size: 22px;
+      font-weight: 700;
+      color: #8764b8;
+    }
+    .stat-label {
+      font-size: 10px;
+      color: #888;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+    .entity-list {
+      margin-top: 16px;
+      padding: 12px;
+      background: #161b22;
+      border: 1px solid #222;
+      border-radius: 8px;
+      font-size: 12px;
+      line-height: 1.6;
+      display: none;
+    }
+    .entity-list.active { display: block; }
+    .entity-item {
+      padding: 4px 0;
+      border-bottom: 1px solid #222;
+      display: flex;
+      justify-content: space-between;
+    }
+    .entity-item:last-child { border-bottom: none; }
+    .entity-type {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: #8764b8;
+      color: #fff;
+    }
+    .summary-area {
+      margin-top: 16px;
+      padding: 12px;
+      background: #161b22;
+      border: 1px solid #222;
+      border-radius: 8px;
+      font-size: 12px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-word;
+      display: none;
+    }
+    .summary-area.active { display: block; }
+    .status-bar {
+      padding: 8px 16px;
+      background: #161b22;
+      border-top: 1px solid #222;
+      font-size: 10px;
+      color: #666;
+      display: flex;
+      justify-content: space-between;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-icon">TA</div>
+    <div>
+      <h1>Edge Tab Analyzer</h1>
+      <p>Semantic extraction &amp; content scoring</p>
+    </div>
+  </div>
+  <div class="content">
+    <div class="model-chips">
+      <span class="chip">Embeddings</span>
+      <span class="chip">Claude</span>
+      <span class="chip">Rerankers</span>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="analyzeBtn">&#128269; Analyze Tab</button>
+    </div>
+    <div class="stats-grid" id="statsGrid" style="display:none;">
+      <div class="stat-card">
+        <div class="stat-value" id="wordCount">0</div>
+        <div class="stat-label">Words</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="readability">0</div>
+        <div class="stat-label">Readability</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="sentences">0</div>
+        <div class="stat-label">Sentences</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="quality">0</div>
+        <div class="stat-label">Quality</div>
+      </div>
+    </div>
+    <div class="section-label" id="entityLabel" style="display:none;margin-top:16px;">Key Entities</div>
+    <div class="entity-list" id="entityList"></div>
+    <div class="section-label" id="summaryLabel" style="display:none;margin-top:16px;">Summary</div>
+    <div class="summary-area" id="summaryArea"></div>
+  </div>
+  <div class="status-bar">
+    <span id="statusText">Ready</span>
+    <span>Memory Ring &bull; EXT-033</span>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      var analyzeBtn = document.getElementById('analyzeBtn');
+      var statsGrid = document.getElementById('statsGrid');
+      var wordCountEl = document.getElementById('wordCount');
+      var readabilityEl = document.getElementById('readability');
+      var sentencesEl = document.getElementById('sentences');
+      var qualityEl = document.getElementById('quality');
+      var entityList = document.getElementById('entityList');
+      var entityLabel = document.getElementById('entityLabel');
+      var summaryArea = document.getElementById('summaryArea');
+      var summaryLabel = document.getElementById('summaryLabel');
+      var statusText = document.getElementById('statusText');
+
+      analyzeBtn.addEventListener('click', function () {
+        statusText.textContent = 'Analyzing...';
+        chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+          if (!tabs || tabs.length === 0) {
+            statusText.textContent = 'No active tab found';
+            return;
+          }
+          chrome.tabs.sendMessage(tabs[0].id, { action: 'getPageContent' }, function (pageData) {
+            var content = '';
+            var url = tabs[0].url || '';
+            var title = tabs[0].title || '';
+            if (pageData && pageData.content) {
+              content = pageData.content;
+            }
+            chrome.runtime.sendMessage(
+              { action: 'analyzeContent', content: content, url: url, title: title },
+              function (resp) {
+                if (chrome.runtime.lastError) {
+                  statusText.textContent = 'Error: ' + chrome.runtime.lastError.message;
+                  return;
+                }
+                if (resp && resp.stats) {
+                  statsGrid.style.display = 'grid';
+                  wordCountEl.textContent = resp.stats.wordCount;
+                  readabilityEl.textContent = resp.stats.readabilityScore;
+                  sentencesEl.textContent = resp.stats.sentenceCount;
+                  qualityEl.textContent = resp.stats.qualityScore + '%';
+                }
+                if (resp && resp.entities && resp.entities.length > 0) {
+                  entityLabel.style.display = 'block';
+                  entityList.className = 'entity-list active';
+                  entityList.innerHTML = '';
+                  resp.entities.forEach(function (e) {
+                    var item = document.createElement('div');
+                    item.className = 'entity-item';
+                    item.innerHTML = '<span>' + (e.value || '') + '</span><span class="entity-type">' + (e.type || '') + '</span>';
+                    entityList.appendChild(item);
+                  });
+                }
+                if (resp && resp.summary) {
+                  summaryLabel.style.display = 'block';
+                  summaryArea.className = 'summary-area active';
+                  summaryArea.textContent = resp.summary;
+                }
+                statusText.textContent = 'Analysis complete';
+              }
+            );
+          });
+        });
+      });
+
+      chrome.runtime.sendMessage({ action: 'getState' }, function (resp) {
+        if (resp && resp.healthy) statusText.textContent = 'Engine healthy';
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+{
+  "id": "atlas://bot/organism-alpha-bot",
+  "name": "organism-alpha-bot",
+  "class": "Bot",
+  "division": "Command & Control",
+  "divisionNum": "VII",
+  "emoji": "👑",
+  "domain": "Fleet Commander",
+  "triggers": ["push:main", "schedule:every-6h", "workflow_dispatch"],
+  "capabilities": ["orchestrate", "census", "escalate", "trigger_any_bot", "policy_enforce"],
+  "authority": "fleet_commander",
+  "governance_pipeline": "pipeline://governance/bot_cycle",
+  "ocl_ref": "atlas://organism/bot-fleet",
+  "script": "scripts/alpha-fleet-controller.js",
+  "workflow": ".github/workflows/organism-alpha-bot.yml",
+  "report": "docs/fleet-report.md",
+  "microbots": []
+}

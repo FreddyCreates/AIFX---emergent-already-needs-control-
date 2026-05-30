@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Context Bridge Adapter</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "Segoe UI", -apple-system, sans-serif;
+      background: #0d1117; color: #e0e0e0;
+      min-height: 100vh; display: flex; flex-direction: column;
+    }
+    .header {
+      background: linear-gradient(135deg, #0ea5e9, #0284c7);
+      padding: 16px 20px; display: flex; align-items: center; gap: 12px;
+    }
+    .header-icon {
+      width: 36px; height: 36px; background: rgba(255,255,255,0.2);
+      border-radius: 8px; display: flex; align-items: center;
+      justify-content: center; font-size: 18px;
+    }
+    .header h1 { font-size: 16px; font-weight: 700; }
+    .header p { font-size: 11px; opacity: 0.85; margin-top: 2px; }
+    .content { flex: 1; padding: 16px; overflow-y: auto; }
+    .section-label {
+      font-size: 11px; color: #888; text-transform: uppercase;
+      letter-spacing: 0.5px; margin-bottom: 6px; margin-top: 12px;
+    }
+    .context-card {
+      background: #0c2a3d; border: 1px solid #0ea5e933; border-radius: 8px;
+      padding: 10px 12px; margin-bottom: 12px;
+    }
+    .context-card .label { font-size: 10px; color: #0ea5e9; text-transform: uppercase; letter-spacing: 0.5px; }
+    .context-card .value { font-size: 12px; color: #e0e0e0; margin-top: 2px; word-break: break-all; }
+    .btn-row { display: flex; gap: 8px; margin-top: 8px; }
+    .btn {
+      flex: 1; padding: 10px 0; border: none; border-radius: 8px;
+      color: #fff; font-weight: 600; font-size: 13px;
+      cursor: pointer; transition: opacity 0.15s;
+    }
+    .btn:hover { opacity: 0.85; }
+    .btn-primary { background: #0ea5e9; }
+    .btn-secondary { background: #10b981; }
+    .btn-tertiary { background: #7c3aed; }
+    .bridge-output {
+      margin-top: 16px; padding: 12px; background: #0c1a2d;
+      border: 1px solid #0ea5e933; border-radius: 8px; min-height: 60px;
+      font-size: 12px; font-family: 'Courier New', monospace;
+      line-height: 1.6; white-space: pre-wrap; word-break: break-word; display: none;
+    }
+    .bridge-output.active { display: block; }
+    .bridges-list { margin-top: 8px; }
+    .bridge-item {
+      background: #0c2a3d; border: 1px solid #0ea5e922; border-radius: 6px;
+      padding: 8px 10px; margin-bottom: 6px; font-size: 11px; color: #88c0d0;
+    }
+    .status-bar {
+      padding: 8px 16px; background: #161b22; border-top: 1px solid #222;
+      font-size: 10px; color: #666; display: flex; justify-content: space-between;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-icon">🌉</div>
+    <div>
+      <h1>Context Bridge Adapter</h1>
+      <p>Phi-encoded page context bridging — EXT-037</p>
+    </div>
+  </div>
+  <div class="content">
+    <div class="section-label">Current Page</div>
+    <div class="context-card">
+      <div class="label">URL</div>
+      <div class="value" id="pageUrl">Loading...</div>
+      <div class="label" style="margin-top:6px">Domain</div>
+      <div class="value" id="pageDomain">—</div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" id="captureBtn">📸 Capture Context</button>
+      <button class="btn btn-secondary" id="bridgeBtn">🌉 Bridge to AI</button>
+    </div>
+    <div class="btn-row" style="margin-top:8px">
+      <button class="btn btn-tertiary" id="listBridgesBtn">📋 Active Bridges</button>
+    </div>
+
+    <div class="bridge-output" id="bridgeOutput"></div>
+    <div class="bridges-list" id="bridgesList" style="display:none"></div>
+  </div>
+  <div class="status-bar">
+    <span id="statusText">Ready — Memory Ring</span>
+    <span>Context Bridge Adapter &bull; EXT-037</span>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+      var pageUrl = document.getElementById('pageUrl');
+      var pageDomain = document.getElementById('pageDomain');
+      var captureBtn = document.getElementById('captureBtn');
+      var bridgeBtn = document.getElementById('bridgeBtn');
+      var listBridgesBtn = document.getElementById('listBridgesBtn');
+      var bridgeOutput = document.getElementById('bridgeOutput');
+      var bridgesList = document.getElementById('bridgesList');
+      var statusText = document.getElementById('statusText');
+
+      function show(data) {
+        bridgeOutput.className = 'bridge-output active';
+        bridgeOutput.textContent = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+      }
+
+      // Load current tab URL
+      chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        if (tabs && tabs[0]) {
+          var url = tabs[0].url || '';
+          var domain = '';
+          try { domain = new URL(url).hostname; } catch (e) { domain = url; }
+          pageUrl.textContent = url.substring(0, 80) + (url.length > 80 ? '...' : '');
+          pageDomain.textContent = domain;
+        }
+      });
+
+      captureBtn.addEventListener('click', function () {
+        chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+          if (!tabs || !tabs[0]) { show('No active tab.'); return; }
+          var tab = tabs[0];
+          var ctx = {
+            url: tab.url, title: tab.title,
+            domain: (function () { try { return new URL(tab.url).hostname; } catch (e) { return tab.url; } })(),
+            selection: '', headings: [], wordCount: 0, language: 'en', readingTime: 0
+          };
+          chrome.runtime.sendMessage({ action: 'captureContext', tabId: tab.id, context: ctx }, function (r) {
+            if (chrome.runtime.lastError) { show('Error: ' + chrome.runtime.lastError.message); return; }
+            show(r);
+            statusText.textContent = 'Captured — φ(' + (r.context && r.context.phiCoords ? r.context.phiCoords.theta.toFixed(1) + '°' : '?') + ')';
+          });
+        });
+      });
+
+      bridgeBtn.addEventListener('click', function () {
+        chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+          if (!tabs || !tabs[0]) { show('No active tab.'); return; }
+          show('🌉 Building bridge payload...');
+          chrome.runtime.sendMessage({ action: 'bridgeToPrompt', tabId: tabs[0].id }, function (r) {
+            if (chrome.runtime.lastError) { show('Error: ' + chrome.runtime.lastError.message); return; }
+            show(r && r.bridgedPrompt ? r.bridgedPrompt : JSON.stringify(r, null, 2));
+            statusText.textContent = 'Bridge ready — copy to AI session';
+          });
+        });
+      });
+
+      listBridgesBtn.addEventListener('click', function () {
+        var visible = bridgesList.style.display !== 'none';
+        if (visible) { bridgesList.style.display = 'none'; return; }
+        chrome.runtime.sendMessage({ action: 'getAllBridges' }, function (r) {
+          if (chrome.runtime.lastError) { show('Error: ' + chrome.runtime.lastError.message); return; }
+          bridgesList.innerHTML = '';
+          if (!Array.isArray(r) || r.length === 0) {
+            bridgesList.innerHTML = '<div style="color:#666;font-size:12px;margin-top:8px">No active bridges.</div>';
+          } else {
+            r.forEach(function (b) {
+              var el = document.createElement('div');
+              el.className = 'bridge-item';
+              el.textContent = (b.title || 'Untitled').substring(0, 40) + ' — ' + (b.url || '').substring(0, 40);
+              bridgesList.appendChild(el);
+            });
+          }
+          bridgesList.style.display = 'block';
+        });
+      });
+
+      chrome.runtime.sendMessage({ action: 'getState' }, function (r) {
+        if (r) statusText.textContent = 'Active bridges: ' + (r.activeBridges || 0);
+      });
+    })();
+  </script>
+</body>
+</html>

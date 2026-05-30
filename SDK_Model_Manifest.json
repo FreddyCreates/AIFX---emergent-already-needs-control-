@@ -1,0 +1,296 @@
+{
+  "manifestVersion": "1.0.0",
+  "architect": "Medina",
+  "description": "Unified manifest wiring all 5 sovereign SDKs to the Frontend Frontier 100 Register and Architectural Laws",
+  "generatedAt": "2026-04-22T20:30:00.000Z",
+  "sdks": [
+    {
+      "name": "@medina/sovereign-memory-sdk",
+      "version": "1.0.0",
+      "license": "MIT (open-core)",
+      "packagePath": "sdk/sovereign-memory-sdk",
+      "marketplaceAngle": "Enterprise memory that never forgets",
+      "intelligenceType": "Spatial memory and phi-encoded persistence intelligence",
+      "ringAffinity": "Memory Ring",
+      "organismPlacement": "Frontend organism / memory layer",
+      "modules": [
+        {
+          "name": "SpatialMemoryStore",
+          "file": "src/spatial-memory-store.js",
+          "primitiveFunction": "Store and retrieve memories by 5-axis spatial coordinates",
+          "frontierModelsServed": ["FF-089", "FF-090", "FF-091", "FF-092", "FF-093"]
+        },
+        {
+          "name": "DualLayerSearch",
+          "file": "src/dual-layer-search.js",
+          "primitiveFunction": "Search by semantic meaning and phi-resonance proximity simultaneously",
+          "frontierModelsServed": ["FF-080", "FF-081", "FF-085", "FF-087", "FF-088"]
+        },
+        {
+          "name": "MemoryLineage",
+          "file": "src/memory-lineage.js",
+          "primitiveFunction": "Track ancestor chains and fork/consolidate memory branches",
+          "frontierModelsServed": ["FF-039", "FF-040", "FF-041", "FF-042"]
+        },
+        {
+          "name": "LivingDocument",
+          "file": "src/living-document.js",
+          "primitiveFunction": "Manage documents as evolving organisms with mutation history",
+          "frontierModelsServed": ["FF-001", "FF-002", "FF-003", "FF-004", "FF-005"]
+        },
+        {
+          "name": "PhiCoordinateGenerator",
+          "file": "src/phi-coordinate-generator.js",
+          "primitiveFunction": "Generate and manipulate phi-encoded spatial coordinates",
+          "frontierModelsServed": ["FF-069", "FF-070", "FF-071", "FF-078", "FF-079"]
+        }
+      ],
+      "lawsEnforced": ["AL-022", "AL-023", "AL-024", "AL-016", "AL-017"],
+      "monetization": {
+        "free": ["store", "retrieve", "basic search"],
+        "paid": ["dual-read", "lineage tracking", "consolidation", "kernel compression"]
+      }
+    },
+    {
+      "name": "@medina/enterprise-integration-sdk",
+      "version": "1.0.0",
+      "license": "UNLICENSED (proprietary)",
+      "packagePath": "sdk/enterprise-integration-sdk",
+      "marketplaceAngle": "Plug any enterprise into a sovereign intelligence substrate",
+      "intelligenceType": "Enterprise integration and onboarding intelligence",
+      "ringAffinity": "Interface Ring",
+      "organismPlacement": "Frontend organism / integration layer",
+      "modules": [
+        {
+          "name": "CompanyOnboarding",
+          "file": "src/onboarding.js",
+          "primitiveFunction": "Onboard companies in express/standard/sovereign modes",
+          "frontierModelsServed": ["FF-024", "FF-025", "FF-026", "FF-027"]
+        },
+        {
+          "name": "Connectors (8)",
+          "file": "src/connectors/",
+          "primitiveFunction": "Map enterprise systems (Salesforce/SAP/Google/Slack/HubSpot/Stripe/Twilio/Shopify) to sovereign substrate",
+          "frontierModelsServed": ["FF-080", "FF-081", "FF-082", "FF-083", "FF-084", "FF-085", "FF-086", "FF-087", "FF-088"]
+        },
+        {
+          "name": "CampaignManager",
+          "file": "src/campaign-manager.js",
+          "primitiveFunction": "Create, launch, and measure multi-channel campaigns",
+          "frontierModelsServed": ["FF-082", "FF-083", "FF-084"]
+        },
+        {
+          "name": "MultiChannelMessenger",
+          "file": "src/messaging.js",
+          "primitiveFunction": "Send messages across email/sms/slack/webhook channels",
+          "frontierModelsServed": ["FF-082", "FF-083", "FF-084", "FF-085"]
+        },
+        {
+          "name": "ExportPipeline",
+          "file": "src/export-pipeline.js",
+          "primitiveFunction": "Define and execute data export pipelines with scheduling",
+          "frontierModelsServed": ["FF-051", "FF-052", "FF-053"]
+        }
+      ],
+      "lawsEnforced": ["AL-028", "AL-029", "AL-021"],
+      "monetization": {
+        "model": "per-seat or per-connector",
+        "connectors": ["salesforce", "sap", "google", "slack", "hubspot", "stripe", "twilio", "shopify"]
+      }
+    },
+    {
+      "name": "@medina/intelligence-routing-sdk",
+      "version": "1.0.0",
+      "license": "MIT (open-core)",
+      "packagePath": "sdk/intelligence-routing-sdk",
+      "marketplaceAngle": "Intelligent task routing for AI workforces",
+      "intelligenceType": "Task routing and workforce orchestration intelligence",
+      "ringAffinity": "Interface Ring",
+      "organismPlacement": "Frontend organism / orchestration layer",
+      "modules": [
+        {
+          "name": "ModelRouter",
+          "file": "src/model-router.js",
+          "primitiveFunction": "Route tasks to best matching model by capability/priority/cost",
+          "frontierModelsServed": ["FF-024", "FF-025", "FF-026", "FF-027", "FF-028", "FF-029", "FF-030", "FF-031", "FF-032", "FF-033", "FF-034", "FF-035", "FF-036", "FF-037", "FF-038"]
+        },
+        {
+          "name": "CommandParser",
+          "file": "src/command-parser.js",
+          "primitiveFunction": "Parse natural language and structured commands into executable actions",
+          "frontierModelsServed": ["FF-024", "FF-094", "FF-095", "FF-096", "FF-097", "FF-098", "FF-099", "FF-100"]
+        },
+        {
+          "name": "TerminalDispatch",
+          "file": "src/terminal-dispatch.js",
+          "primitiveFunction": "Dispatch commands to local/remote/edge terminals",
+          "frontierModelsServed": ["FF-094", "FF-095"]
+        },
+        {
+          "name": "IntelligenceWire",
+          "file": "src/intelligence-wire.js",
+          "primitiveFunction": "Create encrypted wires between intelligence endpoints",
+          "frontierModelsServed": ["FF-082", "FF-083", "FF-084"]
+        },
+        {
+          "name": "WorkforceRouter",
+          "file": "src/workforce-router.js",
+          "primitiveFunction": "Assign tasks to agents and rebalance workload",
+          "frontierModelsServed": ["FF-039", "FF-040", "FF-041", "FF-042", "FF-043", "FF-044", "FF-045", "FF-046", "FF-047", "FF-048", "FF-049", "FF-050"]
+        }
+      ],
+      "lawsEnforced": ["AL-025", "AL-026", "AL-027", "AL-014"],
+      "monetization": {
+        "free": ["single-model routing"],
+        "paid": ["multi-model orchestration", "RUDN", "wire dispatch"]
+      }
+    },
+    {
+      "name": "@medina/organism-runtime-sdk",
+      "version": "1.0.0",
+      "license": "MIT (open-core)",
+      "packagePath": "sdk/organism-runtime-sdk",
+      "marketplaceAngle": "A living runtime for autonomous AI systems — the organism IS the computation",
+      "intelligenceType": "Autonomous organism runtime intelligence",
+      "ringAffinity": "Sovereign Ring",
+      "organismPlacement": "Organism core / runtime layer",
+      "modules": [
+        {
+          "name": "OrganismState",
+          "file": "src/organism-state.js",
+          "primitiveFunction": "Manage 4-register architecture (Cognitive/Affective/Somatic/Sovereign)",
+          "frontierModelsServed": ["FF-039", "FF-040", "FF-041", "FF-042", "FF-043", "FF-044", "FF-045", "FF-046", "FF-047", "FF-048", "FF-049", "FF-050"]
+        },
+        {
+          "name": "Heartbeat",
+          "file": "src/heartbeat.js",
+          "primitiveFunction": "Maintain 873ms organism pulse — the fundamental clock",
+          "frontierModelsServed": ["FF-094", "FF-095", "FF-096", "FF-097", "FF-098", "FF-099", "FF-100"]
+        },
+        {
+          "name": "KernelExecutor",
+          "file": "src/kernel-executor.js",
+          "primitiveFunction": "Load and execute computation kernels with sandboxed isolation",
+          "frontierModelsServed": ["FF-051", "FF-052", "FF-053", "FF-054", "FF-055", "FF-056", "FF-057", "FF-058", "FF-059"]
+        },
+        {
+          "name": "EdgeSensor",
+          "file": "src/edge-sensor.js",
+          "primitiveFunction": "Sense edge environment (temperature/network/resource/signal/custom)",
+          "frontierModelsServed": ["FF-094", "FF-095", "FF-096", "FF-097", "FF-098", "FF-099"]
+        },
+        {
+          "name": "CrossOrganismResonance",
+          "file": "src/cross-organism-resonance.js",
+          "primitiveFunction": "Exchange resonance signals with peer organisms",
+          "frontierModelsServed": ["FF-082", "FF-083", "FF-084"]
+        }
+      ],
+      "lawsEnforced": ["AL-019", "AL-020", "AL-033", "AL-034", "AL-035", "AL-036"],
+      "monetization": {
+        "free": ["basic pulse/state"],
+        "paid": ["full autonomous cycle", "edge model", "cross-organism wiring"]
+      }
+    },
+    {
+      "name": "@medina/document-absorption-engine",
+      "version": "1.0.0",
+      "license": "UNLICENSED (proprietary)",
+      "packagePath": "sdk/document-absorption-engine",
+      "marketplaceAngle": "Turn raw documents into living organism knowledge",
+      "intelligenceType": "Document absorption and knowledge synthesis intelligence",
+      "ringAffinity": "Memory Ring",
+      "organismPlacement": "Frontend organism / knowledge layer",
+      "modules": [
+        {
+          "name": "DocumentIntake",
+          "file": "src/document-intake.js",
+          "primitiveFunction": "Ingest multi-format documents (text/markdown/html/json/csv)",
+          "frontierModelsServed": ["FF-001", "FF-002", "FF-003", "FF-004", "FF-005", "FF-006", "FF-007", "FF-008"]
+        },
+        {
+          "name": "ContentExtractor",
+          "file": "src/content-extractor.js",
+          "primitiveFunction": "Extract entities, keywords, and summaries from content",
+          "frontierModelsServed": ["FF-069", "FF-070", "FF-071", "FF-072", "FF-073", "FF-074"]
+        },
+        {
+          "name": "KnowledgeGraph",
+          "file": "src/knowledge-graph.js",
+          "primitiveFunction": "Build and query typed knowledge graphs from absorbed content",
+          "frontierModelsServed": ["FF-075", "FF-076", "FF-077", "FF-078", "FF-079"]
+        },
+        {
+          "name": "AbsorptionPipeline",
+          "file": "src/absorption-pipeline.js",
+          "primitiveFunction": "Orchestrate intake→extract→classify→index→absorb pipeline",
+          "frontierModelsServed": ["FF-051", "FF-052", "FF-053", "FF-054"]
+        },
+        {
+          "name": "DigestGenerator",
+          "file": "src/digest-generator.js",
+          "primitiveFunction": "Generate brief/detailed/executive digests from document sets",
+          "frontierModelsServed": ["FF-060", "FF-061", "FF-062", "FF-063", "FF-064", "FF-065", "FF-066", "FF-067", "FF-068"]
+        }
+      ],
+      "lawsEnforced": ["AL-030", "AL-031", "AL-032"],
+      "monetization": {
+        "model": "per-document or enterprise license"
+      }
+    }
+  ],
+  "architecturalLaws": {
+    "register": "Architectural_Laws_Register.csv",
+    "totalLaws": 40,
+    "categories": [
+      "Structural Containment",
+      "Visual Priority",
+      "Projection Sovereignty",
+      "State Flow",
+      "Build Determinism",
+      "Verification",
+      "Scene Sovereignty",
+      "Communication",
+      "Storage",
+      "Native Capabilities",
+      "Heartbeat",
+      "Register Integrity",
+      "Governance",
+      "Memory",
+      "Routing",
+      "Integration",
+      "Absorption",
+      "Architecture"
+    ]
+  },
+  "frontierRegister": {
+    "file": "Frontend_Frontier_100_Register.csv",
+    "totalModels": 100,
+    "categories": [
+      "Markup",
+      "Styling",
+      "Framework",
+      "State",
+      "Build",
+      "Testing",
+      "Graphics",
+      "Communication",
+      "Storage",
+      "Web API"
+    ]
+  },
+  "phantomRegister": {
+    "file": "Phantom_Blockchain_Model_Register.csv",
+    "totalFamilies": 8
+  },
+  "wiring": {
+    "principle": "Every frontend model maps to a primitive function, every primitive maps to a sovereign SDK module, every SDK enforces architectural laws, and every law traces back to the organism",
+    "flowDirection": "Fracture → Primitive → Sovereign → Organism → Doctrine",
+    "phases": [
+      "Phase 1 — Recognize: Name the model and its intelligence type",
+      "Phase 2 — Reduce to primitive: Identify relation/visibility/flow/state/synchronization/projection/transformation/verification",
+      "Phase 3 — Rebuild sovereignly: Build sovereign renderer/router/state kernel/scene system/interface organism/visual proof engine",
+      "Phase 4 — Reinsert into organism: Wire into doctrine/mechanism/runtime truth/company/organism/IP/counsel"
+    ]
+  }
+}
