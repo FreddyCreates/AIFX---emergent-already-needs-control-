@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🕷️ Organism Crawler Dashboard</title>
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --bg2: #111118;
+      --border: #1e1e2e;
+      --accent: #7c3aed;
+      --accent2: #06b6d4;
+      --accent3: #10b981;
+      --warn: #f59e0b;
+      --danger: #ef4444;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --phi: 1.618;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 13px;
+      min-height: 100vh;
+    }
+    header {
+      background: linear-gradient(135deg, #1e003e 0%, #001e3e 100%);
+      border-bottom: 1px solid var(--accent);
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    header h1 { font-size: 20px; letter-spacing: 0.05em; }
+    header .badge {
+      background: var(--accent);
+      color: white;
+      padding: 2px 10px;
+      border-radius: 9999px;
+      font-size: 11px;
+    }
+    header .ts { margin-left: auto; color: var(--muted); font-size: 11px; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      padding: 20px;
+    }
+    .card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .card h2 { font-size: 13px; color: var(--accent2); margin-bottom: 12px; letter-spacing: 0.04em; }
+    .stat { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; border-bottom: 1px solid var(--border); }
+    .stat:last-child { border-bottom: none; }
+    .stat .label { color: var(--muted); }
+    .stat .val { color: var(--text); font-weight: bold; }
+    .stat .val.ok { color: var(--accent3); }
+    .stat .val.warn { color: var(--warn); }
+    .stat .val.danger { color: var(--danger); }
+
+    .table-wrap { padding: 0 20px 20px; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    thead th { background: var(--bg2); color: var(--accent2); padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border); }
+    tbody tr { border-bottom: 1px solid var(--border); }
+    tbody tr:hover { background: rgba(124,58,237,0.05); }
+    tbody td { padding: 6px 10px; color: var(--muted); }
+    tbody td.file { color: var(--text); font-family: monospace; font-size: 11px; }
+    tbody td.ok { color: var(--accent3); }
+    tbody td.warn { color: var(--warn); }
+    tbody td.danger { color: var(--danger); }
+
+    .section-title {
+      padding: 16px 20px 6px;
+      font-size: 14px;
+      color: var(--accent);
+      border-top: 1px solid var(--border);
+      margin-top: 8px;
+    }
+
+    .phi-bar {
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent) 0%, var(--accent2) 61.8%, var(--accent3) 100%);
+      margin: 0 20px 20px;
+      border-radius: 2px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <span>🕷️</span>
+    <h1>Organism Crawler Dashboard</h1>
+    <span class="badge">LIVE</span>
+    <span class="ts" id="ts">Loading...</span>
+  </header>
+
+  <div class="phi-bar"></div>
+
+  <div class="grid" id="summary-grid">
+    <!-- Populated by JS -->
+  </div>
+
+  <div class="section-title">🔍 Potential Orphan Files (no known importer)</div>
+  <div class="table-wrap">
+    <table id="orphan-table">
+      <thead><tr><th>File</th><th>Status</th></tr></thead>
+      <tbody id="orphan-tbody"></tbody>
+    </table>
+  </div>
+
+  <div class="section-title">🔗 Dead Links & Broken References</div>
+  <div class="table-wrap">
+    <table id="dead-table">
+      <thead><tr><th>File</th><th>Line</th><th>Reference</th><th>Type</th></tr></thead>
+      <tbody id="dead-tbody"></tbody>
+    </table>
+  </div>
+
+  <div class="section-title">🕸️ Dependency Web — Top Hubs</div>
+  <div class="table-wrap">
+    <table id="hub-table">
+      <thead><tr><th>File</th><th>Hub Score</th><th>In-Degree</th><th>Out-Degree</th></tr></thead>
+      <tbody id="hub-tbody"></tbody>
+    </table>
+  </div>
+
+  <script>
+    // ── Phi constant
+    const PHI = 1.618033988749895;
+    const PHI_INV = 1 / PHI;
+
+    // ── Timestamp
+    document.getElementById('ts').textContent = new Date().toLocaleString();
+
+    // ── Try to load crawler-report state from embedded JSON
+    // The crawler script injects CRAWLER_STATE when generating this dashboard
+    const STATE = window.CRAWLER_STATE || null;
+
+    function renderSummary(data) {
+      const grid = document.getElementById('summary-grid');
+      const metrics = [
+        { title: '📁 File Map', stats: [
+          { label: 'Total Files', val: data.totalFiles || 0, cls: 'ok' },
+          { label: 'Directories', val: data.totalDirs || 0, cls: '' },
+          { label: 'Code Files', val: data.codeFiles || 0, cls: 'ok' },
+          { label: 'Doc Files',  val: data.docFiles || 0, cls: '' },
+        ]},
+        { title: '🔍 Orphan Analysis', stats: [
+          { label: 'Potential Orphans', val: data.orphanCount || 0, cls: data.orphanCount > 50 ? 'warn' : 'ok' },
+          { label: 'Referenced Files', val: data.referenced || 0, cls: 'ok' },
+          { label: 'Coverage', val: data.totalFiles ? `${Math.round((1 - (data.orphanCount || 0) / data.totalFiles) * 100)}%` : '—', cls: 'ok' },
+        ]},
+        { title: '🔗 Link Health', stats: [
+          { label: 'Dead Links', val: data.deadLinks || 0, cls: data.deadLinks > 20 ? 'danger' : data.deadLinks > 5 ? 'warn' : 'ok' },
+          { label: 'Files Checked', val: data.filesChecked || 0, cls: '' },
+          { label: 'Health', val: data.filesChecked ? `${Math.round((1 - (data.deadLinks || 0) / (data.filesChecked * 10)) * 100)}%` : '—', cls: 'ok' },
+        ]},
+        { title: '🕸️ Dependency Web', stats: [
+          { label: 'Graph Nodes', val: data.graphNodes || 0, cls: 'ok' },
+          { label: 'Graph Edges', val: data.graphEdges || 0, cls: 'ok' },
+          { label: 'Top Hub Score', val: data.topHubScore ? data.topHubScore.toFixed(2) : '—', cls: '' },
+          { label: 'φ-Density', val: data.graphNodes ? (data.graphEdges / data.graphNodes / PHI).toFixed(3) : '—', cls: '' },
+        ]},
+      ];
+
+      grid.innerHTML = metrics.map(m => `
+        <div class="card">
+          <h2>${m.title}</h2>
+          ${m.stats.map(s => `
+            <div class="stat">
+              <span class="label">${s.label}</span>
+              <span class="val ${s.cls}">${s.val}</span>
+            </div>
+          `).join('')}
+        </div>
+      `).join('');
+    }
+
+    function renderOrphans(orphans) {
+      const tbody = document.getElementById('orphan-tbody');
+      if (!orphans || orphans.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="2" class="ok">No orphans detected ✅</td></tr>';
+        return;
+      }
+      tbody.innerHTML = orphans.slice(0, 50).map(f =>
+        `<tr><td class="file">${f}</td><td class="warn">⚠ no importers</td></tr>`
+      ).join('');
+      if (orphans.length > 50) {
+        tbody.innerHTML += `<tr><td colspan="2" class="warn">... and ${orphans.length - 50} more</td></tr>`;
+      }
+    }
+
+    function renderDeadLinks(links) {
+      const tbody = document.getElementById('dead-tbody');
+      if (!links || links.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" class="ok">No dead links detected ✅</td></tr>';
+        return;
+      }
+      tbody.innerHTML = links.slice(0, 50).map(l =>
+        `<tr>
+          <td class="file">${l.file}</td>
+          <td class="warn">${l.line}</td>
+          <td class="danger">${l.reference}</td>
+          <td class="muted">${l.type}</td>
+        </tr>`
+      ).join('');
+      if (links.length > 50) {
+        tbody.innerHTML += `<tr><td colspan="4" class="warn">... and ${links.length - 50} more</td></tr>`;
+      }
+    }
+
+    function renderHubs(hubs) {
+      const tbody = document.getElementById('hub-tbody');
+      if (!hubs || hubs.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4">No data</td></tr>';
+        return;
+      }
+      tbody.innerHTML = hubs.map(h =>
+        `<tr>
+          <td class="file">${h.file}</td>
+          <td class="ok">${typeof h.score === 'number' ? h.score.toFixed(3) : h.score}</td>
+          <td>${h.inDegree}</td>
+          <td>${h.outDegree}</td>
+        </tr>`
+      ).join('');
+    }
+
+    // ── Main render
+    if (STATE) {
+      renderSummary(STATE.summary || {});
+      renderOrphans(STATE.orphans || []);
+      renderDeadLinks(STATE.deadLinks || []);
+      renderHubs(STATE.topHubs || []);
+    } else {
+      // No embedded state — show placeholder with instructions
+      const grid = document.getElementById('summary-grid');
+      grid.innerHTML = `
+        <div class="card" style="grid-column:1/-1">
+          <h2>🕷️ Dashboard Ready</h2>
+          <div class="stat"><span class="label">Status</span><span class="val warn">Awaiting first crawl</span></div>
+          <div class="stat"><span class="label">Generate data</span><span class="val">node scripts/organism-crawler.js --dashboard</span></div>
+          <div class="stat"><span class="label">φ constant</span><span class="val ok">${PHI}</span></div>
+        </div>
+      `;
+    }
+  </script>
+
+  <script>
+    window.CRAWLER_STATE = {
+  "summary": {
+    "totalFiles": 890,
+    "totalDirs": 170,
+    "codeFiles": 415,
+    "docFiles": 268,
+    "orphanCount": 211,
+    "referenced": 0,
+    "deadLinks": 0,
+    "filesChecked": 561,
+    "graphNodes": 415,
+    "graphEdges": 321,
+    "topHubScore": 41
+  },
+  "orphans": [
+    "desktop/main.js",
+    "desktop/preload.js",
+    "electron/main.js",
+    "electron/preload.js",
+    "extensions/cipher-shield/background.js",
+    "extensions/cipher-shield/content.js",
+    "extensions/cipher-shield/devtools.js",
+    "extensions/code-sovereign/background.js",
+    "extensions/code-sovereign/content.js",
+    "extensions/code-sovereign/devtools.js",
+    "extensions/contract-forge/background.js",
+    "extensions/contract-forge/content.js",
+    "extensions/contract-forge/devtools.js",
+    "extensions/creative-muse/background.js",
+    "extensions/creative-muse/content.js",
+    "extensions/creative-muse/devtools.js",
+    "extensions/data-alchemist/background.js",
+    "extensions/data-alchemist/content.js",
+    "extensions/data-alchemist/devtools.js",
+    "extensions/data-oracle/background.js",
+    "extensions/data-oracle/content.js",
+    "extensions/data-oracle/devtools.js",
+    "extensions/edge-ai-assistant/background.js",
+    "extensions/edge-ai-assistant/content.js",
+    "extensions/edge-ai-assistant/devtools.js",
+    "extensions/edge-context-engine/background.js",
+    "extensions/edge-context-engine/content.js",
+    "extensions/edge-context-engine/devtools.js",
+    "extensions/edge-prompt-lab/background.js",
+    "extensions/edge-prompt-lab/content.js",
+    "extensions/edge-prompt-lab/devtools.js",
+    "extensions/edge-runner/background.js",
+    "extensions/edge-runner/content.js",
+    "extensions/edge-runner/devtools.js",
+    "extensions/edge-tab-analyzer/background.js",
+    "extensions/edge-tab-analyzer/content.js",
+    "extensions/edge-tab-analyzer/devtools.js",
+    "extensions/jarvis/background.js",
+    "extensions/jarvis/content.js",
+    "extensions/jarvis/devtools.js",
+    "extensions/jarvis/postcss.config.cjs",
+    "extensions/jarvis/src/background/db.ts",
+    "extensions/jarvis/src/background/domain-ais.ts",
+    "extensions/jarvis/src/background/engines/DallasISDEngine.ts",
+    "extensions/jarvis/src/background/engines/MasterSovereignEngine.ts",
+    "extensions/jarvis/src/background/engines/OrganismCore.ts",
+    "extensions/jarvis/src/background/engines/WyomingNevadaEngine.ts",
+    "extensions/jarvis/src/background/engines/index.ts",
+    "extensions/jarvis/src/background/index.ts",
+    "extensions/jarvis/src/background/mission-engine.ts",
+    "extensions/jarvis/src/background/neuro-chemistry.ts",
+    "extensions/jarvis/src/background/pattern-synthesis-engine.ts",
+    "extensions/jarvis/src/background/skills/email.ts",
+    "extensions/jarvis/src/background/skills/excel.ts",
+    "extensions/jarvis/src/background/skills/highlights.ts",
+    "extensions/jarvis/src/background/skills/knowledgeGraph.ts",
+    "extensions/jarvis/src/background/skills/memoryAI.ts",
+    "extensions/jarvis/src/background/skills/nlp.ts",
+    "extensions/jarvis/src/background/skills/pdf.ts",
+    "extensions/jarvis/src/background/skills/phantom-meta.ts",
+    "extensions/jarvis/src/background/skills/readability.ts",
+    "extensions/jarvis/src/background/skills/sentryAI.ts",
+    "extensions/jarvis/src/background/skills/solus.ts",
+    "extensions/jarvis/src/background/skills/workflow.ts",
+    "extensions/jarvis/src/background/sovereign-license.ts",
+    "extensions/jarvis/src/background/types.ts",
+    "extensions/jarvis/src/content/index.ts",
+    "extensions/jarvis/src/offscreen/offscreen.ts",
+    "extensions/jarvis/src/sidepanel/App.tsx",
+    "extensions/jarvis/src/sidepanel/index.tsx",
+    "extensions/jarvis/src/sidepanel/panels/AGIPromptsPanel.tsx",
+    "extensions/jarvis/src/sidepanel/panels/AGIToolsPanel.tsx",
+    "extensions/jarvis/src/sidepanel/panels/AgentsPanel.tsx",
+    "extensions/jarvis/src/sidepanel/panels/CampaignPanel.tsx",
+    "extensions/jarvis/src/sidepanel/panels/ChatPanel.tsx",
+    "extensions/jarvis/src/sidepanel/panels/DocsPanel.tsx",
+    "extensions/jarvis/src/sidepanel/panels/GraphPanel.tsx",
+    "extensions/jarvis/src/sidepanel/panels/HighlightsPanel.tsx",
+    "extensions/jarvis/src/sidepanel/panels/InboxPanel.tsx",
+    "extensions/jarvis/src/sidepanel/panels/InstallPanel.tsx",
+    "extensions/jarvis/src/sidepanel/panels/LogPanel.tsx",
+    "extensions/jarvis/src/sidepanel/panels/MemoryPanel.tsx",
+    "extensions/jarvis/src/sidepanel/panels/MemoryVaultPanel.tsx",
+    "extensions/jarvis/src/sidepanel/panels/MirrorPanel.tsx",
+    "extensions/jarvis/src/sidepanel/panels/NexusPanel.tsx",
+    "extensions/jarvis/src/sidepanel/panels/NotesPanel.tsx",
+    "extensions/jarvis/src/sidepanel/panels/PhantomPanel.tsx",
+    "extensions/jarvis/src/sidepanel/panels/PromptsPanel.tsx",
+    "extensions/jarvis/src/sidepanel/panels/ScreenPanel.tsx",
+    "extensions/jarvis/src/sidepanel/panels/SearchPanel.tsx",
+    "extensions/jarvis/src/sidepanel/panels/SentryPanel.tsx",
+    "extensions/jarvis/src/sidepanel/panels/SolusPanel.tsx",
+    "extensions/jarvis/src/sidepanel/panels/TabsPanel.tsx",
+    "extensions/jarvis/src/sidepanel/panels/ToolsPanel.tsx",
+    "extensions/jarvis/src/sidepanel/panels/VaultPanel.tsx",
+    "extensions/jarvis/src/sidepanel/panels/WorkspacePanel.tsx",
+    "extensions/jarvis/src/store/index.ts",
+    "extensions/jarvis/tailwind.config.ts",
+    "extensions/jarvis/vite.config.ts",
+    "extensions/knowledge-cartographer/background.js"
+  ],
+  "deadLinks": [],
+  "topHubs": [
+    {
+      "file": "protocols/index.js",
+      "score": "67.338",
+      "inDegree": 0,
+      "outDegree": 41
+    },
+    {
+      "file": "sdk/organism-marketplace/src/tools/index.js",
+      "score": "39.832",
+      "inDegree": 0,
+      "outDegree": 24
+    },
+    {
+      "file": "extensions/jarvis/src/background/index.ts",
+      "score": "28.506",
+      "inDegree": 0,
+      "outDegree": 17
+    },
+    {
+      "file": "extensions/jarvis/src/sidepanel/App.tsx",
+      "score": "25.270",
+      "inDegree": 0,
+      "outDegree": 15
+    },
+    {
+      "file": "organism/typescript/src/index.ts",
+      "score": "23.652",
+      "inDegree": 0,
+      "outDegree": 14
+    },
+    {
+      "file": "extensions/jarvis/src/background/engines/index.ts",
+      "score": "15.562",
+      "inDegree": 0,
+      "outDegree": 9
+    },
+    {
+      "file": "sdk/enterprise-integration-sdk/src/connectors/index.js",
+      "score": "15.562",
+      "inDegree": 0,
+      "outDegree": 9
+    },
+    {
+      "file": "sdk/index.js",
+      "score": "13.944",
+      "inDegree": 0,
+      "outDegree": 8
+    },
+    {
+      "file": "sdk/organism-marketplace/src/index.js",
+      "score": "13.944",
+      "inDegree": 0,
+      "outDegree": 8
+    },
+    {
+      "file": "sdk/microbots/index.js",
+      "score": "12.326",
+      "inDegree": 0,
+      "outDegree": 7
+    }
+  ],
+  "generatedAt": "2026-05-02T22:46:39.360Z"
+};
+  </script>
+</body>
+</html>

@@ -1,0 +1,159 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://itsnotailabs.com/schemas/intelligence-contract.schema.json",
+  "title": "NOVA Intelligence Contract",
+  "description": "Machine-readable agreement between AI models before computation happens. The core primitive of the Pactum Intelligentiae layer.",
+  "type": "object",
+  "required": [
+    "contract_id",
+    "contract_type",
+    "intent",
+    "requesting_model",
+    "executing_model",
+    "function_signature",
+    "input_shape",
+    "output_shape",
+    "status"
+  ],
+  "properties": {
+    "contract_id": {
+      "type": "string",
+      "pattern": "^ic_[a-z0-9_]+$",
+      "description": "Unique contract identifier (e.g. ic_linalg_eigen_001)"
+    },
+    "contract_type": {
+      "type": "string",
+      "enum": [
+        "NOVA_INTELLIGENCE_CONTRACT",
+        "NOVA_COMPUTE_CONTRACT",
+        "NOVA_VERIFICATION_CONTRACT",
+        "NOVA_STORAGE_CONTRACT"
+      ],
+      "description": "Type of intelligence contract"
+    },
+    "intent": {
+      "type": "string",
+      "description": "Human/AI-readable purpose of the computation"
+    },
+    "requesting_model": {
+      "type": "string",
+      "description": "Agent/model requesting the computation"
+    },
+    "executing_model": {
+      "type": "string",
+      "description": "Agent/model performing the computation"
+    },
+    "verifying_models": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Agents responsible for verification"
+    },
+    "source_language": {
+      "type": "string",
+      "enum": ["Julia", "Python", "Rust", "JavaScript", "TypeScript"],
+      "description": "Language performing the computation"
+    },
+    "target_language": {
+      "type": "string",
+      "enum": ["Motoko", "Rust", "JavaScript"],
+      "description": "Language storing/receiving the result"
+    },
+    "bridge_language": {
+      "type": "string",
+      "enum": ["JavaScript", "TypeScript", "WASM"],
+      "description": "Language bridging the two"
+    },
+    "interface_language": {
+      "type": "string",
+      "enum": ["Candid", "JSON", "Protobuf"],
+      "description": "Interface definition language"
+    },
+    "function_signature": {
+      "type": "string",
+      "description": "Full function signature (e.g. linalg.eigen(Matrix{Float64}))"
+    },
+    "input_shape": {
+      "$ref": "#/definitions/PrimitiveShape"
+    },
+    "output_shape": {
+      "$ref": "#/definitions/PrimitiveShape"
+    },
+    "type_map_id": {
+      "type": "string",
+      "description": "Reference to the type mapping registry entry"
+    },
+    "proof_requirements": {
+      "type": "object",
+      "properties": {
+        "input_hash": { "type": "boolean" },
+        "output_hash": { "type": "boolean" },
+        "wrapper_hash": { "type": "boolean" },
+        "candid_hash": { "type": "boolean" },
+        "roundtrip_test": { "type": "boolean" },
+        "runtime_hash": { "type": "boolean" }
+      }
+    },
+    "risk_level": {
+      "type": "string",
+      "enum": ["low", "medium", "high", "critical"]
+    },
+    "execution_mode": {
+      "type": "string",
+      "enum": ["browser-wasm", "node", "local-julia", "bridge-service", "icp-canister"]
+    },
+    "allowed_runtime": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "motoko_storage": {
+      "type": "boolean",
+      "description": "Whether result should be stored in Motoko sovereign memory"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["proposed", "accepted", "executing", "executed", "verified", "disputed", "rejected", "stored"]
+    },
+    "timestamps": {
+      "type": "object",
+      "properties": {
+        "proposed_at": { "type": "string", "format": "date-time" },
+        "accepted_at": { "type": "string", "format": "date-time" },
+        "executed_at": { "type": "string", "format": "date-time" },
+        "verified_at": { "type": "string", "format": "date-time" },
+        "stored_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "dispute_path": {
+      "type": "object",
+      "properties": {
+        "reason": { "type": "string" },
+        "agent": { "type": "string" },
+        "resolution": { "type": "string", "enum": ["replay", "human_review", "reject", "accept_unverified"] }
+      }
+    }
+  },
+  "definitions": {
+    "PrimitiveShape": {
+      "type": "object",
+      "required": ["shape_type"],
+      "properties": {
+        "shape_type": {
+          "type": "string",
+          "enum": ["Scalar", "Vector", "Matrix", "Tensor", "Complex", "Sparse", "Record", "Variant", "Result", "EigenResult"]
+        },
+        "element_type": {
+          "type": "string",
+          "enum": ["Float64", "Float32", "Int64", "Int32", "Complex128", "Bool", "String", "Any"]
+        },
+        "dimensions": {
+          "type": "array",
+          "items": { "type": "integer" }
+        },
+        "layout": {
+          "type": "string",
+          "enum": ["row-major", "column-major", "sparse-csc", "sparse-csr"]
+        }
+      }
+    }
+  }
+}

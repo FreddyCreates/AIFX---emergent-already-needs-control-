@@ -1,0 +1,70 @@
+{
+  "NOVA_LINGUA_CHECK": "WARN",
+  "report_id": "lc_eigen_001",
+  "contract_id": "ic_linalg_eigen_001",
+  "function": "linalg.eigen",
+  "source": "Julia",
+  "target": "Motoko",
+  "bridge": "JavaScript",
+  "interface": "Candid",
+  "primitive_shape": "Matrix<Float64> → EigenResult",
+  "agents_consulted": [
+    {
+      "agent": "julia_inspector",
+      "status": "pass",
+      "notes": "Function known, package LinearAlgebra, non-deterministic"
+    },
+    {
+      "agent": "motoko_sovereign",
+      "status": "pass",
+      "notes": "EigenResult representable as { values: [Complex]; vectors: [[Float]] }"
+    },
+    {
+      "agent": "candid_treaty",
+      "status": "pass",
+      "notes": "Interface: linalg_eigen : (vec vec float64) -> (record { values: vec record { re: float64; im: float64 }; vectors: vec vec float64 })"
+    },
+    {
+      "agent": "js_bridge",
+      "status": "pass",
+      "notes": "Matrix and EigenResult transportable, deep copy required"
+    },
+    {
+      "agent": "primitive_shape",
+      "status": "pass",
+      "notes": "Input: Matrix [3,3] row-major Float64; Output: EigenResult"
+    },
+    {
+      "agent": "critic_dispute",
+      "status": "warn",
+      "notes": "Eigenvector signs may vary; tolerance comparison required; result non-deterministic"
+    },
+    {
+      "agent": "proof_agent",
+      "status": "pass",
+      "notes": "All 5 hashes required and producible"
+    },
+    {
+      "agent": "sovereign_acceptance",
+      "status": "accept_with_tolerance",
+      "notes": "Accepted — store with tolerance flag for eigenvector comparison"
+    }
+  ],
+  "warnings": [
+    "Eigenvector signs may vary; tolerance comparison required.",
+    "Result may be non-deterministic; tolerance comparison required",
+    "Column-major (Julia) vs row-major (JS) layout difference",
+    "Roundtrip test required — floating point precision may differ"
+  ],
+  "required_receipts": [
+    "input_hash",
+    "output_hash",
+    "wrapper_hash",
+    "candid_hash",
+    "runtime_hash"
+  ],
+  "risk_level": "medium",
+  "status": "ready_for_contract",
+  "phi_confidence": 0.562,
+  "timestamp": "2026-05-21T04:00:00.050Z"
+}

@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Documentation — ItsNotAILABS Scientific Computing</title>
+  <meta name="description" content="Complete documentation for JULIA/MOTOKO bridges, JULIA/PYTHON integration, CPL language, and 234+ protocols.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Orbitron:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-primary: #030712;
+      --bg-secondary: #0a0f1e;
+      --bg-sidebar: #0f172a;
+      --bg-glass: rgba(255, 255, 255, 0.03);
+      --border: rgba(255, 255, 255, 0.08);
+      --accent-cpl: #00D4AA;
+      --accent-julia: #9558B2;
+      --accent-motoko: #29ABE2;
+      --accent-python: #3776AB;
+      --accent-gold: #D4AF37;
+      --text-primary: #F8FAFC;
+      --text-secondary: #94A3B8;
+      --text-dim: #64748B;
+      --gradient-scientific: linear-gradient(135deg, #00D4AA 0%, #3776AB 50%, #9558B2 100%);
+    }
+    
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+    
+    a { color: var(--accent-cpl); text-decoration: none; }
+    a:hover { color: var(--accent-gold); }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+    
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(3, 7, 18, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 2rem;
+    }
+    nav .nav-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .nav-brand {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent-cpl);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .nav-brand .logo-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--gradient-scientific);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+    }
+    .nav-links {
+      display: flex;
+      gap: 0.25rem;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+    .nav-links a:hover, .nav-links a.active {
+      color: var(--accent-cpl);
+      background: rgba(0, 212, 170, 0.1);
+    }
+    
+    /* Layout */
+    .docs-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      min-height: 100vh;
+      padding-top: 60px;
+    }
+    
+    /* Sidebar */
+    .sidebar {
+      position: fixed;
+      top: 60px;
+      left: 0;
+      width: 280px;
+      height: calc(100vh - 60px);
+      background: var(--bg-sidebar);
+      border-right: 1px solid var(--border);
+      padding: 2rem 1.5rem;
+      overflow-y: auto;
+    }
+    .sidebar-section {
+      margin-bottom: 2rem;
+    }
+    .sidebar-section h4 {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+      margin-bottom: 1rem;
+      padding-left: 0.5rem;
+    }
+    .sidebar-section ul {
+      list-style: none;
+    }
+    .sidebar-section li a {
+      display: block;
+      padding: 0.5rem 0.75rem;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+    }
+    .sidebar-section li a:hover {
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .sidebar-section li a.active {
+      color: var(--accent-cpl);
+      background: rgba(0, 212, 170, 0.1);
+    }
+    
+    /* Content */
+    .docs-content {
+      margin-left: 280px;
+      padding: 3rem 4rem;
+      max-width: 900px;
+    }
+    .docs-content h1 {
+      font-family: 'Orbitron', monospace;
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    .docs-content h1 .highlight { color: var(--accent-cpl); }
+    .docs-content .lead {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      margin-bottom: 3rem;
+      line-height: 1.8;
+    }
+    
+    .docs-content h2 {
+      font-size: 1.5rem;
+      margin: 3rem 0 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .docs-content h3 {
+      font-size: 1.2rem;
+      margin: 2rem 0 1rem;
+      color: var(--accent-julia);
+    }
+    .docs-content p {
+      margin-bottom: 1.5rem;
+      color: var(--text-secondary);
+    }
+    
+    /* Code Blocks */
+    .code-block {
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin: 1.5rem 0;
+      overflow: hidden;
+    }
+    .code-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      background: rgba(255, 255, 255, 0.03);
+      border-bottom: 1px solid var(--border);
+    }
+    .code-lang {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--accent-julia);
+    }
+    .code-copy {
+      padding: 0.25rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: transparent;
+      color: var(--text-dim);
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .code-copy:hover {
+      border-color: var(--accent-cpl);
+      color: var(--accent-cpl);
+    }
+    .code-block pre {
+      padding: 1.5rem;
+      overflow-x: auto;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+    .code-block .comment { color: var(--text-dim); }
+    .code-block .keyword { color: var(--accent-julia); }
+    .code-block .string { color: var(--accent-cpl); }
+    .code-block .function { color: var(--accent-motoko); }
+    .code-block .number { color: var(--accent-gold); }
+    
+    /* Cards */
+    .feature-cards {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    .feature-card {
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+    .feature-card:hover {
+      border-color: var(--accent-cpl);
+    }
+    .feature-card h4 {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .feature-card p {
+      font-size: 0.9rem;
+      margin-bottom: 0;
+    }
+    
+    /* Callouts */
+    .callout {
+      padding: 1.25rem 1.5rem;
+      border-radius: 12px;
+      margin: 1.5rem 0;
+      border-left: 4px solid;
+    }
+    .callout.info {
+      background: rgba(0, 212, 170, 0.1);
+      border-color: var(--accent-cpl);
+    }
+    .callout.warning {
+      background: rgba(255, 189, 46, 0.1);
+      border-color: #ffbd2e;
+    }
+    .callout h5 {
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+    .callout p {
+      font-size: 0.9rem;
+      margin-bottom: 0;
+    }
+    
+    @media (max-width: 992px) {
+      .docs-layout { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+      .docs-content { margin-left: 0; padding: 2rem; }
+      .feature-cards { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-content">
+    <a href="./index.html" class="nav-brand">
+      <div class="logo-icon">⚛</div>
+      ItsNotAILABS
+    </a>
+    <ul class="nav-links">
+      <li><a href="./index.html">Platform</a></li>
+      <li><a href="./protocols.html">Protocols</a></li>
+      <li><a href="./tools.html">Tools</a></li>
+      <li><a href="./download.html">Extensions</a></li>
+      <li><a href="./documents.html">Documents</a></li>
+      <li><a href="./docs.html" class="active">Docs</a></li>
+      <li><a href="./research/portal.html">Research</a></li>
+      <li><a href="./sandbox-labs.html">Sandbox</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="docs-layout">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <h4>Getting Started</h4>
+      <ul>
+        <li><a href="#" class="active">Introduction</a></li>
+        <li><a href="#">Quick Start</a></li>
+        <li><a href="#">Installation</a></li>
+        <li><a href="#">Authentication</a></li>
+      </ul>
+    </div>
+    
+    <div class="sidebar-section">
+      <h4>Language Bridges</h4>
+      <ul>
+        <li><a href="#">Julia ↔ Motoko</a></li>
+        <li><a href="#">Julia ↔ Python</a></li>
+        <li><a href="#">Bridge Configuration</a></li>
+        <li><a href="#">Performance Tuning</a></li>
+      </ul>
+    </div>
+    
+    <div class="sidebar-section">
+      <h4>CPL Language</h4>
+      <ul>
+        <li><a href="#">CPL Overview</a></li>
+        <li><a href="#">Syntax Reference</a></li>
+        <li><a href="#">Protocol Binding</a></li>
+        <li><a href="#">Memory Management</a></li>
+      </ul>
+    </div>
+    
+    <div class="sidebar-section">
+      <h4>API Reference</h4>
+      <ul>
+        <li><a href="#">REST API</a></li>
+        <li><a href="#">GraphQL API</a></li>
+        <li><a href="#">WebSocket API</a></li>
+        <li><a href="#">Rate Limits</a></li>
+      </ul>
+    </div>
+    
+    <div class="sidebar-section">
+      <h4>SDKs</h4>
+      <ul>
+        <li><a href="#">JavaScript SDK</a></li>
+        <li><a href="#">Python SDK</a></li>
+        <li><a href="#">Julia SDK</a></li>
+        <li><a href="#">Rust SDK</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="docs-content">
+    <h1>Welcome to <span class="highlight">ItsNotAILABS</span></h1>
+    <p class="lead">
+      Build intelligent systems with cross-language bridges, cognitive protocols, and decentralized AI infrastructure. 
+      This documentation covers the JULIA/MOTOKO bridge, JULIA/PYTHON integration, and CPL orchestration.
+    </p>
+    
+    <div class="feature-cards">
+      <div class="feature-card">
+        <h4>📐 Julia Integration</h4>
+        <p>High-performance scientific computing with native Julia support and seamless interop.</p>
+      </div>
+      <div class="feature-card">
+        <h4>∞ Motoko Bridge</h4>
+        <p>Run computations on the Internet Computer with trustless, decentralized execution.</p>
+      </div>
+      <div class="feature-card">
+        <h4>🐍 Python Ecosystem</h4>
+        <p>Access PyTorch, TensorFlow, and the entire Python ML ecosystem from Julia.</p>
+      </div>
+      <div class="feature-card">
+        <h4>🧠 CPL Language</h4>
+        <p>Orchestrate cognitive functions with the Cognitive Protocol Language.</p>
+      </div>
+    </div>
+    
+    <h2>Quick Start</h2>
+    
+    <p>Get started with the platform in minutes. First, obtain your API key from the dashboard, then install the SDK for your preferred language.</p>
+    
+    <h3>Installation</h3>
+    
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">Julia</span>
+        <button class="code-copy">Copy</button>
+      </div>
+      <pre><span class="comment"># Add the ItsNotAILABS registry</span>
+<span class="keyword">using</span> Pkg
+Pkg.<span class="function">add</span>(<span class="string">"ItsNotAILABS"</span>)
+
+<span class="comment"># Import the SDK</span>
+<span class="keyword">using</span> ItsNotAILABS
+
+<span class="comment"># Initialize with your API key</span>
+client = <span class="function">Client</span>(api_key=<span class="string">"sk-..."</span>)</pre>
+    </div>
+    
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">Python</span>
+        <button class="code-copy">Copy</button>
+      </div>
+      <pre><span class="comment"># Install via pip</span>
+pip install itsnotailabs
+
+<span class="comment"># Import and initialize</span>
+<span class="keyword">from</span> itsnotailabs <span class="keyword">import</span> Client
+
+client = <span class="function">Client</span>(api_key=<span class="string">"sk-..."</span>)</pre>
+    </div>
+    
+    <h3>Your First Request</h3>
+    
+    <p>Make your first API call to the Sovereign Mind model:</p>
+    
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">Julia</span>
+        <button class="code-copy">Copy</button>
+      </div>
+      <pre><span class="comment"># Generate text with Sovereign Mind</span>
+response = client.<span class="function">generate</span>(
+    model = <span class="string">"sovereign-mind-7b"</span>,
+    prompt = <span class="string">"Explain quantum entanglement in simple terms"</span>,
+    max_tokens = <span class="number">256</span>,
+    temperature = <span class="number">0.7</span>
+)
+
+<span class="function">println</span>(response.text)</pre>
+    </div>
+    
+    <div class="callout info">
+      <h5>💡 Pro Tip</h5>
+      <p>Enable <code>phi_optimization = true</code> in your requests to leverage our golden ratio optimization for better coherence and reasoning.</p>
+    </div>
+    
+    <h2>Julia ↔ Motoko Bridge</h2>
+    
+    <p>The Julia-Motoko bridge allows you to execute Julia computations on the Internet Computer's decentralized infrastructure. This is ideal for scientific workflows requiring both high performance and trustless execution.</p>
+    
+    <h3>Basic Usage</h3>
+    
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">Julia</span>
+        <button class="code-copy">Copy</button>
+      </div>
+      <pre><span class="keyword">using</span> MotokoBinding
+
+<span class="comment"># Define a computation to run on-chain</span>
+<span class="function">@motoko_canister</span> <span class="keyword">function</span> compute_phi_series(n::Int)
+    φ = <span class="number">1.618033988749</span>
+    <span class="keyword">return</span> [φ^i <span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">1</span>:n]
+<span class="keyword">end</span>
+
+<span class="comment"># Call the canister</span>
+result = <span class="function">compute_phi_series</span>(<span class="number">10</span>)
+<span class="function">println</span>(result)  <span class="comment"># Computed on Internet Computer</span></pre>
+    </div>
+    
+    <div class="callout warning">
+      <h5>⚠️ Note</h5>
+      <p>Motoko canisters have cycle costs. Monitor your cycle balance in the dashboard to avoid interruptions.</p>
+    </div>
+    
+    <h2>CPL Reference</h2>
+    
+    <p>CPL (Cognitive Protocol Language) is the orchestration layer for all cognitive functions. Here's a quick reference:</p>
+    
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">CPL</span>
+        <button class="code-copy">Copy</button>
+      </div>
+      <pre><span class="comment"># Initialize an organism</span>
+<span class="function">init_organism</span>(<span class="string">"sovereign-alpha"</span>) {
+    phi = <span class="number">1.618033988749</span>
+    protocols = [<span class="string">"hebbian"</span>, <span class="string">"memory"</span>, <span class="string">"attention"</span>]
+}
+
+<span class="comment"># Load and execute protocols</span>
+<span class="function">load_protocol</span>(<span class="string">"hebbian-learning"</span>)
+<span class="function">load_protocol</span>(<span class="string">"memory-consolidation"</span>)
+
+<span class="comment"># Run cognitive cycle</span>
+<span class="function">run_cognitive_cycle</span>() {
+    attention_threshold = <span class="number">0.8</span>
+    memory_capacity = <span class="number">1000</span>
+}</pre>
+    </div>
+    
+    <h2>Next Steps</h2>
+    
+    <div class="feature-cards">
+      <div class="feature-card">
+        <h4>📖 API Reference</h4>
+        <p>Complete reference for all REST, GraphQL, and WebSocket endpoints.</p>
+      </div>
+      <div class="feature-card">
+        <h4>🔌 Protocols</h4>
+        <p>Explore 234+ cognitive protocols for building intelligent systems.</p>
+      </div>
+    </div>
+  </main>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🧠 NOVA Intelligence Exchange — Developer Dashboard</title>
+  <style>
+    :root {
+      --bg: #030712;
+      --bg2: #0a0f1e;
+      --bg3: #111827;
+      --card: rgba(17, 24, 39, 0.9);
+      --border: rgba(255, 255, 255, 0.08);
+      --glow: rgba(0, 212, 170, 0.3);
+      --accent: #00D4AA;
+      --accent2: #9558B2;
+      --accent3: #29ABE2;
+      --accent4: #F59E0B;
+      --accent5: #EF4444;
+      --accent6: #22D3EE;
+      --text: #F8FAFC;
+      --muted: #94A3B8;
+      --dim: #64748B;
+      --phi: 1.618033988749895;
+      --gold: #D4AF37;
+      --julia: #9558B2;
+      --motoko: #29ABE2;
+      --candid: #00D4AA;
+      --js: #F7DF1E;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ═══ HEADER ═══ */
+    .header {
+      background: linear-gradient(135deg, #0a001e 0%, #001a2e 50%, #001e0a 100%);
+      border-bottom: 2px solid var(--accent);
+      padding: 20px 30px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 4px 40px rgba(0, 212, 170, 0.1);
+    }
+    .header h1 { font-size: 18px; letter-spacing: 0.08em; color: var(--accent); }
+    .header .subtitle { color: var(--muted); font-size: 11px; margin-left: 8px; }
+    .badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 9999px;
+      font-size: 10px;
+      font-weight: bold;
+    }
+    .badge-live { background: var(--accent); color: #000; }
+    .badge-proto { background: var(--accent2); color: #fff; }
+    .badge-layer { background: var(--accent3); color: #fff; }
+    .badge-warn { background: var(--accent4); color: #000; }
+    .badge-err { background: var(--accent5); color: #fff; }
+    .header .ts { margin-left: auto; color: var(--dim); font-size: 10px; }
+
+    /* ═══ NAV TABS ═══ */
+    .nav {
+      display: flex;
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      padding: 0 20px;
+      overflow-x: auto;
+    }
+    .nav button {
+      background: none;
+      border: none;
+      color: var(--muted);
+      padding: 12px 18px;
+      font-family: inherit;
+      font-size: 11px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      white-space: nowrap;
+    }
+    .nav button.active, .nav button:hover {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    /* ═══ GRID LAYOUTS ═══ */
+    .container { padding: 20px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+    .grid-8 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+    .full { grid-column: 1 / -1; }
+
+    /* ═══ CARDS ═══ */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      backdrop-filter: blur(10px);
+    }
+    .card-glow { border-color: var(--glow); box-shadow: 0 0 20px rgba(0, 212, 170, 0.05); }
+    .card h3 { font-size: 12px; color: var(--accent); margin-bottom: 10px; letter-spacing: 0.05em; }
+    .card h4 { font-size: 11px; color: var(--muted); margin-bottom: 8px; }
+
+    /* ═══ LAYER STACK ═══ */
+    .layer-stack { display: flex; flex-direction: column; gap: 4px; }
+    .layer {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      border-radius: 4px;
+      border-left: 3px solid var(--accent);
+      background: rgba(0, 212, 170, 0.03);
+    }
+    .layer .lid { font-weight: bold; color: var(--accent); min-width: 24px; }
+    .layer .lname { color: var(--gold); min-width: 140px; }
+    .layer .lpurpose { color: var(--muted); font-size: 11px; }
+    .layer:nth-child(1) { border-color: #EF4444; }
+    .layer:nth-child(2) { border-color: #F59E0B; }
+    .layer:nth-child(3) { border-color: #22D3EE; }
+    .layer:nth-child(4) { border-color: #9558B2; }
+    .layer:nth-child(5) { border-color: #D4AF37; }
+    .layer:nth-child(6) { border-color: #10B981; }
+    .layer:nth-child(7) { border-color: #29ABE2; }
+    .layer:nth-child(8) { border-color: #00D4AA; }
+
+    /* ═══ AGENT CARDS ═══ */
+    .agent-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px;
+      transition: border-color 0.2s;
+    }
+    .agent-card:hover { border-color: var(--accent); }
+    .agent-card .agent-name { font-size: 11px; color: var(--accent); font-weight: bold; margin-bottom: 4px; }
+    .agent-card .agent-id { font-size: 10px; color: var(--dim); margin-bottom: 6px; }
+    .agent-card .agent-checks { font-size: 10px; color: var(--muted); line-height: 1.5; }
+
+    /* ═══ CONTRACT FLOW ═══ */
+    .flow {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-wrap: wrap;
+      padding: 10px 0;
+    }
+    .flow-step {
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: bold;
+      border: 1px solid var(--border);
+    }
+    .flow-arrow { color: var(--dim); font-size: 14px; }
+    .flow-step.active { background: var(--accent); color: #000; border-color: var(--accent); }
+    .flow-step.done { background: rgba(0, 212, 170, 0.1); border-color: var(--accent); color: var(--accent); }
+    .flow-step.warn { background: rgba(245, 158, 11, 0.1); border-color: var(--accent4); color: var(--accent4); }
+
+    /* ═══ CODE BLOCKS ═══ */
+    .code {
+      background: #000;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 12px;
+      font-size: 11px;
+      overflow-x: auto;
+      line-height: 1.6;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    .code .key { color: var(--accent3); }
+    .code .val { color: var(--accent); }
+    .code .str { color: var(--gold); }
+    .code .num { color: var(--accent2); }
+    .code .comment { color: var(--dim); }
+
+    /* ═══ METRICS ═══ */
+    .metric {
+      text-align: center;
+      padding: 12px 8px;
+    }
+    .metric .value { font-size: 24px; color: var(--accent); font-weight: bold; }
+    .metric .label { font-size: 10px; color: var(--muted); margin-top: 4px; }
+
+    /* ═══ TABLE ═══ */
+    .table { width: 100%; border-collapse: collapse; font-size: 11px; }
+    .table th { text-align: left; color: var(--dim); padding: 8px; border-bottom: 1px solid var(--border); }
+    .table td { padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.03); color: var(--muted); }
+    .table tr:hover td { color: var(--text); }
+
+    /* ═══ STATUS DOTS ═══ */
+    .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+    .dot-green { background: #10B981; }
+    .dot-yellow { background: #F59E0B; }
+    .dot-red { background: #EF4444; }
+    .dot-blue { background: #29ABE2; }
+    .dot-purple { background: #9558B2; }
+
+    /* ═══ SECTIONS ═══ */
+    .section { display: none; }
+    .section.visible { display: block; }
+    .section-title { font-size: 14px; color: var(--accent); margin-bottom: 16px; letter-spacing: 0.05em; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+
+    /* ═══ LINGUA CHECK ═══ */
+    .lingua-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+    .lingua-pass { background: rgba(16, 185, 129, 0.1); border: 1px solid #10B981; }
+    .lingua-warn { background: rgba(245, 158, 11, 0.1); border: 1px solid #F59E0B; }
+    .lingua-fail { background: rgba(239, 68, 68, 0.1); border: 1px solid #EF4444; }
+
+    /* ═══ RESPONSIVE ═══ */
+    @media (max-width: 900px) {
+      .grid-2, .grid-3, .grid-4, .grid-8 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- HEADER -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div class="header">
+  <h1>🧠 NOVA INTELLIGENCE EXCHANGE</h1>
+  <span class="subtitle">Pactum Intelligentiae — Developer Dashboard</span>
+  <span class="badge badge-live">LIVE</span>
+  <span class="badge badge-proto">PROTO-251</span>
+  <span class="badge badge-layer">L0→L7</span>
+  <span class="ts" id="clock"></span>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- NAVIGATION -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div class="nav">
+  <button class="active" onclick="showSection('overview')">⚡ Overview</button>
+  <button onclick="showSection('layers')">📐 Layer Stack (L0-L7)</button>
+  <button onclick="showSection('agents')">🤖 Internal Agents</button>
+  <button onclick="showSection('contracts')">📜 Contracts</button>
+  <button onclick="showSection('lingua')">🔍 LinguaCheck</button>
+  <button onclick="showSection('receipts')">🧾 Receipts</button>
+  <button onclick="showSection('memory')">🧠 Contract Memory</button>
+  <button onclick="showSection('generated')">⚙️ Generated Code</button>
+  <button onclick="showSection('flow')">🌊 Live Flow</button>
+</div>
+
+<div class="container">
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SECTION: OVERVIEW -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div class="section visible" id="sec-overview">
+  <div class="grid-4">
+    <div class="card card-glow metric"><div class="value" id="m-proposed">47</div><div class="label">Contracts Proposed</div></div>
+    <div class="card metric"><div class="value" id="m-accepted">44</div><div class="label">Accepted</div></div>
+    <div class="card metric"><div class="value" id="m-verified">41</div><div class="label">Verified & Stored</div></div>
+    <div class="card metric"><div class="value" id="m-disputed">3</div><div class="label">Disputed</div></div>
+  </div>
+
+  <div class="grid-4">
+    <div class="card metric"><div class="value" style="color:var(--julia)">Julia</div><div class="label">Source Language</div></div>
+    <div class="card metric"><div class="value" style="color:var(--js)">JS/WASM</div><div class="label">Bridge Layer</div></div>
+    <div class="card metric"><div class="value" style="color:var(--candid)">Candid</div><div class="label">Interface</div></div>
+    <div class="card metric"><div class="value" style="color:var(--motoko)">Motoko</div><div class="label">Sovereign Store</div></div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3>📐 ARCHITECTURE STACK</h3>
+      <div class="layer-stack">
+        <div class="layer"><span class="lid">L0</span><span class="lname">Forma Prima</span><span class="lpurpose">Primitive shape capture</span></div>
+        <div class="layer"><span class="lid">L1</span><span class="lname">Sigillum</span><span class="lpurpose">Canonical hash sealing</span></div>
+        <div class="layer"><span class="lid">L2</span><span class="lname">Pactum</span><span class="lpurpose">Intelligence contract negotiation</span></div>
+        <div class="layer"><span class="lid">L3</span><span class="lname">LinguaCheck</span><span class="lpurpose">Cross-language verification</span></div>
+        <div class="layer"><span class="lid">L4</span><span class="lname">Consilium</span><span class="lpurpose">Cross-model review council</span></div>
+        <div class="layer"><span class="lid">L5</span><span class="lname">Executio</span><span class="lpurpose">Execution + receipt generation</span></div>
+        <div class="layer"><span class="lid">L6</span><span class="lname">Memoria Sovereigna</span><span class="lpurpose">Motoko sovereign storage</span></div>
+        <div class="layer"><span class="lid">L7</span><span class="lname">Discentia</span><span class="lpurpose">Learning / correction</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>🤖 AGENT CONSENSUS STATUS</h3>
+      <table class="table">
+        <tr><th>Agent</th><th>Status</th><th>Confidence</th></tr>
+        <tr><td><span class="dot dot-green"></span>Julia Inspector</td><td>Active</td><td>0.618</td></tr>
+        <tr><td><span class="dot dot-green"></span>Motoko Sovereign</td><td>Active</td><td>0.618</td></tr>
+        <tr><td><span class="dot dot-green"></span>Candid Treaty</td><td>Active</td><td>0.618</td></tr>
+        <tr><td><span class="dot dot-green"></span>JS Bridge</td><td>Active</td><td>0.618</td></tr>
+        <tr><td><span class="dot dot-green"></span>Primitive Shape</td><td>Active</td><td>0.618</td></tr>
+        <tr><td><span class="dot dot-green"></span>Proof Agent</td><td>Active</td><td>0.618</td></tr>
+        <tr><td><span class="dot dot-yellow"></span>Critic/Dispute</td><td>Watching</td><td>0.500</td></tr>
+        <tr><td><span class="dot dot-blue"></span>Sovereign Gate</td><td>Ready</td><td>0.618</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SECTION: LAYERS -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div class="section" id="sec-layers">
+  <h2 class="section-title">📐 LAYER STACK — Intellectus Architecture (L0→L7)</h2>
+  
+  <div class="card full" style="margin-bottom:16px">
+    <h3>THE DEEP ARCHITECTURE</h3>
+    <p style="color:var(--muted);line-height:1.8;margin-bottom:12px">
+      Not just a bridge. A <span style="color:var(--gold)">contracted intelligence exchange system</span>. 
+      Each layer has autonomous agents that inspect, challenge, verify, contract, seal, and store.
+    </p>
+    <div class="flow">
+      <span class="flow-step done">Model A Proposes</span><span class="flow-arrow">→</span>
+      <span class="flow-step done">Model B Interprets</span><span class="flow-arrow">→</span>
+      <span class="flow-step done">Contract Forms</span><span class="flow-arrow">→</span>
+      <span class="flow-step done">Language Agents Inspect</span><span class="flow-arrow">→</span>
+      <span class="flow-step done">Type Agents Verify</span><span class="flow-arrow">→</span>
+      <span class="flow-step done">Proof Agents Seal</span><span class="flow-arrow">→</span>
+      <span class="flow-step active">Motoko Stores</span><span class="flow-arrow">→</span>
+      <span class="flow-step">Memory Updates</span>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3>L0 — FORMA PRIMA (Primitive Capture)</h3>
+      <div class="code">
+<span class="comment">// Primitive shapes captured at ingress</span>
+Scalar    → Float64, Int64, Bool, String
+Vector    → [Float64] with length
+Matrix    → [[Float64]] with [rows, cols], layout
+Tensor    → [[[Float64]]] with [d1, d2, d3, ...]
+Complex   → { re: Float64, im: Float64 }
+Sparse    → CSC/CSR representation
+Record    → Named fields
+Variant   → Tagged union
+Result    → Ok/Err wrapper
+EigenResult → { values: [Complex], vectors: Matrix }
+      </div>
+    </div>
+    <div class="card">
+      <h3>L1 — SIGILLUM (Canonical Hash)</h3>
+      <div class="code">
+<span class="comment">// Every computation sealed with 5 hashes</span>
+input_hash   → SHA256(canonicalize(input))
+output_hash  → SHA256(canonicalize(output))
+wrapper_hash → SHA256(motoko_wrapper_source)
+candid_hash  → SHA256(candid_interface_def)
+runtime_hash → SHA256(runtime_env + timestamp)
+
+<span class="comment">// φ-seal ensures golden ratio integrity</span>
+phi_seal = <span class="num">1.618033988749895</span>
+      </div>
+    </div>
+    <div class="card">
+      <h3>L2 — PACTUM (Intelligence Contract)</h3>
+      <div class="code">
+{
+  <span class="key">"contract_type"</span>: <span class="str">"NOVA_INTELLIGENCE_CONTRACT"</span>,
+  <span class="key">"requesting_model"</span>: <span class="str">"research_agent"</span>,
+  <span class="key">"executing_model"</span>: <span class="str">"julia_compute_agent"</span>,
+  <span class="key">"function"</span>: <span class="str">"linalg.eigen"</span>,
+  <span class="key">"intent"</span>: <span class="str">"spectral analysis"</span>,
+  <span class="key">"proof_required"</span>: <span class="num">true</span>,
+  <span class="key">"status"</span>: <span class="str">"proposed"</span>
+}
+      </div>
+    </div>
+    <div class="card">
+      <h3>L3 — LINGUA CHECK (Language Verification)</h3>
+      <div class="code">
+<span class="comment">// 4 language agents inspect boundaries</span>
+Julia Agent    → syntax, packages, determinism, WASM
+Motoko Agent   → representability, async-safety, storage
+Candid Agent   → interface match, shareability
+JS Agent       → transport stability, copy correctness
+
+<span class="comment">// Output</span>
+NOVA_LINGUA_CHECK: <span class="val">PASS</span> | <span class="val">WARN</span> | <span class="val">FAIL</span>
+      </div>
+    </div>
+    <div class="card">
+      <h3>L4 — CONSILIUM (Cross-Model Review)</h3>
+      <div class="code">
+<span class="comment">// 4 review roles</span>
+Builder Model    → proposes computation
+Critic Model     → finds risks and edge cases
+Verifier Model   → checks proof requirements
+Sovereign Model  → final accept/reject gate
+
+<span class="comment">// Decisions</span>
+accept | reject | request_replay | human_review
+      </div>
+    </div>
+    <div class="card">
+      <h3>L5–L7 — EXECUTION → MEMORY → LEARNING</h3>
+      <div class="code">
+<span class="comment">// L5: Execute</span>
+julia_compute(input) → typed_result
+create_compute_receipt(hashes)
+
+<span class="comment">// L6: Sovereign Memory</span>
+motoko_canister.store(result, receipt, contract)
+status = <span class="val">"stored"</span>
+
+<span class="comment">// L7: Learning</span>
+memory.learn(function_signature, warnings, benchmarks)
+future_routing.update(confidence, patterns)
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SECTION: AGENTS -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div class="section" id="sec-agents">
+  <h2 class="section-title">🤖 INTERNAL AGENTS — The Bridge's Mind</h2>
+  
+  <div class="grid-8">
+    <div class="agent-card">
+      <div class="agent-name">🟣 Julia Inspector Agent</div>
+      <div class="agent-id">julia_inspector • L3</div>
+      <div class="agent-checks">
+        ✓ Is function real?<br>
+        ✓ Package dependencies?<br>
+        ✓ Deterministic?<br>
+        ✓ WASM-compatible?<br>
+        ✓ Input types accepted?<br>
+        ✓ Output type produced?
+      </div>
+    </div>
+    <div class="agent-card">
+      <div class="agent-name">🔵 Motoko Sovereign Agent</div>
+      <div class="agent-id">motoko_sovereign • L3</div>
+      <div class="agent-checks">
+        ✓ Can represent value?<br>
+        ✓ Wrapper generatable?<br>
+        ✓ Async-safe?<br>
+        ✓ Should store?<br>
+        ✓ Proof record needed?
+      </div>
+    </div>
+    <div class="agent-card">
+      <div class="agent-name">🟢 Candid Treaty Agent</div>
+      <div class="agent-id">candid_treaty • L3</div>
+      <div class="agent-checks">
+        ✓ Interface matches wrapper?<br>
+        ✓ All types shareable?<br>
+        ✓ Frontend callable?<br>
+        ✓ Agent-consistent?
+      </div>
+    </div>
+    <div class="agent-card">
+      <div class="agent-name">🟡 JavaScript Bridge Agent</div>
+      <div class="agent-id">js_bridge • L3</div>
+      <div class="agent-checks">
+        ✓ PROTOCOL-JULIA.js transport?<br>
+        ✓ Runtime: WASM/Node/Browser?<br>
+        ✓ Conversions stable?<br>
+        ✓ Arrays copied correctly?
+      </div>
+    </div>
+    <div class="agent-card">
+      <div class="agent-name">⚪ Primitive Shape Agent</div>
+      <div class="agent-id">primitive_shape • L0</div>
+      <div class="agent-checks">
+        ✓ Scalar / Vector / Matrix?<br>
+        ✓ Tensor / Complex / Sparse?<br>
+        ✓ Record / Variant / Result?<br>
+        ✓ Dimensions & layout?
+      </div>
+    </div>
+    <div class="agent-card">
+      <div class="agent-name">🔒 Proof Agent</div>
+      <div class="agent-id">proof_agent • L1</div>
+      <div class="agent-checks">
+        ✓ Input canonicalized?<br>
+        ✓ Output canonicalized?<br>
+        ✓ Hashes produced?<br>
+        ✓ Receipt matches contract?
+      </div>
+    </div>
+    <div class="agent-card">
+      <div class="agent-name">⚠️ Critic / Dispute Agent</div>
+      <div class="agent-id">critic_dispute • L4</div>
+      <div class="agent-checks">
+        ✓ What can go wrong?<br>
+        ✓ Benchmark false?<br>
+        ✓ Type lossy?<br>
+        ✓ Non-deterministic?<br>
+        ✓ Mark unverified?
+      </div>
+    </div>
+    <div class="agent-card">
+      <div class="agent-name">👑 Sovereign Acceptance Agent</div>
+      <div class="agent-id">sovereign_acceptance • L4</div>
+      <div class="agent-checks">
+        ✓ Accept<br>
+        ✓ Reject<br>
+        ✓ Request replay<br>
+        ✓ Request human review<br>
+        ✓ Store as verified/unverified
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SECTION: CONTRACTS -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div class="section" id="sec-contracts">
+  <h2 class="section-title">📜 INTELLIGENCE CONTRACTS — Active Exchange</h2>
+  
+  <div class="card" style="margin-bottom:16px">
+    <h3>EXAMPLE: linalg.eigen Contract</h3>
+    <div class="code">
+{
+  <span class="key">"contract_type"</span>: <span class="str">"NOVA_INTELLIGENCE_CONTRACT"</span>,
+  <span class="key">"contract_id"</span>: <span class="str">"ic_linalg_eigen_001"</span>,
+  <span class="key">"requesting_agent"</span>: <span class="str">"research_agent"</span>,
+  <span class="key">"executing_agent"</span>: <span class="str">"julia_compute_agent"</span>,
+  <span class="key">"verifying_agent"</span>: <span class="str">"motoko_type_agent"</span>,
+  <span class="key">"function"</span>: <span class="str">"linalg.eigen"</span>,
+  <span class="key">"intent"</span>: <span class="str">"spectral analysis of governance graph"</span>,
+  <span class="key">"input_type"</span>: <span class="str">"Matrix&lt;Float64&gt;"</span>,
+  <span class="key">"output_type"</span>: <span class="str">"EigenResult"</span>,
+  <span class="key">"primitive_shape"</span>: <span class="str">"Matrix"</span>,
+  <span class="key">"proof_required"</span>: <span class="num">true</span>,
+  <span class="key">"hash_required"</span>: <span class="num">true</span>,
+  <span class="key">"roundtrip_required"</span>: <span class="num">true</span>,
+  <span class="key">"allowed_runtime"</span>: [<span class="str">"julia-wasm"</span>, <span class="str">"local-julia"</span>],
+  <span class="key">"motoko_storage"</span>: <span class="num">true</span>,
+  <span class="key">"status"</span>: <span class="str">"stored"</span>
+}
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>MODEL-TO-MODEL NEGOTIATION FLOW</h3>
+    <table class="table">
+      <tr><th>Agent</th><th>Says</th><th>Status</th></tr>
+      <tr><td>Research Agent</td><td>"I need spectral analysis on this matrix."</td><td><span class="dot dot-green"></span>Proposed</td></tr>
+      <tr><td>Julia Agent</td><td>"I can perform linalg.eigen with Matrix&lt;Float64&gt;."</td><td><span class="dot dot-green"></span>Capable</td></tr>
+      <tr><td>Primitive Agent</td><td>"Input is Matrix [3,3], row-major."</td><td><span class="dot dot-green"></span>Classified</td></tr>
+      <tr><td>Motoko Agent</td><td>"I can represent result as EigenResult."</td><td><span class="dot dot-green"></span>Representable</td></tr>
+      <tr><td>Candid Agent</td><td>"Interface: linalg_eigen : MatrixFloat → EigenResult."</td><td><span class="dot dot-green"></span>Shareable</td></tr>
+      <tr><td>Proof Agent</td><td>"I require 5 hashes: input, output, wrapper, candid, runtime."</td><td><span class="dot dot-green"></span>Required</td></tr>
+      <tr><td>Critic Agent</td><td>"Eigenvectors may differ by sign; compare with tolerance."</td><td><span class="dot dot-yellow"></span>Warning</td></tr>
+      <tr><td>Sovereign Agent</td><td>"Accepted. Execute and seal receipt."</td><td><span class="dot dot-blue"></span>Accepted</td></tr>
+      <tr><td>Julia Runtime</td><td>"Computed."</td><td><span class="dot dot-green"></span>Executed</td></tr>
+      <tr><td>Proof Agent</td><td>"Receipt sealed."</td><td><span class="dot dot-green"></span>Sealed</td></tr>
+      <tr><td>Motoko</td><td>"Stored."</td><td><span class="dot dot-green"></span>Stored</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SECTION: LINGUA CHECK -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div class="section" id="sec-lingua">
+  <h2 class="section-title">🔍 LINGUA CHECK — Cross-Language Intelligence Verifier</h2>
+
+  <div class="lingua-status lingua-warn">
+    <span style="font-size:16px">⚠️</span>
+    <span><strong>NOVA_LINGUA_CHECK: WARN</strong> — linalg.eigen</span>
+    <span class="badge badge-warn" style="margin-left:auto">4 warnings</span>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3>REPORT: linalg_eigen</h3>
+      <div class="code">
+{
+  <span class="key">"NOVA_LINGUA_CHECK"</span>: <span class="str">"WARN"</span>,
+  <span class="key">"function"</span>: <span class="str">"linalg.eigen"</span>,
+  <span class="key">"source"</span>: <span class="str">"Julia"</span>,
+  <span class="key">"target"</span>: <span class="str">"Motoko"</span>,
+  <span class="key">"interface"</span>: <span class="str">"Candid"</span>,
+  <span class="key">"primitive_shape"</span>: <span class="str">"Matrix&lt;Float64&gt; → EigenResult"</span>,
+  <span class="key">"warnings"</span>: [
+    <span class="str">"Eigenvector signs may vary"</span>,
+    <span class="str">"Non-deterministic result"</span>,
+    <span class="str">"Column-major vs row-major"</span>,
+    <span class="str">"Roundtrip precision may differ"</span>
+  ],
+  <span class="key">"required_receipts"</span>: [
+    <span class="str">"input_hash"</span>, <span class="str">"output_hash"</span>,
+    <span class="str">"wrapper_hash"</span>, <span class="str">"candid_hash"</span>,
+    <span class="str">"runtime_hash"</span>
+  ],
+  <span class="key">"status"</span>: <span class="str">"ready_for_contract"</span>
+}
+      </div>
+    </div>
+    <div class="card">
+      <h3>AGENT VERDICTS</h3>
+      <table class="table">
+        <tr><th>Agent</th><th>Verdict</th><th>Notes</th></tr>
+        <tr><td>julia_inspector</td><td><span class="dot dot-green"></span>PASS</td><td>Known, LinearAlgebra, non-deterministic</td></tr>
+        <tr><td>motoko_sovereign</td><td><span class="dot dot-green"></span>PASS</td><td>EigenResult representable</td></tr>
+        <tr><td>candid_treaty</td><td><span class="dot dot-green"></span>PASS</td><td>Interface generatable</td></tr>
+        <tr><td>js_bridge</td><td><span class="dot dot-green"></span>PASS</td><td>Transportable, copy needed</td></tr>
+        <tr><td>primitive_shape</td><td><span class="dot dot-green"></span>PASS</td><td>Matrix [3,3] Float64</td></tr>
+        <tr><td>critic_dispute</td><td><span class="dot dot-yellow"></span>WARN</td><td>Signs vary, tolerance needed</td></tr>
+        <tr><td>proof_agent</td><td><span class="dot dot-green"></span>PASS</td><td>All 5 hashes producible</td></tr>
+        <tr><td>sovereign_acceptance</td><td><span class="dot dot-blue"></span>ACCEPT</td><td>With tolerance flag</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SECTION: RECEIPTS -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div class="section" id="sec-receipts">
+  <h2 class="section-title">🧾 COMPUTE RECEIPTS — Sealed Proofs</h2>
+
+  <div class="card">
+    <h3>RECEIPT: ic_linalg_eigen_001</h3>
+    <div class="code">
+{
+  <span class="key">"receipt_id"</span>: <span class="str">"rcpt_nova_eigen_001"</span>,
+  <span class="key">"contract_id"</span>: <span class="str">"ic_linalg_eigen_001"</span>,
+  <span class="key">"function_signature"</span>: <span class="str">"linalg.eigen"</span>,
+  <span class="key">"hashes"</span>: {
+    <span class="key">"input"</span>: <span class="str">"a7f3bc21e"</span>,
+    <span class="key">"output"</span>: <span class="str">"d4e8f91ab"</span>,
+    <span class="key">"wrapper"</span>: <span class="str">"c3b7a2f8d"</span>,
+    <span class="key">"candid"</span>: <span class="str">"e1f9b3c7a"</span>,
+    <span class="key">"runtime"</span>: <span class="str">"b8c2d4e6f"</span>
+  },
+  <span class="key">"result_summary"</span>: {
+    <span class="key">"eigenvalues"</span>: [
+      { <span class="key">"re"</span>: <span class="num">5.372</span>, <span class="key">"im"</span>: <span class="num">0</span> },
+      { <span class="key">"re"</span>: <span class="num">-0.372</span>, <span class="key">"im"</span>: <span class="num">0.618</span> },
+      { <span class="key">"re"</span>: <span class="num">-0.372</span>, <span class="key">"im"</span>: <span class="num">-0.618</span> }
+    ]
+  },
+  <span class="key">"phi_seal"</span>: <span class="num">1.618033988749895</span>,
+  <span class="key">"verified"</span>: <span class="num">true</span>,
+  <span class="key">"storage_location"</span>: <span class="str">"motoko_canister://sovereign_memory/eigen_results/001"</span>
+}
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SECTION: MEMORY -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div class="section" id="sec-memory">
+  <h2 class="section-title">🧠 CONTRACT MEMORY — The Bridge Learns</h2>
+  
+  <div class="grid-2">
+    <div class="card">
+      <h3>LEARNING CYCLE</h3>
+      <div class="flow">
+        <span class="flow-step done">Proposed</span><span class="flow-arrow">→</span>
+        <span class="flow-step done">Accepted</span><span class="flow-arrow">→</span>
+        <span class="flow-step done">Executed</span><span class="flow-arrow">→</span>
+        <span class="flow-step done">Verified</span><span class="flow-arrow">→</span>
+        <span class="flow-step done">Stored</span><span class="flow-arrow">→</span>
+        <span class="flow-step active">LEARNED</span>
+      </div>
+      <p style="color:var(--muted);margin-top:12px;line-height:1.6">
+        Every contract teaches the system. Future calls to the same function 
+        benefit from known shapes, known wrappers, known warnings, known proofs.
+      </p>
+    </div>
+    <div class="card">
+      <h3>KNOWN FUNCTIONS (MEMORY)</h3>
+      <table class="table">
+        <tr><th>Function</th><th>Executions</th><th>Confidence</th><th>Last</th></tr>
+        <tr><td>linalg.eigen</td><td>14</td><td>0.618</td><td>2min ago</td></tr>
+        <tr><td>linalg.svd</td><td>9</td><td>0.618</td><td>5min ago</td></tr>
+        <tr><td>linalg.inv</td><td>22</td><td>0.618</td><td>1min ago</td></tr>
+        <tr><td>stats.mean</td><td>47</td><td>0.618</td><td>30s ago</td></tr>
+        <tr><td>stats.cov</td><td>8</td><td>0.618</td><td>8min ago</td></tr>
+        <tr><td>fft</td><td>5</td><td>0.618</td><td>12min ago</td></tr>
+        <tr><td>phi_transform</td><td>103</td><td>0.618</td><td>NOW</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SECTION: GENERATED -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div class="section" id="sec-generated">
+  <h2 class="section-title">⚙️ GENERATED CODE — Auto-Generated from Contracts</h2>
+  
+  <div class="grid-2">
+    <div class="card">
+      <h3>GENERATED: JuliaCompute.mo (Motoko)</h3>
+      <div class="code">
+<span class="comment">// AUTO-GENERATED by NOVA Intelligence Contract Bridge</span>
+<span class="comment">// Contract: ic_linalg_eigen_001</span>
+
+<span class="key">import</span> Float <span class="str">"mo:base/Float"</span>;
+<span class="key">import</span> Array <span class="str">"mo:base/Array"</span>;
+<span class="key">import</span> Time <span class="str">"mo:base/Time"</span>;
+
+<span class="key">module</span> JuliaCompute {
+
+  <span class="key">public type</span> Complex = {
+    re : Float;
+    im : Float;
+  };
+
+  <span class="key">public type</span> MatrixFloat = [[Float]];
+
+  <span class="key">public type</span> EigenResult = {
+    values : [Complex];
+    vectors : MatrixFloat;
+    computation_time_ms : Float;
+  };
+
+  <span class="key">public type</span> ComputeReceipt = {
+    receipt_id : Text;
+    contract_id : Text;
+    input_hash : Text;
+    output_hash : Text;
+    phi_seal : Float;
+    verified : Bool;
+  };
+
+  <span class="key">public func</span> storeResult(
+    contract_id : Text,
+    eigenResult : EigenResult,
+    receipt : ComputeReceipt
+  ) : <span class="key">async</span> StoredResult { ... };
+};
+      </div>
+    </div>
+    <div class="card">
+      <h3>GENERATED: julia_compute.did (Candid)</h3>
+      <div class="code">
+<span class="comment">// AUTO-GENERATED Candid Interface</span>
+<span class="comment">// Contract: ic_linalg_eigen_001</span>
+
+<span class="key">type</span> Complex = <span class="key">record</span> {
+  re : <span class="val">float64</span>;
+  im : <span class="val">float64</span>;
+};
+
+<span class="key">type</span> MatrixFloat = <span class="val">vec vec float64</span>;
+
+<span class="key">type</span> EigenResult = <span class="key">record</span> {
+  values : <span class="val">vec Complex</span>;
+  vectors : <span class="val">MatrixFloat</span>;
+  computation_time_ms : <span class="val">float64</span>;
+};
+
+<span class="key">service</span> : {
+  storeResult : (<span class="val">text</span>, EigenResult, ComputeReceipt)
+    -> (StoredResult);
+  getResult : (<span class="val">text</span>)
+    -> (<span class="val">opt</span> StoredResult) <span class="key">query</span>;
+  linalg_eigen : (MatrixFloat)
+    -> (EigenResult);
+}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SECTION: LIVE FLOW -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div class="section" id="sec-flow">
+  <h2 class="section-title">🌊 LIVE CONTRACT FLOW — Real-Time Exchange</h2>
+  
+  <div class="card" style="margin-bottom:16px">
+    <h3>LIVE PIPELINE VISUALIZATION</h3>
+    <div id="live-log" class="code" style="min-height:200px;max-height:400px;overflow-y:auto"></div>
+  </div>
+
+  <div class="grid-3">
+    <div class="card metric"><div class="value" id="flow-rate">3.2</div><div class="label">Contracts/sec</div></div>
+    <div class="card metric"><div class="value" id="flow-latency">150ms</div><div class="label">Avg Latency</div></div>
+    <div class="card metric"><div class="value" id="flow-phi" style="color:var(--gold)">φ</div><div class="label">Seal Rate: 97%</div></div>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SCRIPTS -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<script>
+const PHI = 1.618033988749895;
+
+// Clock
+function updateClock() {
+  document.getElementById('clock').textContent = new Date().toISOString().replace('T', ' ').slice(0, 19) + ' UTC';
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// Navigation
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('visible'));
+  document.getElementById('sec-' + id).classList.add('visible');
+  document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+// Live Flow Simulation
+const agents = ['research_agent', 'julia_inspector', 'motoko_sovereign', 'candid_treaty', 'proof_agent', 'sovereign_acceptance'];
+const functions = ['linalg.eigen', 'linalg.svd', 'stats.mean', 'fft', 'phi_transform', 'linalg.inv', 'stats.cov'];
+const statuses = ['proposed', 'inspecting', 'accepted', 'executing', 'verified', 'stored'];
+
+function addLiveEntry() {
+  const log = document.getElementById('live-log');
+  if (!log) return;
+  const fn = functions[Math.floor(Math.random() * functions.length)];
+  const agent = agents[Math.floor(Math.random() * agents.length)];
+  const status = statuses[Math.floor(Math.random() * statuses.length)];
+  const ts = new Date().toISOString().slice(11, 23);
+  const confidence = (PHI - 1).toFixed(3);
+  
+  const colors = {
+    proposed: '#22D3EE', inspecting: '#F59E0B', accepted: '#10B981',
+    executing: '#9558B2', verified: '#00D4AA', stored: '#D4AF37'
+  };
+  
+  const entry = document.createElement('div');
+  entry.innerHTML = `<span style="color:#64748b">[${ts}]</span> <span style="color:${colors[status]}">${status.toUpperCase().padEnd(10)}</span> <span style="color:#94A3B8">${fn.padEnd(16)}</span> <span style="color:#64748b">← ${agent}</span> <span style="color:#D4AF37">φ=${confidence}</span>`;
+  log.appendChild(entry);
+  
+  if (log.children.length > 50) log.removeChild(log.firstChild);
+  log.scrollTop = log.scrollHeight;
+}
+
+setInterval(addLiveEntry, 800 + Math.random() * 1200);
+setTimeout(addLiveEntry, 100);
+
+// Metric animation
+let proposed = 47;
+setInterval(() => {
+  if (Math.random() > 0.7) {
+    proposed++;
+    document.getElementById('m-proposed').textContent = proposed;
+    const accepted = Math.floor(proposed * 0.936);
+    const verified = Math.floor(proposed * 0.872);
+    const disputed = proposed - accepted;
+    document.getElementById('m-accepted').textContent = accepted;
+    document.getElementById('m-verified').textContent = verified;
+    document.getElementById('m-disputed').textContent = disputed;
+  }
+}, 3000);
+</script>
+</body>
+</html>

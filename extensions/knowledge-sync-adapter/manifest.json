@@ -1,0 +1,43 @@
+{
+  "manifest_version": 3,
+  "name": "Knowledge Sync Adapter",
+  "version": "1.0.0",
+  "description": "Intelligence adapter — extracts named entities and relationships from any page and syncs them into the organism's knowledge graph with phi-resonance scoring.",
+  "permissions": [
+    "sidePanel",
+    "activeTab",
+    "storage",
+    "alarms",
+    "scripting"
+  ],
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ]
+    }
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "minimum_chrome_version": "114",
+  "action": {
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png"
+    },
+    "default_popup": "popup.html"
+  },
+  "devtools_page": "devtools.html"
+}

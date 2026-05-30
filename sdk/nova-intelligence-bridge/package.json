@@ -1,0 +1,38 @@
+{
+  "name": "@organism/nova-intelligence-bridge",
+  "version": "1.0.0",
+  "description": "NOVA Intelligence Contract Bridge — Julia-Motoko Isomorphic Compute Layer with AI agent inspection, contract negotiation, and sovereign memory",
+  "main": "src/index.js",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.js",
+    "./agents": "./src/agents/index.js",
+    "./schema": "./intelligence_contract.schema.json"
+  },
+  "keywords": [
+    "intelligence-contract",
+    "julia",
+    "motoko",
+    "candid",
+    "bridge",
+    "nova",
+    "pactum-intelligentiae",
+    "organism"
+  ],
+  "author": "MedinaSITech",
+  "license": "MIT",
+  "files": [
+    "src/"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FreddyCreates/potential-succotash.git",
+    "directory": "sdk/nova-intelligence-bridge"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

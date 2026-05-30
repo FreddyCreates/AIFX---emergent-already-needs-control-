@@ -1,0 +1,19 @@
+{
+  "id": "atlas://bot/organism-crawler-bot",
+  "name": "organism-crawler-bot",
+  "class": "Crawler",
+  "division": "Secure & Monitor",
+  "divisionNum": "III",
+  "emoji": "🕷️",
+  "domain": "Organism mapping & dependency web",
+  "triggers": ["push:main", "schedule:tue-fri"],
+  "capabilities": ["map", "orphan_detect", "dead_link_detect", "dep_graph", "dashboard"],
+  "languages": ["atlas://language/cil", "atlas://language/ril"],
+  "governance_pipeline": "pipeline://governance/bot_cycle",
+  "ocl_ref": "atlas://organism/bot-fleet",
+  "script": "scripts/organism-crawler.js",
+  "workflow": ".github/workflows/organism-crawler-bot.yml",
+  "report": "docs/crawler-report.md",
+  "dashboard": "dist/dashboards/crawler-dashboard.html",
+  "microbots": ["orphan-scanner", "link-checker", "graph-builder"]
+}

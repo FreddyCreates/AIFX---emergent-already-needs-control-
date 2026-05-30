@@ -1,0 +1,49 @@
+{
+  "id": "atlas://deployment/marketplace-sdk",
+  "name": "organism-marketplace-sdk",
+  "class": "Deployment",
+  "type": "npm-package",
+  "division": "Deploy & Operate",
+  "divisionNum": "V",
+  "emoji": "🔷",
+  "domain": "Marketplace SDK npm Deployment",
+  "description": "Callable tool marketplace for the sovereign organism — 24 AI-invocable tools with schema validation, routing, settlement, and multi-model adapters",
+  "deployment": {
+    "target": "npm-registry",
+    "package": "@medina/organism-marketplace",
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
+  },
+  "capabilities": [
+    "tool_schema_builder",
+    "tool_registry",
+    "tool_invoker",
+    "marketplace_settlement",
+    "marketplace_router",
+    "chatgpt_adapter",
+    "repo_intelligence_bridge",
+    "family_profiles",
+    "family_template"
+  ],
+  "tools": {
+    "crawling": ["FlowMonitor", "PatternSeeker", "AnomalyDetector", "CacheOptimizer", "LogStreamer", "TopologyCrawler"],
+    "context": ["PulseKeeper", "StateGuardian", "CycleCounter", "ContextBuilder", "MemoryConsolidator", "LineageTracer"],
+    "commander": ["SyncWeaver", "InferEngine", "AttentionRouter", "ResourceBalancer", "ConnectionPool", "TaskCommander"],
+    "sentry": ["SentinelWatch", "IntegrityChecker", "BoundaryEnforcer", "SealVerifier", "QueueProcessor", "DoctrineAuditor"]
+  },
+  "artifacts": {
+    "openapi": "dist/marketplace-sdk/openapi.json",
+    "chatgptPlugin": "dist/marketplace-sdk/ai-plugin.json"
+  },
+  "triggers": ["push:sdk/organism-marketplace/", "tag:marketplace-v*"],
+  "governance_pipeline": "pipeline://governance/sdk_cycle",
+  "ocl_ref": "atlas://organism/bot-fleet",
+  "law_refs": [
+    "governance://law/SDK_SAFETY#SDK_INTEGRITY",
+    "governance://law/SDK_SAFETY#EXPORT_VALIDATION"
+  ],
+  "workflow": ".github/workflows/deploy-marketplace-sdk.yml",
+  "bot": "organism-sdk-bot",
+  "version": "1.0.0",
+  "createdAt": "2026-05-18T08:00:00Z"
+}

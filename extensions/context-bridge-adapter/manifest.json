@@ -1,0 +1,43 @@
+{
+  "manifest_version": 3,
+  "name": "Context Bridge Adapter",
+  "version": "1.0.0",
+  "description": "Intelligence adapter — captures full page context (URL, title, selection, metadata) and bridges it as a phi-encoded structured payload into any AI session.",
+  "permissions": [
+    "sidePanel",
+    "activeTab",
+    "storage",
+    "alarms",
+    "scripting"
+  ],
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ]
+    }
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "minimum_chrome_version": "114",
+  "action": {
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png"
+    },
+    "default_popup": "popup.html"
+  },
+  "devtools_page": "devtools.html"
+}

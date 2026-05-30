@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://itsnotailabs.github.io/production/schemas/notary-packet.schema.json",
+  "title": "Notary Packet",
+  "type": "object",
+  "required": ["packet_id", "graph_root", "target", "operator_approved"],
+  "properties": {
+    "packet_id": { "type": "string" },
+    "graph_root": { "type": "string" },
+    "target": {
+      "type": "string",
+      "enum": ["ICP", "IPFS", "Arweave", "Git", "L2"]
+    },
+    "operator_approved": { "type": "boolean" },
+    "receipt_id": { "type": "string" },
+    "submitted_at": { "type": "string", "format": "date-time" }
+  },
+  "additionalProperties": false
+}

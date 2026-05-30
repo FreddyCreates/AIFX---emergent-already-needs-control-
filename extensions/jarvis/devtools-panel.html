@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>JARVIS CPL Intelligence Panel</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #0a0a0f;
+      color: #e0e8ff;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Header ── */
+    header {
+      background: linear-gradient(135deg, #0d1b2a 0%, #1a0a2e 100%);
+      border-bottom: 1px solid #00d4ff33;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .arc-reactor {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #00d4ff 0%, #0066cc 50%, #001133 100%);
+      box-shadow: 0 0 12px #00d4ff88, 0 0 24px #00d4ff44;
+      animation: pulse 873ms ease-in-out infinite alternate;
+      flex-shrink: 0;
+    }
+    @keyframes pulse {
+      from { box-shadow: 0 0 8px #00d4ff66, 0 0 16px #00d4ff33; }
+      to   { box-shadow: 0 0 20px #00d4ffaa, 0 0 40px #00d4ff55; }
+    }
+    header h1 { font-size: 14px; font-weight: 700; letter-spacing: 1px; color: #00d4ff; }
+    header p  { font-size: 10px; color: #7090aa; margin-top: 2px; }
+    .status-pill {
+      margin-left: auto;
+      background: #00d4ff22;
+      border: 1px solid #00d4ff44;
+      border-radius: 12px;
+      padding: 3px 10px;
+      font-size: 10px;
+      color: #00d4ff;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── Tabs ── */
+    nav {
+      display: flex;
+      background: #0d1220;
+      border-bottom: 1px solid #1a2a3a;
+    }
+    nav button {
+      flex: 1;
+      padding: 8px 4px;
+      border: none;
+      background: transparent;
+      color: #5070a0;
+      font-size: 11px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    nav button.active {
+      color: #00d4ff;
+      border-bottom-color: #00d4ff;
+      background: #00d4ff0a;
+    }
+
+    /* ── Content ── */
+    .panel { display: none; flex: 1; overflow-y: auto; padding: 12px; }
+    .panel.active { display: block; }
+
+    /* Section titles */
+    .section-title {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: #00d4ff;
+      text-transform: uppercase;
+      margin: 12px 0 6px;
+    }
+
+    /* Engine stats grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .stat-card {
+      background: #0d1b2a;
+      border: 1px solid #1a3050;
+      border-radius: 6px;
+      padding: 8px 10px;
+      text-align: center;
+    }
+    .stat-card .val {
+      font-size: 18px;
+      font-weight: 700;
+      color: #00d4ff;
+      font-variant-numeric: tabular-nums;
+    }
+    .stat-card .lbl {
+      font-size: 9px;
+      color: #5070a0;
+      margin-top: 2px;
+      letter-spacing: 0.5px;
+    }
+
+    /* Log stream */
+    #log-stream {
+      background: #050a10;
+      border: 1px solid #1a2a3a;
+      border-radius: 6px;
+      padding: 8px;
+      height: 220px;
+      overflow-y: auto;
+      font-family: 'Cascadia Code', 'Consolas', monospace;
+      font-size: 11px;
+      line-height: 1.6;
+    }
+    .log-line { padding: 1px 0; border-bottom: 1px solid #0d1a2a; }
+    .log-line .ts  { color: #4060a0; margin-right: 8px; }
+    .log-line .tag { color: #00d4ff; margin-right: 6px; }
+    .log-line .msg { color: #b0c8e8; }
+    .log-line.warn .tag { color: #ffaa00; }
+    .log-line.err  .tag { color: #ff4444; }
+
+    /* CPL call inspector */
+    #cpl-calls { list-style: none; }
+    #cpl-calls li {
+      background: #0d1b2a;
+      border: 1px solid #1a3050;
+      border-radius: 5px;
+      padding: 7px 10px;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+    }
+    #cpl-calls li .proto  { color: #00d4ff; font-weight: 700; }
+    #cpl-calls li .intent { color: #7090c0; }
+    #cpl-calls li .timing { color: #40d080; font-variant-numeric: tabular-nums; }
+
+    /* WASM status */
+    .wasm-card {
+      background: linear-gradient(135deg, #0d1b2a, #0a0f1e);
+      border: 1px solid #00d4ff33;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+    .wasm-card .wasm-title { font-size: 12px; font-weight: 700; color: #00d4ff; margin-bottom: 8px; }
+    .wasm-row { display: flex; justify-content: space-between; font-size: 11px; padding: 3px 0; border-bottom: 1px solid #0d1a2a; }
+    .wasm-row .k { color: #5070a0; }
+    .wasm-row .v { color: #a0c8e8; font-weight: 600; }
+    .wasm-row .v.ok { color: #40d080; }
+
+    /* Heartbeat bar */
+    .hb-bar {
+      display: flex;
+      gap: 3px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+    .hb-tick {
+      width: 8px; height: 20px;
+      background: #00d4ff;
+      border-radius: 2px;
+      animation: hbGlow 873ms ease-in-out infinite alternate;
+    }
+    .hb-tick:nth-child(2n)   { animation-delay: 200ms; opacity: 0.7; }
+    .hb-tick:nth-child(3n)   { animation-delay: 400ms; opacity: 0.5; }
+    @keyframes hbGlow {
+      from { background: #005588; }
+      to   { background: #00d4ff; box-shadow: 0 0 6px #00d4ff; }
+    }
+
+    /* Refresh btn */
+    .btn-refresh {
+      display: block;
+      margin: 10px 0 0 auto;
+      background: #00d4ff22;
+      border: 1px solid #00d4ff44;
+      border-radius: 5px;
+      padding: 5px 14px;
+      color: #00d4ff;
+      font-size: 11px;
+      cursor: pointer;
+    }
+    .btn-refresh:hover { background: #00d4ff33; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="arc-reactor"></div>
+  <div>
+    <h1>JARVIS CPL Intelligence Panel</h1>
+    <p>Universal CPL WASM — composes into any runtime · any call · any query</p>
+  </div>
+  <span class="status-pill" id="online-pill">ACTIVATING…</span>
+</header>
+
+<nav>
+  <button class="active" onclick="showTab('engine')">⚡ Engine</button>
+  <button onclick="showTab('cpl')">🔗 CPL Calls</button>
+  <button onclick="showTab('wasm')">🧬 Universal WASM</button>
+  <button onclick="showTab('log')">📋 Log Stream</button>
+</nav>
+
+<!-- ENGINE tab -->
+<div class="panel active" id="tab-engine">
+  <div class="section-title">Live Engine Stats</div>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="val" id="s-heartbeat">0</div><div class="lbl">Heartbeats</div></div>
+    <div class="stat-card"><div class="val" id="s-commands">0</div><div class="lbl">Commands</div></div>
+    <div class="stat-card"><div class="val" id="s-memory">0</div><div class="lbl">Memory Items</div></div>
+    <div class="stat-card"><div class="val" id="s-tasks">0</div><div class="lbl">Tasks Queued</div></div>
+    <div class="stat-card"><div class="val" id="s-mood">—</div><div class="lbl">Mood State</div></div>
+    <div class="stat-card"><div class="val" id="s-uptime">0s</div><div class="lbl">Uptime</div></div>
+  </div>
+  <div class="section-title">Heartbeat Visualizer (873ms)</div>
+  <div class="hb-bar" id="hb-bar"></div>
+  <button class="btn-refresh" onclick="refresh()">↻ Refresh</button>
+</div>
+
+<!-- CPL CALLS tab -->
+<div class="panel" id="tab-cpl">
+  <div class="section-title">Recent CPL Protocol Calls</div>
+  <ul id="cpl-calls">
+    <li><span class="proto">—</span><span class="intent">Awaiting CPL calls…</span><span class="timing">—</span></li>
+  </ul>
+  <button class="btn-refresh" onclick="refreshCpl()">↻ Refresh CPL Calls</button>
+</div>
+
+<!-- WASM tab -->
+<div class="panel" id="tab-wasm">
+  <div class="wasm-card">
+    <div class="wasm-title">🧬 Universal CPL WASM — JARVISIUS Engine</div>
+    <div class="wasm-row"><span class="k">Binary</span><span class="v ok" id="w-loaded">Checking…</span></div>
+    <div class="wasm-row"><span class="k">Version</span><span class="v" id="w-ver">—</span></div>
+    <div class="wasm-row"><span class="k">Protocols</span><span class="v" id="w-proto">—</span></div>
+    <div class="wasm-row"><span class="k">Heartbeat</span><span class="v" id="w-hb">—</span></div>
+    <div class="wasm-row"><span class="k">Boot Protocol</span><span class="v" id="w-boot">—</span></div>
+    <div class="wasm-row"><span class="k">Mood (active)</span><span class="v" id="w-mood">—</span></div>
+    <div class="wasm-row"><span class="k">φ-Slot 0</span><span class="v" id="w-phi">—</span></div>
+    <div class="wasm-row"><span class="k">Tick Count</span><span class="v" id="w-tick">—</span></div>
+    <div class="wasm-row"><span class="k">Status</span><span class="v ok" id="w-status">—</span></div>
+  </div>
+  <button class="btn-refresh" onclick="refreshWasm()">↻ Refresh WASM State</button>
+</div>
+
+<!-- LOG tab -->
+<div class="panel" id="tab-log">
+  <div class="section-title">Engine Log Stream</div>
+  <div id="log-stream"><div class="log-line"><span class="ts">—</span><span class="tag">[JARVIS CPL]</span><span class="msg">Waiting for engine…</span></div></div>
+  <button class="btn-refresh" onclick="refreshLog()">↻ Refresh Logs</button>
+</div>
+
+<script>
+var MOODS = ['neutral','curious','playful','focused','empathetic'];
+
+function showTab(id) {
+  document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('nav button').forEach(function(b){ b.classList.remove('active'); });
+  document.getElementById('tab-' + id).classList.add('active');
+  event.target.classList.add('active');
+  if (id === 'engine')  refresh();
+  if (id === 'cpl')     refreshCpl();
+  if (id === 'wasm')    refreshWasm();
+  if (id === 'log')     refreshLog();
+}
+
+/* build heartbeat visualizer */
+(function buildHb() {
+  var bar = document.getElementById('hb-bar');
+  for (var i = 0; i < 20; i++) {
+    var d = document.createElement('div');
+    d.className = 'hb-tick';
+    d.style.animationDelay = (i * 44) + 'ms';
+    bar.appendChild(d);
+  }
+})();
+
+function refresh() {
+  chrome.runtime.sendMessage({ type: 'devtools', action: 'getStatus' }, function(resp) {
+    if (!resp) return;
+    document.getElementById('s-heartbeat').textContent = resp.heartbeatCount || 0;
+    document.getElementById('s-commands').textContent  = resp.commandCount  || 0;
+    document.getElementById('s-memory').textContent   = resp.memoryCount   || 0;
+    document.getElementById('s-tasks').textContent    = resp.taskCount     || 0;
+    document.getElementById('s-mood').textContent     = resp.mood          || '—';
+    var up = resp.uptime ? Math.round(resp.uptime / 1000) + 's' : '—';
+    document.getElementById('s-uptime').textContent   = up;
+    document.getElementById('online-pill').textContent = 'ONLINE';
+    document.getElementById('online-pill').style.color = '#40d080';
+  });
+}
+
+function refreshCpl() {
+  chrome.runtime.sendMessage({ type: 'devtools', action: 'getCplCalls' }, function(resp) {
+    if (!resp || !resp.calls) return;
+    var ul = document.getElementById('cpl-calls');
+    ul.innerHTML = '';
+    var calls = resp.calls.slice(-20).reverse();
+    calls.forEach(function(c) {
+      var li = document.createElement('li');
+      li.innerHTML =
+        '<span class="proto">PROTO-' + String(c.proto).padStart(3,'0') + '</span>' +
+        '<span class="intent">' + (c.intent || 'unknown') + '</span>' +
+        '<span class="timing">' + (c.ms || '?') + 'ms</span>';
+      ul.appendChild(li);
+    });
+    if (!calls.length) ul.innerHTML = '<li><span class="proto">—</span><span class="intent">No CPL calls recorded yet</span></li>';
+  });
+}
+
+function refreshWasm() {
+  chrome.runtime.sendMessage({ type: 'devtools', action: 'getWasmState' }, function(resp) {
+    if (!resp) return;
+    var ok = resp.loaded;
+    document.getElementById('w-loaded').textContent  = ok ? 'LOADED ✓' : 'NOT LOADED';
+    document.getElementById('w-loaded').style.color  = ok ? '#40d080' : '#ff4444';
+    document.getElementById('w-ver').textContent     = resp.version   ? 'EXT-' + resp.version : '—';
+    document.getElementById('w-proto').textContent   = resp.protocols || '—';
+    document.getElementById('w-hb').textContent      = resp.heartbeat ? resp.heartbeat + 'ms' : '—';
+    document.getElementById('w-boot').textContent    = resp.bootProto ? 'PROTO-' + String(resp.bootProto).padStart(3,'0') : '—';
+    document.getElementById('w-mood').textContent    = resp.mood      ? MOODS[resp.mood] || resp.mood : '—';
+    document.getElementById('w-phi').textContent     = resp.phi       || '—';
+    document.getElementById('w-tick').textContent    = resp.tick      || '—';
+    document.getElementById('w-status').textContent  = resp.booted    ? 'ONLINE ✓' : 'STANDBY';
+    document.getElementById('w-status').style.color  = resp.booted    ? '#40d080'  : '#ffaa00';
+  });
+}
+
+function refreshLog() {
+  chrome.runtime.sendMessage({ type: 'devtools', action: 'getLogs' }, function(resp) {
+    if (!resp || !resp.logs) return;
+    var stream = document.getElementById('log-stream');
+    stream.innerHTML = '';
+    var logs = resp.logs.slice(-60).reverse();
+    logs.forEach(function(l) {
+      var div = document.createElement('div');
+      div.className = 'log-line' + (l.level === 'warn' ? ' warn' : l.level === 'error' ? ' err' : '');
+      div.innerHTML =
+        '<span class="ts">' + new Date(l.ts).toLocaleTimeString() + '</span>' +
+        '<span class="tag">[' + (l.tag || 'JARVIS') + ']</span>' +
+        '<span class="msg">' + l.msg + '</span>';
+      stream.appendChild(div);
+    });
+    if (!logs.length) stream.innerHTML = '<div class="log-line"><span class="msg">No logs yet</span></div>';
+  });
+}
+
+/* auto-refresh engine tab on load */
+setTimeout(refresh, 300);
+setTimeout(refreshWasm, 400);
+</script>
+</body>
+</html>

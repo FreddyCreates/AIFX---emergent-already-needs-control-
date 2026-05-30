@@ -1,0 +1,37 @@
+{
+  "name": "@medina/agent-workspace-sdk",
+  "version": "1.0.0",
+  "description": "Shared AI workspaces, handoff lanes, and collaboration surfaces for Copilot, ChatGPT, and internal agents",
+  "license": "MIT",
+  "type": "module",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./agent-workspace": "./src/agent-workspace.js",
+    "./default-workspaces": "./src/default-workspaces.js"
+  },
+  "keywords": [
+    "workspace",
+    "handoff",
+    "agents",
+    "copilot",
+    "chatgpt",
+    "collaboration",
+    "orchestration"
+  ],
+  "files": [
+    "src/"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FreddyCreates/potential-succotash.git",
+    "directory": "sdk/agent-workspace-sdk"
+  },
+  "author": "Medina",
+  "publishConfig": {
+    "access": "public"
+  }
+}

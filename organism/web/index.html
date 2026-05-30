@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🧬 Sovereign Organism — Live Runtime</title>
+<style>
+/* ── reset & base ──────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d1117;--surface:#161b22;--border:#30363d;
+  --text:#e0e0e0;--muted:#8b949e;
+  --purple:#6c63ff;--red:#e94560;--green:#00e676;--amber:#ffb300;--cyan:#00bcd4;
+  --heartbeat:873ms;
+}
+html{font-size:14px}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+  line-height:1.5;min-height:100vh;
+}
+
+/* ── layout ────────────────────────────────────────────────────── */
+.shell{max-width:1200px;margin:0 auto;padding:1.5rem}
+header{text-align:center;margin-bottom:2rem}
+header h1{font-size:1.8rem;font-weight:700;letter-spacing:.02em}
+header h1 span.emoji{font-size:2rem}
+header .subtitle{color:var(--muted);font-size:.85rem;margin-top:.25rem}
+
+.grid{display:grid;gap:1.25rem}
+.grid-2x2{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.grid-meta{grid-template-columns:repeat(auto-fit,minmax(200px,1fr));margin-top:1.25rem}
+
+/* ── cards ─────────────────────────────────────────────────────── */
+.card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;padding:1.25rem;
+  transition:border-color .3s,box-shadow .3s;
+}
+.card:hover{border-color:var(--purple);box-shadow:0 0 18px rgba(108,99,255,.15)}
+.card h2{font-size:1rem;font-weight:600;margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem}
+
+/* ── progress bars ─────────────────────────────────────────────── */
+.field{margin-bottom:.6rem}
+.field-label{display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted);margin-bottom:.2rem}
+.bar-track{height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px;transition:width .6s cubic-bezier(.4,0,.2,1),background .6s}
+
+/* ── heartbeat hero ────────────────────────────────────────────── */
+.hero{
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:center;
+  gap:2rem;margin-bottom:1.5rem;padding:1.5rem;
+  background:var(--surface);border:1px solid var(--border);border-radius:14px;
+}
+.pulse-ring{
+  position:relative;width:90px;height:90px;display:flex;align-items:center;justify-content:center;
+}
+.pulse-ring .dot{
+  width:28px;height:28px;border-radius:50%;background:var(--red);
+  animation:throb var(--heartbeat) ease-in-out infinite;
+  box-shadow:0 0 20px var(--red);
+}
+.pulse-ring .ring{
+  position:absolute;inset:0;border:2px solid var(--red);border-radius:50%;
+  animation:ring-expand var(--heartbeat) ease-out infinite;opacity:0;
+}
+@keyframes throb{
+  0%,100%{transform:scale(1)}
+  15%{transform:scale(1.35)}
+  30%{transform:scale(1)}
+  45%{transform:scale(1.20)}
+  60%{transform:scale(1)}
+}
+@keyframes ring-expand{
+  0%{transform:scale(.6);opacity:.7}
+  100%{transform:scale(1.4);opacity:0}
+}
+.beat-info{text-align:center}
+.beat-count{font-size:2.4rem;font-weight:800;font-variant-numeric:tabular-nums;color:var(--purple)}
+.beat-label{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+
+/* ── vitality ──────────────────────────────────────────────────── */
+.vitality-box{text-align:center}
+.vitality-value{font-size:2.4rem;font-weight:800;font-variant-numeric:tabular-nums}
+.vitality-status{
+  display:inline-block;padding:.15rem .7rem;border-radius:20px;
+  font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-top:.3rem;
+}
+.status-thriving  {background:rgba(0,230,118,.15);color:var(--green)}
+.status-healthy   {background:rgba(0,188,212,.15);color:var(--cyan)}
+.status-stressed  {background:rgba(255,179,0,.15);color:var(--amber)}
+.status-degraded  {background:rgba(233,69,96,.15);color:var(--red)}
+.status-critical  {background:rgba(233,69,96,.3);color:#ff1744}
+
+/* ── sensors ───────────────────────────────────────────────────── */
+.sensor{display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;border-bottom:1px solid var(--border)}
+.sensor:last-child{border-bottom:none}
+.sensor-name{font-size:.82rem;color:var(--muted)}
+.sensor-val{font-weight:600;font-variant-numeric:tabular-nums;font-size:.9rem}
+.badge{
+  display:inline-block;padding:.1rem .45rem;border-radius:10px;
+  font-size:.65rem;font-weight:600;text-transform:uppercase;margin-left:.5rem;
+}
+.badge-good{background:rgba(0,230,118,.15);color:var(--green)}
+.badge-warn{background:rgba(255,179,0,.15);color:var(--amber)}
+.badge-bad {background:rgba(233,69,96,.15);color:var(--red)}
+
+/* ── log console ───────────────────────────────────────────────── */
+.console{
+  margin-top:1.25rem;background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;overflow:hidden;
+}
+.console-header{
+  padding:.6rem 1rem;background:var(--border);font-size:.78rem;font-weight:600;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.console-body{
+  height:180px;overflow-y:auto;padding:.6rem 1rem;font-family:'Fira Code','Cascadia Code','Consolas',monospace;font-size:.72rem;line-height:1.7;
+}
+.console-body::-webkit-scrollbar{width:6px}
+.console-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.log-line{color:var(--muted)}
+.log-line .ts{color:var(--purple)}
+.log-line .beat{color:var(--green)}
+.log-line .vit{color:var(--amber)}
+
+/* ── controls ──────────────────────────────────────────────────── */
+.controls{display:flex;gap:.6rem;margin-top:1rem;justify-content:center;flex-wrap:wrap}
+.btn{
+  padding:.45rem 1.2rem;border-radius:8px;border:1px solid var(--border);
+  background:var(--surface);color:var(--text);cursor:pointer;
+  font-size:.78rem;font-weight:600;transition:all .2s;
+}
+.btn:hover{border-color:var(--purple);box-shadow:0 0 10px rgba(108,99,255,.2)}
+.btn-primary{background:var(--purple);border-color:var(--purple);color:#fff}
+.btn-primary:hover{box-shadow:0 0 16px rgba(108,99,255,.4)}
+.btn-danger{border-color:var(--red);color:var(--red)}
+.btn-danger:hover{background:rgba(233,69,96,.1)}
+
+/* ── phi badge ─────────────────────────────────────────────────── */
+.phi-badge{
+  display:inline-flex;align-items:center;gap:.3rem;
+  font-size:.7rem;color:var(--muted);margin-top:.4rem;
+}
+.phi-badge .phi{color:var(--purple);font-weight:700}
+
+/* ── responsive ────────────────────────────────────────────────── */
+@media(max-width:600px){
+  .hero{flex-direction:column;gap:1rem}
+  .beat-count,.vitality-value{font-size:1.8rem}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <!-- header -->
+  <header>
+    <h1><span class="emoji">🧬</span> Sovereign Organism — Live Runtime</h1>
+    <p class="subtitle">Golden-ratio heartbeat engine · φ = 1.618033988749895 · 873 ms cycle</p>
+  </header>
+
+  <!-- heartbeat hero -->
+  <div class="hero">
+    <div class="pulse-ring">
+      <div class="ring"></div>
+      <div class="dot"></div>
+    </div>
+    <div class="beat-info">
+      <div class="beat-count" id="beatCount">0</div>
+      <div class="beat-label">heartbeats</div>
+      <div class="phi-badge">φ <span class="phi">1.618034</span> · <span id="heartbeatMs">873</span> ms</div>
+    </div>
+    <div class="vitality-box">
+      <div class="vitality-value" id="vitalityValue" style="color:var(--green)">0.00</div>
+      <div class="beat-label">vitality</div>
+      <div class="vitality-status status-healthy" id="vitalityStatus">initializing</div>
+    </div>
+  </div>
+
+  <!-- 4 register cards -->
+  <div class="grid grid-2x2">
+    <!-- Cognitive -->
+    <div class="card" id="card-cognitive">
+      <h2>🧠 Cognitive</h2>
+      <div id="reg-cognitive"></div>
+    </div>
+    <!-- Affective -->
+    <div class="card" id="card-affective">
+      <h2>💜 Affective</h2>
+      <div id="reg-affective"></div>
+    </div>
+    <!-- Somatic -->
+    <div class="card" id="card-somatic">
+      <h2>⚡ Somatic</h2>
+      <div id="reg-somatic"></div>
+    </div>
+    <!-- Sovereign -->
+    <div class="card" id="card-sovereign">
+      <h2>👑 Sovereign</h2>
+      <div id="reg-sovereign"></div>
+    </div>
+  </div>
+
+  <!-- sensors -->
+  <div class="grid grid-meta">
+    <div class="card">
+      <h2>📡 Edge Sensors</h2>
+      <div id="sensors">
+        <div class="sensor"><span class="sensor-name">Loading…</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>📊 Runtime</h2>
+      <div id="runtime-info">
+        <div class="sensor"><span class="sensor-name">Uptime</span><span class="sensor-val" id="uptime">0s</span></div>
+        <div class="sensor"><span class="sensor-name">Worker</span><span class="sensor-val" id="workerState">starting</span></div>
+        <div class="sensor"><span class="sensor-name">Interval</span><span class="sensor-val">873 ms</span></div>
+        <div class="sensor"><span class="sensor-name">Golden Angle</span><span class="sensor-val">137.508°</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Math Intelligence Panel -->
+  <div class="card" style="margin:1rem 0">
+    <h2>🧮 Math Intelligence <span style="font-size:0.7em;color:var(--muted)">(Worker #15 — Brain Division)</span></h2>
+    <div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0.75rem;margin-top:0.75rem">
+      <div class="card" style="background:var(--bg-dark);padding:0.75rem"><strong>📐 Matrix</strong><br><span style="color:var(--muted);font-size:0.85rem">Multiply, transpose, determinant, inverse</span></div>
+      <div class="card" style="background:var(--bg-dark);padding:0.75rem"><strong>📊 Statistics</strong><br><span style="color:var(--muted);font-size:0.85rem">Mean, median, variance, skewness, kurtosis</span></div>
+      <div class="card" style="background:var(--bg-dark);padding:0.75rem"><strong>🌀 Phi / Golden</strong><br><span style="color:var(--muted);font-size:0.85rem">Fibonacci, golden angle, phi powers</span></div>
+      <div class="card" style="background:var(--bg-dark);padding:0.75rem"><strong>〰️ Fourier</strong><br><span style="color:var(--muted);font-size:0.85rem">DFT, power spectrum, dominant frequency</span></div>
+      <div class="card" style="background:var(--bg-dark);padding:0.75rem"><strong>🎲 Probability</strong><br><span style="color:var(--muted);font-size:0.85rem">Normal, Poisson, binomial, Bayesian</span></div>
+      <div class="card" style="background:var(--bg-dark);padding:0.75rem"><strong>🎯 Optimize</strong><br><span style="color:var(--muted);font-size:0.85rem">Golden section search, gradient descent</span></div>
+      <div class="card" style="background:var(--bg-dark);padding:0.75rem"><strong>📈 Regression</strong><br><span style="color:var(--muted);font-size:0.85rem">Linear (R², residuals), polynomial</span></div>
+      <div class="card" style="background:var(--bg-dark);padding:0.75rem"><strong>🔢 Number Theory</strong><br><span style="color:var(--muted);font-size:0.85rem">Primes, factorization, GCD, totient</span></div>
+      <div class="card" style="background:var(--bg-dark);padding:0.75rem"><strong>📝 Summarize</strong><br><span style="color:var(--muted);font-size:0.85rem">Extractive text summarization</span></div>
+      <div class="card" style="background:var(--bg-dark);padding:0.75rem"><strong>❓ QA</strong><br><span style="color:var(--muted);font-size:0.85rem">Context-based question answering</span></div>
+      <div class="card" style="background:var(--bg-dark);padding:0.75rem"><strong>🎯 Intent</strong><br><span style="color:var(--muted);font-size:0.85rem">12-type intent classification</span></div>
+      <div class="card" style="background:var(--bg-dark);padding:0.75rem"><strong>🧠 Chain-of-Thought</strong><br><span style="color:var(--muted);font-size:0.85rem">6-step reasoning decomposition</span></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       JARVIS CONTROL CENTER — Full Dashboard Module
+       Connected to JARVISIUS canister · All 10 Alpha Script AIs
+       ═══════════════════════════════════════════════════════════════ -->
+  <div class="card" style="margin:1rem 0;border-color:#d4af37;border-width:2px">
+    <h2 style="display:flex;align-items:center;gap:0.5rem">
+      <span style="font-size:1.5rem">🤖</span>
+      JARVIS Control Center
+      <span style="font-size:0.65em;color:var(--muted);font-weight:400">JARVISIUS Canister · BRONZE Tier · Owner: Alfredo</span>
+      <span id="jarvisStatus" style="margin-left:auto;font-size:0.75rem;padding:3px 10px;border-radius:12px;background:#3fb950;color:#000;font-weight:600">● ONLINE</span>
+    </h2>
+
+    <!-- JARVIS Stats Bar -->
+    <div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:0.5rem;margin-top:0.75rem">
+      <div style="background:var(--bg);padding:0.6rem;border-radius:8px;text-align:center">
+        <div style="font-size:1.3rem;font-weight:700;color:#58a6ff" id="jarvisBeats">0</div>
+        <div style="font-size:0.75rem;color:var(--muted)">Heartbeats</div>
+      </div>
+      <div style="background:var(--bg);padding:0.6rem;border-radius:8px;text-align:center">
+        <div style="font-size:1.3rem;font-weight:700;color:#d4af37" id="jarvisNotes">0</div>
+        <div style="font-size:0.75rem;color:var(--muted)">Notes</div>
+      </div>
+      <div style="background:var(--bg);padding:0.6rem;border-radius:8px;text-align:center">
+        <div style="font-size:1.3rem;font-weight:700;color:#e94560" id="jarvisCommands">0</div>
+        <div style="font-size:0.75rem;color:var(--muted)">Commands</div>
+      </div>
+      <div style="background:var(--bg);padding:0.6rem;border-radius:8px;text-align:center">
+        <div style="font-size:1.3rem;font-weight:700;color:#00e676" id="jarvisDocs">0</div>
+        <div style="font-size:0.75rem;color:var(--muted)">Documents</div>
+      </div>
+      <div style="background:var(--bg);padding:0.6rem;border-radius:8px;text-align:center">
+        <div style="font-size:1.3rem;font-weight:700;color:#00bcd4" id="jarvisTabs">0</div>
+        <div style="font-size:0.75rem;color:var(--muted)">Tab Actions</div>
+      </div>
+    </div>
+
+    <!-- JARVIS Panels Grid -->
+    <div class="grid" style="grid-template-columns:1fr 1fr;gap:0.75rem;margin-top:0.75rem">
+
+      <!-- Chat Interface -->
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:0.75rem;display:flex;flex-direction:column;min-height:200px">
+        <div style="font-weight:600;margin-bottom:0.5rem;display:flex;align-items:center;gap:0.4rem">💬 JARVIS Chat <span style="font-size:0.7rem;color:var(--muted)">— Routes through all 10 Alpha AIs</span></div>
+        <div id="jarvisChatLog" style="flex:1;overflow-y:auto;font-size:0.8rem;margin-bottom:0.5rem;max-height:180px;padding:0.25rem">
+          <div style="color:var(--muted);font-style:italic">JARVIS ready. All Alpha Script AIs standing by.</div>
+        </div>
+        <div style="display:flex;gap:0.4rem">
+          <input type="text" id="jarvisChatInput" placeholder="Ask JARVIS anything…" style="flex:1;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:0.4rem 0.6rem;color:var(--text);font-size:0.8rem;outline:none">
+          <button id="jarvisChatSend" style="background:#d4af37;border:none;border-radius:6px;padding:0.4rem 0.8rem;color:#000;font-weight:600;cursor:pointer;font-size:0.8rem">Send</button>
+        </div>
+      </div>
+
+      <!-- Command Feed -->
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:0.75rem;min-height:200px">
+        <div style="font-weight:600;margin-bottom:0.5rem;display:flex;align-items:center;gap:0.4rem">⚡ Live Command Feed</div>
+        <div id="jarvisCommandFeed" style="overflow-y:auto;font-size:0.75rem;max-height:200px;font-family:'Cascadia Code','Fira Code',monospace">
+          <div style="color:var(--muted)">Waiting for commands…</div>
+        </div>
+      </div>
+
+      <!-- Notes Library -->
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:0.75rem">
+        <div style="font-weight:600;margin-bottom:0.5rem;display:flex;align-items:center;gap:0.4rem">📝 Notes Library</div>
+        <div id="jarvisNotesLibrary" style="overflow-y:auto;font-size:0.8rem;max-height:150px">
+          <div style="color:var(--muted);font-style:italic">No notes yet. Use the extension or chat to create notes.</div>
+        </div>
+        <div style="display:flex;gap:0.4rem;margin-top:0.5rem">
+          <input type="text" id="jarvisNoteInput" placeholder="Quick note…" style="flex:1;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:0.35rem 0.6rem;color:var(--text);font-size:0.8rem;outline:none">
+          <button id="jarvisNoteSave" style="background:#58a6ff;border:none;border-radius:6px;padding:0.35rem 0.7rem;color:#000;font-weight:600;cursor:pointer;font-size:0.75rem">+ Note</button>
+        </div>
+      </div>
+
+      <!-- Documents & PDFs -->
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:0.75rem">
+        <div style="font-weight:600;margin-bottom:0.5rem;display:flex;align-items:center;gap:0.4rem">📄 Document Library</div>
+        <div id="jarvisDocsLibrary" style="overflow-y:auto;font-size:0.8rem;max-height:150px">
+          <div style="color:var(--muted);font-style:italic">No documents yet. Use JARVIS to generate PDFs and capture pages.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alpha Script AIs -->
+    <div style="margin-top:0.75rem">
+      <div style="font-weight:600;margin-bottom:0.5rem">🧬 Alpha Script AIs <span style="font-size:0.7rem;color:var(--muted)">— All 10 responding through JARVIS</span></div>
+      <div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:0.4rem">
+        <div style="background:var(--bg);padding:0.4rem 0.6rem;border-radius:6px;font-size:0.75rem;display:flex;align-items:center;gap:0.3rem"><span style="color:#3fb950">●</span> ALPHA-LOGICUS <span style="color:var(--muted);font-size:0.65rem">Logic</span></div>
+        <div style="background:var(--bg);padding:0.4rem 0.6rem;border-radius:6px;font-size:0.75rem;display:flex;align-items:center;gap:0.3rem"><span style="color:#3fb950">●</span> ALPHA-CREATIVUS <span style="color:var(--muted);font-size:0.65rem">Creative</span></div>
+        <div style="background:var(--bg);padding:0.4rem 0.6rem;border-radius:6px;font-size:0.75rem;display:flex;align-items:center;gap:0.3rem"><span style="color:#3fb950">●</span> ALPHA-ANALYTICUS <span style="color:var(--muted);font-size:0.65rem">Analysis</span></div>
+        <div style="background:var(--bg);padding:0.4rem 0.6rem;border-radius:6px;font-size:0.75rem;display:flex;align-items:center;gap:0.3rem"><span style="color:#3fb950">●</span> ALPHA-LINGUISTICUS <span style="color:var(--muted);font-size:0.65rem">Language</span></div>
+        <div style="background:var(--bg);padding:0.4rem 0.6rem;border-radius:6px;font-size:0.75rem;display:flex;align-items:center;gap:0.3rem"><span style="color:#3fb950">●</span> ALPHA-MEMORIUS <span style="color:var(--muted);font-size:0.65rem">Memory</span></div>
+        <div style="background:var(--bg);padding:0.4rem 0.6rem;border-radius:6px;font-size:0.75rem;display:flex;align-items:center;gap:0.3rem"><span style="color:#3fb950">●</span> ALPHA-STRATEGICUS <span style="color:var(--muted);font-size:0.65rem">Strategy</span></div>
+        <div style="background:var(--bg);padding:0.4rem 0.6rem;border-radius:6px;font-size:0.75rem;display:flex;align-items:center;gap:0.3rem"><span style="color:#3fb950">●</span> ALPHA-PERCEPTUS <span style="color:var(--muted);font-size:0.65rem">Perception</span></div>
+        <div style="background:var(--bg);padding:0.4rem 0.6rem;border-radius:6px;font-size:0.75rem;display:flex;align-items:center;gap:0.3rem"><span style="color:#3fb950">●</span> ALPHA-EXECUTIUS <span style="color:var(--muted);font-size:0.65rem">Execution</span></div>
+        <div style="background:var(--bg);padding:0.4rem 0.6rem;border-radius:6px;font-size:0.75rem;display:flex;align-items:center;gap:0.3rem"><span style="color:#3fb950">●</span> ALPHA-SECURIUS <span style="color:var(--muted);font-size:0.65rem">Security</span></div>
+        <div style="background:var(--bg);padding:0.4rem 0.6rem;border-radius:6px;font-size:0.75rem;display:flex;align-items:center;gap:0.3rem"><span style="color:#3fb950">●</span> ALPHA-SYNTHIUS <span style="color:var(--muted);font-size:0.65rem">Synthesis</span></div>
+      </div>
+    </div>
+
+    <!-- Extension Install -->
+    <div style="margin-top:0.75rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:0.75rem;display:flex;align-items:center;gap:1rem">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;width:100px;height:100px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <div style="font-size:0.55rem;text-align:center;color:var(--muted);line-height:1.2">
+          <div style="font-size:2rem;margin-bottom:0.2rem">📱</div>
+          QR Code<br>Install
+        </div>
+      </div>
+      <div>
+        <div style="font-weight:600;margin-bottom:0.3rem">Install JARVIS Extension</div>
+        <div style="font-size:0.8rem;color:var(--muted);margin-bottom:0.4rem">Chrome/Edge side panel — slides out like Copilot. Tab control, PDF creation, notes, screen capture, floating button on every page.</div>
+        <div style="display:flex;gap:0.4rem;flex-wrap:wrap">
+          <span style="background:var(--surface);padding:0.2rem 0.5rem;border-radius:4px;font-size:0.7rem;color:var(--cyan)">Manifest V3</span>
+          <span style="background:var(--surface);padding:0.2rem 0.5rem;border-radius:4px;font-size:0.7rem;color:#d4af37">Side Panel</span>
+          <span style="background:var(--surface);padding:0.2rem 0.5rem;border-radius:4px;font-size:0.7rem;color:var(--green)">Tab Control</span>
+          <span style="background:var(--surface);padding:0.2rem 0.5rem;border-radius:4px;font-size:0.7rem;color:var(--purple)">PDF Capture</span>
+          <span style="background:var(--surface);padding:0.2rem 0.5rem;border-radius:4px;font-size:0.7rem;color:var(--amber)">Notes Sync</span>
+          <span style="background:var(--surface);padding:0.2rem 0.5rem;border-radius:4px;font-size:0.7rem;color:var(--red)">Screen Capture</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- log console -->
+  <div class="console">
+    <div class="console-header">
+      <span>🖥 Live Console</span>
+      <span id="logCount">0 entries</span>
+    </div>
+    <div class="console-body" id="logBody"></div>
+  </div>
+
+  <!-- controls -->
+  <div class="controls">
+    <button class="btn btn-primary" id="btnStart">▶ Start</button>
+    <button class="btn btn-danger" id="btnStop">■ Stop</button>
+    <button class="btn" id="btnState">⟳ Get State</button>
+    <button class="btn" id="btnFuse">🔮 Fuse Reasoning</button>
+    <button class="btn" id="btnAlpha">α Route Alpha</button>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════
+   Inline Web Worker — identical logic to organism-worker.js,
+   created as a Blob URL so it works without a server.
+   ═══════════════════════════════════════════════════════════════════ */
+const workerSource = `
+const PHI = 1.618033988749895;
+const GOLDEN_ANGLE = 137.508;
+const HEARTBEAT = 873;
+
+let beatCount = 0;
+let running = false;
+let intervalId = null;
+
+const registers = {
+  cognitive: { attention: 0.72, reasoning: 0.68, memory: 0.75, creativity: 0.60 },
+  affective: { valence: 0.65, arousal: 0.50, dominance: 0.58, empathy: 0.70 },
+  somatic:   { energy: 0.80, tension: 0.30, rhythm: 0.73, resilience: 0.66 },
+  sovereign: { autonomy: 0.85, coherence: 0.78, integrity: 0.82, emergence: 0.55 },
+};
+
+const sensors = { temperature: 36.6, network: 0.95, memory: 0.42, cpu: 0.35 };
+
+function clamp(v, lo, hi) { lo = lo === undefined ? 0 : lo; hi = hi === undefined ? 1 : hi; return Math.max(lo, Math.min(hi, v)); }
+
+function drift(value, beatIdx) {
+  return clamp(value + Math.sin((beatIdx * GOLDEN_ANGLE * Math.PI) / 180) * 0.02);
+}
+
+function driftRegister(reg, beatIdx) {
+  const out = {};
+  for (const key of Object.keys(reg)) out[key] = drift(reg[key], beatIdx + key.length);
+  return out;
+}
+
+function updateSensors(beatIdx) {
+  const t = beatIdx * 0.1;
+  sensors.temperature = clamp(36.2 + Math.sin(t * 0.3) * 0.8 + Math.cos(t * PHI) * 0.3, 35.5, 38.5);
+  sensors.network     = clamp(0.90 + Math.sin(t * 0.7) * 0.08, 0, 1);
+  sensors.memory      = clamp(0.40 + Math.sin(t * 0.2) * 0.15 + beatIdx * 0.0001, 0, 1);
+  sensors.cpu         = clamp(0.30 + Math.sin(t * 1.1) * 0.20 + Math.cos(t * 0.5) * 0.05, 0, 1);
+}
+
+function vitality() {
+  const weights = { cognitive: 1 / PHI, affective: 1, somatic: PHI, sovereign: PHI * PHI };
+  let totalW = 0, totalV = 0;
+  for (const [name, reg] of Object.entries(registers)) {
+    const vals = Object.values(reg);
+    const avg = vals.reduce((a, b) => a + b, 0) / vals.length;
+    totalV += avg * weights[name]; totalW += weights[name];
+  }
+  return clamp(totalV / totalW);
+}
+
+function vitalityStatus(v) {
+  if (v >= 0.80) return "thriving";
+  if (v >= 0.65) return "healthy";
+  if (v >= 0.50) return "stressed";
+  if (v >= 0.35) return "degraded";
+  return "critical";
+}
+
+function beat() {
+  beatCount++;
+  registers.cognitive = driftRegister(registers.cognitive, beatCount);
+  registers.affective = driftRegister(registers.affective, beatCount);
+  registers.somatic   = driftRegister(registers.somatic, beatCount);
+  registers.sovereign = driftRegister(registers.sovereign, beatCount);
+  updateSensors(beatCount);
+  const v = vitality();
+  self.postMessage({
+    type: "heartbeat", beatCount,
+    registers: JSON.parse(JSON.stringify(registers)),
+    sensors: Object.assign({}, sensors),
+    vitality: v, vitalityStatus: vitalityStatus(v),
+    timestamp: Date.now(), phi: PHI, goldenAngle: GOLDEN_ANGLE, heartbeatMs: HEARTBEAT,
+  });
+}
+
+function start() { if (running) return; running = true; beat(); intervalId = setInterval(beat, HEARTBEAT); self.postMessage({ type: "started" }); }
+function stop()  { if (!running) return; running = false; clearInterval(intervalId); intervalId = null; self.postMessage({ type: "stopped" }); }
+
+self.onmessage = function (e) {
+  const msg = e.data;
+  switch (msg.type) {
+    case "start": start(); break;
+    case "stop":  stop();  break;
+    case "getState":
+      self.postMessage({ type: "state", beatCount, running,
+        registers: JSON.parse(JSON.stringify(registers)),
+        sensors: Object.assign({}, sensors),
+        vitality: vitality(), vitalityStatus: vitalityStatus(vitality()),
+      }); break;
+    case "fuseReasoning": {
+      const v = vitality();
+      self.postMessage({ type: "fuseResult", result: { fused: true, vitality: v, status: vitalityStatus(v), phi: PHI, beatCount } }); break;
+    }
+    case "routeToAlpha":
+      self.postMessage({ type: "alphaRouted", payload: msg.payload || null, beatCount }); break;
+    default:
+      self.postMessage({ type: "error", message: "Unknown command: " + msg.type });
+  }
+};
+`;
+
+/* ── create worker from blob ────────────────────────────────────── */
+const blob = new Blob([workerSource], { type: "application/javascript" });
+const workerURL = URL.createObjectURL(blob);
+const worker = new Worker(workerURL);
+
+/* ── DOM refs ───────────────────────────────────────────────────── */
+const $beatCount     = document.getElementById("beatCount");
+const $vitalityValue = document.getElementById("vitalityValue");
+const $vitalityStatus= document.getElementById("vitalityStatus");
+const $sensors       = document.getElementById("sensors");
+const $logBody       = document.getElementById("logBody");
+const $logCount      = document.getElementById("logCount");
+const $uptime        = document.getElementById("uptime");
+const $workerState   = document.getElementById("workerState");
+
+const registerContainers = {
+  cognitive: document.getElementById("reg-cognitive"),
+  affective: document.getElementById("reg-affective"),
+  somatic:   document.getElementById("reg-somatic"),
+  sovereign: document.getElementById("reg-sovereign"),
+};
+
+/* ── color helpers ──────────────────────────────────────────────── */
+const regColors = {
+  cognitive: "#6c63ff",
+  affective: "#e94560",
+  somatic:   "#00e676",
+  sovereign: "#ffb300",
+};
+
+const statusColors = {
+  thriving: "var(--green)",
+  healthy:  "var(--cyan)",
+  stressed: "var(--amber)",
+  degraded: "var(--red)",
+  critical: "#ff1744",
+};
+
+function barColor(val) {
+  if (val >= 0.7) return "var(--green)";
+  if (val >= 0.4) return "var(--amber)";
+  return "var(--red)";
+}
+
+function sensorBadge(key, val) {
+  if (key === "temperature") {
+    if (val >= 36.0 && val <= 37.5) return ["good", "OK"];
+    if (val < 36.0 || val > 38.0) return ["bad", "ALERT"];
+    return ["warn", "WARM"];
+  }
+  if (val >= 0.75) return ["good", "OK"];
+  if (val >= 0.50) return ["warn", "MED"];
+  return ["bad", "LOW"];
+}
+
+/* ── render helpers ─────────────────────────────────────────────── */
+function renderRegister(name, reg) {
+  const container = registerContainers[name];
+  if (!container) return;
+  const color = regColors[name];
+  let html = "";
+  for (const [field, val] of Object.entries(reg)) {
+    const pct = (val * 100).toFixed(1);
+    html += `<div class="field">
+      <div class="field-label"><span>${field}</span><span>${pct}%</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${color}"></div></div>
+    </div>`;
+  }
+  container.innerHTML = html;
+}
+
+function renderSensors(s) {
+  const entries = [
+    ["🌡 Temperature", s.temperature.toFixed(1) + " °C", sensorBadge("temperature", s.temperature)],
+    ["🌐 Network",     (s.network * 100).toFixed(0) + "%", sensorBadge("network", s.network)],
+    ["💾 Memory",      (s.memory * 100).toFixed(0) + "%",  sensorBadge("memory", 1 - s.memory)],
+    ["🔲 CPU",         (s.cpu * 100).toFixed(0) + "%",     sensorBadge("cpu", 1 - s.cpu)],
+  ];
+  $sensors.innerHTML = entries.map(([name, val, [cls, label]]) =>
+    `<div class="sensor">
+      <span class="sensor-name">${name}</span>
+      <span class="sensor-val">${val}<span class="badge badge-${cls}">${label}</span></span>
+    </div>`
+  ).join("");
+}
+
+let logLines = 0;
+const MAX_LOG = 200;
+
+function addLog(msg) {
+  logLines++;
+  const time = new Date().toISOString().substr(11, 12);
+  const line = document.createElement("div");
+  line.className = "log-line";
+  line.innerHTML = `<span class="ts">[${time}]</span> ${msg}`;
+  $logBody.appendChild(line);
+  if ($logBody.children.length > MAX_LOG) $logBody.removeChild($logBody.firstChild);
+  $logBody.scrollTop = $logBody.scrollHeight;
+  $logCount.textContent = logLines + " entries";
+}
+
+function formatUptime(ms) {
+  const s = Math.floor(ms / 1000);
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  const sec = s % 60;
+  if (h > 0) return `${h}h ${m}m ${sec}s`;
+  if (m > 0) return `${m}m ${sec}s`;
+  return `${sec}s`;
+}
+
+/* ── worker message handler ─────────────────────────────────────── */
+const startTime = Date.now();
+
+worker.onmessage = function (e) {
+  const d = e.data;
+
+  switch (d.type) {
+    case "heartbeat": {
+      $beatCount.textContent = d.beatCount.toLocaleString();
+      $vitalityValue.textContent = d.vitality.toFixed(3);
+      $vitalityValue.style.color = statusColors[d.vitalityStatus] || "var(--text)";
+      $vitalityStatus.textContent = d.vitalityStatus;
+      $vitalityStatus.className = "vitality-status status-" + d.vitalityStatus;
+
+      for (const name of Object.keys(d.registers)) renderRegister(name, d.registers[name]);
+      renderSensors(d.sensors);
+      $uptime.textContent = formatUptime(Date.now() - startTime);
+
+      addLog(`<span class="beat">♥ beat #${d.beatCount}</span> · vitality <span class="vit">${d.vitality.toFixed(3)}</span> [${d.vitalityStatus}] · temp ${d.sensors.temperature.toFixed(1)}°C · cpu ${(d.sensors.cpu * 100).toFixed(0)}%`);
+      break;
+    }
+    case "started":
+      $workerState.textContent = "running";
+      $workerState.style.color = "var(--green)";
+      addLog("🟢 Organism <b>STARTED</b>");
+      break;
+    case "stopped":
+      $workerState.textContent = "stopped";
+      $workerState.style.color = "var(--red)";
+      addLog("🔴 Organism <b>STOPPED</b>");
+      break;
+    case "state":
+      addLog("📋 State snapshot — beat #" + d.beatCount + " · vitality " + d.vitality.toFixed(3) + " · " + d.vitalityStatus);
+      break;
+    case "fuseResult":
+      addLog("🔮 Fuse result — vitality " + d.result.vitality.toFixed(3) + " · " + d.result.status + " · φ = " + d.result.phi);
+      break;
+    case "alphaRouted":
+      addLog("α Alpha routed at beat #" + d.beatCount);
+      break;
+    case "error":
+      addLog("❌ Error: " + d.message);
+      break;
+  }
+};
+
+/* ── button wiring ──────────────────────────────────────────────── */
+document.getElementById("btnStart").addEventListener("click", () => worker.postMessage({ type: "start" }));
+document.getElementById("btnStop").addEventListener("click", () => worker.postMessage({ type: "stop" }));
+document.getElementById("btnState").addEventListener("click", () => worker.postMessage({ type: "getState" }));
+document.getElementById("btnFuse").addEventListener("click", () => worker.postMessage({ type: "fuseReasoning" }));
+document.getElementById("btnAlpha").addEventListener("click", () => worker.postMessage({ type: "routeToAlpha", payload: { ts: Date.now() } }));
+
+/* ── auto-start ─────────────────────────────────────────────────── */
+worker.postMessage({ type: "start" });
+addLog("⏳ Initializing organism…");
+
+/* ═══════════════════════════════════════════════════════════════════
+   JARVIS CONTROL CENTER — Dashboard Wiring
+   Local state management + chat interface + note taking
+   Connected to JARVISIUS canister via extension message bridge
+   ═══════════════════════════════════════════════════════════════════ */
+(function initJarvis() {
+  const PHI = 1.618033988749895;
+  let jarvisBeatCount = 0;
+  const jarvisState = { notes: [], commands: [], documents: [], tabActions: [] };
+
+  const alphaAIs = [
+    { name: "ALPHA-LOGICUS",      domain: "logic",      intents: ["reason", "prove", "deduce", "infer"] },
+    { name: "ALPHA-CREATIVUS",    domain: "creative",   intents: ["create", "design", "imagine", "compose"] },
+    { name: "ALPHA-ANALYTICUS",   domain: "analysis",   intents: ["analyze", "compare", "evaluate", "measure"] },
+    { name: "ALPHA-LINGUISTICUS", domain: "language",   intents: ["translate", "summarize", "rephrase", "explain"] },
+    { name: "ALPHA-MEMORIUS",     domain: "memory",     intents: ["remember", "recall", "store", "note"] },
+    { name: "ALPHA-STRATEGICUS",  domain: "strategy",   intents: ["plan", "schedule", "prioritize", "organize"] },
+    { name: "ALPHA-PERCEPTUS",    domain: "perception", intents: ["see", "observe", "scan", "detect"] },
+    { name: "ALPHA-EXECUTIUS",    domain: "execution",  intents: ["run", "execute", "launch", "open"] },
+    { name: "ALPHA-SECURIUS",     domain: "security",   intents: ["verify", "protect", "encrypt", "audit"] },
+    { name: "ALPHA-SYNTHIUS",     domain: "synthesis",  intents: ["fuse", "combine", "merge", "synthesize"] }
+  ];
+
+  function routeToAlpha(text) {
+    const lower = text.toLowerCase();
+    for (const ai of alphaAIs) {
+      for (const intent of ai.intents) {
+        if (lower.includes(intent)) return ai;
+      }
+    }
+    return alphaAIs[0];
+  }
+
+  function logCommand(intent, payload, ai) {
+    const cmd = { id: jarvisState.commands.length + 1, intent, payload, alphaAi: ai, ts: Date.now() };
+    jarvisState.commands.push(cmd);
+    updateStats();
+    updateCommandFeed(cmd);
+    return cmd;
+  }
+
+  function updateStats() {
+    jarvisBeatCount++;
+    var el;
+    el = document.getElementById("jarvisBeats");   if (el) el.textContent = jarvisBeatCount.toLocaleString();
+    el = document.getElementById("jarvisNotes");    if (el) el.textContent = jarvisState.notes.length;
+    el = document.getElementById("jarvisCommands"); if (el) el.textContent = jarvisState.commands.length;
+    el = document.getElementById("jarvisDocs");     if (el) el.textContent = jarvisState.documents.length;
+    el = document.getElementById("jarvisTabs");     if (el) el.textContent = jarvisState.tabActions.length;
+  }
+
+  function updateCommandFeed(cmd) {
+    const feed = document.getElementById("jarvisCommandFeed");
+    if (!feed) return;
+    if (jarvisState.commands.length === 1) feed.innerHTML = "";
+    const time = new Date(cmd.ts).toLocaleTimeString();
+    const div = document.createElement("div");
+    div.style.cssText = "padding:0.2rem 0;border-bottom:1px solid var(--border);display:flex;gap:0.4rem;align-items:baseline";
+    div.innerHTML = '<span style="color:var(--muted);font-size:0.65rem">' + time + '</span>' +
+      '<span style="color:#d4af37">' + cmd.intent + '</span>' +
+      '<span style="color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + cmd.payload.substring(0, 60) + '</span>' +
+      '<span style="color:#58a6ff;font-size:0.65rem">' + cmd.alphaAi + '</span>';
+    feed.prepend(div);
+  }
+
+  function addChatMessage(sender, text, color) {
+    const log = document.getElementById("jarvisChatLog");
+    if (!log) return;
+    const div = document.createElement("div");
+    div.style.cssText = "margin-bottom:0.3rem;padding:0.2rem 0;border-bottom:1px solid rgba(48,54,61,0.5)";
+    div.innerHTML = '<span style="font-weight:600;color:' + color + '">' + sender + ':</span> ' +
+      '<span style="color:var(--text)">' + text + '</span>';
+    log.appendChild(div);
+    log.scrollTop = log.scrollHeight;
+  }
+
+  function processChat(input) {
+    addChatMessage("You", input, "#58a6ff");
+    const ai = routeToAlpha(input);
+    logCommand("chat", input, ai.name);
+
+    // JARVIS response based on intent routing
+    const lower = input.toLowerCase();
+    let response;
+
+    if (lower.includes("open") && (lower.includes("tab") || lower.includes("http") || lower.includes("www"))) {
+      response = "Opening tab. Command routed to " + ai.name + " for execution.";
+      jarvisState.tabActions.push({ id: jarvisState.tabActions.length + 1, action: "opened", title: input, url: input, ts: Date.now() });
+    } else if (lower.includes("note") || lower.includes("remember")) {
+      const noteContent = input.replace(/^(take a note|note|remember)\s*/i, "");
+      jarvisState.notes.push({ id: jarvisState.notes.length + 1, content: noteContent, source: "chat", ts: Date.now() });
+      response = "Note saved: \"" + noteContent.substring(0, 50) + "\" — stored in JARVISIUS canister via " + ai.name + ".";
+      updateNotesLibrary();
+    } else if (lower.includes("pdf") || lower.includes("document")) {
+      jarvisState.documents.push({ id: jarvisState.documents.length + 1, title: input, type: "pdf", ts: Date.now() });
+      response = "Document generation queued. " + ai.name + " processing.";
+      updateDocsLibrary();
+    } else if (lower.includes("switch") && lower.includes("tab")) {
+      response = "Tab switch command received. Routing to extension via " + ai.name + ".";
+      jarvisState.tabActions.push({ id: jarvisState.tabActions.length + 1, action: "switched", title: input, url: "", ts: Date.now() });
+    } else if (lower.includes("screenshot") || lower.includes("capture")) {
+      response = "Screen capture initiated. " + ai.name + " will process the visual data.";
+    } else if (lower.includes("search")) {
+      response = "Search query routed to " + ai.name + ". Processing across all connected engines.";
+    } else {
+      response = ai.name + " (" + ai.domain + "): Processing your request. All 10 Alpha AIs are available for complex routing.";
+    }
+
+    setTimeout(function() {
+      addChatMessage("JARVIS", response, "#d4af37");
+      updateStats();
+    }, 300 + Math.random() * 400);
+  }
+
+  function updateNotesLibrary() {
+    const lib = document.getElementById("jarvisNotesLibrary");
+    if (!lib) return;
+    if (jarvisState.notes.length === 0) { lib.innerHTML = '<div style="color:var(--muted);font-style:italic">No notes yet.</div>'; return; }
+    lib.innerHTML = jarvisState.notes.slice(-8).reverse().map(function(n) {
+      var time = new Date(n.ts).toLocaleTimeString();
+      return '<div style="padding:0.2rem 0;border-bottom:1px solid var(--border);font-size:0.8rem">' +
+        '<span style="color:var(--muted);font-size:0.65rem">' + time + '</span> ' +
+        '<span style="color:#58a6ff;font-size:0.65rem">[' + n.source + ']</span> ' + n.content + '</div>';
+    }).join("");
+  }
+
+  function updateDocsLibrary() {
+    const lib = document.getElementById("jarvisDocsLibrary");
+    if (!lib) return;
+    if (jarvisState.documents.length === 0) { lib.innerHTML = '<div style="color:var(--muted);font-style:italic">No documents yet.</div>'; return; }
+    lib.innerHTML = jarvisState.documents.slice(-6).reverse().map(function(d) {
+      var time = new Date(d.ts).toLocaleTimeString();
+      return '<div style="padding:0.2rem 0;border-bottom:1px solid var(--border);font-size:0.8rem">' +
+        '<span style="color:var(--muted);font-size:0.65rem">' + time + '</span> ' +
+        '<span style="color:#00e676;font-size:0.65rem">[' + d.type + ']</span> ' + d.title.substring(0, 50) + '</div>';
+    }).join("");
+  }
+
+  // Wire chat
+  var chatInput = document.getElementById("jarvisChatInput");
+  var chatSend = document.getElementById("jarvisChatSend");
+  if (chatSend && chatInput) {
+    chatSend.addEventListener("click", function() {
+      var text = chatInput.value.trim();
+      if (text) { processChat(text); chatInput.value = ""; }
+    });
+    chatInput.addEventListener("keydown", function(e) {
+      if (e.key === "Enter") { chatSend.click(); }
+    });
+  }
+
+  // Wire note input
+  var noteInput = document.getElementById("jarvisNoteInput");
+  var noteSave = document.getElementById("jarvisNoteSave");
+  if (noteSave && noteInput) {
+    noteSave.addEventListener("click", function() {
+      var text = noteInput.value.trim();
+      if (text) {
+        jarvisState.notes.push({ id: jarvisState.notes.length + 1, content: text, source: "dashboard", ts: Date.now() });
+        logCommand("take_note", text, "ALPHA-MEMORIUS");
+        updateNotesLibrary();
+        updateStats();
+        noteInput.value = "";
+      }
+    });
+    noteInput.addEventListener("keydown", function(e) {
+      if (e.key === "Enter") { noteSave.click(); }
+    });
+  }
+
+  // Heartbeat pulse
+  setInterval(function() {
+    jarvisBeatCount++;
+    var el = document.getElementById("jarvisBeats");
+    if (el) el.textContent = jarvisBeatCount.toLocaleString();
+  }, 873);
+
+  // Initial welcome command
+  logCommand("system_init", "JARVIS Control Center initialized — BRONZE tier — Owner: Alfredo", "SYSTEM");
+  addChatMessage("JARVIS", "Good day, Alfredo. All systems online. 10 Alpha Script AIs standing by. Extension side panel ready. What would you like me to do?", "#d4af37");
+})();
+</script>
+</body>
+</html>

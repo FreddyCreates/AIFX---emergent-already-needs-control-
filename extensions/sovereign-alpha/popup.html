@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sovereign Alpha</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 280px; background: #1e1e2e; color: #cdd6f4;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 13px; padding: 16px;
+  }
+  .header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+  .logo { font-size: 24px; }
+  .title { font-weight: 700; font-size: 15px; color: #89b4fa; }
+  .subtitle { font-size: 11px; color: #7f849c; }
+  .modules { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+  .module {
+    background: #252536; border: 1px solid #45475a; border-radius: 8px;
+    padding: 10px; cursor: pointer; transition: border-color .15s;
+    display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center;
+  }
+  .module:hover { border-color: #89b4fa; }
+  .module .icon { font-size: 20px; }
+  .module .name { font-size: 11px; font-weight: 600; color: #a6adc8; }
+  .open-btn {
+    width: 100%; background: #89b4fa; color: #1e1e2e; border: none;
+    border-radius: 8px; padding: 10px; font-size: 13px; font-weight: 700;
+    cursor: pointer; transition: opacity .15s;
+  }
+  .open-btn:hover { opacity: .85; }
+  .shortcut { text-align: center; font-size: 10px; color: #7f849c; margin-top: 8px; }
+</style>
+</head>
+<body>
+<div class="header">
+  <span class="logo">⚡</span>
+  <div><div class="title">Sovereign Alpha</div><div class="subtitle">Four tools · One install</div></div>
+</div>
+<div class="modules">
+  <div class="module" data-tab="workbook">
+    <span class="icon">📓</span>
+    <span class="name">Workbook</span>
+  </div>
+  <div class="module" data-tab="intelligence">
+    <span class="icon">🔍</span>
+    <span class="name">Intelligence</span>
+  </div>
+  <div class="module" data-tab="vault">
+    <span class="icon">🔐</span>
+    <span class="name">Secure Vault</span>
+  </div>
+  <div class="module" data-tab="command">
+    <span class="icon">⌨️</span>
+    <span class="name">Command Bar</span>
+  </div>
+</div>
+<button class="open-btn" id="openBtn">Open Sovereign Alpha ↗</button>
+<div class="shortcut">Ctrl+Shift+K to open Command Bar overlay</div>
+<script>
+document.getElementById('openBtn').addEventListener('click', () => {
+  chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+    if (tabs[0]) chrome.sidePanel.open({ tabId: tabs[0].id });
+  });
+  window.close();
+});
+document.querySelectorAll('.module').forEach(m => {
+  m.addEventListener('click', () => {
+    chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+      if (tabs[0]) chrome.sidePanel.open({ tabId: tabs[0].id });
+    });
+    window.close();
+  });
+});
+</script>
+</body>
+</html>

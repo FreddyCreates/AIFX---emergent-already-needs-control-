@@ -1,0 +1,40 @@
+{
+  "name": "@medina/intelligence-routing-sdk",
+  "version": "1.0.0",
+  "description": "Intelligent task routing for AI workforces — model router, command parser, terminal dispatch, Intelligence Wire, workforce routing",
+  "license": "MIT",
+  "type": "module",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./model-router": "./src/model-router.js",
+    "./command-parser": "./src/command-parser.js",
+    "./terminal-dispatch": "./src/terminal-dispatch.js",
+    "./intelligence-wire": "./src/intelligence-wire.js",
+    "./workforce-router": "./src/workforce-router.js"
+  },
+  "keywords": [
+    "ai",
+    "routing",
+    "intelligence",
+    "workforce",
+    "orchestration",
+    "model-router",
+    "terminal-dispatch"
+  ],
+  "files": [
+    "src/"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FreddyCreates/potential-succotash.git",
+    "directory": "sdk/intelligence-routing-sdk"
+  },
+  "author": "Medina",
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -1,0 +1,93 @@
+# ════════════════════════════════════════════════════════════════════════════
+# CPL-P — Universal Default Governance Pipeline
+# id: pipeline://governance/default_cycle
+# version: 1.0.0
+#
+# The universal governance pipeline. Works for any entity class.
+# All specialized pipelines (bot, economy, learning, topology) inherit from
+# this shape and add domain-specific steps.
+#
+# Step functions bound by atlas-governance-cycle.js
+# ════════════════════════════════════════════════════════════════════════════
+
+id: "pipeline://governance/default_cycle"
+version: "1.0.0"
+updated: "2026-05-03"
+
+steps:
+
+  - id: "ingest_events"
+    description: "Load all events from dist/governance/events/"
+    use: "governance.ingest_events"
+    on_error: "continue"
+
+  - id: "enrich_context"
+    description: "Enrich events with entity data and fleet state"
+    use: "governance.enrich_context"
+    on_error: "continue"
+
+  - id: "apply_laws"
+    description: "Apply all CPL-L laws to each event + entity"
+    use: "governance.apply_cpl_l"
+    on_error: "stop"
+
+  - id: "record_decisions"
+    description: "Append all decisions to audit log"
+    use: "governance.record_decisions"
+    on_error: "continue"
+
+  - id: "update_mml"
+    description: "Update Meta-Memory Layer with law stats"
+    use: "governance.update_mml"
+    on_error: "continue"
+
+  - id: "route_actions"
+    description: "Route FORBID/REQUIRE/ESCALATE/NOTIFY actions"
+    use: "governance.route_actions"
+    on_error: "continue"
+
+  - id: "meta_analysis"
+    description: "Feed stats to meta engine, emit UEL proposals"
+    use: "governance.meta_analysis"
+    on_error: "continue"
+
+  - id: "organism_narration"
+    description: "ORACLE + GUARDIAN: turn proposals into narratives and guard violations"
+    use: "governance.organism_narration"
+    on_error: "continue"
+
+  - id: "generate_report"
+    description: "Write governance report to docs/"
+    use: "governance.generate_report"
+    on_error: "continue"
+
+branches:
+
+  - id: "if_high_risk"
+    when: "context.risk_score > 0.7"
+    then:
+      type: "ESCALATE"
+      target: "human://operator"
+
+  - id: "if_all_clear"
+    when: "context.risk_score < 0.2 && !context.blocked"
+    then:
+      type: "ALLOW"
+      skip_steps: ["route_actions"]
+
+  - id: "if_law_conflict"
+    when: "context.has_forbid && context.has_allow"
+    then:
+      type: "ESCALATE"
+      target: "human://operator"
+
+bindings:
+  "governance.ingest_events":        "modules/ingest-events.js"
+  "governance.enrich_context":       "modules/enrich-context.js"
+  "governance.apply_cpl_l":         "modules/apply-cpl-l.js"
+  "governance.record_decisions":     "modules/record-decisions.js"
+  "governance.update_mml":           "modules/update-mml.js"
+  "governance.route_actions":        "modules/route-actions.js"
+  "governance.meta_analysis":        "modules/meta-analysis.js"
+  "governance.organism_narration":   "modules/organism-narration.js"
+  "governance.generate_report":      "modules/generate-report.js"

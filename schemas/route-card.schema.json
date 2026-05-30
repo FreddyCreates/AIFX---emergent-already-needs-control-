@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://itsnotailabs.github.io/production/schemas/route-card.schema.json",
+  "title": "RATIO ORDINIS Route Card",
+  "type": "object",
+  "required": [
+    "task_substrate",
+    "candidate_routes",
+    "selected_route",
+    "risk_class",
+    "evidence_plan",
+    "fallback_plan",
+    "memory_consequence",
+    "artifact_consequence",
+    "registry_consequence",
+    "proof_consequence"
+  ],
+  "properties": {
+    "task_substrate": { "type": "string" },
+    "candidate_routes": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+    "selected_route": { "type": "string" },
+    "rejected_routes": { "type": "array", "items": { "type": "string" } },
+    "risk_class": { "type": "string" },
+    "evidence_plan": { "type": "string" },
+    "fallback_plan": { "type": "string" },
+    "human_approval_need": { "type": "boolean", "default": false },
+    "memory_consequence": { "type": "string" },
+    "artifact_consequence": { "type": "string" },
+    "registry_consequence": { "type": "string" },
+    "proof_consequence": { "type": "string" }
+  },
+  "additionalProperties": false
+}

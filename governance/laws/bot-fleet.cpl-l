@@ -1,0 +1,270 @@
+# ════════════════════════════════════════════════════════════════════════════
+# CPL-L (Control Protocol Language — Laws)
+# id: governance://law/BOT_FLEET_SAFETY
+# version: 1.0.0
+#
+# Safety and security laws for the Sovereign Organism Bot Fleet.
+# These laws are evaluated by the governance engine on every bot event.
+#
+# Law structure:
+#   each subject is a bot atlas URI
+#   each rule has: name, when (condition expression), then (actions)
+#   actions: FORBID, REQUIRE, ALLOW, ESCALATE, NOTIFY
+#
+# Condition variables available in `when` expressions:
+#   context.findings          — array of finding strings from the bot run
+#   context.health_dashboard  — current fleet health: "green", "yellow", "red"
+#   context.risk_score        — float 0-1, phi-weighted risk
+#   context.status            — bot run status: "success", "failed", "partial"
+#   context.failures          — number of failed checks
+#   context.event             — event type: "ci_run_completed", "release_requested", etc.
+#   context.matrix            — test matrix (for test-bot)
+#   context.severity          — "critical", "high", "medium", "low"
+# ════════════════════════════════════════════════════════════════════════════
+
+id: "governance://law/BOT_FLEET_SAFETY"
+version: "1.0.0"
+updated: "2026-05-03"
+ocl_ref: "atlas://organism/bot-fleet"
+
+subjects:
+
+  # ── Sentinel Bot ────────────────────────────────────────────────────────────
+  - id: "atlas://bot/organism-sentinel-bot"
+    rules:
+      - name: "BLOCK_SECRETS"
+        description: "Block merges when secrets are found in code"
+        when: 'context.findings.includes("secret_leak")'
+        then:
+          - action: "FORBID"
+            target: "merge"
+            reason: "Secret leak detected — merge blocked pending remediation"
+          - action: "REQUIRE"
+            target: "human_review"
+            arg: "security_team"
+            reason: "Security team must review before merge proceeds"
+
+      - name: "ESCALATE_CRITICAL_THREAT"
+        description: "Escalate immediately on critical severity findings"
+        when: 'context.severity === "critical" && context.risk_score > 0.9'
+        then:
+          - action: "ESCALATE"
+            target: "human://operator"
+            reason: "Critical threat detected — requires immediate human action"
+          - action: "FORBID"
+            target: "any_deploy"
+            reason: "All deployments blocked during critical threat"
+
+  # ── Cyber Bot ───────────────────────────────────────────────────────────────
+  - id: "atlas://bot/organism-cyber-bot"
+    rules:
+      - name: "BLOCK_DEPLOY_ON_CRITICAL_CVE"
+        description: "Block deployments when critical CVEs are unmitigated"
+        when: 'context.findings.filter(f => f.startsWith("cve:critical")).length > 0'
+        then:
+          - action: "FORBID"
+            target: "deploy"
+            reason: "Unmitigated critical CVEs — deployment blocked"
+          - action: "REQUIRE"
+            target: "security_review"
+            arg: "security_team"
+
+      - name: "WARN_HIGH_THREAT_SCORE"
+        description: "Notify when defense matrix drops below 50"
+        when: 'context.defense_score < 50'
+        then:
+          - action: "NOTIFY"
+            target: "fleet_commander"
+            reason: "Defense matrix score critical — bot fleet hardening required"
+
+  # ── Release Bot ─────────────────────────────────────────────────────────────
+  - id: "atlas://bot/organism-release-bot"
+    rules:
+      - name: "NO_RELEASE_ON_RED"
+        description: "Block releases when fleet health is red"
+        when: 'context.health_dashboard === "red"'
+        then:
+          - action: "FORBID"
+            target: "release"
+            reason: "Fleet health is RED — release blocked until stability restored"
+          - action: "REQUIRE"
+            target: "stability_review"
+            reason: "Health must reach GREEN before release proceeds"
+
+      - name: "NO_RELEASE_ON_FAILING_TESTS"
+        description: "Block releases when tests are failing"
+        when: 'context.test_status === "failed"'
+        then:
+          - action: "FORBID"
+            target: "release"
+            reason: "Failing tests detected — release blocked"
+
+      - name: "REQUIRE_REVIEW_ON_MAJOR"
+        description: "Require human review for major version releases"
+        when: 'context.version_bump === "major"'
+        then:
+          - action: "REQUIRE"
+            target: "human_review"
+            arg: "release_manager"
+            reason: "Major version bump requires release manager approval"
+
+  # ── Deploy Bot ──────────────────────────────────────────────────────────────
+  - id: "atlas://bot/organism-deploy-bot"
+    rules:
+      - name: "NO_DEPLOY_ON_RED"
+        description: "Block ICP/Pages deployments when fleet is red"
+        when: 'context.health_dashboard === "red"'
+        then:
+          - action: "FORBID"
+            target: "deploy"
+            reason: "Fleet health is RED — ICP/Pages deployment blocked"
+
+      - name: "NO_DEPLOY_WITHOUT_TESTS"
+        description: "Deployment requires passing test run"
+        when: 'context.test_status !== "success" && context.event === "deploy_requested"'
+        then:
+          - action: "FORBID"
+            target: "deploy"
+            reason: "Tests must pass before deployment"
+          - action: "REQUIRE"
+            target: "test_run"
+            reason: "Run organism-test-bot before deploying"
+
+  # ── Cloud Bot ───────────────────────────────────────────────────────────────
+  - id: "atlas://bot/organism-cloud-bot"
+    rules:
+      - name: "NO_EDGE_DEPLOY_ON_OFFLINE_REGIONS"
+        description: "Warn when too many edge regions are unhealthy"
+        when: 'context.unhealthy_regions > 5'
+        then:
+          - action: "NOTIFY"
+            target: "fleet_commander"
+            reason: "More than 5 edge regions unhealthy — edge stability degraded"
+          - action: "REQUIRE"
+            target: "human_review"
+            arg: "infra_team"
+
+      - name: "BLOCK_EDGE_DEPLOY_ON_ALL_OFFLINE"
+        description: "Block edge deployments when all regions are offline"
+        when: 'context.healthy_regions === 0'
+        then:
+          - action: "FORBID"
+            target: "edge_deploy"
+            reason: "No healthy edge regions — edge deployment blocked"
+
+  # ── Test Bot ────────────────────────────────────────────────────────────────
+  - id: "atlas://bot/organism-test-bot"
+    rules:
+      - name: "ESCALATE_FULL_MATRIX_FAILURE"
+        description: "Escalate if all test matrix nodes fail"
+        when: 'context.failures === context.matrix.length && context.matrix.length > 0'
+        then:
+          - action: "ESCALATE"
+            target: "human://operator"
+            reason: "All test matrix nodes failed — full regression detected"
+          - action: "FORBID"
+            target: "release"
+            reason: "Cannot release with 100% matrix failure"
+
+      - name: "FLAG_HIGH_FAILURE_RATE"
+        description: "Flag if more than 60.8% (phi-inverse) of tests fail"
+        when: 'context.failure_rate > 0.618'
+        then:
+          - action: "NOTIFY"
+            target: "fleet_commander"
+            reason: "Test failure rate exceeds φ⁻¹ threshold (61.8%)"
+
+  # ── Learning Bot ────────────────────────────────────────────────────────────
+  - id: "atlas://bot/organism-learning-bot"
+    rules:
+      - name: "PREVENT_WEIGHT_DIVERGENCE"
+        description: "Stop evolution if protocol weights diverge beyond phi"
+        when: 'context.max_weight > 1.618 || context.min_weight < 0.01'
+        then:
+          - action: "FORBID"
+            target: "weight_update"
+            reason: "Protocol weight divergence detected — evolution halted for manual inspection"
+          - action: "NOTIFY"
+            target: "fleet_commander"
+
+  # ── Alpha Bot (commander) ───────────────────────────────────────────────────
+  - id: "atlas://bot/organism-alpha-bot"
+    rules:
+      - name: "ESCALATE_MULTIPLE_BOT_FAILURES"
+        description: "Escalate when 3+ bots fail in the same cycle"
+        when: 'context.failed_bots.length >= 3'
+        then:
+          - action: "ESCALATE"
+            target: "human://operator"
+            reason: "3+ bots failing simultaneously — fleet-wide incident"
+          - action: "REQUIRE"
+            target: "incident_review"
+
+      - name: "HIGH_RISK_FLEET_LOCKDOWN"
+        description: "Block all non-critical operations during high-risk events"
+        when: 'context.risk_score > 0.9'
+        then:
+          - action: "FORBID"
+            target: "release"
+            reason: "Fleet-wide risk score critical (>0.9) — releases locked"
+          - action: "FORBID"
+            target: "deploy"
+            reason: "Fleet-wide risk score critical (>0.9) — deployments locked"
+
+  # ── Geometry Lock (Nova Protocol Bridge) ───────────────────────────────────
+  - id: "atlas://protocol/geometry-lock"
+    rules:
+      - name: "BLOCK_UNKEYED_CALLS"
+        description: "Block any external call that does not present a valid geometric key"
+        when: 'context.event === "external_call" && context.key_access !== "granted"'
+        then:
+          - action: "FORBID"
+            target: "external_call"
+            reason: "No valid geometric key presented — external call blocked by geometry lock"
+          - action: "NOTIFY"
+            target: "atlas://bot/organism-sentinel-bot"
+            reason: "Unkeyed external call attempt detected — sentinel review required"
+
+      - name: "ESCALATE_REPEATED_KEY_DENIALS"
+        description: "Escalate when the same caller is denied 3+ times in a cycle"
+        when: 'context.caller_deny_count >= 3'
+        then:
+          - action: "ESCALATE"
+            target: "human://operator"
+            reason: "Repeated geometric key denial — possible probing or compromised partner"
+          - action: "FORBID"
+            target: "external_call"
+            reason: "Caller suspended pending operator review"
+
+      - name: "REQUIRE_REKEY_ON_DRIFT"
+        description: "Require re-keying when resonance drops below phi-inverse threshold"
+        when: 'context.resonance_R !== undefined && context.resonance_R < 0.618'
+        then:
+          - action: "REQUIRE"
+            target: "rekey"
+            reason: "Phase resonance below φ⁻¹ threshold — caller must regenerate geometric key"
+          - action: "NOTIFY"
+            target: "atlas://bot/organism-sentinel-bot"
+            reason: "Geometry lock resonance drift detected"
+
+      - name: "REQUIRE_INTELLIGENCE_KEY_FOR_AI"
+        description: "AI callers must present a geometric key — machine tokens are not accepted on the intelligence interface"
+        when: 'context.caller_interface_type === "intelligence" && context.token_type !== "geometric_key"'
+        then:
+          - action: "FORBID"
+            target: "external_call"
+            reason: "AI caller must present a geometric key (phi-resonant) — machine token rejected on intelligence interface"
+          - action: "NOTIFY"
+            target: "atlas://bot/organism-sentinel-bot"
+            reason: "AI caller attempted machine-interface token on intelligence route — interface mismatch"
+
+      - name: "BLOCK_MACHINE_ON_INTELLIGENCE_ROUTES"
+        description: "Machine-interface callers cannot access intelligence-only routes"
+        when: 'context.caller_interface_type === "machine" && context.route_requires_intelligence === true'
+        then:
+          - action: "FORBID"
+            target: "external_call"
+            reason: "Machine interface callers cannot access intelligence-only routes — register as intelligence caller"
+          - action: "NOTIFY"
+            target: "atlas://bot/organism-sentinel-bot"
+            reason: "Machine caller attempted intelligence-only route — interface boundary violation"

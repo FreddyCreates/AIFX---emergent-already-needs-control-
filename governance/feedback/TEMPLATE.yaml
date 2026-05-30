@@ -1,0 +1,47 @@
+# ════════════════════════════════════════════════════════════════════════════
+# Human Feedback File — Template
+#
+# When a bot decision is overridden by a human operator, create a YAML file
+# here following this template. The governance meta engine reads these files
+# on every cycle and uses them to learn from override patterns.
+#
+# File naming convention: fb-{YYYY-MM-DD}-{NNN}.yaml
+# ════════════════════════════════════════════════════════════════════════════
+
+# Unique feedback ID
+id: "fb-YYYY-MM-DD-001"
+
+# Who overrode the decision
+actor: "human://operator"
+
+# What was overridden
+target:
+  type: "decision"
+  entity: "atlas://bot/organism-release-bot"
+  law_id: "governance://law/BOT_FLEET_SAFETY"
+  rule_name: "NO_RELEASE_ON_RED"
+  pipeline_id: "pipeline://governance/bot_cycle"
+  run_id: "GITHUB_RUN_ID_HERE"
+
+# What the system decided vs what the human decided
+decision:
+  system: "FORBID"    # What the governance engine decided
+  human: "ALLOW"      # What the human decided to do instead
+
+# Context at time of decision
+context_snapshot:
+  health_dashboard: "red"
+  risk_score: 0.42
+  findings:
+    - "visual_flaky_test"
+
+# Human's reasoning (required for override)
+rationale: "Red status due to flaky visual tests only; core functionality verified. Safe to release."
+
+# Optional: proposed law change
+law_proposal:
+  type: "CONDITION_RELAXATION"
+  suggestion: "Exclude visual-only failures from NO_RELEASE_ON_RED when risk_score < 0.5"
+
+# Timestamp
+at: "YYYY-MM-DDTHH:MM:SSZ"

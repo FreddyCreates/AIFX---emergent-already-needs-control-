@@ -1,0 +1,19 @@
+{
+  "id": "atlas://bot/organism-deploy-bot",
+  "name": "organism-deploy-bot",
+  "class": "Bot",
+  "division": "Deploy & Operate",
+  "divisionNum": "V",
+  "emoji": "🌐",
+  "domain": "ICP canister & Pages deployment",
+  "triggers": ["push:organism/"],
+  "capabilities": ["deploy_icp", "deploy_pages", "canister_manage"],
+  "languages": ["atlas://language/cpl-p"],
+  "governance_pipeline": "pipeline://governance/bot_cycle",
+  "ocl_ref": "atlas://organism/bot-fleet",
+  "law_refs": ["governance://law/BOT_FLEET_SAFETY#NO_DEPLOY_ON_RED"],
+  "script": "scripts/validate-deployment.js",
+  "workflow": ".github/workflows/deploy-icp.yml",
+  "report": "docs/deploy-report.md",
+  "microbots": []
+}

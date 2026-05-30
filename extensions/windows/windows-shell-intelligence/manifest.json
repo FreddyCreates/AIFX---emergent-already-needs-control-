@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "Windows Shell Intelligence",
+  "version": "1.0.0",
+  "description": "Shell & Explorer AI — Codex + CodeLlama + DeepSeek code intelligence for Windows Explorer context menus and shell operations",
+  "platform": "windows",
+  "permissions": [
+    "shell-extension",
+    "context-menu",
+    "file-system",
+    "clipboard"
+  ],
+  "engine": {
+    "service": "engine.js"
+  },
+  "interface": {
+    "entry": "interface.js"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "minimum_windows_version": "10.0.19041"
+}

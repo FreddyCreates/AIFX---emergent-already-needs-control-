@@ -1,0 +1,171 @@
+{
+  "bots": [
+    {
+      "name": "organism-build-bot",
+      "emoji": "🧬",
+      "division": "I — Build & Package",
+      "domain": "Extension Packaging",
+      "hasWorkflow": false,
+      "workflowFile": "organism-build-bot.yml",
+      "script": "build-alpha-one.js",
+      "status": "missing-workflow"
+    },
+    {
+      "name": "organism-sdk-bot",
+      "emoji": "📦",
+      "division": "I — Build & Package",
+      "domain": "SDK Packaging",
+      "hasWorkflow": true,
+      "workflowFile": "organism-sdk-bot.yml",
+      "script": "prepare-sdks.js",
+      "status": "active"
+    },
+    {
+      "name": "organism-release-bot",
+      "emoji": "🚀",
+      "division": "I — Build & Package",
+      "domain": "Production Releases",
+      "hasWorkflow": true,
+      "workflowFile": "organism-release-bot.yml",
+      "script": "bundle-release.js",
+      "status": "active"
+    },
+    {
+      "name": "organism-test-bot",
+      "emoji": "🧪",
+      "division": "II — Validate & Test",
+      "domain": "Cross-Matrix Testing",
+      "hasWorkflow": true,
+      "workflowFile": "organism-test-bot.yml",
+      "script": "generate-test-report.js",
+      "status": "active"
+    },
+    {
+      "name": "organism-protocol-bot",
+      "emoji": "🔬",
+      "division": "II — Validate & Test",
+      "domain": "Protocol Integrity",
+      "hasWorkflow": true,
+      "workflowFile": "organism-protocol-bot.yml",
+      "script": "lint-protocols.js",
+      "status": "active"
+    },
+    {
+      "name": "organism-neural-bot",
+      "emoji": "🧠",
+      "division": "II — Validate & Test",
+      "domain": "Neural Architecture",
+      "hasWorkflow": true,
+      "workflowFile": "organism-neural-bot.yml",
+      "script": "validate-neural-graph.js",
+      "status": "active"
+    },
+    {
+      "name": "organism-sandcastle-bot",
+      "emoji": "🏰",
+      "division": "II — Validate & Test",
+      "domain": "Sandboxed BTL Pipeline",
+      "hasWorkflow": true,
+      "workflowFile": "organism-sandcastle-bot.yml",
+      "script": "sandcastle-pipeline.js",
+      "status": "active"
+    },
+    {
+      "name": "organism-visual-bot",
+      "emoji": "📸",
+      "division": "II — Validate & Test",
+      "domain": "Visual Regression",
+      "hasWorkflow": true,
+      "workflowFile": "organism-visual-bot.yml",
+      "script": "visual-regression.js",
+      "status": "active"
+    },
+    {
+      "name": "organism-sentinel-bot",
+      "emoji": "🛡️",
+      "division": "III — Secure & Monitor",
+      "domain": "Security Scanning",
+      "hasWorkflow": true,
+      "workflowFile": "organism-sentinel-bot.yml",
+      "script": "sentinel-scan.js",
+      "status": "active"
+    },
+    {
+      "name": "organism-deps-bot",
+      "emoji": "🔄",
+      "division": "III — Secure & Monitor",
+      "domain": "Dependency Health",
+      "hasWorkflow": true,
+      "workflowFile": "organism-deps-bot.yml",
+      "script": null,
+      "status": "active"
+    },
+    {
+      "name": "organism-crawler-bot",
+      "emoji": "🕷️",
+      "division": "III — Secure & Monitor",
+      "domain": "Organism Mapping",
+      "hasWorkflow": true,
+      "workflowFile": "organism-crawler-bot.yml",
+      "script": "organism-crawler.js",
+      "status": "active"
+    },
+    {
+      "name": "organism-docs-bot",
+      "emoji": "📚",
+      "division": "IV — Document & Report",
+      "domain": "Auto-Documentation",
+      "hasWorkflow": true,
+      "workflowFile": "organism-docs-bot.yml",
+      "script": "generate-docs.js",
+      "status": "active"
+    },
+    {
+      "name": "organism-deploy-bot",
+      "emoji": "🌐",
+      "division": "V — Deploy & Operate",
+      "domain": "ICP & Pages Deployment",
+      "hasWorkflow": true,
+      "workflowFile": "organism-deploy-bot.yml",
+      "script": "alpha-deployment-integration.js",
+      "status": "active"
+    },
+    {
+      "name": "organism-learning-bot",
+      "emoji": "🎓",
+      "division": "VI — Learn & Evolve",
+      "domain": "Protocol Evolution",
+      "hasWorkflow": true,
+      "workflowFile": "organism-learning-bot.yml",
+      "script": "learning-pipeline.js",
+      "status": "active"
+    },
+    {
+      "name": "organism-economy-bot",
+      "emoji": "💰",
+      "division": "VI — Learn & Evolve",
+      "domain": "Marketplace Analytics",
+      "hasWorkflow": true,
+      "workflowFile": "organism-economy-bot.yml",
+      "script": "economy-tracker.js",
+      "status": "active"
+    },
+    {
+      "name": "organism-alpha-bot",
+      "emoji": "👑",
+      "division": "VII — Command & Control",
+      "domain": "Fleet Commander",
+      "hasWorkflow": true,
+      "workflowFile": "organism-alpha-bot.yml",
+      "script": "alpha-deployment-integration.js",
+      "status": "active"
+    }
+  ],
+  "missing_workflows": [
+    "organism-build-bot"
+  ],
+  "missing_scripts": [
+    "organism-deps-bot"
+  ],
+  "timestamp": "2026-05-30T19:26:50.066Z"
+}

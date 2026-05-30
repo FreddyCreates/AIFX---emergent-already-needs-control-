@@ -1,0 +1,42 @@
+{
+  "manifest_version": 3,
+  "name": "Edge AI Assistant",
+  "version": "1.0.0",
+  "description": "AI User Experience \u2014 Edge side panel assistant with multi-model reasoning and phi-weighted response fusion",
+  "permissions": [
+    "sidePanel",
+    "activeTab",
+    "storage",
+    "alarms"
+  ],
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ]
+    }
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "minimum_chrome_version": "114",
+  "action": {
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png"
+    },
+    "default_popup": "popup.html"
+  },
+  "devtools_page": "devtools.html"
+}

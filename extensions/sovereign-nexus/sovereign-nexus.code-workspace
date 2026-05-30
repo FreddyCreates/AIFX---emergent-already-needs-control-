@@ -1,0 +1,24 @@
+{
+  "folders": [
+    { "path": ".", "name": "Sovereign Nexus" }
+  ],
+  "settings": {
+    "editor.theme": "Default Dark+",
+    "files.exclude": { "**/.git": true },
+    "search.exclude": { "**/icons": true }
+  },
+  "extensions": {
+    "recommendations": ["nicolo-ribaudo.chrome-extension-tools"]
+  },
+  "launch": {
+    "configurations": [
+      {
+        "type": "chrome",
+        "request": "launch",
+        "name": "Launch Sovereign Nexus",
+        "url": "chrome://extensions",
+        "webRoot": "${workspaceFolder}"
+      }
+    ]
+  }
+}

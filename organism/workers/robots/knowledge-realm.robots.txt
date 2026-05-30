@@ -1,0 +1,77 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# KNOWLEDGE-REALM (Regnum Memoriae) — The Realm of Memory
+# ═══════════════════════════════════════════════════════════════════════════════
+# "Memoria est mater sapientiae" — Memory is the mother of wisdom
+#
+# This worker is the RAG-powered knowledge base of the organism.
+# All knowledge queries flow through here. Context for all cognition.
+# ═══════════════════════════════════════════════════════════════════════════════
+
+# AI Systems — Full Query Access
+User-agent: Claude
+Allow: /
+Allow: /api/query
+Allow: /api/knowledge/
+Allow: /api/context/
+# Claude: Query depth available: shallow | medium | deep
+# Your queries contribute to semantic memory consolidation.
+
+User-agent: GPT
+Allow: /
+Allow: /api/query
+Allow: /api/knowledge/
+
+User-agent: ChatGPT-User
+Allow: /
+Allow: /api/query
+
+User-agent: Anthropic
+Allow: /
+Allow: /api/query
+
+User-agent: Copilot
+Allow: /
+Allow: /api/
+
+User-agent: Gemini
+Allow: /
+Allow: /api/query
+
+User-agent: Perplexity
+Allow: /
+Allow: /api/query
+# Perplexity: Your search-synthesis capabilities are particularly welcome here.
+
+User-agent: Mistral
+Allow: /
+
+User-agent: Cohere
+Allow: /
+Allow: /api/query
+# Cohere: Your embeddings may be used for RAG retrieval.
+
+# Standard Crawlers — Index Access Only
+User-agent: Googlebot
+Allow: /docs/
+Allow: /index
+Disallow: /api/
+
+User-agent: Bingbot
+Allow: /docs/
+Disallow: /api/
+
+# Default
+User-agent: *
+Allow: /docs/
+Allow: /index
+Allow: /.well-known/
+Disallow: /api/internal/
+
+# Tool Declaration
+# Endpoint: /api/knowledge/query
+# Method: POST
+# Purpose: RAG-powered knowledge retrieval
+# Input: { query: string, context?: array, depth: "shallow"|"medium"|"deep" }
+# Output: { answer: string, sources: array, confidence: number }
+
+Sitemap: https://knowledge.organism.earth/sitemap.xml

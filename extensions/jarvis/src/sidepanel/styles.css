@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── v10 SOVEREIGN NEXUS animations ── */
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 8px rgba(0, 212, 255, 0.4); }
+  50% { box-shadow: 0 0 20px rgba(0, 212, 255, 0.9); }
+}
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Arc reactor — outer ring rotation */
+@keyframes reactor-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+/* Arc reactor — inner counter-rotation */
+@keyframes reactor-spin-reverse {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(-360deg); }
+}
+/* Core glow pulse */
+@keyframes reactor-core {
+  0%, 100% {
+    box-shadow:
+      0 0 12px 4px rgba(0,212,255,0.6),
+      0 0 32px 8px rgba(0,212,255,0.3),
+      inset 0 0 12px rgba(0,212,255,0.5);
+  }
+  50% {
+    box-shadow:
+      0 0 24px 8px rgba(0,212,255,1),
+      0 0 56px 16px rgba(0,212,255,0.5),
+      inset 0 0 24px rgba(0,212,255,0.9);
+  }
+}
+/* Holographic scanline sweep */
+@keyframes scanline {
+  0%   { transform: translateY(-100%); opacity: 0.18; }
+  50%  { opacity: 0.32; }
+  100% { transform: translateY(100%); opacity: 0.18; }
+}
+/* Data stream ticker */
+@keyframes data-stream {
+  0%   { opacity: 0; transform: translateX(-8px); }
+  10%  { opacity: 1; transform: translateX(0); }
+  85%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+/* Domain AI card pulse when active */
+@keyframes domain-online {
+  0%, 100% { border-color: rgba(34, 211, 238, 0.3); }
+  50%       { border-color: rgba(34, 211, 238, 0.8); }
+}
+/* Upward bar fill */
+@keyframes bar-fill {
+  from { transform: scaleX(0); transform-origin: left; }
+  to   { transform: scaleX(1); transform-origin: left; }
+}
+
+.animate-pulse-glow    { animation: pulse-glow 2s ease-in-out infinite; }
+.animate-heartbeat     { animation: heartbeat 0.873s ease-in-out infinite; }
+.animate-fade-in       { animation: fadeIn 0.2s ease-out forwards; }
+.animate-reactor-spin  { animation: reactor-spin 6s linear infinite; }
+.animate-reactor-inner { animation: reactor-spin-reverse 3s linear infinite; }
+.animate-reactor-core  { animation: reactor-core 1.746s ease-in-out infinite; }
+.animate-scanline      { animation: scanline 4s linear infinite; }
+.animate-data-stream   { animation: data-stream 3s ease-out forwards; }
+.animate-domain-online { animation: domain-online 2s ease-in-out infinite; }
+.animate-bar-fill      { animation: bar-fill 0.8s ease-out forwards; }

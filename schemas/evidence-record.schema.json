@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://itsnotailabs.github.io/production/schemas/evidence-record.schema.json",
+  "title": "Evidence Record",
+  "type": "object",
+  "required": ["evidence_id", "source_type", "captured_at", "linked_claim_ids"],
+  "properties": {
+    "evidence_id": { "type": "string" },
+    "source_type": {
+      "type": "string",
+      "enum": ["runtime_diagnostic", "tool_event", "test_log", "artifact", "route_card", "paper_packet"]
+    },
+    "captured_at": { "type": "string", "format": "date-time" },
+    "linked_claim_ids": { "type": "array", "items": { "type": "string" } },
+    "hash": { "type": "string" },
+    "storage_uri": { "type": "string" }
+  },
+  "additionalProperties": false
+}
