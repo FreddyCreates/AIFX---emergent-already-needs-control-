@@ -1,0 +1,111 @@
+# ============================================================================
+# Deploy to Internet Computer — Native ICP Production Hosting
+#
+# Deploys the Vigil AI / Organism frontend directly to an ICP asset canister
+# on the mainnet. No GitHub Pages. No servers. Straight to the runtime.
+#
+# Required repository secrets:
+#   DFX_IDENTITY_PEM  — PEM-encoded private key of the controller identity.
+#                       Generate with: dfx identity export <name>
+#                       Then add the output as a repo secret.
+#
+# On first deploy, dfx creates canister_ids.json and commits it back so that
+# subsequent deploys reuse the same canister.
+# ============================================================================
+
+name: Deploy to ICP
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'download.html'
+      - 'docs/**'
+      - 'dfx.json'
+      - '.github/workflows/deploy-icp.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    name: Deploy Vigil AI frontend to ICP mainnet
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # ── Install DFX ──────────────────────────────────────────────────────
+      - name: Install DFX
+        uses: dfinity/setup-dfx@main
+        with:
+          dfx-version: "0.22.0"
+
+      # ── Identity ─────────────────────────────────────────────────────────
+      # Import the controller identity from the repo secret, then activate it.
+      - name: Set up ICP identity
+        run: |
+          echo "${{ secrets.DFX_IDENTITY_PEM }}" > /tmp/deploy-identity.pem
+          dfx identity import --storage-mode plaintext deploy-ci /tmp/deploy-identity.pem
+          dfx identity use deploy-ci
+          rm -f /tmp/deploy-identity.pem
+          echo "Active principal: $(dfx identity get-principal)"
+
+      # ── Build web assets ─────────────────────────────────────────────────
+      # Assemble the production frontend into icp-dist/ — the directory that
+      # dfx.json points at as the asset canister source.
+      - name: Assemble icp-dist
+        run: |
+          rm -rf icp-dist
+          mkdir -p icp-dist
+
+          # Main pages
+          cp index.html    icp-dist/index.html
+          cp download.html icp-dist/download.html
+
+          # Documentation (if present)
+          [ -d docs ] && cp -r docs icp-dist/docs || true
+
+          echo "icp-dist contents:"
+          find icp-dist -type f | sort
+
+      # ── Deploy ───────────────────────────────────────────────────────────
+      # --network ic  → ICP mainnet
+      # --yes         → non-interactive (accept all prompts)
+      # On first run dfx will create the canister and write canister_ids.json.
+      - name: Deploy to ICP mainnet
+        run: |
+          dfx deploy vigil_frontend --network ic --yes
+        env:
+          # Suppress the warning about using a plaintext identity on mainnet
+          # (this is intentional in CI — the PEM is never written to disk long-term).
+          DFX_WARNING: "-mainnet_plaintext_identity"
+
+      # ── Persist canister IDs ─────────────────────────────────────────────
+      # Commit canister_ids.json so the next run reuses the same canister.
+      - name: Commit canister_ids.json
+        run: |
+          if [ -f canister_ids.json ]; then
+            git config user.name "icp-deploy-bot"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add canister_ids.json
+            if git diff --cached --quiet; then
+              echo "canister_ids.json unchanged"
+            else
+              git commit -m "chore: update canister_ids.json after ICP deploy"
+              git push
+            fi
+          fi
+
+      # ── Print live URL ────────────────────────────────────────────────────
+      - name: Print live canister URL
+        run: |
+          CANISTER_ID=$(dfx canister --network ic id vigil_frontend 2>/dev/null || echo "unknown")
+          echo ""
+          echo "✅ Vigil AI is live on the Internet Computer"
+          echo "   Canister ID : ${CANISTER_ID}"
+          echo "   URL         : https://${CANISTER_ID}.icp0.io"
+          echo "   Raw URL     : https://${CANISTER_ID}.raw.icp0.io"

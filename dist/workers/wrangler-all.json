@@ -1,0 +1,128 @@
+{
+  "workers": [
+    {
+      "name": "organism-router",
+      "main": "dist/workers/organism-router.js",
+      "compatibility_date": "2025-01-01",
+      "workers_dev": false,
+      "routes": [
+        {
+          "pattern": "/*",
+          "zone_name": "sovereign-organism.com"
+        }
+      ],
+      "vars": {
+        "WORKER_TYPE": "router",
+        "ORGANISM_ID": "sovereign",
+        "PHI": "1.618033988749895"
+      },
+      "limits": {
+        "cpu_ms": 10
+      }
+    },
+    {
+      "name": "organism-api-gw",
+      "main": "dist/workers/organism-api-gw.js",
+      "compatibility_date": "2025-01-01",
+      "workers_dev": false,
+      "routes": [
+        {
+          "pattern": "/api/*",
+          "zone_name": "sovereign-organism.com"
+        }
+      ],
+      "vars": {
+        "WORKER_TYPE": "gateway",
+        "ORGANISM_ID": "sovereign",
+        "PHI": "1.618033988749895"
+      },
+      "limits": {
+        "cpu_ms": 20
+      }
+    },
+    {
+      "name": "organism-cache",
+      "main": "dist/workers/organism-cache.js",
+      "compatibility_date": "2025-01-01",
+      "workers_dev": false,
+      "routes": [
+        {
+          "pattern": "/sdk/*",
+          "zone_name": "sovereign-organism.com"
+        },
+        {
+          "pattern": "/protocols/*",
+          "zone_name": "sovereign-organism.com"
+        }
+      ],
+      "vars": {
+        "WORKER_TYPE": "cache",
+        "ORGANISM_ID": "sovereign",
+        "PHI": "1.618033988749895"
+      },
+      "limits": {
+        "cpu_ms": 5
+      }
+    },
+    {
+      "name": "organism-transform",
+      "main": "dist/workers/organism-transform.js",
+      "compatibility_date": "2025-01-01",
+      "workers_dev": true,
+      "routes": [
+        {
+          "pattern": "/transform/*",
+          "zone_name": "sovereign-organism.com"
+        }
+      ],
+      "vars": {
+        "WORKER_TYPE": "transform",
+        "ORGANISM_ID": "sovereign",
+        "PHI": "1.618033988749895"
+      },
+      "limits": {
+        "cpu_ms": 30
+      }
+    },
+    {
+      "name": "organism-sentinel",
+      "main": "dist/workers/organism-sentinel.js",
+      "compatibility_date": "2025-01-01",
+      "workers_dev": false,
+      "routes": [
+        {
+          "pattern": "/*",
+          "zone_name": "sovereign-organism.com"
+        }
+      ],
+      "vars": {
+        "WORKER_TYPE": "sentinel",
+        "ORGANISM_ID": "sovereign",
+        "PHI": "1.618033988749895"
+      },
+      "limits": {
+        "cpu_ms": 50
+      }
+    },
+    {
+      "name": "organism-icp-relay",
+      "main": "dist/workers/organism-icp-relay.js",
+      "compatibility_date": "2025-01-01",
+      "workers_dev": true,
+      "routes": [
+        {
+          "pattern": "/icp/*",
+          "zone_name": "sovereign-organism.com"
+        }
+      ],
+      "vars": {
+        "WORKER_TYPE": "router",
+        "ORGANISM_ID": "sovereign",
+        "PHI": "1.618033988749895"
+      },
+      "limits": {
+        "cpu_ms": 15
+      }
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "id": "atlas://bot/organism-sandcastle-bot",
+  "name": "organism-sandcastle-bot",
+  "class": "Bot",
+  "division": "Validate & Test",
+  "divisionNum": "II",
+  "emoji": "🏰",
+  "domain": "Sandboxed BTL pipeline",
+  "triggers": ["push:*", "pull_request"],
+  "capabilities": ["build", "test", "sandbox", "isolation"],
+  "languages": ["atlas://language/cpl-p"],
+  "governance_pipeline": "pipeline://governance/bot_cycle",
+  "ocl_ref": "atlas://organism/bot-fleet",
+  "script": "scripts/sandcastle-pipeline.js",
+  "workflow": ".github/workflows/organism-sandcastle-bot.yml",
+  "report": "docs/sandcastle-report.md",
+  "microbots": []
+}

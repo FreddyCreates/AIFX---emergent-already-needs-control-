@@ -1,0 +1,18 @@
+{
+  "id": "atlas://bot/organism-test-bot",
+  "name": "organism-test-bot",
+  "class": "Bot",
+  "division": "Validate & Test",
+  "divisionNum": "II",
+  "emoji": "🧪",
+  "domain": "Cross-matrix testing",
+  "triggers": ["push:test/"],
+  "capabilities": ["test", "report", "matrix_run"],
+  "languages": ["atlas://language/ril"],
+  "governance_pipeline": "pipeline://governance/bot_cycle",
+  "ocl_ref": "atlas://organism/bot-fleet",
+  "script": "scripts/generate-test-report.js",
+  "workflow": ".github/workflows/organism-test-bot.yml",
+  "report": "docs/test-health-dashboard.md",
+  "microbots": []
+}

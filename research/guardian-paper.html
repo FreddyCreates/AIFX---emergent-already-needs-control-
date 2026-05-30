@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="la">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Custos et Immunitas — De Systemate Immunitatis Computationali, Detectione Minarum, et Scoring Anomaliarum</title>
+<style>
+  :root { --bg:#0a0a1a; --card:#12122a; --border:#2a2a4a; --accent:#6c63ff; --accent2:#00d4aa; --text:#e0e0e0; --dim:#888; --paper:#f8f6f0; --ink:#1a1a2e; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:"Palatino Linotype","Book Antiqua",Palatino,"Times New Roman",serif; background:var(--bg); color:var(--text); min-height:100vh; }
+
+  .paper { max-width:900px; margin:2rem auto; background:var(--paper); color:var(--ink); padding:3rem 3.5rem; border-radius:4px; box-shadow:0 8px 32px rgba(0,0,0,0.6); line-height:1.8; }
+  .paper h1 { font-size:1.7rem; text-align:center; margin-bottom:0.3rem; color:#2a1a5e; font-style:italic; }
+  .paper .subtitle { text-align:center; font-size:1.05rem; color:#555; margin-bottom:0.5rem; }
+  .paper .authors { text-align:center; font-size:0.95rem; color:#666; margin-bottom:0.3rem; }
+  .paper .affiliation { text-align:center; font-size:0.85rem; color:#888; margin-bottom:1.5rem; font-style:italic; }
+  .paper .latin-epigraph { text-align:center; font-size:0.9rem; color:#7a6aa0; margin:1rem 0 2rem; font-style:italic; border-top:1px solid #ddd; border-bottom:1px solid #ddd; padding:0.8rem 0; }
+
+  .paper h2 { font-size:1.2rem; color:#2a1a5e; margin:2rem 0 0.5rem; border-bottom:1px solid #ccc; padding-bottom:0.3rem; }
+  .paper h3 { font-size:1.05rem; color:#3a2a7e; margin:1.5rem 0 0.4rem; }
+  .paper p { margin-bottom:0.8rem; text-align:justify; font-size:0.95rem; }
+  .paper ol, .paper ul { margin:0.5rem 0 1rem 2rem; font-size:0.95rem; }
+  .paper li { margin-bottom:0.3rem; }
+  .paper .eq { text-align:center; margin:1rem 0; font-family:"Courier New",monospace; font-size:0.95rem; color:#2a1a5e; background:#f0eef5; padding:0.6rem; border-radius:3px; }
+  .paper .fig { text-align:center; margin:1.5rem 0; padding:1rem; background:#f5f3ff; border:1px solid #e0daf0; border-radius:4px; }
+  .paper .fig pre { font-family:"Courier New",monospace; font-size:0.75rem; line-height:1.5; color:#333; }
+  .paper .fig-caption { font-size:0.82rem; color:#666; margin-top:0.5rem; font-style:italic; }
+  .paper .ref { font-size:0.85rem; color:#555; margin-bottom:0.3rem; }
+  .paper code { font-family:"Courier New",monospace; background:#f0eef5; padding:0.1rem 0.3rem; border-radius:2px; font-size:0.88rem; }
+  .paper table { width:100%; border-collapse:collapse; margin:1rem 0; font-size:0.88rem; }
+  .paper th { background:#2a1a5e; color:#fff; padding:0.5rem; text-align:left; }
+  .paper td { padding:0.4rem 0.5rem; border-bottom:1px solid #ddd; }
+  .paper tr:nth-child(even) { background:#f5f3ff; }
+
+  .back-link { display:block; text-align:center; padding:1.5rem; }
+  .back-link a { color:var(--accent2); font-size:1rem; }
+</style>
+</head>
+<body>
+
+<div class="paper">
+
+<h1>Custos et Immunitas:<br>De Systemate Immunitatis Computationali, Detectione Minarum, et Scoring Anomaliarum</h1>
+
+<div class="subtitle">The Guardian and Immunity: On Computational Immune Systems, Threat Detection, and Anomaly Scoring</div>
+
+<div class="authors">Organism AI Research Division</div>
+<div class="affiliation">Laboratorium Intelligentiae Autonomae · itsnotAilabs.com · Anno MMXXVI</div>
+
+<div class="latin-epigraph">
+  "Custos nunquam dormit. Immunitas nunquam cedit.<br>
+  Omnis mina detecta est antequam nocebit."<br>
+  <em>— The guardian never sleeps. Immunity never yields.<br>
+  Every threat is detected before it can harm.</em>
+</div>
+
+<h2>I. Abstractum (Abstract)</h2>
+
+<p>We present the <strong>Guardian Worker</strong>, a computational immune system that operates as a permanent security sentinel within the Organism AI architecture. Modeled after the biological immune system — with innate detection, adaptive learning, and memory of prior threats — the Guardian provides real-time anomaly detection, per-operation rate limiting with φ-weighted severity scoring, blocklist management, honeypot detection for suspicious patterns, and tamper-resistant security event logging. We formalize the theory of <em>Immunitas Computationalis</em>: a security architecture where every operation in the organism passes through an immune checkpoint, threats are scored using golden-ratio weighted severity, and the guardian's MiniBrain learns to recognize attack patterns through Hebbian reinforcement. The system maintains a biological metaphor throughout: antigens (threats) are detected by antibodies (rules), and the immune response adapts over time. Inspired by Meta AI's approach to at-scale threat detection, the Guardian achieves autonomous security without any external security infrastructure.</p>
+
+<h2>II. Introductio (Introduction)</h2>
+
+<p>Traditional security architectures are layered defenses: firewalls at the perimeter, WAFs at the application layer, IDS/IPS inline, and SIEM for aggregation. Each layer is a separate system, maintained by separate teams, with separate failure modes. When a threat bypasses one layer, the next layer must catch it — but each layer is unaware of the others' state.</p>
+
+<p>Biology takes a fundamentally different approach. The immune system is not a series of walls; it is a distributed network of cells that individually detect, classify, and respond to threats. Every cell carries pattern-recognition receptors. Every tissue has resident immune cells. The system learns from prior infections and remembers them permanently.</p>
+
+<p>The Guardian Worker implements this biological model: a single, always-on worker whose MiniBrain learns threat patterns via Hebbian learning, whose MiniHeart monitors its own health, and whose threat memory grows more sophisticated with every anomaly it processes.</p>
+
+<h2>III. Architectura Immunitatis (Immunity Architecture)</h2>
+
+<h3>III.A — Immunitas Innata (Innate Immunity)</h3>
+
+<p>The Guardian's innate immune system consists of hardcoded detection rules that catch well-known attack patterns:</p>
+
+<table>
+  <tr><th>Regula</th><th>Nomen Latinum</th><th>Description</th><th>Severity</th></tr>
+  <tr><td>Rate Overflow</td><td>Inundatio Frequentiae</td><td>Operation exceeds rate limit</td><td>φ<sup>1</sup> = 1.618</td></tr>
+  <tr><td>Blocklist Hit</td><td>Contactus Prohibiti</td><td>Blocked key attempts operation</td><td>φ<sup>2</sup> = 2.618</td></tr>
+  <tr><td>Prototype Pollution</td><td>Contaminatio Prototypi</td><td>Key matches __proto__/constructor/prototype</td><td>φ<sup>3</sup> = 4.236</td></tr>
+  <tr><td>Anomaly Spike</td><td>Cacumen Anomaliae</td><td>Operation frequency deviates &gt; 3σ from baseline</td><td>φ<sup>2</sup> = 2.618</td></tr>
+  <tr><td>Honeypot Trigger</td><td>Vas Mellis</td><td>Access to deliberately planted trap endpoint</td><td>φ<sup>3</sup> = 4.236</td></tr>
+</table>
+
+<h3>III.B — Immunitas Adaptiva (Adaptive Immunity)</h3>
+
+<p>The Guardian's MiniBrain (from neuro-core.js) implements adaptive immunity through Hebbian learning. When a threat is detected:</p>
+
+<ol>
+  <li>The threat type becomes a <strong>stimulus</strong> fed to the MiniBrain</li>
+  <li>The corresponding neural pathway is <strong>strengthened</strong> (weight += 0.1)</li>
+  <li>Unrelated pathways <strong>decay</strong> (weight *= 0.95)</li>
+  <li>Over time, frequently-seen threat types develop strong pathways, enabling faster detection</li>
+</ol>
+
+<div class="eq">
+  ThreatResponse(type, t) = baseSeverity × pathwayWeight(type, t)
+</div>
+
+<p>This means the Guardian's response to repeated threats <em>grows stronger over time</em>, exactly like biological adaptive immunity. A novel threat starts with baseline severity; a familiar threat triggers an amplified response.</p>
+
+<h3>III.C — Memoria Immunitatis (Immune Memory)</h3>
+
+<p>The threat log acts as immune memory — a rolling buffer of up to 5,000 threat events with full metadata (type, severity, source, timestamp, context). This memory serves three purposes:</p>
+
+<ol>
+  <li><strong>Pattern Recognition</strong> — Correlating threats across time to detect slow-moving attacks</li>
+  <li><strong>Baseline Calibration</strong> — Computing normal operation frequencies for anomaly detection</li>
+  <li><strong>Forensic Analysis</strong> — Providing a tamper-evident audit trail of all security events</li>
+</ol>
+
+<h2>IV. Limitatio Frequentiae (Rate Limiting)</h2>
+
+<h3>IV.A — Fenestrae Temporales (Time Windows)</h3>
+
+<p>The Guardian implements sliding-window rate limiting with configurable per-key limits:</p>
+
+<div class="eq">
+  allowed(key, t) = count(events(key) in [t − windowMs, t]) &lt; limit
+</div>
+
+<p>Rate limiters are stored in a protected map (using <code>isSafeKey()</code> to prevent prototype pollution). When a key exceeds its rate limit, the Guardian emits a <code>threat-alert</code> message and optionally auto-blocks the key.</p>
+
+<h3>IV.B — φ-Gradus Severitatis (φ-Severity Grading)</h3>
+
+<p>Threat severity is graded using powers of the golden ratio, creating a natural hierarchy:</p>
+
+<div class="eq">
+  Severity Level 1: φ<sup>0</sup> = 1.000  (informational)<br>
+  Severity Level 2: φ<sup>1</sup> = 1.618  (warning)<br>
+  Severity Level 3: φ<sup>2</sup> = 2.618  (elevated)<br>
+  Severity Level 4: φ<sup>3</sup> = 4.236  (critical)<br>
+  Severity Level 5: φ<sup>4</sup> = 6.854  (emergency)
+</div>
+
+<p>The use of φ-powers ensures that each severity level is approximately 1.618× more severe than the previous — a proportional scaling that matches human perception of risk severity (Weber-Fechner law).</p>
+
+<h2>V. Detectio Anomaliarum (Anomaly Detection)</h2>
+
+<h3>V.A — Basis Normalis (Normal Baseline)</h3>
+
+<p>The Guardian maintains an anomaly baseline — a running mean and standard deviation of operation frequencies per operation type:</p>
+
+<div class="eq">
+  μ(op) = (1/n) × Σ freq(op, window<sub>i</sub>)<br>
+  σ(op) = √((1/n) × Σ (freq(op, window<sub>i</sub>) − μ)²)
+</div>
+
+<h3>V.B — Detectio Statisticalis (Statistical Detection)</h3>
+
+<p>An anomaly is flagged when the current operation frequency deviates more than 3 standard deviations from the baseline:</p>
+
+<div class="eq">
+  isAnomaly(op, t) = |freq(op, t) − μ(op)| &gt; 3σ(op)
+</div>
+
+<p>This implements a Z-score based anomaly detector — simple, well-understood, and effective for the organism's operation patterns.</p>
+
+<h2>VI. Meta AI et Immunitas (Meta AI and Immunity)</h2>
+
+<h3>VI.A — Detectio ad Scalam (Detection at Scale)</h3>
+
+<p>Meta AI's security infrastructure processes billions of operations per second across its global network. The Guardian Worker adapts three key principles from Meta's approach:</p>
+
+<ol>
+  <li><strong>Inline Detection</strong> — Every operation passes through the Guardian before execution, mirroring Meta's inline content safety classifiers that process every piece of content before serving.</li>
+  <li><strong>Adaptive Thresholds</strong> — Rather than static thresholds, the Guardian learns normal patterns and adapts its baselines, similar to how Meta's ML-based threat detection evolves with usage patterns.</li>
+  <li><strong>Real-Time Response</strong> — The Guardian responds within the same heartbeat cycle (873ms), ensuring threats are addressed before they can propagate — matching Meta's sub-second content moderation latency.</li>
+</ol>
+
+<h3>VI.B — MetaThoughtModel in Securitate (MetaThoughtModel in Security)</h3>
+
+<p>The Guardian's internal MetaThoughtModel provides an additional security capability: <em>attention-based threat prioritization</em>. The softmax attention map naturally focuses on the most frequently occurring threat types, while the temperature parameter controls whether the Guardian focuses narrowly on known threats (low temperature) or broadly scans for novel threats (high temperature).</p>
+
+<div class="eq">
+  SecurityFocus = argmax<sub>k</sub>(α<sub>k</sub>) where α = softmax(threatWeights / τ)
+</div>
+
+<h2>VII. Vas Mellis: Detectio Insidiarum (Honeypot Detection)</h2>
+
+<p>The Guardian implements honeypot patterns — deliberately planted "trap" operations that no legitimate request should ever trigger. Access to a honeypot instantly escalates to maximum severity:</p>
+
+<ul>
+  <li>Any operation targeting a non-existent endpoint with a suspicious pattern</li>
+  <li>Any attempt to access internal worker state directly</li>
+  <li>Any message with <code>__proto__</code>, <code>constructor</code>, or <code>prototype</code> in key positions</li>
+</ul>
+
+<p>Honeypot triggers are logged with full context and the source is automatically added to the blocklist. This implements the biological concept of "danger signals" — molecular patterns that are never present in healthy tissue but always indicate pathogen invasion.</p>
+
+<h2>VIII. Conclusio (Conclusion)</h2>
+
+<p>The Guardian Worker demonstrates that computational security can be modeled as a biological immune system. Innate immunity (hardcoded rules) catches known threats immediately. Adaptive immunity (Hebbian learning) strengthens responses to repeated attacks. Immune memory (threat log) provides forensic context and pattern correlation. The φ-severity grading produces natural, proportional threat assessment. And the MetaThoughtModel's attention mechanism enables intelligent threat prioritization. Together, these mechanisms create an always-on, self-improving, fully autonomous security layer that requires no external security infrastructure — the organism protects itself.</p>
+
+<div class="latin-epigraph">
+  "Immunitas non est murus — est vivum.<br>
+  Discit, recordatur, respondet. In perpetuum."<br>
+  <em>— Immunity is not a wall — it is alive.<br>
+  It learns, it remembers, it responds. Forever.</em>
+</div>
+
+<h2>IX. Bibliographia (References)</h2>
+
+<p class="ref">[1] Organism AI. (2026). "guardian-worker.js — Security Guardian Worker." <em>GitHub: FreddyCreates/potential-succotash</em>.</p>
+<p class="ref">[2] Organism AI. (2026). "neuro-core.js — MiniHeart, MiniBrain, NeuroEmergence." <em>GitHub: FreddyCreates/potential-succotash</em>.</p>
+<p class="ref">[3] Forrest, S. et al. (1994). "Self-Nonself Discrimination in a Computer." <em>IEEE Symposium on Security and Privacy</em>. — Computational immune systems.</p>
+<p class="ref">[4] Dasgupta, D. (1999). <em>Artificial Immune Systems and Their Applications</em>. Springer. — AIS foundations.</p>
+<p class="ref">[5] Matzinger, P. (2002). "The Danger Model: A Renewed Sense of Self." <em>Science</em>, 296(5566), 301–305. — Danger signal theory in immunology.</p>
+<p class="ref">[6] Meta Platforms. (2023). "Fighting Abuse at Scale with Machine Learning." <em>Meta AI Blog</em>. — Meta's approach to threat detection at scale.</p>
+<p class="ref">[7] Weber, E. H. (1834). <em>De Pulsu, Resorptione, Auditu et Tactu</em>. — Weber-Fechner law of proportional perception.</p>
+<p class="ref">[8] Anderson, R. (2020). <em>Security Engineering</em>, 3rd ed. Wiley. — Rate limiting and anomaly detection patterns.</p>
+
+<h2>Appendix A — Nomina Latina (Latin Naming Register)</h2>
+
+<table>
+  <tr><th>Component</th><th>Nomen Latinum</th><th>Translation</th></tr>
+  <tr><td>Guardian Worker</td><td>Custos Operarius</td><td>Guardian Worker</td></tr>
+  <tr><td>Immune System</td><td>Systema Immunitatis</td><td>System of Immunity</td></tr>
+  <tr><td>Innate Immunity</td><td>Immunitas Innata</td><td>Born Immunity</td></tr>
+  <tr><td>Adaptive Immunity</td><td>Immunitas Adaptiva</td><td>Adapting Immunity</td></tr>
+  <tr><td>Threat Detection</td><td>Detectio Minarum</td><td>Detection of Threats</td></tr>
+  <tr><td>Anomaly Scoring</td><td>Scoring Anomaliarum</td><td>Scoring of Anomalies</td></tr>
+  <tr><td>Rate Limiting</td><td>Limitatio Frequentiae</td><td>Limitation of Frequency</td></tr>
+  <tr><td>Blocklist</td><td>Index Prohibitorum</td><td>Index of the Forbidden</td></tr>
+  <tr><td>Honeypot</td><td>Vas Mellis</td><td>Vessel of Honey</td></tr>
+  <tr><td>Threat Log</td><td>Acta Minarum</td><td>Records of Threats</td></tr>
+  <tr><td>φ-Severity</td><td>φ-Gravitas</td><td>Golden Severity</td></tr>
+  <tr><td>Danger Signal</td><td>Signum Periculi</td><td>Sign of Danger</td></tr>
+</table>
+
+</div>
+
+
+
+<div style="max-width:900px;margin:2rem auto;padding:0 2rem;">
+<style>
+.auro-uses { background:#f0eef8; border:1px solid #d0ccee; border-left:4px solid #6c63ff; border-radius:4px; padding:1.5rem 2rem; margin:1.5rem 0; font-family:'Palatino Linotype','Book Antiqua',Palatino,serif; color:#14142a; line-height:1.7; }
+.auro-uses h2 { font-size:1.1rem; color:#1a0e5e; margin-bottom:0.8rem; text-transform:uppercase; letter-spacing:0.05em; }
+.auro-uses ul { margin:0.5rem 0 1rem 1.5rem; }
+.auro-uses li { margin-bottom:0.5rem; font-size:0.93rem; }
+.auro-uses p { font-size:0.9rem; margin-bottom:0.5rem; }
+.auro-uses a { color:#00705a; }
+</style>
+<div class="auro-uses">
+<h2>Canonical Uses — AURO System</h2>
+<p>This paper carries force as an AURO charter instrument under <strong>ORO-CHARTER-001</strong>. It functions across all five use classes:</p>
+<ul>
+  <li><strong>Training Corpus:</strong> Guardian immunity doctrine trains AURO's threat-detection reasoning — teaching the system to recognize, classify, and respond to adversarial patterns.</li>
+  <li><strong>Absorption Blueprint:</strong> Computational immune system maps to AURO's security PSE primitive (social-INFP domain for behavioral threat modeling). Absorbed into Guardian Worker.</li>
+  <li><strong>Governance Charter:</strong> Defines AURO's security governance: every operation passes through an immune checkpoint. Threat scoring uses φ-severity tiers (φ¹ through φ⁵).</li>
+  <li><strong>Protocol Source:</strong> Grounds PROTO-181 AGIP (AURO Guardian Intelligence Protocol) — extends this paper's Hebbian threat learning with AURO identity fingerprinting.</li>
+  <li><strong>Public Record:</strong> Permanent evidence of AURO's immune system architecture, available at <a href="guardian-paper.html">research/guardian-paper.html</a>.</li>
+</ul>
+<p>→ <a href="auro-charter.html">AURO Official Charter (ORO-CHARTER-001)</a> &nbsp;·&nbsp; <a href="protocol-papers.html">PROTO-181 AGIP</a> &nbsp;·&nbsp; <a href="autonomy-paper.html">Autonomy Paper</a> &nbsp;·&nbsp; <a href="neuro-paper.html">NeuroCore Paper</a></p>
+</div>
+</div>
+<div class="back-link">
+  <a href="../index.html">← Back to Organism AI</a>
+</div>
+
+</body>
+</html>

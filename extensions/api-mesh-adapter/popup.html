@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>API Mesh Adapter</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{width:380px;background:#1a1a2e;color:#c8c8e0;font-family:'Segoe UI',system-ui,sans-serif;font-size:13px}
+  .popup{display:flex;flex-direction:column;padding:16px;gap:12px}
+  .hdr{display:flex;align-items:center;gap:10px}
+  .phi{font-size:22px;color:#10b981;font-weight:700}
+  .hdr h1{font-size:16px;font-weight:600;color:#e0e0ff;flex:1}
+  .status{display:flex;align-items:center;gap:6px;font-size:11px;color:#888}
+  .status-dot{width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 4px #22c55e80}
+  .stats-row{display:flex;gap:6px}
+  .stat{flex:1;background:#061a10;border:1px solid #10b98133;border-radius:6px;padding:8px;text-align:center}
+  .stat .v{font-size:18px;font-weight:700;color:#10b981;font-family:'Courier New',monospace}
+  .stat .l{font-size:10px;color:#555;margin-top:2px}
+  .response-area{background:#0e0e22;border:1px solid #0a2010;border-radius:6px;padding:10px;min-height:60px;max-height:120px;overflow-y:auto;font-family:'Courier New',monospace;font-size:11px;color:#a0d0a0;line-height:1.5}
+  .btn-row{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  .btn{background:#0e0e22;color:#c8c8e0;border:1px solid #0a2010;border-radius:6px;padding:10px;font-size:12px;cursor:pointer;font-weight:500;transition:all .15s;text-align:center}
+  .btn:hover{border-color:#10b981;color:#10b981;background:#10b98111}
+  .side-panel-btn{width:100%;background:#10b98122;color:#10b981;border:1px solid #10b98144;border-radius:6px;padding:8px;font-weight:600;cursor:pointer;font-size:12px;transition:all .15s}
+  .side-panel-btn:hover{background:#10b98144}
+  .footer{display:flex;justify-content:space-between;align-items:center;font-size:10px;color:#555;padding-top:4px;border-top:1px solid #0a2010}
+</style>
+</head>
+<body>
+<div class="popup">
+  <div class="hdr">
+    <span class="phi">φ</span>
+    <h1>API Mesh Adapter</h1>
+    <div class="status"><span class="status-dot" id="statusDot"></span><span id="statusText">Connecting…</span></div>
+  </div>
+  <div class="stats-row">
+    <div class="stat"><div class="v" id="sI">0</div><div class="l">Intercepted</div></div>
+    <div class="stat"><div class="v" id="sS">0</div><div class="l">Schemas</div></div>
+    <div class="stat"><div class="v" id="sM">0</div><div class="l">Routed</div></div>
+  </div>
+  <div class="response-area" id="responseArea">Browse any page — API responses auto-intercepted and routed through the mesh.</div>
+  <div class="btn-row">
+    <button class="btn" id="logBtn">📋 Intercept Log</button>
+    <button class="btn" id="schemaBtn">🗂️ Schema Map</button>
+    <button class="btn" id="stateBtn">⚙️ State</button>
+    <button class="btn" id="clearBtn">🗑️ Clear</button>
+  </div>
+  <button class="side-panel-btn" id="sidePanelBtn">Open Side Panel</button>
+  <div class="footer">
+    <span>v1.0.0 — API Mesh Adapter EXT-038</span>
+    <span id="hbFooter">HB: 0</span>
+  </div>
+</div>
+<script>
+(function(){
+  const responseArea=document.getElementById('responseArea');
+  const logBtn=document.getElementById('logBtn');
+  const schemaBtn=document.getElementById('schemaBtn');
+  const stateBtn=document.getElementById('stateBtn');
+  const statusDot=document.getElementById('statusDot');
+  const statusText=document.getElementById('statusText');
+  const hbFooter=document.getElementById('hbFooter');
+  const sI=document.getElementById('sI'),sS=document.getElementById('sS'),sM=document.getElementById('sM');
+  let hb=0;
+
+  function show(data){responseArea.textContent=typeof data==='string'?data:JSON.stringify(data,null,2);}
+
+  logBtn.addEventListener('click',function(){
+    chrome.runtime.sendMessage({action:'getLog',n:20},function(r){
+      if(chrome.runtime.lastError){show('Error: '+chrome.runtime.lastError.message);return;}
+      show(r);
+    });
+  });
+
+  schemaBtn.addEventListener('click',function(){
+    chrome.runtime.sendMessage({action:'getSchemaRegistry'},function(r){
+      if(chrome.runtime.lastError){show('Error: '+chrome.runtime.lastError.message);return;}
+      show(r);
+    });
+  });
+
+  stateBtn.addEventListener('click',function(){
+    chrome.runtime.sendMessage({action:'getState'},function(r){
+      if(chrome.runtime.lastError){show('Error: '+chrome.runtime.lastError.message);return;}
+      show(r);
+    });
+  });
+
+  document.getElementById('sidePanelBtn').addEventListener('click',function(){try{chrome.runtime.sendMessage({action:'getState'},function(){});}catch(e){}});
+  document.getElementById('clearBtn').addEventListener('click',function(){responseArea.textContent='Cleared.';});
+
+  function hbeat(){
+    try{chrome.runtime.sendMessage({action:'getState'},function(r){
+      hb++;hbFooter.textContent='HB: '+hb;statusDot.style.background='#22c55e';
+      if(r){sI.textContent=r.interceptCount||0;sS.textContent=r.registeredSchemas||0;sM.textContent=r.meshRoutes||0;statusText.textContent='Active';}
+    });}catch(e){statusDot.style.background='#f87171';statusText.textContent='Offline';}
+  }
+  hbeat();setInterval(hbeat,3000);
+})();
+</script>
+</body>
+</html>

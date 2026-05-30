@@ -1,0 +1,19 @@
+{
+  "id": "atlas://bot/organism-economy-bot",
+  "name": "organism-economy-bot",
+  "class": "Bot",
+  "division": "Learn & Evolve",
+  "divisionNum": "VI",
+  "emoji": "💰",
+  "domain": "Marketplace analytics & SDK economy",
+  "triggers": ["schedule:weekly", "push:sdk/"],
+  "capabilities": ["marketplace_analytics", "sdk_tracking", "ext_tracking", "economy_report"],
+  "languages": ["atlas://language/ril"],
+  "governance_pipeline": "pipeline://governance/bot_cycle",
+  "ocl_ref": "atlas://organism/bot-fleet",
+  "protocol_refs": ["PROTO-011:OrganismMarketplaceProtocol"],
+  "script": "scripts/economy-tracker.js",
+  "workflow": ".github/workflows/organism-economy-bot.yml",
+  "report": "docs/economy-dashboard.md",
+  "microbots": []
+}

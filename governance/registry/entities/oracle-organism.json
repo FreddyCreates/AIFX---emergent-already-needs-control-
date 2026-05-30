@@ -1,0 +1,13 @@
+{
+  "id": "atlas://organism/oracle",
+  "name": "oracle",
+  "class": "Organism",
+  "division": "Sovereign Intelligence",
+  "emoji": "🔮",
+  "domain": "Narrative intelligence — turns proposals + state into human-readable judgments",
+  "events": ["narrative_emitted", "judgment_delivered", "proposal_processed"],
+  "capabilities": ["narrate", "judge", "summarize", "advise"],
+  "governance_pipeline": "pipeline://governance/topology_cycle",
+  "ocl_ref": "atlas://organism/bot-fleet",
+  "consumes": ["meta-proposals", "ril-incidents", "law-decisions"]
+}

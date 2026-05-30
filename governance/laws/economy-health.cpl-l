@@ -1,0 +1,47 @@
+# ════════════════════════════════════════════════════════════════════════════
+# CPL-L — Economy Health Laws
+# id: governance://law/economy-health
+# version: 1.0.0
+#
+# Safety laws for economy domain (organism-economy-bot + marketplace entities).
+# Applied by the economy_cycle pipeline.
+# ════════════════════════════════════════════════════════════════════════════
+
+id: "governance://law/economy-health"
+version: "1.0.0"
+updated: "2026-05-03"
+ocl_ref: "atlas://organism/bot-fleet"
+
+subjects:
+
+  - id: "atlas://bot/organism-economy-bot"
+    rules:
+      - name: "ALERT_MARKETPLACE_DECLINE"
+        description: "Alert when marketplace SDK installs drop >20%"
+        when: 'context.install_delta < -0.20'
+        then:
+          - action: "NOTIFY"
+            target: "fleet_commander"
+            reason: "Marketplace SDK install rate dropped >20% week-over-week"
+          - action: "REQUIRE"
+            target: "economy_investigation"
+            reason: "Root cause analysis required before next release"
+
+      - name: "BLOCK_PRICE_CHANGE_ON_RED"
+        description: "Block marketplace pricing changes when economy health is red"
+        when: 'context.economy_health === "red"'
+        then:
+          - action: "FORBID"
+            target: "price_update"
+            reason: "Economy health is red — pricing changes blocked"
+          - action: "REQUIRE"
+            target: "human_review"
+            arg: "economy_team"
+
+      - name: "ESCALATE_REVENUE_ANOMALY"
+        description: "Escalate if revenue swings by more than 50% in a cycle"
+        when: 'Math.abs(context.revenue_delta) > 0.5'
+        then:
+          - action: "ESCALATE"
+            target: "human://operator"
+            reason: "Economy revenue anomaly (>50% swing) — requires immediate review"

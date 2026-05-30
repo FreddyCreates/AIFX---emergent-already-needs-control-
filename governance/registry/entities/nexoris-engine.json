@@ -1,0 +1,13 @@
+{
+  "id": "atlas://engine/nexoris",
+  "name": "nexoris",
+  "class": "Engine",
+  "division": "Infrastructure",
+  "emoji": "🔗",
+  "domain": "Connection fabric — cross-agent linking, synapse binding",
+  "events": ["synapse_bound", "link_established", "connection_broken"],
+  "capabilities": ["bind", "link", "route", "mesh"],
+  "governance_pipeline": "pipeline://governance/default_cycle",
+  "ocl_ref": "atlas://organism/bot-fleet",
+  "script": "sdk/engines/nexoris-engine.js"
+}

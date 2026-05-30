@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vigil AI v14</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --bg0:#04040e;
+    --bg1:#080818;
+    --bg2:#0d0d28;
+    --bg3:#121238;
+    --bg4:#181848;
+    --accent:#7c6eff;
+    --accent2:#5a4fcc;
+    --accent-glow:rgba(124,110,255,0.25);
+    --cyan:#00e5cc;
+    --cyan-glow:rgba(0,229,204,0.2);
+    --gold:#ffd93d;
+    --danger:#ff4060;
+    --success:#00e5cc;
+    --text1:#f0f0ff;
+    --text2:#a0a0c8;
+    --text3:#606088;
+    --border:#1c1c44;
+    --border2:#242460;
+    --card:#0f0f2a;
+  }
+  body{
+    background:var(--bg1);color:var(--text1);
+    font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+    font-size:13px;line-height:1.5;
+    width:100%;height:100vh;
+    display:flex;flex-direction:column;overflow:hidden;
+  }
+
+  /* Header */
+  .hdr{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:10px 14px;
+    background:linear-gradient(135deg,#1a0a3a 0%,#0d0a28 100%);
+    border-bottom:1px solid var(--border2);
+    flex-shrink:0;position:relative;overflow:hidden;
+  }
+  .hdr::before{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(90deg,transparent,rgba(124,110,255,0.08),transparent);
+    animation:scanline 3s linear infinite;
+  }
+  @keyframes scanline{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+  .hdr-left{display:flex;align-items:center;gap:10px;position:relative;z-index:1}
+  .arc-reactor{
+    width:32px;height:32px;border-radius:50%;
+    background:radial-gradient(circle,#00e5cc 0%,#0066ff 40%,#1a0a3a 70%);
+    box-shadow:0 0 12px #00e5cc,0 0 24px rgba(0,229,204,0.4);
+    animation:reactor 2s ease-in-out infinite alternate;
+    flex-shrink:0;position:relative;
+  }
+  .arc-reactor::after{
+    content:'';position:absolute;inset:4px;border-radius:50%;
+    border:1px solid rgba(0,229,204,0.6);
+    animation:reactor-ring 1s linear infinite;
+  }
+  @keyframes reactor{
+    0%{box-shadow:0 0 8px #00e5cc,0 0 16px rgba(0,229,204,0.3)}
+    100%{box-shadow:0 0 16px #00e5cc,0 0 32px rgba(0,229,204,0.6),0 0 48px rgba(0,102,255,0.2)}
+  }
+  @keyframes reactor-ring{0%{opacity:1}50%{opacity:0.4}100%{opacity:1}}
+  .logo-text{font-size:17px;font-weight:900;letter-spacing:3px;color:#fff;text-shadow:0 0 10px rgba(124,110,255,0.8)}
+  .logo-ver{font-size:9px;color:var(--cyan);letter-spacing:1px;margin-top:-2px}
+  .online-dot{
+    width:7px;height:7px;border-radius:50%;
+    background:var(--cyan);box-shadow:0 0 6px var(--cyan);
+    animation:blink 2s infinite;
+  }
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:0.4}}
+  .hdr-right{display:flex;align-items:center;gap:6px;position:relative;z-index:1}
+  .hbtn{
+    background:rgba(255,255,255,0.07);border:1px solid var(--border2);
+    color:var(--text2);font-size:13px;cursor:pointer;
+    padding:3px 8px;border-radius:5px;transition:all 0.2s;
+  }
+  .hbtn:hover{background:rgba(124,110,255,0.2);border-color:var(--accent);color:#fff}
+
+  /* Nav tabs */
+  .nav{
+    display:flex;background:var(--bg0);border-bottom:1px solid var(--border);
+    flex-shrink:0;overflow-x:auto;scrollbar-width:none;
+  }
+  .nav::-webkit-scrollbar{display:none}
+  .tab{
+    flex:1;min-width:52px;padding:8px 4px;text-align:center;cursor:pointer;
+    font-size:10px;font-weight:700;color:var(--text3);
+    border-bottom:2px solid transparent;transition:all 0.2s;white-space:nowrap;
+  }
+  .tab:hover{color:var(--text2);background:rgba(124,110,255,0.06)}
+  .tab.active{color:var(--accent);border-bottom-color:var(--accent);background:rgba(124,110,255,0.08)}
+  .tab-icon{display:block;font-size:14px;margin-bottom:1px}
+
+  /* Panel container */
+  .main{flex:1;overflow:hidden;display:flex;flex-direction:column}
+  .panel{display:none;flex-direction:column;flex:1;overflow:hidden}
+  .panel.active{display:flex}
+
+  /* Scroll area */
+  .scroll{flex:1;overflow-y:auto;padding:12px}
+  .scroll::-webkit-scrollbar{width:4px}
+  .scroll::-webkit-scrollbar-track{background:transparent}
+  .scroll::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+  .scroll::-webkit-scrollbar-thumb:hover{background:var(--accent)}
+
+  /* Chat */
+  .chat-msgs{
+    flex:1;overflow-y:auto;padding:12px;
+    display:flex;flex-direction:column;gap:10px;
+  }
+  .chat-msgs::-webkit-scrollbar{width:4px}
+  .chat-msgs::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+  .msg{
+    max-width:90%;padding:10px 14px;border-radius:14px;
+    font-size:13px;line-height:1.55;word-break:break-word;
+    animation:msgIn 0.25s ease;
+  }
+  @keyframes msgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  .msg.user{
+    align-self:flex-end;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    color:#fff;border-bottom-right-radius:4px;
+    box-shadow:0 4px 12px rgba(124,110,255,0.3);
+  }
+  .msg.bot{
+    align-self:flex-start;background:var(--bg3);
+    border:1px solid var(--border2);border-bottom-left-radius:4px;
+  }
+  .msg.bot::before{
+    content:attr(data-agent);display:block;
+    font-size:9px;font-weight:800;color:var(--cyan);
+    letter-spacing:1px;margin-bottom:4px;text-transform:uppercase;
+  }
+  .msg-time{display:block;font-size:10px;color:var(--text3);margin-top:4px;text-align:right}
+  .msg.bot .msg-time{text-align:left}
+  .typing{
+    display:flex;align-items:center;gap:4px;padding:10px 14px;
+    background:var(--bg3);border:1px solid var(--border2);
+    border-radius:14px;border-bottom-left-radius:4px;align-self:flex-start;
+  }
+  .typing span{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:typ 1.2s infinite}
+  .typing span:nth-child(2){animation-delay:0.2s}
+  .typing span:nth-child(3){animation-delay:0.4s}
+  @keyframes typ{0%,80%,100%{opacity:0.2;transform:scale(0.7)}40%{opacity:1;transform:scale(1)}}
+
+  /* Quick actions */
+  .quick{
+    display:flex;gap:5px;padding:8px 12px;flex-wrap:wrap;
+    border-top:1px solid var(--border);background:var(--bg0);flex-shrink:0;
+  }
+  .qbtn{
+    padding:5px 10px;border:1px solid var(--border2);border-radius:20px;
+    background:var(--bg2);color:var(--text2);font-size:10px;font-weight:700;
+    cursor:pointer;letter-spacing:0.3px;transition:all 0.2s;
+  }
+  .qbtn:hover{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 0 8px var(--accent-glow)}
+
+  /* Chat input */
+  .cinput-wrap{
+    display:flex;gap:8px;padding:10px 12px;
+    border-top:1px solid var(--border);background:var(--bg0);flex-shrink:0;
+  }
+  .cinput{
+    flex:1;padding:9px 13px;border:1px solid var(--border2);border-radius:22px;
+    background:var(--bg2);color:var(--text1);font-size:13px;outline:none;
+    transition:border-color 0.2s,box-shadow 0.2s;
+  }
+  .cinput:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
+  .cinput::placeholder{color:var(--text3)}
+  .sbtn{
+    padding:9px 18px;border:none;border-radius:22px;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    color:#fff;font-size:13px;font-weight:700;cursor:pointer;transition:all 0.2s;
+    box-shadow:0 4px 12px rgba(124,110,255,0.3);
+  }
+  .sbtn:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(124,110,255,0.5)}
+
+  /* Search panel */
+  .search-bar-wrap{
+    padding:12px;border-bottom:1px solid var(--border);
+    background:var(--bg0);flex-shrink:0;
+  }
+  .search-bar{display:flex;gap:8px}
+  .sinput{
+    flex:1;padding:10px 14px;border:1px solid var(--border2);border-radius:22px;
+    background:var(--bg2);color:var(--text1);font-size:13px;outline:none;
+    transition:border-color 0.2s,box-shadow 0.2s;
+  }
+  .sinput:focus{border-color:var(--cyan);box-shadow:0 0 0 3px var(--cyan-glow)}
+  .sinput::placeholder{color:var(--text3)}
+  .search-go{
+    padding:10px 16px;border:none;border-radius:22px;
+    background:linear-gradient(135deg,var(--cyan),#00a896);
+    color:#000;font-size:13px;font-weight:800;cursor:pointer;transition:all 0.2s;
+  }
+  .search-go:hover{transform:translateY(-1px);box-shadow:0 6px 16px var(--cyan-glow)}
+  .search-note{font-size:10px;color:var(--text3);margin-top:6px;text-align:center}
+  .search-note a{color:var(--cyan);text-decoration:none}
+  .search-note a:hover{text-decoration:underline}
+  .result-card{
+    background:var(--card);border:1px solid var(--border2);
+    border-radius:10px;padding:12px 14px;margin-bottom:8px;transition:all 0.2s;
+  }
+  .result-card:hover{border-color:var(--accent);background:var(--bg3)}
+  .result-type{
+    font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+    margin-bottom:4px;padding:2px 6px;border-radius:3px;display:inline-block;
+  }
+  .result-type.answer{background:rgba(0,229,204,0.15);color:var(--cyan)}
+  .result-type.abstract{background:rgba(124,110,255,0.15);color:var(--accent)}
+  .result-type.result{background:rgba(255,217,61,0.15);color:var(--gold)}
+  .result-type.related{background:rgba(255,255,255,0.07);color:var(--text2)}
+  .result-title{font-size:13px;font-weight:700;color:var(--text1);margin-bottom:4px;line-height:1.4}
+  .result-text{font-size:11px;color:var(--text2);line-height:1.5;margin-bottom:6px}
+  .result-url{font-size:10px;color:var(--accent);text-decoration:none;word-break:break-all;display:block}
+  .result-url:hover{text-decoration:underline}
+  .search-empty{padding:30px 20px;text-align:center;color:var(--text3)}
+  .search-empty .sei{font-size:40px;margin-bottom:12px}
+  .search-empty p{font-size:12px;line-height:1.6}
+  .search-loading{display:flex;align-items:center;gap:8px;padding:20px;justify-content:center;color:var(--text3)}
+  .spinner{
+    width:20px;height:20px;border-radius:50%;
+    border:2px solid var(--border2);border-top-color:var(--cyan);
+    animation:spin 0.8s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* Screen panel */
+  .screen-btns{
+    display:flex;gap:8px;padding:12px;
+    border-bottom:1px solid var(--border);background:var(--bg0);flex-shrink:0;
+  }
+  .screen-btn{
+    flex:1;padding:10px;border:1px solid var(--border2);border-radius:8px;
+    background:var(--bg2);color:var(--text1);font-size:11px;font-weight:700;
+    cursor:pointer;transition:all 0.2s;text-align:center;
+  }
+  .screen-btn:hover{border-color:var(--cyan);background:rgba(0,229,204,0.1);color:var(--cyan)}
+  .screen-preview{flex:1;overflow-y:auto;padding:12px}
+  .screen-preview::-webkit-scrollbar{width:4px}
+  .screen-preview::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+  .capture-img{width:100%;border-radius:8px;border:1px solid var(--border2);margin-bottom:10px;display:block}
+  .capture-meta{
+    background:var(--card);border:1px solid var(--border2);border-radius:8px;
+    padding:10px 12px;font-size:11px;color:var(--text2);margin-bottom:8px;
+  }
+  .capture-meta strong{color:var(--text1);display:block;margin-bottom:2px}
+  .page-text-block{
+    background:var(--card);border:1px solid var(--border2);border-radius:8px;
+    padding:12px;font-size:11px;color:var(--text2);line-height:1.6;
+    white-space:pre-wrap;word-break:break-word;max-height:300px;overflow-y:auto;
+  }
+
+  /* Panel header */
+  .panel-hdr{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:10px 14px;border-bottom:1px solid var(--border);
+    background:var(--bg0);flex-shrink:0;
+    font-size:11px;font-weight:700;color:var(--text2);letter-spacing:0.5px;text-transform:uppercase;
+  }
+  .ref-btn{
+    background:none;border:none;color:var(--text3);cursor:pointer;
+    font-size:13px;padding:2px 6px;border-radius:4px;transition:all 0.2s;
+  }
+  .ref-btn:hover{color:var(--cyan);background:rgba(0,229,204,0.1)}
+
+  /* List items */
+  .list-item{
+    display:flex;align-items:center;gap:10px;padding:10px 12px;
+    background:var(--card);border:1px solid var(--border);border-radius:10px;
+    margin-bottom:6px;cursor:pointer;transition:all 0.2s;
+  }
+  .list-item:hover{border-color:var(--accent);background:var(--bg3)}
+  .list-item.active-tab{border-color:var(--cyan)}
+  .item-icon{
+    width:30px;height:30px;border-radius:6px;background:var(--bg2);
+    border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;
+    font-size:12px;font-weight:800;color:var(--accent);flex-shrink:0;
+  }
+  .item-info{flex:1;min-width:0}
+  .item-title{font-size:12px;font-weight:600;color:var(--text1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .item-sub{font-size:10px;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:1px}
+  .item-action{
+    background:none;border:none;color:var(--text3);cursor:pointer;
+    font-size:13px;padding:4px 6px;border-radius:4px;transition:all 0.2s;flex-shrink:0;
+  }
+  .item-action:hover{color:var(--danger);background:rgba(255,64,96,0.1)}
+
+  /* Note cards */
+  .note-card{
+    background:var(--card);border:1px solid var(--border);border-radius:10px;
+    padding:12px 14px;margin-bottom:8px;border-left:3px solid var(--accent);transition:all 0.2s;
+  }
+  .note-card:hover{border-color:var(--accent)}
+  .note-content{font-size:12px;color:var(--text1);line-height:1.6;margin-bottom:8px;word-break:break-word}
+  .note-footer{display:flex;align-items:center;justify-content:space-between}
+  .note-meta{font-size:10px;color:var(--text3)}
+  .del-btn{
+    background:none;border:none;color:var(--text3);cursor:pointer;
+    font-size:11px;padding:2px 6px;border-radius:4px;transition:all 0.2s;
+  }
+  .del-btn:hover{color:var(--danger);background:rgba(255,64,96,0.1)}
+
+  /* Doc items */
+  .doc-item{
+    display:flex;align-items:center;gap:10px;padding:10px 12px;
+    background:var(--card);border:1px solid var(--border);border-radius:10px;
+    margin-bottom:6px;cursor:pointer;transition:all 0.2s;
+  }
+  .doc-item:hover{border-color:var(--accent);background:var(--bg3)}
+
+  /* Log */
+  .log-entry{
+    display:flex;align-items:center;gap:8px;padding:7px 10px;
+    border-radius:7px;border:1px solid var(--border);background:var(--card);
+    margin-bottom:5px;font-size:11px;
+  }
+  .log-time{color:var(--text3);font-size:10px;flex-shrink:0;font-variant-numeric:tabular-nums}
+  .log-intent{padding:2px 6px;border-radius:4px;font-size:9px;font-weight:800;background:var(--bg3);color:var(--accent);flex-shrink:0}
+  .log-raw{color:var(--text2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .log-ok{color:var(--success);flex-shrink:0}
+
+  /* Status bar */
+  .sbar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:5px 14px;background:var(--bg0);border-top:1px solid var(--border);
+    flex-shrink:0;font-size:10px;color:var(--text3);
+  }
+  .sbar-item{display:flex;align-items:center;gap:4px}
+  .sv{color:var(--cyan);font-weight:700;font-variant-numeric:tabular-nums}
+
+  /* Empty state */
+  .update-banner{display:none;background:linear-gradient(90deg,#00b4d8,#0077b6);color:#fff;font-size:11px;padding:5px 12px;align-items:center;justify-content:space-between;gap:8px;font-weight:600;letter-spacing:0.5px}
+  .update-install-btn{background:rgba(255,255,255,0.25);border:1px solid rgba(255,255,255,0.5);color:#fff;border-radius:4px;padding:2px 8px;font-size:10px;font-weight:700;cursor:pointer;white-space:nowrap}
+  .update-install-btn:hover{background:rgba(255,255,255,0.45)}
+  .neuro-chip{font-size:9px;color:var(--cyan);margin-top:1px;opacity:0.8}
+
+  /* Persistent download strip */
+  .dl-strip{display:flex;align-items:center;gap:6px;padding:5px 10px;background:rgba(0,0,0,0.35);border-bottom:1px solid rgba(124,110,255,0.3);flex-wrap:nowrap}
+  .dl-strip-label{font-size:10px;color:var(--text3);white-space:nowrap;font-weight:600}
+  .dl-strip-btn{background:rgba(124,110,255,0.22);border:1px solid var(--accent);color:var(--accent);border-radius:5px;padding:3px 10px;font-size:10px;font-weight:700;cursor:pointer;white-space:nowrap;transition:background 0.15s}
+  .dl-strip-btn:hover{background:rgba(124,110,255,0.5)}
+  .dl-strip-hint{font-size:9px;color:var(--text3);margin-left:2px;white-space:nowrap}
+
+  /* Download bar */
+  .download-bar{display:flex;align-items:center;gap:6px;padding:6px 8px;background:rgba(124,110,255,0.06);border-top:1px solid var(--border);flex-wrap:wrap}
+  .dl-label{font-size:10px;color:var(--text3);white-space:nowrap}
+  .dl-btn{background:rgba(124,110,255,0.18);border:1px solid rgba(124,110,255,0.35);color:var(--accent);border-radius:6px;padding:4px 10px;font-size:10px;font-weight:600;cursor:pointer}
+  .dl-btn:hover{background:rgba(124,110,255,0.35)}
+
+  /* Tools panel */
+  .tools-grid{padding:8px 8px 0;display:flex;flex-direction:column;gap:4px}
+  .tool-section-label{font-size:9px;color:var(--text3);font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 0 2px 2px}
+  .tool-btn{display:flex;flex-direction:column;align-items:flex-start;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--text1);cursor:pointer;text-align:left;transition:background 0.15s}
+  .tool-btn:hover{background:rgba(124,110,255,0.15);border-color:var(--accent)}
+  .tool-desc{font-size:10px;color:var(--text3);margin-top:2px;font-weight:400}
+
+  /* Quick notepad */
+  .tool-notepad{padding:8px;margin-top:6px;border-top:1px solid var(--border)}
+  .notepad-label{font-size:10px;color:var(--text3);font-weight:700;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.5px}
+  .notepad-ta{width:100%;box-sizing:border-box;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;color:var(--text1);font-size:12px;padding:8px;resize:vertical;min-height:80px;font-family:inherit}
+  .notepad-ta:focus{outline:none;border-color:var(--accent)}
+  .notepad-actions{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
+  .notepad-btn{background:rgba(124,110,255,0.18);border:1px solid rgba(124,110,255,0.3);color:var(--accent);border-radius:6px;padding:4px 8px;font-size:10px;font-weight:600;cursor:pointer}
+  .notepad-btn:hover{background:rgba(124,110,255,0.35)}
+
+  /* Mic button */
+  .mic-btn{background:none;border:1px solid var(--border);border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;transition:all 0.2s;flex-shrink:0;color:var(--text2)}
+  .mic-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .mic-btn.listening{border-color:#ff4060;color:#ff4060;animation:micpulse 0.8s ease-in-out infinite}
+  @keyframes micpulse{0%,100%{box-shadow:0 0 0 0 rgba(255,64,96,0.5)}50%{box-shadow:0 0 0 6px rgba(255,64,96,0)}}
+
+  /* Workspace panel */
+  .ws-toolbar{display:flex;gap:6px;padding:8px;border-bottom:1px solid var(--border);flex-wrap:wrap;align-items:center}
+  .ws-tool{background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text2);border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer;transition:background 0.15s}
+  .ws-tool:hover,.ws-tool.active{background:rgba(124,110,255,0.2);border-color:var(--accent);color:var(--accent)}
+  .ws-area{flex:1;display:flex;flex-direction:column;overflow:hidden}
+  .ws-canvas{flex:1;width:100%;box-sizing:border-box;background:rgba(255,255,255,0.03);border:none;border-radius:0;color:var(--text1);font-size:12px;padding:12px;resize:none;font-family:'Courier New',monospace;line-height:1.7;outline:none}
+  .ws-canvas:focus{outline:none}
+  .ws-actions{display:flex;gap:6px;padding:8px;border-top:1px solid var(--border);flex-wrap:wrap}
+  .ws-action-btn{background:rgba(124,110,255,0.15);border:1px solid rgba(124,110,255,0.3);color:var(--accent);border-radius:6px;padding:5px 12px;font-size:11px;font-weight:600;cursor:pointer}
+  .ws-action-btn:hover{background:rgba(124,110,255,0.35)}
+  .ws-label{font-size:9px;color:var(--text3);font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:6px 12px 2px}
+
+  /* Install panel */
+  .install-step{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border)}
+  .install-num{min-width:26px;height:26px;border-radius:50%;background:rgba(124,110,255,0.25);border:1px solid var(--accent);color:var(--accent);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .install-body{flex:1}
+  .install-title{font-size:12px;font-weight:700;color:var(--text1);margin-bottom:3px}
+  .install-desc{font-size:11px;color:var(--text3);line-height:1.5}
+  .install-dl-btn{margin-top:7px;background:rgba(124,110,255,0.2);border:1px solid var(--accent);color:var(--accent);border-radius:7px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;display:inline-block}
+  .install-dl-btn:hover{background:rgba(124,110,255,0.4)}
+  .install-divider{text-align:center;color:var(--text3);font-size:10px;padding:8px 0;font-weight:600;letter-spacing:1px}
+  .install-note{margin-top:10px;padding:8px 10px;background:rgba(0,220,130,0.08);border:1px solid rgba(0,220,130,0.2);border-radius:8px;font-size:10px;color:#00dc82;line-height:1.5}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="hdr">
+  <div class="hdr-left">
+    <div class="arc-reactor"></div>
+    <div>
+      <div class="logo-text">Vigil AI</div>
+      <div class="logo-ver">AI v3.1 &bull; NEUROCORE &bull; EDGE READY</div>
+      <div class="neuro-chip" id="neuroChip">FOCUSED &bull; 0% AWR</div>
+    </div>
+    <div class="online-dot" title="System online"></div>
+  </div>
+  <div class="hdr-right">
+    <span style="font-size:10px;color:var(--text3)" id="statusChip">READY</span>
+    <button class="hbtn" id="minimizeBtn" title="Close panel">&#x2715;</button>
+  </div>
+</div>
+
+<!-- Sovereign Update Banner -->
+<div class="update-banner" id="updateBanner" style="display:none">
+  <span id="updateBannerText">⚡ Vigil AI Update Available</span>
+  <button class="update-install-btn" id="autoInstallBtn" title="Auto-download installer">⬇ Auto-Install</button>
+</div>
+
+<!-- Persistent Download Strip -->
+<div class="dl-strip">
+  <span class="dl-strip-label">&#x1F4E6; Get Vigil AI:</span>
+  <button class="dl-strip-btn" id="dlZipBtn">&#x1F4E5; ZIP</button>
+  <button class="dl-strip-btn" id="dlBatBtn">&#x2699;&#xFE0F; .bat Installer</button>
+  <span class="dl-strip-hint">&#x2193; click to download now</span>
+</div>
+
+<!-- Navigation -->
+<div class="nav">
+  <div class="tab active" data-panel="chat"><span class="tab-icon">&#x1F4AC;</span>Chat</div>
+  <div class="tab" data-panel="tools"><span class="tab-icon">&#x1F9F0;</span>Tools</div>
+  <div class="tab" data-panel="workspace"><span class="tab-icon">&#x1F5C3;&#xFE0F;</span>Workspace</div>
+  <div class="tab" data-panel="search"><span class="tab-icon">&#x1F50D;</span>Search</div>
+  <div class="tab" data-panel="screen"><span class="tab-icon">&#x1F5A5;&#xFE0F;</span>Screen</div>
+  <div class="tab" data-panel="tabs"><span class="tab-icon">&#x1F5C2;&#xFE0F;</span>Tabs</div>
+  <div class="tab" data-panel="notes"><span class="tab-icon">&#x1F4DD;</span>Notes</div>
+  <div class="tab" data-panel="docs"><span class="tab-icon">&#x1F4C4;</span>Docs</div>
+  <div class="tab" data-panel="install"><span class="tab-icon">&#x1F4E6;</span>Install</div>
+  <div class="tab" data-panel="log"><span class="tab-icon">&#x1F4CB;</span>Log</div>
+</div>
+
+<div class="main">
+
+  <!-- Chat panel -->
+  <div class="panel active" id="panel-chat">
+    <div class="chat-msgs" id="chatMsgs">
+      <div class="msg bot" data-agent="Vigil AI &#x2022; ORCHESTRATOR">
+        Vigil AI v14 online. NeuroCore active, Memory Temple live, 40+ analytical patterns loaded, skills engaged. I run 24/7 — no modes, no clicking. Just talk. I can research, analyze, build frameworks, draft emails, generate reports, organize your workspace, and more. What are we working on?
+        <span class="msg-time">just now</span>
+      </div>
+    </div>
+    <div class="quick">
+      <button class="qbtn" data-cmd="list tabs">&#x1F5C2;&#xFE0F; Tabs</button>
+      <button class="qbtn" data-cmd="screenshot">&#x1F4F8; Shot</button>
+      <button class="qbtn" data-cmd="summarize">&#x1F4D6; Summarize</button>
+      <button class="qbtn" data-cmd="take note">&#x1F4DD; Note</button>
+      <button class="qbtn" data-cmd="research">&#x1F52C; Research</button>
+      <button class="qbtn" data-cmd="theory">&#x1F9E0; Theory</button>
+      <button class="qbtn" data-cmd="analyze this">&#x1F4CA; Analyze</button>
+      <button class="qbtn" data-cmd="memory temple">&#x1F4BE; Memory</button>
+      <button class="qbtn" data-cmd="brainstorm">&#x1F4A1; Brainstorm</button>
+      <button class="qbtn" data-cmd="what if">&#x1F30D; What-If</button>
+      <button class="qbtn" data-cmd="risk">&#x26A0;&#xFE0F; Risk</button>
+      <button class="qbtn" data-cmd="what am i building">&#x1F3AF; Founder</button>
+    </div>
+    <div class="cinput-wrap">
+      <input type="text" class="cinput" id="chatInput" placeholder="Ask Vigil AI anything..." autocomplete="off">
+      <button class="mic-btn" id="micBtn" title="Voice input — click to speak">&#x1F3A4;</button>
+      <button class="sbtn" id="sendBtn">&#x26A1; Send</button>
+    </div>
+  </div>
+
+  <!-- Tools panel -->
+  <div class="panel" id="panel-tools">
+    <div class="tools-grid">
+      <div class="tool-section-label">💾 Memory &amp; Context</div>
+      <button class="tool-btn" data-tool="mempleStatus">📂 Memory Temple<span class="tool-desc">Show what I've archived from our talks</span></button>
+      <button class="tool-btn" data-tool="founderContext">🎯 Founder Context<span class="tool-desc">What you're building + current focus</span></button>
+
+      <div class="tool-section-label" style="margin-top:10px">🖥️ Page Intelligence</div>
+      <button class="tool-btn" data-tool="readActivePage">🔎 Read Page<span class="tool-desc">Extract full text from current tab</span></button>
+      <button class="tool-btn" data-tool="summarizeActivePage">📖 Summarize Page<span class="tool-desc">AI summary of what's open</span></button>
+
+      <div class="tool-section-label" style="margin-top:10px">📦 Get Vigil AI</div>
+      <button class="tool-btn dl-tool-btn" id="toolDlZip">📥 Download ZIP<span class="tool-desc">jarvis-extension.zip — load unpacked in Edge</span></button>
+      <button class="tool-btn dl-tool-btn" id="toolDlBat">⚙️ Download Installer<span class="tool-desc">install-vigil-edge.bat — runs setup automatically</span></button>
+    </div>
+    <!-- Quick notepad -->
+    <div class="tool-notepad">
+      <div class="notepad-label">✏️ Quick Notepad</div>
+      <textarea class="notepad-ta" id="notepadInput" placeholder="Type a note, idea, or research finding here..."></textarea>
+      <div class="notepad-actions">
+        <button class="notepad-btn" id="saveNotepadBtn">💾 Save Note</button>
+        <button class="notepad-btn" id="archiveResearchBtn">🔬 Research</button>
+        <button class="notepad-btn" id="archiveTheoryBtn">🧠 Theory</button>
+        <button class="notepad-btn" id="clearNotepadBtn">🗑 Clear</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search sandbox panel -->
+  <div class="panel" id="panel-search">
+    <div class="search-bar-wrap">
+      <div class="search-bar">
+        <input type="text" class="sinput" id="searchInput" placeholder="Search anything &mdash; results appear here, no new tabs needed..." autocomplete="off">
+        <button class="search-go" id="searchGoBtn">Search</button>
+      </div>
+      <div class="search-note">
+        Vigil AI Native Intelligence &bull; reads your current page + built-in knowledge &bull; no external services
+      </div>
+    </div>
+    <div class="scroll" id="searchResults">
+      <div class="search-empty">
+        <div class="sei">&#x1F50D;</div>
+        <p>Type anything above and hit Search.<br>Vigil AI reads this page + native knowledge &mdash; zero external services.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen reader panel -->
+  <div class="panel" id="panel-screen">
+    <div class="screen-btns">
+      <button class="screen-btn" id="captureBtn">&#x1F4F8; Capture Tab</button>
+      <button class="screen-btn" id="readPageBtn">&#x1F50E; Read Text</button>
+      <button class="screen-btn" id="summarizePageBtn">&#x1F4D6; Summarize</button>
+    </div>
+    <div class="screen-preview" id="screenPreview">
+      <div class="empty">
+        <div class="ei">&#x1F5A5;&#xFE0F;</div>
+        <p>Capture your current tab or extract page text.<br>All processing is local &mdash; nothing leaves your browser.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs panel -->
+  <div class="panel" id="panel-tabs">
+    <div class="panel-hdr">
+      Open Tabs
+      <button class="ref-btn" id="refreshTabsBtn" title="Refresh">&#x1F504;</button>
+    </div>
+    <div class="scroll" id="tabsList"></div>
+  </div>
+
+  <!-- Notes panel -->
+  <div class="panel" id="panel-notes">
+    <div class="panel-hdr">
+      Saved Notes
+      <button class="ref-btn" id="refreshNotesBtn" title="Refresh">&#x1F504;</button>
+    </div>
+    <div class="scroll" id="notesList"></div>
+  </div>
+
+  <!-- Docs panel -->
+  <div class="panel" id="panel-docs">
+    <div class="panel-hdr">
+      Documents
+      <button class="ref-btn" id="refreshDocsBtn" title="Refresh">&#x1F504;</button>
+    </div>
+    <div class="scroll" id="docsList"></div>
+  </div>
+
+  <!-- Install panel -->
+  <div class="panel" id="panel-install">
+    <div class="panel-hdr">Install Vigil AI in Edge</div>
+    <div class="scroll" style="padding:10px">
+      <div class="install-step">
+        <div class="install-num">1</div>
+        <div class="install-body">
+          <div class="install-title">Download the ZIP</div>
+          <div class="install-desc">Click below to download the extension ZIP file to your computer.</div>
+          <button class="install-dl-btn" id="installDlZip">&#x1F4E5; Download vigil-extension.zip</button>
+        </div>
+      </div>
+      <div class="install-step">
+        <div class="install-num">2</div>
+        <div class="install-body">
+          <div class="install-title">Open Edge Extensions</div>
+          <div class="install-desc">In Microsoft Edge, go to <strong>edge://extensions</strong> and turn on <strong>Developer mode</strong> (toggle top-right).</div>
+        </div>
+      </div>
+      <div class="install-step">
+        <div class="install-num">3</div>
+        <div class="install-body">
+          <div class="install-title">Load Unpacked</div>
+          <div class="install-desc">Unzip the file, then click <strong>Load unpacked</strong> and select the extracted <strong>jarvis/</strong> folder.</div>
+        </div>
+      </div>
+      <div class="install-divider">— OR — use the Windows auto-installer —</div>
+      <div class="install-step">
+        <div class="install-num">★</div>
+        <div class="install-body">
+          <div class="install-title">One-Click Windows Installer</div>
+          <div class="install-desc">Download the .bat file and double-click it. It installs Vigil AI into Edge automatically, no manual steps needed.</div>
+          <button class="install-dl-btn" id="installDlBat">&#x2699;&#xFE0F; Download install-vigil-edge.bat</button>
+        </div>
+      </div>
+      <div class="install-note">
+        &#x26A1; Auto-Update: Vigil AI checks for new versions every 4 hours. When an update is found, it auto-downloads the installer and sends you a Chrome notification.
+      </div>
+    </div>
+  </div>
+
+  <!-- Log panel -->
+  <div class="panel" id="panel-log">
+    <div class="panel-hdr">
+      Command History
+      <button class="ref-btn" id="refreshLogBtn" title="Refresh">&#x1F504;</button>
+    </div>
+    <div class="scroll" id="cmdLog"></div>
+  </div>
+
+</div>
+
+<!-- Status bar -->
+<div class="sbar">
+  <div class="sbar-item">&#x1F493; <span class="sv" id="hbCount">0</span></div>
+  <div class="sbar-item">&#x23F1; <span class="sv" id="uptime">0m 0s</span></div>
+  <div class="sbar-item">&#x26A1; <span class="sv" id="cmdCount">0</span> cmds</div>
+  <div class="sbar-item">&#x1F4BE; <span class="sv" id="memTurns">0</span>/100</div>
+  <div class="sbar-item" style="color:var(--cyan)">EDGE</div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var cur = 'chat';
+
+  function esc(s) {
+    var d = document.createElement('div');
+    d.textContent = String(s || '');
+    return d.innerHTML;
+  }
+  function ts() {
+    var d = new Date();
+    return d.getHours().toString().padStart(2, '0') + ':' + d.getMinutes().toString().padStart(2, '0');
+  }
+
+  /* Tab navigation */
+  document.querySelectorAll('.tab').forEach(function (t) {
+    t.addEventListener('click', function () {
+      document.querySelectorAll('.tab').forEach(function (x) { x.classList.remove('active'); });
+      document.querySelectorAll('.panel').forEach(function (x) { x.classList.remove('active'); });
+      t.classList.add('active');
+      var p = document.getElementById('panel-' + t.dataset.panel);
+      if (p) p.classList.add('active');
+      cur = t.dataset.panel;
+      if (cur === 'tabs') loadTabs();
+      if (cur === 'notes') loadNotes();
+      if (cur === 'docs') loadDocs();
+      if (cur === 'log') loadLog();
+    });
+  });
+
+  document.getElementById('minimizeBtn').addEventListener('click', function () { window.close(); });
+
+  /* ========== CHAT ========== */
+  var chatMsgs = document.getElementById('chatMsgs');
+  var chatInput = document.getElementById('chatInput');
+
+  function addMsg(text, type, agent) {
+    var div = document.createElement('div');
+    div.className = 'msg ' + type;
+    if (type === 'bot' && agent) div.setAttribute('data-agent', agent);
+    var content = document.createElement('span');
+    content.textContent = text;
+    var t = document.createElement('span');
+    t.className = 'msg-time';
+    t.textContent = ts();
+    if (type === 'user') {
+      div.innerHTML = esc(text);
+      div.appendChild(t);
+    } else {
+      div.appendChild(content);
+      div.appendChild(t);
+    }
+    chatMsgs.appendChild(div);
+    chatMsgs.scrollTop = chatMsgs.scrollHeight;
+  }
+
+  function showTyping() {
+    var t = document.createElement('div');
+    t.className = 'typing'; t.id = 'typing-ind';
+    t.innerHTML = '<span></span><span></span><span></span>';
+    chatMsgs.appendChild(t);
+    chatMsgs.scrollTop = chatMsgs.scrollHeight;
+  }
+  function hideTyping() { var t = document.getElementById('typing-ind'); if (t) t.remove(); }
+
+  function sendChat() {
+    var text = chatInput.value.trim();
+    if (!text) return;
+    addMsg(text, 'user');
+    chatInput.value = '';
+    showTyping();
+
+    chrome.runtime.sendMessage({ action: 'executeCommand', command: text }, function (resp) {
+      hideTyping();
+      if (chrome.runtime.lastError) {
+        addMsg('Connection error: ' + chrome.runtime.lastError.message, 'bot', 'Vigil AI \u2022 ERROR');
+        return;
+      }
+      if (!resp) { addMsg('No response from engine.', 'bot', 'Vigil AI \u2022 ERROR'); return; }
+
+      if (resp.sandboxQuery) {
+        addMsg('Opening sandbox search for "' + resp.sandboxQuery + '" \u2014 no new tab needed.', 'bot', 'Vigil AI \u2022 UNIVERSUM');
+        setTimeout(function () {
+          document.querySelector('[data-panel="search"]').click();
+          document.getElementById('searchInput').value = resp.sandboxQuery;
+          runSearch(resp.sandboxQuery);
+        }, 300);
+        return;
+      }
+
+      var out = resp.message || JSON.stringify(resp);
+      if (resp.tabs) {
+        out = resp.message + '\n\n';
+        resp.tabs.forEach(function (t, i) { out += (t.active ? '\u25B6 ' : '  ') + (i + 1) + '. ' + t.title + '\n'; });
+      }
+      if (resp.notes) {
+        out = resp.message + '\n\n';
+        resp.notes.forEach(function (n, i) { out += (i + 1) + '. ' + n.content.substring(0, 60) + '\n'; });
+      }
+      if (resp.summary) {
+        var s = resp.summary;
+        out = '\u1F4C4 ' + s.title + '\n\u1F4CA ' + s.wordCount + ' words | ' + s.headingCount + ' headings | ' + s.linkCount + ' links\n\n';
+        if (s.keyPoints && s.keyPoints.length) {
+          out += 'Key Points:\n';
+          s.keyPoints.forEach(function (p) { out += '\u2022 ' + p + '\n'; });
+        }
+      }
+      if (resp.pageData) {
+        var pd = resp.pageData;
+        out = pd.title + '\n' + pd.url + '\n' + pd.wordCount + ' words | ' + pd.linkCount + ' links | ' + pd.imageCount + ' images';
+      }
+      addMsg(out, 'bot', 'Vigil AI \u2022 ' + (resp.agent || 'ENGINE'));
+    });
+  }
+
+  document.getElementById('sendBtn').addEventListener('click', sendChat);
+  chatInput.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); }
+  });
+  document.querySelectorAll('.qbtn').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var cmd = b.dataset.cmd;
+      if (cmd === 'take note') { chatInput.value = 'take note: '; chatInput.focus(); }
+      else { chatInput.value = cmd; sendChat(); }
+    });
+  });
+
+  /* ========== Vigil AI INTELLIGENCE SEARCH ========== */
+  var searchInput = document.getElementById('searchInput');
+  var searchResults = document.getElementById('searchResults');
+
+  function runSearch(query) {
+    if (!query) return;
+    searchResults.innerHTML = '<div class="search-loading"><div class="spinner"></div>&nbsp;Vigil AI analyzing "' + esc(query) + '"&hellip;</div>';
+    chrome.runtime.sendMessage({ action: 'sandboxSearch', query: query }, function (resp) {
+      if (chrome.runtime.lastError || !resp || !resp.success || !resp.results || !resp.results.length) {
+        var msg = (resp && resp.message) || 'No results found.';
+        searchResults.innerHTML = '<div class="search-empty"><div class="sei">&#x1F916;</div><p>' + esc(msg) +
+          '<br><br>Try asking in Chat, or say "read page" to extract from what\'s currently open.</p></div>';
+        return;
+      }
+      searchResults.innerHTML = '<div style="font-size:10px;color:var(--text3);margin-bottom:8px;padding:0 2px">' +
+        '&#x26A1; Vigil Intelligence results for: <strong style="color:var(--text2)">' + esc(resp.query) + '</strong></div>';
+      resp.results.forEach(function (r) {
+        var card = document.createElement('div');
+        card.className = 'result-card';
+        var labels = { answer: 'From Page', abstract: 'Knowledge', result: 'Native', related: 'Context', fallback: 'Vigil AI' };
+        var urlHtml = r.url ? '<a class="result-url" href="' + esc(r.url) + '" target="_blank">' +
+          esc(r.url.substring(0, 60)) + (r.url.length > 60 ? '&hellip;' : '') + '</a>' : '';
+        card.innerHTML = '<span class="result-type ' + (r.type === 'fallback' ? 'answer' : r.type) + '">' + esc(labels[r.type] || r.type) + '</span>' +
+          (r.source ? '<span style="font-size:9px;color:var(--text3);float:right;margin-top:2px">' + esc(r.source) + '</span>' : '') +
+          '<div class="result-title">' + esc(r.title) + '</div>' +
+          '<div class="result-text">' + esc(r.text.substring(0, 250)) + (r.text.length > 250 ? '&hellip;' : '') + '</div>' +
+          urlHtml;
+        searchResults.appendChild(card);
+      });
+      var footer = document.createElement('div');
+      footer.style.cssText = 'text-align:center;padding:12px 0;font-size:11px;color:var(--text3)';
+      footer.textContent = '100% native \u2014 no external APIs used';
+      searchResults.appendChild(footer);
+    });
+  }
+
+  document.getElementById('searchGoBtn').addEventListener('click', function () { runSearch(searchInput.value.trim()); });
+  searchInput.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); runSearch(searchInput.value.trim()); } });
+
+  /* ========== SCREEN READER ========== */
+  var screenPreview = document.getElementById('screenPreview');
+
+  document.getElementById('captureBtn').addEventListener('click', function () {
+    screenPreview.innerHTML = '<div class="search-loading"><div class="spinner"></div>&nbsp;Capturing tab&hellip;</div>';
+    chrome.runtime.sendMessage({ action: 'captureTab' }, function (resp) {
+      if (chrome.runtime.lastError || !resp || !resp.success) {
+        screenPreview.innerHTML = '<div class="empty"><div class="ei">&#x26A0;&#xFE0F;</div><p>' +
+          esc((resp && resp.message) || 'Capture failed') + '</p></div>';
+        return;
+      }
+      screenPreview.innerHTML = '';
+      var meta = document.createElement('div');
+      meta.className = 'capture-meta';
+      var strong = document.createElement('strong');
+      strong.textContent = resp.title;
+      meta.appendChild(strong);
+      meta.appendChild(document.createTextNode(resp.url));
+      var img = document.createElement('img');
+      img.className = 'capture-img';
+      img.src = resp.dataUrl;
+      img.title = resp.title;
+      var dlBtn = document.createElement('button');
+      dlBtn.className = 'screen-btn';
+      dlBtn.style.marginTop = '8px';
+      dlBtn.textContent = '\u2B07 Save Screenshot';
+      dlBtn.addEventListener('click', function () { chrome.runtime.sendMessage({ action: 'screenshot' }); });
+      screenPreview.appendChild(meta);
+      screenPreview.appendChild(img);
+      screenPreview.appendChild(dlBtn);
+    });
+  });
+
+  document.getElementById('readPageBtn').addEventListener('click', function () {
+    screenPreview.innerHTML = '<div class="search-loading"><div class="spinner"></div>&nbsp;Reading page text&hellip;</div>';
+    chrome.runtime.sendMessage({ action: 'readPage' }, function (resp) {
+      if (chrome.runtime.lastError || !resp || !resp.success) {
+        screenPreview.innerHTML = '<div class="empty"><div class="ei">&#x26A0;&#xFE0F;</div><p>' +
+          esc((resp && resp.message) || 'Could not read page') + '</p></div>';
+        return;
+      }
+      var pd = resp.pageData;
+      screenPreview.innerHTML = '';
+      var meta = document.createElement('div');
+      meta.className = 'capture-meta';
+      meta.innerHTML = '<strong>' + esc(pd.title) + '</strong>' +
+        esc(pd.url) + ' &mdash; ' + pd.wordCount + ' words | ' + pd.linkCount + ' links | ' + pd.imageCount + ' images';
+      var tb = document.createElement('div');
+      tb.className = 'page-text-block';
+      tb.textContent = pd.text.substring(0, 3000) + (pd.text.length > 3000 ? '\n\n[...truncated]' : '');
+      screenPreview.appendChild(meta);
+      screenPreview.appendChild(tb);
+    });
+  });
+
+  document.getElementById('summarizePageBtn').addEventListener('click', function () {
+    screenPreview.innerHTML = '<div class="search-loading"><div class="spinner"></div>&nbsp;Summarizing page&hellip;</div>';
+    chrome.runtime.sendMessage({ action: 'summarize' }, function (resp) {
+      if (chrome.runtime.lastError || !resp || !resp.success) {
+        screenPreview.innerHTML = '<div class="empty"><div class="ei">&#x26A0;&#xFE0F;</div><p>' +
+          esc((resp && resp.message) || 'Could not summarize') + '</p></div>';
+        return;
+      }
+      var s = resp.summary;
+      screenPreview.innerHTML = '';
+      var meta = document.createElement('div');
+      meta.className = 'capture-meta';
+      meta.innerHTML = '<strong>' + esc(s.title) + '</strong>' +
+        esc(s.url) + ' &mdash; ' + s.wordCount + ' words | ' + s.headingCount + ' headings';
+      var tb = document.createElement('div');
+      tb.className = 'page-text-block';
+      var txt = 'SUMMARY\n\n';
+      if (s.metaDescription) txt += s.metaDescription + '\n\n';
+      if (s.keyPoints && s.keyPoints.length) {
+        txt += 'KEY POINTS:\n';
+        s.keyPoints.forEach(function (p, i) { txt += (i + 1) + '. ' + p + '\n'; });
+      }
+      tb.textContent = txt;
+      screenPreview.appendChild(meta);
+      screenPreview.appendChild(tb);
+    });
+  });
+
+  /* ========== TABS ========== */
+  var tabsList = document.getElementById('tabsList');
+  function loadTabs() {
+    chrome.runtime.sendMessage({ action: 'listTabs' }, function (resp) {
+      if (chrome.runtime.lastError || !resp || !resp.success) {
+        tabsList.innerHTML = '<div class="empty"><div class="ei">&#x26A0;&#xFE0F;</div><p>Could not load tabs</p></div>'; return;
+      }
+      if (!resp.tabs || !resp.tabs.length) {
+        tabsList.innerHTML = '<div class="empty"><div class="ei">&#x1F5C2;&#xFE0F;</div><p>No tabs open</p></div>'; return;
+      }
+      tabsList.innerHTML = '';
+      resp.tabs.forEach(function (tab) {
+        var item = document.createElement('div');
+        item.className = 'list-item' + (tab.active ? ' active-tab' : '');
+        var icon = document.createElement('div'); icon.className = 'item-icon'; icon.textContent = tab.active ? '\u25B6' : tab.index;
+        var info = document.createElement('div'); info.className = 'item-info';
+        var ti = document.createElement('div'); ti.className = 'item-title'; ti.textContent = tab.title;
+        var su = document.createElement('div'); su.className = 'item-sub'; su.textContent = tab.url;
+        info.appendChild(ti); info.appendChild(su);
+        var cl = document.createElement('button'); cl.className = 'item-action'; cl.textContent = '\u2715'; cl.title = 'Close tab';
+        cl.addEventListener('click', function (e) {
+          e.stopPropagation();
+          chrome.runtime.sendMessage({ action: 'executeCommand', command: 'close tab ' + tab.index }, function () { loadTabs(); });
+        });
+        item.appendChild(icon); item.appendChild(info); item.appendChild(cl);
+        item.addEventListener('click', function () {
+          chrome.runtime.sendMessage({ action: 'switchTab', tabIndex: tab.index }, function () { loadTabs(); });
+        });
+        tabsList.appendChild(item);
+      });
+    });
+  }
+  document.getElementById('refreshTabsBtn').addEventListener('click', loadTabs);
+
+  /* ========== NOTES ========== */
+  var notesList = document.getElementById('notesList');
+  function loadNotes() {
+    chrome.runtime.sendMessage({ action: 'listNotes' }, function (resp) {
+      if (chrome.runtime.lastError || !resp || !resp.success) {
+        notesList.innerHTML = '<div class="empty"><div class="ei">&#x26A0;&#xFE0F;</div><p>Could not load notes</p></div>'; return;
+      }
+      if (!resp.notes || !resp.notes.length) {
+        notesList.innerHTML = '<div class="empty"><div class="ei">&#x1F4DD;</div><p>No notes yet.<br>Say "take note: something" in Chat.</p></div>'; return;
+      }
+      notesList.innerHTML = '';
+      resp.notes.forEach(function (note) {
+        var card = document.createElement('div'); card.className = 'note-card';
+        var c = document.createElement('div'); c.className = 'note-content'; c.textContent = note.content;
+        var footer = document.createElement('div'); footer.className = 'note-footer';
+        var m = document.createElement('span'); m.className = 'note-meta';
+        m.textContent = (note.author || 'Alfredo') + ' \u00B7 ' + new Date(note.timestamp).toLocaleString();
+        var del = document.createElement('button'); del.className = 'del-btn'; del.textContent = '\u1F5D1 Delete';
+        del.addEventListener('click', function () {
+          chrome.runtime.sendMessage({ action: 'deleteNote', noteId: note.id }, function () { loadNotes(); });
+        });
+        footer.appendChild(m); footer.appendChild(del);
+        card.appendChild(c); card.appendChild(footer);
+        notesList.appendChild(card);
+      });
+    });
+  }
+  document.getElementById('refreshNotesBtn').addEventListener('click', loadNotes);
+
+  /* ========== DOCS ========== */
+  var docsList = document.getElementById('docsList');
+  function loadDocs() {
+    chrome.runtime.sendMessage({ action: 'listDocuments' }, function (resp) {
+      if (chrome.runtime.lastError || !resp || !resp.success) {
+        docsList.innerHTML = '<div class="empty"><div class="ei">&#x26A0;&#xFE0F;</div><p>Could not load documents</p></div>'; return;
+      }
+      if (!resp.documents || !resp.documents.length) {
+        docsList.innerHTML = '<div class="empty"><div class="ei">&#x1F4C4;</div><p>No documents yet.<br>Say "create pdf: My Report" in Chat.</p></div>'; return;
+      }
+      docsList.innerHTML = '';
+      resp.documents.forEach(function (doc) {
+        var item = document.createElement('div'); item.className = 'doc-item';
+        var icon = document.createElement('div'); icon.className = 'item-icon'; icon.textContent = doc.type === 'pdf' ? '\u1F4C4' : '\u1F4DD';
+        var info = document.createElement('div'); info.className = 'item-info';
+        var ti = document.createElement('div'); ti.className = 'item-title'; ti.textContent = doc.title;
+        var su = document.createElement('div'); su.className = 'item-sub';
+        su.textContent = (doc.author || 'Alfredo') + ' \u00B7 ' + new Date(doc.timestamp).toLocaleString();
+        info.appendChild(ti); info.appendChild(su);
+        item.appendChild(icon); item.appendChild(info);
+        item.addEventListener('click', function () {
+          document.querySelector('[data-panel="chat"]').click();
+          addMsg('Document: ' + doc.title + '\n\n' + (doc.content || '(empty)'), 'bot', 'Vigil AI \u2022 DOCUMENT');
+        });
+        docsList.appendChild(item);
+      });
+    });
+  }
+  document.getElementById('refreshDocsBtn').addEventListener('click', loadDocs);
+
+  /* ========== LOG ========== */
+  var cmdLog = document.getElementById('cmdLog');
+  function loadLog() {
+    chrome.runtime.sendMessage({ action: 'getHistory' }, function (resp) {
+      if (chrome.runtime.lastError || !resp || !resp.success) {
+        cmdLog.innerHTML = '<div class="empty"><div class="ei">&#x1F4CB;</div><p>No commands yet</p></div>'; return;
+      }
+      var hist = resp.data;
+      if (!hist || !hist.length) {
+        cmdLog.innerHTML = '<div class="empty"><div class="ei">&#x1F4CB;</div><p>No commands yet.<br>Start chatting to see history.</p></div>'; return;
+      }
+      cmdLog.innerHTML = '';
+      hist.slice(0, 60).forEach(function (entry) {
+        var div = document.createElement('div'); div.className = 'log-entry';
+        div.innerHTML = '<span class="log-time">' + new Date(entry.timestamp).toLocaleTimeString() + '</span>' +
+          '<span class="log-intent">' + esc(entry.intent) + '</span>' +
+          '<span class="log-raw">' + esc(entry.raw) + '</span>' +
+          '<span class="log-ok">\u2705</span>';
+        cmdLog.appendChild(div);
+      });
+    });
+  }
+  document.getElementById('refreshLogBtn').addEventListener('click', loadLog);
+
+  /* ========== STATUS + NEURO CHIP ========== */
+  function updateStatus() {
+    chrome.runtime.sendMessage({ action: 'getStatus' }, function (resp) {
+      if (chrome.runtime.lastError || !resp || !resp.success) return;
+      var d = resp.data;
+      document.getElementById('hbCount').textContent = d.heartbeatCount;
+      document.getElementById('uptime').textContent = d.uptimeFormatted;
+      document.getElementById('cmdCount').textContent = d.commandCount;
+      // Memory turns
+      var memEl = document.getElementById('memTurns');
+      if (memEl && d.memoryTurns !== undefined) memEl.textContent = d.memoryTurns;
+      // Update neuro chip in header if present
+      var chip = document.getElementById('neuroChip');
+      if (chip && d.mood) chip.textContent = d.mood.toUpperCase() + ' \u2022 ' + (d.awarenessLevel || 0) + '% AWR';
+      // Update statusChip
+      document.getElementById('statusChip').textContent = (d.mood || 'READY').toUpperCase();
+    });
+  }
+
+  /* ========== SOVEREIGN UPDATE CHECK + AUTO-INSTALL ========== */
+  function checkUpdateBanner() {
+    chrome.runtime.sendMessage({ action: 'getUpdateStatus' }, function (resp) {
+      if (chrome.runtime.lastError || !resp || !resp.success) return;
+      var banner = document.getElementById('updateBanner');
+      var bannerText = document.getElementById('updateBannerText');
+      if (resp.update && resp.update.available) {
+        banner.style.display = 'flex';
+        if (resp.update.autoInstalled) {
+          bannerText.textContent = '\u26A1 Vigil AI v' + resp.update.remoteVersion + ' installer downloaded — double-click install-vigil-edge.bat in Downloads';
+        } else {
+          bannerText.textContent = '\u26A1 Update: v' + (resp.update.currentVersion || '?') + ' \u2192 v' + resp.update.remoteVersion;
+        }
+      } else {
+        banner.style.display = 'none';
+      }
+    });
+  }
+
+  // Auto-install button
+  var autoInstallBtn = document.getElementById('autoInstallBtn');
+  if (autoInstallBtn) {
+    autoInstallBtn.addEventListener('click', function () {
+      autoInstallBtn.textContent = '\u23F3 Downloading...';
+      autoInstallBtn.disabled = true;
+      chrome.runtime.sendMessage({ action: 'autoInstallUpdate' }, function (resp) {
+        autoInstallBtn.disabled = false;
+        if (resp && resp.success) {
+          autoInstallBtn.textContent = '\u2705 Downloaded';
+          document.getElementById('updateBannerText').textContent = '\u26A1 Installer downloaded! Double-click install-vigil-edge.bat in Downloads to complete update.';
+        } else {
+          autoInstallBtn.textContent = '\u274C Failed';
+          setTimeout(function () { autoInstallBtn.textContent = '\u2B07 Auto-Install'; }, 3000);
+        }
+      });
+    });
+  }
+
+  /* ========== DOWNLOAD BUTTONS ========== */
+  function setupDownloadBtn(id, action) {
+    var btn = document.getElementById(id);
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+      btn.textContent = '\u23F3 Downloading...';
+      btn.disabled = true;
+      chrome.runtime.sendMessage({ action: action }, function (resp) {
+        btn.disabled = false;
+        if (resp && resp.success) {
+          btn.textContent = '\u2705 Done';
+          setTimeout(function () { btn.innerHTML = btn._origHTML; }, 3000);
+        } else {
+          btn.textContent = '\u274C Failed';
+          setTimeout(function () { btn.innerHTML = btn._origHTML; }, 3000);
+        }
+      });
+    });
+    btn._origHTML = btn.innerHTML;
+  }
+  setupDownloadBtn('dlZipBtn', 'downloadVigilZip');
+  setupDownloadBtn('dlBatBtn', 'downloadVigilBat');
+  setupDownloadBtn('toolDlZip', 'downloadVigilZip');
+  setupDownloadBtn('toolDlBat', 'downloadVigilBat');
+  setupDownloadBtn('installDlZip', 'downloadVigilZip');
+  setupDownloadBtn('installDlBat', 'downloadVigilBat');
+
+  /* ========== SOVEREIGN TOOL BUTTONS ========== */
+  document.querySelectorAll('.tool-btn[data-tool]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var tool = btn.getAttribute('data-tool');
+      var params = {};
+      if (btn.hasAttribute('data-topic')) params.topic = btn.getAttribute('data-topic') || '';
+      if (btn.hasAttribute('data-idea')) params.idea = btn.getAttribute('data-idea') || '';
+      if (btn.hasAttribute('data-subject')) params.subject = btn.getAttribute('data-subject') || '';
+      if (btn.hasAttribute('data-question')) params.question = btn.getAttribute('data-question') || '';
+      if (btn.hasAttribute('data-text')) params.text = btn.getAttribute('data-text') || '';
+
+      // Quick note tool — use notepad textarea if text param is empty
+      if (tool === 'quickNote' && !params.text) {
+        var ta = document.getElementById('notepadInput');
+        params.text = ta ? ta.value.trim() : '';
+        if (!params.text) { ta && ta.focus(); return; }
+      }
+
+      chrome.runtime.sendMessage({ action: 'runSovereignTool', tool: tool, params: params }, function (resp) {
+        if (chrome.runtime.lastError || !resp) return;
+        if (resp.success && resp.message) {
+          // Switch to chat tab and show response
+          document.querySelector('[data-panel="chat"]').click();
+          addMsg(resp.message, 'bot', resp.agent || 'Vigil AI \u2022 SOVEREIGN TOOLS');
+        }
+      });
+    });
+  });
+
+  /* ========== NOTEPAD ========== */
+  var notepadInput = document.getElementById('notepadInput');
+
+  function saveNotepadToMemory(category) {
+    var text = notepadInput ? notepadInput.value.trim() : '';
+    if (!text) { notepadInput && notepadInput.focus(); return; }
+    if (category) {
+      chrome.runtime.sendMessage({ action: 'addTempleEntry', category: category, text: text }, function (resp) {
+        if (resp && resp.success) {
+          addMsg('\u2705 Archived to Memory Temple (' + category + '): "' + text.substring(0, 60) + (text.length > 60 ? '...' : '') + '"', 'bot', 'Vigil AI \u2022 MEMORY TEMPLE');
+          if (notepadInput) notepadInput.value = '';
+          document.querySelector('[data-panel="chat"]').click();
+        }
+      });
+    } else {
+      chrome.runtime.sendMessage({ action: 'takeNote', content: text }, function (resp) {
+        if (resp && resp.success) {
+          addMsg('\u2705 Note saved: "' + text.substring(0, 60) + (text.length > 60 ? '...' : '') + '"', 'bot', 'Vigil AI \u2022 ORGANISMUS');
+          if (notepadInput) notepadInput.value = '';
+          document.querySelector('[data-panel="chat"]').click();
+        }
+      });
+    }
+  }
+
+  var saveNotepadBtn = document.getElementById('saveNotepadBtn');
+  if (saveNotepadBtn) saveNotepadBtn.addEventListener('click', function () { saveNotepadToMemory(null); });
+
+  var archiveResearchBtn = document.getElementById('archiveResearchBtn');
+  if (archiveResearchBtn) archiveResearchBtn.addEventListener('click', function () { saveNotepadToMemory('research'); });
+
+  var archiveTheoryBtn = document.getElementById('archiveTheoryBtn');
+  if (archiveTheoryBtn) archiveTheoryBtn.addEventListener('click', function () { saveNotepadToMemory('theory'); });
+
+  var clearNotepadBtn = document.getElementById('clearNotepadBtn');
+  if (clearNotepadBtn) clearNotepadBtn.addEventListener('click', function () { if (notepadInput) notepadInput.value = ''; });
+
+  setInterval(updateStatus, 2000);
+  setInterval(function () { if (cur === 'tabs') loadTabs(); }, 5000);
+  setInterval(checkUpdateBanner, 30000);
+  updateStatus();
+  checkUpdateBanner();
+  chatInput.focus();
+
+})();
+</script>
+</body>
+</html>

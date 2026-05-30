@@ -1,0 +1,18 @@
+{
+  "id": "atlas://bot/organism-neural-bot",
+  "name": "organism-neural-bot",
+  "class": "Bot",
+  "division": "Validate & Test",
+  "divisionNum": "II",
+  "emoji": "🧠",
+  "domain": "Neural architecture validation",
+  "triggers": ["push:protocols/"],
+  "capabilities": ["validate", "graph", "architecture_check"],
+  "languages": ["atlas://language/ril", "atlas://language/cil"],
+  "governance_pipeline": "pipeline://governance/bot_cycle",
+  "ocl_ref": "atlas://organism/bot-fleet",
+  "script": "scripts/validate-neural-graph.js",
+  "workflow": ".github/workflows/organism-neural-bot.yml",
+  "report": "docs/neural-graph-report.md",
+  "microbots": []
+}

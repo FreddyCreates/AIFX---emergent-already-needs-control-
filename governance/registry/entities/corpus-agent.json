@@ -1,0 +1,14 @@
+{
+  "id": "atlas://agent/corpus",
+  "name": "corpus",
+  "class": "Agent",
+  "division": "Cognitive Core",
+  "emoji": "⚡",
+  "domain": "Body — execution, action, motor output",
+  "events": ["action_executed", "motor_cycle_completed", "resource_acquired"],
+  "capabilities": ["execute", "act", "resource_manage", "state_update"],
+  "governance_pipeline": "pipeline://governance/agent_cycle",
+  "ocl_ref": "atlas://organism/bot-fleet",
+  "law_refs": ["governance://law/agent-health"],
+  "script": "sdk/agents/corpus-agent.js"
+}

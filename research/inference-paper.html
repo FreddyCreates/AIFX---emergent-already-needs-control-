@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="la">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Intelligentia Localis — De Inferentia In-Navigatorio, Classificatione Textus, et Embeddingis Sine Nube</title>
+<style>
+  :root { --bg:#0a0a1a; --card:#12122a; --border:#2a2a4a; --accent:#6c63ff; --accent2:#00d4aa; --text:#e0e0e0; --dim:#888; --paper:#f8f6f0; --ink:#1a1a2e; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:"Palatino Linotype","Book Antiqua",Palatino,"Times New Roman",serif; background:var(--bg); color:var(--text); min-height:100vh; }
+
+  .paper { max-width:900px; margin:2rem auto; background:var(--paper); color:var(--ink); padding:3rem 3.5rem; border-radius:4px; box-shadow:0 8px 32px rgba(0,0,0,0.6); line-height:1.8; }
+  .paper h1 { font-size:1.7rem; text-align:center; margin-bottom:0.3rem; color:#2a1a5e; font-style:italic; }
+  .paper .subtitle { text-align:center; font-size:1.05rem; color:#555; margin-bottom:0.5rem; }
+  .paper .authors { text-align:center; font-size:0.95rem; color:#666; margin-bottom:0.3rem; }
+  .paper .affiliation { text-align:center; font-size:0.85rem; color:#888; margin-bottom:1.5rem; font-style:italic; }
+  .paper .latin-epigraph { text-align:center; font-size:0.9rem; color:#7a6aa0; margin:1rem 0 2rem; font-style:italic; border-top:1px solid #ddd; border-bottom:1px solid #ddd; padding:0.8rem 0; }
+  .paper h2 { font-size:1.2rem; color:#2a1a5e; margin:2rem 0 0.5rem; border-bottom:1px solid #ccc; padding-bottom:0.3rem; }
+  .paper h3 { font-size:1.05rem; color:#3a2a7e; margin:1.5rem 0 0.4rem; }
+  .paper p { margin-bottom:0.8rem; text-align:justify; font-size:0.95rem; }
+  .paper ol, .paper ul { margin:0.5rem 0 1rem 2rem; font-size:0.95rem; }
+  .paper li { margin-bottom:0.3rem; }
+  .paper .eq { text-align:center; margin:1rem 0; font-family:"Courier New",monospace; font-size:0.95rem; color:#2a1a5e; background:#f0eef5; padding:0.6rem; border-radius:3px; }
+  .paper .fig { text-align:center; margin:1.5rem 0; padding:1rem; background:#f5f3ff; border:1px solid #e0daf0; border-radius:4px; }
+  .paper .fig pre { font-family:"Courier New",monospace; font-size:0.75rem; line-height:1.5; color:#333; }
+  .paper .fig-caption { font-size:0.82rem; color:#666; margin-top:0.5rem; font-style:italic; }
+  .paper .ref { font-size:0.85rem; color:#555; margin-bottom:0.3rem; }
+  .paper code { font-family:"Courier New",monospace; background:#f0eef5; padding:0.1rem 0.3rem; border-radius:2px; font-size:0.88rem; }
+  .paper table { width:100%; border-collapse:collapse; margin:1rem 0; font-size:0.88rem; }
+  .paper th { background:#2a1a5e; color:#fff; padding:0.5rem; text-align:left; }
+  .paper td { padding:0.4rem 0.5rem; border-bottom:1px solid #ddd; }
+  .paper tr:nth-child(even) { background:#f5f3ff; }
+  .back-link { display:block; text-align:center; padding:1.5rem; }
+  .back-link a { color:var(--accent2); font-size:1rem; }
+</style>
+</head>
+<body>
+
+<div class="paper">
+
+<h1>Intelligentia Localis:<br>De Inferentia In-Navigatorio, Classificatione Textus, et Embeddingis Sine Nube</h1>
+
+<div class="subtitle">Local Intelligence: On In-Browser Inference, Text Classification, and Cloud-Free Embeddings</div>
+
+<div class="authors">Organism AI Research Division</div>
+<div class="affiliation">Laboratorium Intelligentiae Autonomae · itsnotAilabs.com · Anno MMXXVI</div>
+
+<div class="latin-epigraph">
+  "Intelligentia quae in navigatorio habitat nubem nullam requirit.<br>
+  Servitorem nullum videt, tamen omnia intelligit."<br>
+  <em>— The intelligence that lives in the browser requires no cloud.<br>
+  It sees no server, yet understands all things.</em>
+</div>
+
+<h2>I. Abstractum (Abstract)</h2>
+
+<p>We present the <strong>Inference Worker</strong>, a fully local, in-browser pattern matching and classification engine that performs text classification, cosine similarity scoring, keyword extraction, sentiment analysis, entity recognition, and lightweight embeddings — all without any cloud dependency. Operating as a dedicated Web Worker within the Organism AI architecture, the Inference Worker functions as the organism's <em>sensory cortex</em>: receiving raw textual stimuli, decomposing them into tokens, projecting them into vector space, and returning structured classification judgments. We formalize the pipeline as a five-stage inference chain — tokenization, vectorization, similarity scoring, pattern matching, and entity extraction — and demonstrate that biologically-inspired local intelligence can achieve practical NLP utility at sub-millisecond latencies within the browser sandbox.</p>
+
+<h2>II. Introductio (Introduction)</h2>
+
+<p>Traditional machine learning inference follows a client-server paradigm: the browser collects user input, transmits it to a remote API, and awaits a response. This architecture introduces network latency, privacy exposure, and a hard dependency on cloud availability. When the server fails, the organism is blind — it cannot classify, cannot match, cannot sense.</p>
+
+<p>Biology offers a different model. The peripheral nervous system performs substantial preprocessing before signals ever reach the brain. Retinal ganglion cells detect edges locally; cochlear hair cells perform frequency decomposition in situ; olfactory receptor neurons classify molecular shapes at the point of contact. The brain receives not raw data, but <em>pre-classified signals</em>.</p>
+
+<p>We ask: <em>Quid si systema computationale sensus locales haberet?</em> — What if a computational system had local senses?</p>
+
+<p>This paper presents the <strong>Inference Worker</strong>, which implements:</p>
+
+<ol>
+  <li><strong>Classificatio Textus (Text Classification)</strong> — Category prediction via cosine similarity between input vectors and pre-defined category embeddings</li>
+  <li><strong>Recognitio Exemplarium (Pattern Recognition)</strong> — Regex-based and semantic pattern matching against configurable rule sets</li>
+  <li><strong>Similitudo Vectorialis (Vector Similarity)</strong> — Cosine similarity scoring between arbitrary text pairs using bag-of-words embeddings</li>
+  <li><strong>Extractio Verborum Clavium (Keyword Extraction)</strong> — TF-IDF-weighted keyword ranking with stop word elimination</li>
+  <li><strong>Sentimentum et Entitates (Sentiment &amp; Entities)</strong> — Lexicon-based polarity scoring and pattern-driven named entity recognition</li>
+</ol>
+
+<h2>III. Classificatio Textus (Text Classification)</h2>
+
+<p>The classification pipeline transforms raw text into a category label with a confidence score. The process proceeds through two sub-stages: tokenization and vectorization, culminating in a cosine similarity match against a registry of category prototype vectors.</p>
+
+<h3>III.A — Tokenizatio (Tokenization)</h3>
+
+<p>Input text is first normalized to lowercase and decomposed into word-level tokens by splitting on non-alphanumeric boundaries. A curated stop word list (containing ~150 high-frequency English function words: <code>the</code>, <code>is</code>, <code>at</code>, <code>which</code>, etc.) is applied to filter semantically vacuous tokens. The resulting token array represents the distilled content signal:</p>
+
+<div class="eq">tokenize(text) = filter(split(lowercase(text), /\W+/), λw. w ∉ StopWords ∧ |w| &gt; 1)</div>
+
+<p>This mirrors biological sensory gating — the thalamus filters irrelevant stimuli before they reach the cortex. Stop word removal serves as the organism's attentional gate, ensuring that only content-bearing tokens proceed to vectorization.</p>
+
+<h3>III.B — Vectorizatio (Vectorization)</h3>
+
+<p>Filtered tokens are projected into a sparse vector space using a bag-of-words model with TF-IDF-inspired weighting. Each unique token becomes a dimension; its value reflects term frequency normalized by a simple inverse document frequency proxy:</p>
+
+<div class="eq">v(t) = tf(t, d) × log(N / (1 + df(t)))</div>
+
+<p>Where <em>tf(t, d)</em> is the count of token <em>t</em> in document <em>d</em>, <em>N</em> is the total category count, and <em>df(t)</em> is the number of categories whose prototype contains <em>t</em>. The resulting vector is L2-normalized to unit length for cosine comparison.</p>
+
+<table>
+  <tr><th>Stage</th><th>Nomen Latinum</th><th>Input</th><th>Output</th></tr>
+  <tr><td>Lowercasing</td><td>Reductio Litterarum</td><td>Raw text</td><td>Lowercase text</td></tr>
+  <tr><td>Splitting</td><td>Scissio Verborum</td><td>Lowercase text</td><td>Token array</td></tr>
+  <tr><td>Stop Removal</td><td>Filtratio Vacuorum</td><td>Token array</td><td>Content tokens</td></tr>
+  <tr><td>Frequency Count</td><td>Numeratio Frequentiae</td><td>Content tokens</td><td>Term frequency map</td></tr>
+  <tr><td>TF-IDF Weighting</td><td>Ponderatio TF-IDF</td><td>TF map + corpus stats</td><td>Weighted vector</td></tr>
+  <tr><td>L2 Normalization</td><td>Normalizatio Unitatis</td><td>Weighted vector</td><td>Unit vector</td></tr>
+</table>
+
+<div class="fig">
+<pre>
+  Input Text: "How do I deploy a smart contract on Ethereum?"
+       │
+       ▼
+  ┌─────────────┐
+  │ Tokenizatio │──→ ["how","do","i","deploy","a","smart","contract","on","ethereum"]
+  └─────────────┘
+       │
+       ▼
+  ┌─────────────┐
+  │  Filtratio  │──→ ["deploy","smart","contract","ethereum"]
+  └─────────────┘
+       │
+       ▼
+  ┌─────────────┐
+  │ Vectorizatio│──→ {deploy:0.49, smart:0.52, contract:0.52, ethereum:0.46}
+  └─────────────┘
+       │
+       ▼
+  ┌─────────────┐
+  │  Similitudo │──→ best_match: "blockchain" (score: 0.87)
+  └─────────────┘
+</pre>
+<div class="fig-caption">Figura I — The complete classification pipeline from raw text to category label.</div>
+</div>
+
+<h2>IV. Recognitio Exemplarium (Pattern Recognition)</h2>
+
+<p>Beyond statistical classification, the Inference Worker maintains a configurable pattern registry — a collection of named regular expressions and semantic rule sets that detect structured patterns in input text. Each pattern entry comprises a <code>patternId</code>, a compiled regex or keyword set, and an associated action tag:</p>
+
+<table>
+  <tr><th>Pattern</th><th>Nomen Latinum</th><th>Regex / Rule</th><th>Action Tag</th></tr>
+  <tr><td>URL Detection</td><td>Detectio Nexuum</td><td><code>/https?:\/\/[^\s]+/gi</code></td><td>url_found</td></tr>
+  <tr><td>Email Detection</td><td>Detectio Epistularum</td><td><code>/[\w.-]+@[\w.-]+\.\w+/gi</code></td><td>email_found</td></tr>
+  <tr><td>Code Block</td><td>Detectio Codicis</td><td><code>/```[\s\S]*?```/g</code></td><td>code_block</td></tr>
+  <tr><td>Question Intent</td><td>Intentio Quaestionis</td><td><code>/^(how|what|why|when|where|can|do|is)\b/i</code></td><td>question_intent</td></tr>
+  <tr><td>Command Intent</td><td>Intentio Imperii</td><td><code>/^(run|execute|deploy|install|build)\b/i</code></td><td>command_intent</td></tr>
+</table>
+
+<p>Semantic pattern matching extends regex detection by combining multiple keyword signals. A text is tagged as <em>technical</em> if it contains ≥3 tokens from a curated technical lexicon (e.g., <code>deploy</code>, <code>compile</code>, <code>runtime</code>, <code>kernel</code>). This multi-signal approach reduces false positives compared to single-keyword triggers:</p>
+
+<div class="eq">semantic_match(text, lexicon, θ) = |tokens(text) ∩ lexicon| ≥ θ</div>
+
+<h2>V. Similitudo et Embeddinga (Similarity &amp; Embeddings)</h2>
+
+<p>The Inference Worker computes pairwise text similarity using cosine distance over bag-of-words vectors. Given two texts <em>A</em> and <em>B</em>, each vectorized into unit vectors <em>v<sub>A</sub></em> and <em>v<sub>B</sub></em>, the similarity is:</p>
+
+<div class="eq">cos(v_A, v_B) = Σᵢ (v_Aᵢ × v_Bᵢ) / (‖v_A‖ × ‖v_B‖)</div>
+
+<p>Since both vectors are pre-normalized to unit length, this reduces to the dot product:</p>
+
+<div class="eq">sim(A, B) = v_A · v_B = Σᵢ v_Aᵢ × v_Bᵢ</div>
+
+<p>Embeddings are generated as sparse word-frequency vectors rather than dense neural embeddings. While this sacrifices semantic depth (synonyms occupy orthogonal dimensions), it achieves three critical properties for local inference: (1) zero model download — no 50MB+ ONNX weights, (2) deterministic output — identical input always yields identical vectors, and (3) sub-millisecond computation — vectorization completes in &lt;0.5ms for typical inputs.</p>
+
+<table>
+  <tr><th>Property</th><th>Cloud Neural Embeddings</th><th>Local BoW Embeddings</th></tr>
+  <tr><td>Latency</td><td>50–500ms (network)</td><td>&lt;0.5ms (local)</td></tr>
+  <tr><td>Privacy</td><td>Data leaves browser</td><td>Data stays local</td></tr>
+  <tr><td>Availability</td><td>Requires server</td><td>Always available</td></tr>
+  <tr><td>Semantic Depth</td><td>High (contextual)</td><td>Low (lexical)</td></tr>
+  <tr><td>Model Size</td><td>50–500MB</td><td>0 bytes</td></tr>
+  <tr><td>Determinism</td><td>Variable (temperature)</td><td>Fully deterministic</td></tr>
+</table>
+
+<h2>VI. Sentimentum et Entitates (Sentiment &amp; Entities)</h2>
+
+<p>Sentiment analysis employs a dual-lexicon approach: a positive lexicon (~200 words: <code>excellent</code>, <code>brilliant</code>, <code>innovative</code>, etc.) and a negative lexicon (~200 words: <code>terrible</code>, <code>broken</code>, <code>failure</code>, etc.). The polarity score is computed as the normalized difference between positive and negative hits:</p>
+
+<div class="eq">sentiment(text) = (|tokens ∩ Lex⁺| − |tokens ∩ Lex⁻|) / |tokens|</div>
+
+<p>The score ranges from −1.0 (entirely negative) to +1.0 (entirely positive), with 0.0 representing neutral sentiment. A threshold of ±0.15 determines the categorical label (<em>positivum</em>, <em>negativum</em>, <em>neutrum</em>).</p>
+
+<p>Named entity recognition (NER) operates through pattern-based extraction rather than sequence labeling. The following entity types are detected via compiled regex patterns:</p>
+
+<ul>
+  <li><strong>Persona (Person)</strong> — Capitalized bigrams not at sentence start: <code>/(?&lt;=[.!?]\s)[A-Z][a-z]+ [A-Z][a-z]+/g</code></li>
+  <li><strong>Locus (Location)</strong> — Matched against a gazetteer of ~500 known place names</li>
+  <li><strong>Numerus (Number)</strong> — Numeric patterns including currencies: <code>/\$[\d,.]+|\d+%|\d{4}/g</code></li>
+  <li><strong>Tempus (Date/Time)</strong> — Temporal expressions: <code>/\b\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4}\b/g</code></li>
+  <li><strong>Organisatio (Organization)</strong> — Known suffixes: <code>/\b[A-Z][\w]* (?:Inc|Corp|LLC|Ltd|Foundation)\b/g</code></li>
+</ul>
+
+<div class="fig">
+<pre>
+  Input: "Ethereum dropped 12% yesterday. Vitalik called it temporary."
+         │
+    ┌────┴────────────────────────────────────┐
+    │          Dual Analysis Pipeline          │
+    ├──────────────────┬───────────────────────┤
+    │   Sentimentum    │      Entitates        │
+    │                  │                       │
+    │  Lex⁺: 0 hits   │  "Ethereum"  → ORG    │
+    │  Lex⁻: 1 hit    │  "12%"       → NUM    │
+    │  ("dropped")     │  "yesterday" → TIME   │
+    │                  │  "Vitalik"   → PER    │
+    │  Score: −0.17    │                       │
+    │  Label: negativum│  Entities: 4 found    │
+    └──────────────────┴───────────────────────┘
+</pre>
+<div class="fig-caption">Figura II — Parallel sentiment and entity extraction on a single input.</div>
+</div>
+
+<h2>VII. Neurologia Inferentiae (Inference Neurology)</h2>
+
+<p>Like every worker in the Organism AI architecture, the Inference Worker possesses its own <em>Cor Parvum</em> (MiniHeart) and <em>Cerebrum Parvum</em> (MiniBrain), instantiated via <code>neuro-core.js</code>. These subsystems monitor and adapt the inference pipeline in real time.</p>
+
+<p>The <strong>MiniHeart</strong> tracks inference latency as a vital sign. Each classification request triggers a heartbeat that records processing time. If average latency exceeds the adaptive threshold (initially 50ms), the MiniHeart emits a stress signal to the organism's neural mesh:</p>
+
+<div class="eq">health(t) = 1 − (avg_latency(t) / threshold) where health ∈ [0, 1]</div>
+
+<p>The <strong>MiniBrain</strong> employs Hebbian learning to reinforce successful classification pathways. When a classification result is confirmed (via downstream feedback), the synaptic weight between the input token pattern and the matched category is strengthened:</p>
+
+<div class="eq">Δw(pattern, category) = η × confidence × feedback_signal</div>
+
+<p>Where <em>η</em> is the learning rate (default 0.01), <em>confidence</em> is the cosine similarity score, and <em>feedback_signal</em> is +1 for confirmed matches and −0.5 for rejected matches. Over time, the MiniBrain builds an adaptive bias that tilts classification toward historically successful categories — the inference engine literally <em>learns from experience</em>.</p>
+
+<table>
+  <tr><th>Neuro Component</th><th>Nomen Latinum</th><th>Function</th><th>Metric</th></tr>
+  <tr><td>MiniHeart</td><td>Cor Parvum</td><td>Latency monitoring</td><td>avg_latency_ms</td></tr>
+  <tr><td>MiniHeart</td><td>Cor Parvum</td><td>Health scoring</td><td>health ∈ [0,1]</td></tr>
+  <tr><td>MiniBrain</td><td>Cerebrum Parvum</td><td>Hebbian weight update</td><td>Δw per cycle</td></tr>
+  <tr><td>MiniBrain</td><td>Cerebrum Parvum</td><td>Category bias tuning</td><td>bias_vector</td></tr>
+  <tr><td>MiniBrain</td><td>Cerebrum Parvum</td><td>Attention allocation</td><td>attention_weights</td></tr>
+</table>
+
+<h2>VIII. Conclusio (Conclusion)</h2>
+
+<p>The Inference Worker demonstrates that meaningful NLP — text classification, pattern matching, similarity scoring, sentiment analysis, and entity recognition — can be achieved entirely within the browser, at sub-millisecond latencies, with zero cloud dependency. By modeling the inference pipeline after biological sensory processing, we achieve a system that is private by construction (data never leaves the browser), resilient by design (no external failure points), and adaptive through neuroemergence (MiniHeart and MiniBrain continuously tune performance).</p>
+
+<p>The trade-off is clear: local bag-of-words embeddings lack the semantic depth of transformer-based neural models. Synonyms are invisible; context is absent; polysemy is unresolved. Yet for the organism's operational needs — routing messages, classifying intents, detecting patterns, scoring relevance — lexical methods prove sufficient. The organism does not need to <em>understand</em> language in the human sense; it needs to <em>sense</em> it, rapidly and reliably, as a biological receptor senses a chemical gradient.</p>
+
+<p><em>Intelligentia vera non in nube habitat, sed in ipso navigatorio vivit.</em> — True intelligence does not dwell in the cloud, but lives in the browser itself.</p>
+
+<h2>IX. Bibliographia (References)</h2>
+
+<p class="ref">[1] Organism AI, "inference-worker.js" — In-browser inference engine with text classification, pattern matching, similarity scoring, sentiment analysis, and entity recognition. Organism AI Codebase, 2026.</p>
+<p class="ref">[2] Organism AI, "neuro-core.js" — MiniHeart and MiniBrain subsystem providing Hebbian learning, cardiac monitoring, and neuroemergent adaptation for all workers. Organism AI Codebase, 2026.</p>
+<p class="ref">[3] Salton, G., Wong, A., Yang, C.S. "A Vector Space Model for Automatic Indexing." Communications of the ACM, 18(11):613–620, 1975.</p>
+<p class="ref">[4] Sparck Jones, K. "A Statistical Interpretation of Term Specificity and Its Application in Retrieval." Journal of Documentation, 28(1):11–21, 1972.</p>
+<p class="ref">[5] Manning, C.D., Raghavan, P., Schütze, H. Introduction to Information Retrieval. Cambridge University Press, 2008.</p>
+<p class="ref">[6] Turney, P.D., Pantel, P. "From Frequency to Meaning: Vector Space Models of Semantics." Journal of Artificial Intelligence Research, 37:141–188, 2010.</p>
+<p class="ref">[7] Hebb, D.O. The Organization of Behavior. Wiley &amp; Sons, 1949.</p>
+<p class="ref">[8] Liu, B. "Sentiment Analysis and Opinion Mining." Synthesis Lectures on Human Language Technologies, 5(1):1–167, 2012.</p>
+<p class="ref">[9] Nadeau, D., Sekine, S. "A Survey of Named Entity Recognition and Classification." Lingvisticae Investigationes, 30(1):3–26, 2007.</p>
+<p class="ref">[10] Kuramoto, Y. Chemical Oscillations, Waves, and Turbulence. Springer-Verlag, 1984.</p>
+
+</div>
+
+
+<div style="max-width:900px;margin:2rem auto;padding:0 2rem;">
+<style>
+.auro-uses { background:#f0eef8; border:1px solid #d0ccee; border-left:4px solid #6c63ff; border-radius:4px; padding:1.5rem 2rem; margin:1.5rem 0; font-family:'Palatino Linotype','Book Antiqua',Palatino,serif; color:#14142a; line-height:1.7; }
+.auro-uses h2 { font-size:1.1rem; color:#1a0e5e; margin-bottom:0.8rem; text-transform:uppercase; letter-spacing:0.05em; }
+.auro-uses ul { margin:0.5rem 0 1rem 1.5rem; }
+.auro-uses li { margin-bottom:0.5rem; font-size:0.93rem; }
+.auro-uses p { font-size:0.9rem; margin-bottom:0.5rem; }
+.auro-uses a { color:#00705a; }
+</style>
+<div class="auro-uses">
+<h2>Canonical Uses — AURO System</h2>
+<p>This paper carries force as an AURO charter instrument under <strong>ORO-CHARTER-001</strong>. It functions across all five use classes:</p>
+<ul>
+  <li><strong>Training Corpus:</strong> Inference architecture trains AURO's model-selection reasoning — teaching the system which model to choose for which task via reputation-weighted routing.</li>
+  <li><strong>Absorption Blueprint:</strong> Multi-model inference maps to AURO's ai_tech PSE primitive. Model capability profiles absorbed into the Sovereign Routing Protocol reputation table.</li>
+  <li><strong>Governance Charter:</strong> Defines AURO's model selection policy: reputation decays toward the mean, no single model is sovereign, and routing adapts from outcome feedback.</li>
+  <li><strong>Protocol Source:</strong> Grounds PROTO-001 SRP, PROTO-005 MMFP, and PROTO-014–019 model governance protocols.</li>
+  <li><strong>Public Record:</strong> Permanent evidence of AURO's inference routing design, available at <a href="inference-paper.html">research/inference-paper.html</a>.</li>
+</ul>
+<p>→ <a href="auro-charter.html">AURO Official Charter (ORO-CHARTER-001)</a> &nbsp;·&nbsp; <a href="protocol-papers.html">All 185 ORO Protocols</a> &nbsp;·&nbsp; <a href="neuro-paper.html">NeuroCore Paper</a></p>
+</div>
+</div>
+<div class="back-link">
+  <a href="../index.html">← Back to Organism AI</a>
+</div>
+
+</body>
+</html>

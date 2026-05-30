@@ -1,0 +1,18 @@
+{
+  "id": "atlas://bot/organism-intel-bot",
+  "name": "organism-intel-bot",
+  "class": "Bot",
+  "division": "Document & Report",
+  "divisionNum": "IV",
+  "emoji": "🔭",
+  "domain": "Fleet intelligence aggregation",
+  "triggers": ["push:docs/", "schedule:every-3h"],
+  "capabilities": ["aggregate_reports", "pattern_detect", "awareness_build", "fleet_picture"],
+  "languages": ["atlas://language/ril", "atlas://language/ocl"],
+  "governance_pipeline": "pipeline://governance/bot_cycle",
+  "ocl_ref": "atlas://organism/bot-fleet",
+  "script": "scripts/intelligence-gather.js",
+  "workflow": ".github/workflows/organism-intel-bot.yml",
+  "report": "docs/intel-picture.md",
+  "microbots": ["report-aggregator", "pattern-detector"]
+}

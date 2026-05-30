@@ -1,0 +1,32 @@
+{
+  "canisters": {
+    "wyoming_organism": {
+      "type": "motoko",
+      "main": "WyomingOrganism.mo"
+    },
+    "nevada_organism": {
+      "type": "motoko",
+      "main": "../nevada/NevadaOrganism.mo"
+    },
+    "dallas_isd_organism": {
+      "type": "motoko",
+      "main": "../dallas-isd/DallasISDOrganism.mo"
+    }
+  },
+  "networks": {
+    "local": {
+      "bind": "127.0.0.1:4943",
+      "type": "ephemeral"
+    },
+    "ic": {
+      "providers": ["https://icp-api.io"],
+      "type": "persistent"
+    }
+  },
+  "defaults": {
+    "build": {
+      "packtool": ""
+    }
+  },
+  "version": 1
+}

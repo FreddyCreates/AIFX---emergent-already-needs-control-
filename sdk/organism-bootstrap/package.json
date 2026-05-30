@@ -1,0 +1,32 @@
+{
+  "name": "@medina/organism-bootstrap",
+  "version": "1.0.0",
+  "description": "ICP/Organism bootstrap SDK: Node.js bootstrap function, Motoko code generator with φ-based timers",
+  "type": "module",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "files": [
+    "src/**/*"
+  ],
+  "keywords": [
+    "icp",
+    "internet-computer",
+    "motoko",
+    "bootstrap",
+    "organism",
+    "canister",
+    "phi-timers"
+  ],
+  "author": "Medina",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FreddyCreates/potential-succotash.git",
+    "directory": "sdk/organism-bootstrap"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  }
+}

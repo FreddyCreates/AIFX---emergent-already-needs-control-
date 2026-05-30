@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edge Prompt Lab</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "Segoe UI", -apple-system, sans-serif;
+      background: #0d1117;
+      color: #e0e0e0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .header {
+      background: linear-gradient(135deg, #107c10, #0e6b0e);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .header-icon {
+      width: 36px;
+      height: 36px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .header h1 { font-size: 16px; font-weight: 700; }
+    .header p { font-size: 11px; opacity: 0.85; margin-top: 2px; }
+    .content { flex: 1; padding: 16px; overflow-y: auto; }
+    .model-chips {
+      display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px;
+    }
+    .chip {
+      padding: 4px 10px;
+      border-radius: 14px;
+      background: #107c10;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .section-label {
+      font-size: 11px; color: #888; text-transform: uppercase;
+      letter-spacing: 0.5px; margin-bottom: 6px;
+    }
+    select {
+      width: 100%;
+      padding: 8px;
+      background: #161b22;
+      color: #e0e0e0;
+      border: 1px solid #333;
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: inherit;
+      margin-bottom: 12px;
+    }
+    select:focus { outline: none; border-color: #107c10; }
+    textarea {
+      width: 100%;
+      height: 100px;
+      background: #161b22;
+      color: #e0e0e0;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 13px;
+      resize: vertical;
+      font-family: inherit;
+    }
+    textarea:focus { outline: none; border-color: #107c10; }
+    .btn-row { display: flex; gap: 8px; margin-top: 12px; }
+    .btn {
+      flex: 1;
+      padding: 10px 0;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .btn:hover { opacity: 0.85; }
+    .btn-primary { background: #107c10; }
+    .comparison-results {
+      margin-top: 16px;
+      display: none;
+    }
+    .comparison-results.active { display: block; }
+    .model-result {
+      background: #161b22;
+      border: 1px solid #222;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 8px;
+    }
+    .model-result-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    .model-name {
+      font-weight: 700;
+      font-size: 13px;
+      color: #107c10;
+    }
+    .model-score {
+      font-size: 12px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      background: #107c10;
+      color: #fff;
+    }
+    .model-response {
+      font-size: 12px;
+      line-height: 1.5;
+      color: #ccc;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .avg-score {
+      margin-top: 12px;
+      padding: 10px;
+      background: #0a2e0a;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 13px;
+    }
+    .status-bar {
+      padding: 8px 16px;
+      background: #161b22;
+      border-top: 1px solid #222;
+      font-size: 10px;
+      color: #666;
+      display: flex;
+      justify-content: space-between;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-icon">PL</div>
+    <div>
+      <h1>Edge Prompt Lab</h1>
+      <p>Template library &amp; response comparison</p>
+    </div>
+  </div>
+  <div class="content">
+    <div class="model-chips">
+      <span class="chip">GPT</span>
+      <span class="chip">Claude</span>
+      <span class="chip">Llama</span>
+      <span class="chip">DeepSeek</span>
+    </div>
+    <div class="section-label">Prompt Template</div>
+    <select id="templateSelect">
+      <option value="">— No template —</option>
+      <option value="zero-shot">Zero-Shot</option>
+      <option value="few-shot">Few-Shot</option>
+      <option value="chain-of-thought">Chain-of-Thought</option>
+      <option value="role-play">Role-Play</option>
+      <option value="structured">Structured Output</option>
+      <option value="critique">Self-Critique</option>
+    </select>
+    <div class="section-label">Your Prompt</div>
+    <textarea id="promptInput" placeholder="Enter your prompt to test against models..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="testBtn">&#129514; Test Prompt</button>
+    </div>
+    <div class="comparison-results" id="comparisonResults"></div>
+  </div>
+  <div class="status-bar">
+    <span id="statusText">Ready</span>
+    <span>Build Ring &bull; EXT-034</span>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      var promptInput = document.getElementById('promptInput');
+      var templateSelect = document.getElementById('templateSelect');
+      var testBtn = document.getElementById('testBtn');
+      var comparisonResults = document.getElementById('comparisonResults');
+      var statusText = document.getElementById('statusText');
+
+      testBtn.addEventListener('click', function () {
+        var prompt = promptInput.value.trim();
+        if (!prompt) {
+          statusText.textContent = 'Please enter a prompt';
+          return;
+        }
+        var templateId = templateSelect.value || null;
+        statusText.textContent = 'Testing prompt...';
+        comparisonResults.className = 'comparison-results active';
+        comparisonResults.innerHTML = '<div style="text-align:center;padding:20px;color:#888;">Testing prompt against all models...</div>';
+
+        chrome.runtime.sendMessage(
+          { action: 'testPrompt', prompt: prompt, templateId: templateId },
+          function (resp) {
+            if (chrome.runtime.lastError) {
+              comparisonResults.innerHTML = '<div style="padding:12px;color:#e94560;">Error: ' + chrome.runtime.lastError.message + '</div>';
+              statusText.textContent = 'Error';
+              return;
+            }
+            comparisonResults.innerHTML = '';
+            if (resp && resp.results) {
+              resp.results.forEach(function (r) {
+                var card = document.createElement('div');
+                card.className = 'model-result';
+                card.innerHTML =
+                  '<div class="model-result-header">' +
+                    '<span class="model-name">' + r.model.toUpperCase() + '</span>' +
+                    '<span class="model-score">' + r.score + '</span>' +
+                  '</div>' +
+                  '<div class="model-response">' + r.response + '</div>';
+                comparisonResults.appendChild(card);
+              });
+
+              var avg = document.createElement('div');
+              avg.className = 'avg-score';
+              avg.innerHTML = 'Average Score: <strong>' + resp.averageScore + '</strong> &bull; Best: <strong>' + resp.bestModel.toUpperCase() + '</strong>';
+              comparisonResults.appendChild(avg);
+            }
+            statusText.textContent = 'Test complete';
+          }
+        );
+      });
+
+      chrome.runtime.sendMessage({ action: 'getState' }, function (resp) {
+        if (resp && resp.healthy) statusText.textContent = 'Engine healthy';
+      });
+    })();
+  </script>
+</body>
+</html>

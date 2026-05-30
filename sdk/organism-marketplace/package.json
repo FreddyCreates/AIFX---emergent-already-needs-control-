@@ -1,0 +1,49 @@
+{
+  "name": "@medina/organism-marketplace",
+  "version": "1.0.0",
+  "description": "Callable tool marketplace for the sovereign organism — 24 VOIS tools across 4 families (Crawling, Context, Commander, Sentry), registry, routing, invocation, settlement, and family template generator.",
+  "license": "MIT",
+  "type": "module",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./tool-schema": "./src/tool-schema.js",
+    "./tool-registry": "./src/tool-registry.js",
+    "./tool-invoker": "./src/tool-invoker.js",
+    "./marketplace-settlement": "./src/marketplace-settlement.js",
+    "./marketplace-router": "./src/marketplace-router.js",
+    "./family-profiles": "./src/family-profiles.js",
+    "./family-template": "./src/family-template.js",
+    "./tools": "./src/tools/index.js"
+  },
+  "keywords": [
+    "marketplace",
+    "callable-tools",
+    "registry",
+    "routing",
+    "settlement",
+    "organism",
+    "VOIS",
+    "sovereign",
+    "family-profiles",
+    "crawling",
+    "context",
+    "commander",
+    "sentry"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "src/"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FreddyCreates/potential-succotash.git",
+    "directory": "sdk/organism-marketplace"
+  },
+  "author": "Medina",
+  "publishConfig": {
+    "access": "public"
+  }
+}

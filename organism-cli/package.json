@@ -1,0 +1,22 @@
+{
+  "name": "organism-cli",
+  "version": "1.0.0",
+  "description": "Terminal AI — auto-detects Edge/Chrome/Brave (Edge-first on Windows) and loads all 35 Sovereign Organism extensions directly. One command. Zero manual steps.",
+  "main": "index.js",
+  "bin": {
+    "organism": "./index.js",
+    "organism-cli": "./index.js"
+  },
+  "scripts": {
+    "start": "node index.js install",
+    "install-extensions": "node index.js install",
+    "validate": "node index.js validate",
+    "status": "node index.js status",
+    "list": "node index.js list"
+  },
+  "keywords": ["organism", "chrome-extension", "ai", "cli", "installer"],
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

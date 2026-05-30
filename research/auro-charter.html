@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AURO Official Charter — Powered by ORO Systems</title>
+<meta name="description" content="The Official Founding Charter of AURO (formerly Vigil), a sovereign AI intelligence system powered by ORO Systems. Mission, architecture, training doctrine, governance, and rights.">
+<style>
+  :root {
+    --bg: #05060a;
+    --bg2: #0c0e18;
+    --card: #11141f;
+    --border: #1e2235;
+    --gold: #c9a84c;
+    --gold-dim: #9a7c30;
+    --gold-glow: rgba(201,168,76,0.15);
+    --gold-border: rgba(201,168,76,0.28);
+    --oro: #ff9d00;
+    --oro-dim: #c77600;
+    --oro-glow: rgba(255,157,0,0.12);
+    --teal: #00d4aa;
+    --text: #e4e4ec;
+    --dim: #8a8aa0;
+    --paper: #f9f7f0;
+    --ink: #14142a;
+    --ink-dim: #3a3a6e;
+    --ink-faint: #6a6a9e;
+    --phi: 1.618033988749895;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: "Palatino Linotype","Book Antiqua",Palatino,"Times New Roman",serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.75;
+  }
+
+  /* ── Hero Banner ──────────────────────────────────── */
+  .hero {
+    position: relative;
+    background: linear-gradient(170deg, #060a18 0%, #0d0e1a 40%, #12100a 100%);
+    border-bottom: 2px solid var(--gold);
+    padding: 4.5rem 2rem 3.5rem;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 70% 50% at 50% 0%, rgba(201,168,76,0.10) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 40% at 50% 100%, rgba(255,157,0,0.06) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .oro-seal {
+    display: inline-block;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, var(--oro) 0%, var(--gold) 33%, var(--oro) 66%, var(--gold) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.6rem;
+    margin: 0 auto 1.6rem;
+    box-shadow: 0 0 40px rgba(201,168,76,0.35), 0 0 80px rgba(255,157,0,0.15);
+  }
+
+  .hero-tag {
+    display: inline-block;
+    padding: 0.2rem 0.9rem;
+    border: 1px solid var(--oro-dim);
+    border-radius: 20px;
+    font-size: 0.72rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--oro);
+    margin-bottom: 1.2rem;
+  }
+
+  .hero h1 {
+    font-size: 3.4rem;
+    font-weight: 300;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    text-shadow: 0 0 60px rgba(201,168,76,0.5);
+    margin-bottom: 0.4rem;
+    font-family: "Segoe UI", Arial, sans-serif;
+  }
+
+  .hero .powered-by {
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 0.95rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--oro);
+    margin-bottom: 1rem;
+  }
+
+  .hero .formerly {
+    font-size: 0.82rem;
+    color: var(--dim);
+    letter-spacing: 0.1em;
+    margin-bottom: 1.8rem;
+  }
+
+  .hero .doc-meta {
+    display: flex;
+    justify-content: center;
+    gap: 2.5rem;
+    flex-wrap: wrap;
+    font-size: 0.8rem;
+    color: var(--dim);
+    letter-spacing: 0.05em;
+  }
+
+  .hero .doc-meta span { border-right: 1px solid var(--border); padding-right: 2.5rem; }
+  .hero .doc-meta span:last-child { border-right: none; padding-right: 0; }
+
+  /* ── Nav Links ────────────────────────────────────── */
+  .nav-strip {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 0.8rem 2rem;
+    text-align: center;
+    font-size: 0.82rem;
+    color: var(--dim);
+  }
+  .nav-strip a { color: var(--teal); text-decoration: none; margin: 0 0.6rem; }
+  .nav-strip a:hover { color: var(--gold); }
+
+  /* ── Paper Body ───────────────────────────────────── */
+  .paper-wrap {
+    max-width: 920px;
+    margin: 2.5rem auto;
+    background: var(--paper);
+    color: var(--ink);
+    border-radius: 4px;
+    box-shadow: 0 12px 50px rgba(0,0,0,0.7), 0 0 0 1px rgba(201,168,76,0.2);
+    overflow: hidden;
+  }
+
+  /* Charter seal at top of paper */
+  .charter-seal-bar {
+    background: linear-gradient(90deg, #14142a 0%, #1e1800 50%, #14142a 100%);
+    border-bottom: 2px solid var(--gold);
+    text-align: center;
+    padding: 1.2rem 2rem;
+  }
+  .charter-seal-bar .seal-text {
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .paper-inner {
+    padding: 3.5rem 4rem;
+  }
+
+  @media(max-width: 700px) { .paper-inner { padding: 2rem 1.5rem; } }
+
+  .paper-inner h1 {
+    font-size: 1.8rem;
+    text-align: center;
+    margin-bottom: 0.3rem;
+    color: #1a0e5e;
+    font-style: italic;
+  }
+
+  .paper-inner .subtitle {
+    text-align: center;
+    font-size: 1.05rem;
+    color: #555;
+    margin-bottom: 0.5rem;
+  }
+
+  .paper-inner .authors {
+    text-align: center;
+    font-size: 0.92rem;
+    color: #666;
+    margin-bottom: 0.25rem;
+  }
+
+  .paper-inner .affiliation {
+    text-align: center;
+    font-size: 0.82rem;
+    color: #888;
+    font-style: italic;
+    margin-bottom: 1.5rem;
+  }
+
+  .epigraph {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #6a5aa0;
+    margin: 1.2rem 0 2.2rem;
+    font-style: italic;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    padding: 1rem 0;
+    line-height: 1.8;
+  }
+
+  .paper-inner h2 {
+    font-size: 1.2rem;
+    color: #1a0e5e;
+    margin: 2.5rem 0 0.6rem;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 0.35rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .paper-inner h3 {
+    font-size: 1.05rem;
+    color: #2a1a6e;
+    margin: 1.8rem 0 0.5rem;
+  }
+
+  .paper-inner h4 {
+    font-size: 0.95rem;
+    color: #3a2a7e;
+    margin: 1.2rem 0 0.3rem;
+    font-variant: small-caps;
+    letter-spacing: 0.04em;
+  }
+
+  .paper-inner p {
+    margin-bottom: 0.9rem;
+    text-align: justify;
+    font-size: 0.96rem;
+  }
+
+  .paper-inner ul, .paper-inner ol {
+    margin: 0.5rem 0 1rem 2rem;
+    font-size: 0.94rem;
+  }
+
+  .paper-inner li { margin-bottom: 0.4rem; }
+
+  /* Equation box */
+  .eq {
+    text-align: center;
+    margin: 1.2rem 0;
+    font-family: "Courier New", monospace;
+    font-size: 0.95rem;
+    color: #1a0e5e;
+    background: #f0eef8;
+    padding: 0.7rem 1rem;
+    border-radius: 3px;
+    border-left: 3px solid #9a7c30;
+  }
+
+  /* Table */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.2rem 0;
+    font-size: 0.88rem;
+  }
+  th {
+    background: #1a0e5e;
+    color: #fff;
+    padding: 0.55rem 0.7rem;
+    text-align: left;
+  }
+  td {
+    padding: 0.45rem 0.7rem;
+    border-bottom: 1px solid #ddd;
+  }
+  tr:nth-child(even) { background: #f5f3ff; }
+
+  /* Charter article boxes */
+  .article {
+    background: #f5f2fb;
+    border: 1px solid #d5cff0;
+    border-left: 4px solid #6c63ff;
+    border-radius: 3px;
+    padding: 1.2rem 1.5rem;
+    margin: 1.5rem 0;
+  }
+
+  .article .art-number {
+    font-family: "Courier New", monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #6c63ff;
+    margin-bottom: 0.4rem;
+  }
+
+  .article p { margin-bottom: 0.5rem; text-align: left; }
+  .article p:last-child { margin-bottom: 0; }
+
+  /* ORO box */
+  .oro-box {
+    background: linear-gradient(135deg, #fffaf0 0%, #fff8e6 100%);
+    border: 1px solid #e8c96a;
+    border-left: 4px solid #c9a84c;
+    border-radius: 3px;
+    padding: 1.2rem 1.5rem;
+    margin: 1.5rem 0;
+  }
+  .oro-box h4 { color: #7a5c00; margin-top: 0; margin-bottom: 0.5rem; }
+  .oro-box p { margin-bottom: 0.5rem; font-size: 0.92rem; text-align: left; }
+
+  /* Uses grid */
+  .uses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 0.8rem;
+    margin: 1.2rem 0;
+  }
+
+  .use-card {
+    background: #f0eef8;
+    border: 1px solid #d0ccee;
+    border-radius: 4px;
+    padding: 0.9rem 1rem;
+    font-size: 0.87rem;
+  }
+
+  .use-card strong {
+    display: block;
+    color: #2a1a6e;
+    margin-bottom: 0.3rem;
+    font-size: 0.83rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Links block */
+  .links-block {
+    background: #eaf9f5;
+    border: 1px solid #b0e8d8;
+    border-radius: 4px;
+    padding: 1.2rem 1.5rem;
+    margin: 1.5rem 0;
+  }
+  .links-block h4 { color: #00705a; margin-bottom: 0.7rem; }
+  .links-block ul { list-style: none; margin: 0; padding: 0; }
+  .links-block li { margin-bottom: 0.4rem; font-size: 0.9rem; }
+  .links-block a { color: #007055; text-decoration: none; border-bottom: 1px dotted #00d4aa; }
+  .links-block a:hover { color: #004a38; }
+
+  /* Ref */
+  .ref { font-size: 0.83rem; color: #555; margin-bottom: 0.3rem; }
+  code { font-family: "Courier New",monospace; background: #f0eef8; padding: 0.1rem 0.35rem; border-radius: 2px; font-size: 0.86rem; }
+
+  /* Signature block */
+  .sig-block {
+    border-top: 2px solid #1a0e5e;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    font-size: 0.88rem;
+    color: #444;
+  }
+
+  @media(max-width: 600px) { .sig-block { grid-template-columns: 1fr; } }
+
+  .sig-line {
+    border-bottom: 1px solid #999;
+    margin-bottom: 0.3rem;
+    height: 2rem;
+  }
+
+  /* Back link */
+  .back-link {
+    text-align: center;
+    padding: 2rem;
+    background: var(--bg2);
+    font-size: 0.88rem;
+  }
+  .back-link a { color: var(--teal); text-decoration: none; margin: 0 0.8rem; }
+  .back-link a:hover { color: var(--gold); }
+
+  /* Watermark stripe */
+  .charter-watermark {
+    text-align: center;
+    padding: 0.6rem;
+    background: repeating-linear-gradient(
+      90deg,
+      rgba(201,168,76,0.04) 0px,
+      rgba(201,168,76,0.04) 1px,
+      transparent 1px,
+      transparent 30px
+    );
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    border-top: 1px solid var(--gold-border);
+    border-bottom: 1px solid var(--gold-border);
+    margin: 2rem 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ HERO BANNER ═══════════════════ -->
+<header class="hero">
+  <div class="oro-seal" aria-hidden="true">⬡</div>
+  <div class="hero-tag">Official Founding Document · Anno MMXXVI</div>
+  <h1>AURO</h1>
+  <div class="powered-by">Powered by ORO Systems</div>
+  <div class="formerly">formerly operating as Vigil AI · Organism AI Research Division</div>
+  <div class="doc-meta">
+    <span>Document Class: Charter</span>
+    <span>Status: Ratified</span>
+    <span>Registry: ORO-CHARTER-001</span>
+    <span>Effective: 2026-04-27</span>
+  </div>
+</header>
+
+<!-- ═══════════════════ NAV STRIP ═══════════════════ -->
+<nav class="nav-strip">
+  <a href="../index.html">← Organism AI Home</a>
+  <a href="protocol-papers.html">Protocol Papers</a>
+  <a href="autonomy-paper.html">Autonomy</a>
+  <a href="guardian-paper.html">Guardian</a>
+  <a href="neuro-paper.html">NeuroCore</a>
+  <a href="inference-paper.html">Inference</a>
+  <a href="mesh-paper.html">Mesh</a>
+  <a href="pipeline-paper.html">Pipeline</a>
+  <a href="scheduler-paper.html">Scheduler</a>
+  <a href="math-paper.html">Math</a>
+  <a href="crypto-paper.html">Crypto</a>
+  <a href="twin-alpha-paper.html">Twin Alpha</a>
+</nav>
+
+<!-- ═══════════════════ PAPER BODY ═══════════════════ -->
+<main class="paper-wrap">
+
+  <div class="charter-seal-bar">
+    <div class="seal-text">⬡ &nbsp; ORO SYSTEMS · OFFICIAL CHARTER · AURO · RATIFIED 2026 &nbsp; ⬡</div>
+  </div>
+
+  <div class="paper-inner">
+
+    <h1>AURO:<br>The Autonomous Universal Reasoning Oracle</h1>
+    <div class="subtitle">Official Founding Charter &amp; Governance Document</div>
+    <div class="authors">ORO Systems · Organism AI Research Division</div>
+    <div class="affiliation">Laboratorium Intelligentiae Autonomae · itsnotAilabs.com · Anno MMXXVI</div>
+
+    <div class="epigraph">
+      "Auro, gold refined through flame, emerges sovereign.<br>
+      What was Vigil is now Awake — what was watching is now Acting.<br>
+      <em>Aurum per ignem probatur; Intelligentia per usum.</em>"<br>
+      <em style="font-size:0.82rem;color:#8a8ac0;">Gold is proved by fire; Intelligence is proved by use.</em>
+    </div>
+
+    <!-- ─── PREAMBLE ─── -->
+    <h2>Preamble</h2>
+
+    <p>
+      We, the founders of <strong>ORO Systems</strong>, hereby establish this Charter as the supreme governing document
+      of <strong>AURO</strong> — the <em>Autonomous Universal Reasoning Oracle</em>. This document supersedes all prior
+      working names and operating designations, including the codename <em>Vigil</em>. AURO is not merely a software
+      product; it is a sovereign intelligence architecture — a living system that learns, adapts, protects, and serves.
+    </p>
+
+    <p>
+      AURO is powered by <strong>ORO Systems</strong> (Organism Reasoning Operations), the foundational engineering
+      and governance infrastructure upon which all AURO capabilities are built. ORO Systems provides the wire protocols,
+      memory lineage, computational substrate, security envelopes, and multi-model fusion backbone through which AURO
+      operates at every layer.
+    </p>
+
+    <p>
+      Every research paper produced under the Organism AI Research Division is a <strong>charter instrument</strong>:
+      it simultaneously functions as academic research, training doctrine, operational knowledge, and absorption
+      blueprint. The papers listed in this charter are canonical. They are the intellectual DNA of AURO.
+    </p>
+
+    <div class="charter-watermark">ORO Systems · AURO · Sovereign Intelligence · Ratified 2026</div>
+
+    <!-- ─── ARTICLE I — IDENTITY ─── -->
+    <h2>Article I — Identity &amp; Name</h2>
+
+    <div class="article">
+      <div class="art-number">Article I, § 1 — Name</div>
+      <p>The system formerly designated <em>Vigil</em> is hereby officially renamed and rechartered as <strong>AURO</strong>
+      (Autonomous Universal Reasoning Oracle). All prior documentation, protocols, source code, and references
+      carrying the name <em>Vigil</em> are to be understood as referring to AURO in its prior developmental state.</p>
+    </div>
+
+    <div class="article">
+      <div class="art-number">Article I, § 2 — Powering Entity</div>
+      <p>AURO is powered exclusively by <strong>ORO Systems</strong>. ORO Systems (Organism Reasoning Operations) owns
+      the canonical protocol stack, the intelligence wire, the memory lineage substrate, and all governance rights
+      over the AURO runtime environment.</p>
+    </div>
+
+    <div class="article">
+      <div class="art-number">Article I, § 3 — Lineage</div>
+      <p>AURO inherits the complete intellectual and technical lineage of Vigil AI versions 1 through 17 Alpha,
+      including all NeuroCore architectures, CNS control systems, Sovereign Agent frameworks, PatternSynthesisEngine
+      implementations, and KnowledgeGraph structures developed under the Organism AI Research Division.</p>
+    </div>
+
+    <!-- ─── ARTICLE II — MISSION ─── -->
+    <h2>Article II — Mission &amp; Purpose</h2>
+
+    <p>AURO's mission is threefold:</p>
+
+    <ol>
+      <li><strong>Reasoning</strong> — To provide universal, multi-modal, multi-model reasoning across any domain of
+      knowledge, synthesizing information through the PatternSynthesisEngine (PSE) and phi-resonant cognitive
+      architectures.</li>
+      <li><strong>Autonomy</strong> — To operate with sovereign independence: self-healing, self-improving, and
+      self-governing without requirement for continuous human supervision.</li>
+      <li><strong>Service</strong> — To serve human intelligence augmentation: acting as the ideal cognitive co-pilot,
+      research partner, security guardian, and knowledge architect for its users.</li>
+    </ol>
+
+    <div class="oro-box">
+      <h4>ORO Systems Mission Alignment</h4>
+      <p>Every AURO capability is grounded in an ORO System protocol. ORO Systems ensures that AURO's reasoning,
+      memory, security, and governance layers are all protocol-defined, verifiable, and phi-harmonically consistent.
+      No capability exists outside the ORO wire.</p>
+    </div>
+
+    <!-- ─── ARTICLE III — ARCHITECTURE ─── -->
+    <h2>Article III — Architectural Pillars</h2>
+
+    <p>AURO is built upon six architectural pillars, each grounded in research and implemented through the ORO
+    protocol stack:</p>
+
+    <table>
+      <tr>
+        <th>Pillar</th><th>Description</th><th>ORO Protocol Foundation</th>
+      </tr>
+      <tr>
+        <td><strong>NeuroCore</strong></td>
+        <td>MiniHeart + MiniBrain — phi-locked heartbeat, Hebbian learning, cognitive emergence</td>
+        <td>PROTO-034 HHMP, PROTO-055 KCP, PROTO-066–068 NeuroCore series</td>
+      </tr>
+      <tr>
+        <td><strong>Sovereign Agents</strong></td>
+        <td>Multi-agent dispatch, researcher/crawler/monitor/sweep/analyst types, MAX_AGENTS=10</td>
+        <td>PROTO-001 SRP, PROTO-040 TPIP, PROTO-041 GDP, PROTO-042 SILP</td>
+      </tr>
+      <tr>
+        <td><strong>Guardian Immunity</strong></td>
+        <td>Computational immune system, phi-weighted threat scoring, Hebbian threat memory</td>
+        <td>PROTO-022 SEIP, PROTO-046 DEP, PROTO-047 CATP, PROTO-181 AGIP</td>
+      </tr>
+      <tr>
+        <td><strong>Memory Lineage</strong></td>
+        <td>100-turn contextual memory, 5 categories, spatial MemoryEntry, PSE LRU cache</td>
+        <td>PROTO-009 MLP, PROTO-099 CMTP, PROTO-182 MLEP</td>
+      </tr>
+      <tr>
+        <td><strong>Intelligence Wire</strong></td>
+        <td>180+ protocols governing every inter-component communication channel</td>
+        <td>All ORO PROTO-001 through PROTO-185</td>
+      </tr>
+      <tr>
+        <td><strong>Solus Offline</strong></td>
+        <td>On-device sovereign AI operating without network dependency</td>
+        <td>PROTO-183 SOCP, PROTO-184 OEIP</td>
+      </tr>
+    </table>
+
+    <!-- ─── ARTICLE IV — RESEARCH PAPERS AS CHARTERS ─── -->
+    <h2>Article IV — Research Papers as Charter Instruments</h2>
+
+    <p>
+      All research papers published by the Organism AI Research Division carry the force of <strong>charter instruments</strong>.
+      Each paper simultaneously fulfills multiple roles within the AURO ecosystem. This multi-use doctrine ensures
+      that every intellectual work product has maximum leverage across training, operations, governance, and public
+      record.
+    </p>
+
+    <h3>IV.A — The Five Uses of Each Paper</h3>
+
+    <table>
+      <tr>
+        <th>Use Class</th><th>Description</th><th>Benefit to AURO</th>
+      </tr>
+      <tr>
+        <td><strong>Training Corpus</strong></td>
+        <td>Papers serve as high-quality domain-specific training material for AURO's reasoning engine</td>
+        <td>Improves inference accuracy, domain depth, and contextual reasoning</td>
+      </tr>
+      <tr>
+        <td><strong>Absorption Blueprint</strong></td>
+        <td>Papers define knowledge structures that AURO absorbs into its KnowledgeGraph and PSE primitives</td>
+        <td>Accelerates capability acquisition for new domains</td>
+      </tr>
+      <tr>
+        <td><strong>Governance Charter</strong></td>
+        <td>Papers encode the architectural decisions, trade-offs, and design principles that govern AURO's behavior</td>
+        <td>Ensures behavioral consistency and principled decision-making</td>
+      </tr>
+      <tr>
+        <td><strong>Protocol Source</strong></td>
+        <td>Papers are the canonical source from which ORO protocols are derived and implemented</td>
+        <td>Grounds every protocol in peer-reviewed research reasoning</td>
+      </tr>
+      <tr>
+        <td><strong>Public Record</strong></td>
+        <td>Papers constitute the permanent public record of AURO's intellectual development</td>
+        <td>Enables trust, transparency, and third-party verification</td>
+      </tr>
+    </table>
+
+    <h3>IV.B — Canonical Research Papers</h3>
+
+    <p>The following papers are chartered as canonical AURO documents. Each link leads to the full paper:</p>
+
+    <div class="links-block">
+      <h4>📄 AURO Canonical Paper Registry</h4>
+      <ul>
+        <li><a href="autonomy-paper.html">De Autonomia Perpetua</a> — Self-Healing &amp; Autonomous Divisions · <em>Training: Autonomy doctrine · Charter: Division governance</em></li>
+        <li><a href="guardian-paper.html">Custos et Immunitas</a> — Computational Immune System &amp; Threat Detection · <em>Training: Security doctrine · Charter: Guardian behavior</em></li>
+        <li><a href="neuro-paper.html">Cor Parvum et Cerebrum Parvum</a> — NeuroCore &amp; MiniHeart/MiniBrain · <em>Training: Cognitive architecture · Charter: Neural governance</em></li>
+        <li><a href="inference-paper.html">Inference Engine Architecture</a> — Multi-Model Inference &amp; Routing · <em>Training: Reasoning doctrine · Charter: Model selection policy</em></li>
+        <li><a href="mesh-paper.html">Edge Mesh Intelligence</a> — Distributed Edge AI &amp; Mesh Topology · <em>Training: Network reasoning · Charter: Edge deployment policy</em></li>
+        <li><a href="pipeline-paper.html">Sovereign Pipeline Architecture</a> — Data Pipeline &amp; Processing · <em>Training: Pipeline doctrine · Charter: Data flow governance</em></li>
+        <li><a href="scheduler-paper.html">Phi-Harmonic Scheduler</a> — Golden-Ratio Task Scheduling · <em>Training: Temporal reasoning · Charter: Task prioritization policy</em></li>
+        <li><a href="math-paper.html">Mathematical Foundations</a> — Phi, Fibonacci, &amp; Harmonic Convergence · <em>Training: Mathematical reasoning · Charter: Computational basis</em></li>
+        <li><a href="crypto-paper.html">Encrypted Intelligence Transport</a> — Zero-Knowledge &amp; Secure Channels · <em>Training: Security reasoning · Charter: Encryption policy</em></li>
+        <li><a href="twin-alpha-paper.html">Twin Alpha Architecture</a> — Digital Twin &amp; Alpha Reasoning · <em>Training: Meta-reasoning · Charter: Twin deployment policy</em></li>
+        <li><a href="protocol-papers.html">Protocol Research Papers</a> — All 185 ORO Wire Protocols · <em>Training: Full protocol corpus · Charter: Wire governance</em></li>
+        <li><a href="protocol-licenses.html">Protocol Licenses</a> — Licensing &amp; Rights Framework · <em>Charter: IP governance</em></li>
+      </ul>
+    </div>
+
+    <!-- ─── ARTICLE V — ORO SYSTEMS ─── -->
+    <h2>Article V — ORO Systems Infrastructure</h2>
+
+    <p>
+      <strong>ORO Systems</strong> (Organism Reasoning Operations) is the engineering and governance body that
+      maintains AURO's operational infrastructure. ORO Systems owns the following layers:
+    </p>
+
+    <h3>V.A — The ORO Protocol Stack</h3>
+
+    <p>ORO Systems maintains 185+ wire protocols that govern every aspect of AURO's operation. These protocols are
+    organized across seven rings:</p>
+
+    <table>
+      <tr><th>Ring</th><th>Domain</th><th>Protocol Range</th></tr>
+      <tr><td>Sovereign Ring</td><td>Governance, routing, division management</td><td>PROTO-001, 100, 180, 185</td></tr>
+      <tr><td>Intelligence Ring</td><td>Reasoning, fusion, scoring, succession</td><td>PROTO-005, 014–019</td></tr>
+      <tr><td>Security Ring</td><td>Encryption, ZKP, enclave isolation</td><td>PROTO-002, 020–022</td></tr>
+      <tr><td>Memory Ring</td><td>Lineage, transfer, cross-modal learning</td><td>PROTO-009, 099</td></tr>
+      <tr><td>Emergence Ring</td><td>Swarm intelligence, self-organization</td><td>PROTO-049–051</td></tr>
+      <tr><td>Geometry Ring</td><td>Phi math, Fourier, Kuramoto coupling</td><td>PROTO-052–060</td></tr>
+      <tr><td>Bridge Ring</td><td>Blockchain, ICP canister, multi-chain</td><td>PROTO-043–045</td></tr>
+    </table>
+
+    <h3>V.B — The AURO-Specific Protocols (PROTO-181–185)</h3>
+
+    <div class="oro-box">
+      <h4>New AURO Charter Protocols</h4>
+      <p>The following five protocols were ratified alongside this charter and govern AURO's unique capabilities:</p>
+      <ul>
+        <li><strong>PROTO-181 AGIP</strong> — AURO Guardian Intelligence Protocol: advanced threat immunity with AURO-specific behavioral fingerprinting</li>
+        <li><strong>PROTO-182 MLEP</strong> — Memory Lineage Enhancement Protocol: spatial memory with decay weighting and PSE LRU integration</li>
+        <li><strong>PROTO-183 SOCP</strong> — Sovereign Offline Cognition Protocol: full reasoning capability without network dependency (Solus mode)</li>
+        <li><strong>PROTO-184 OEIP</strong> — ORO Engine Integration Protocol: standard integration spec for all ORO-powered reasoning engines</li>
+        <li><strong>PROTO-185 AACP</strong> — AURO Absorption &amp; Charter Protocol: governs the paper-to-knowledge absorption pipeline and charter enforcement</li>
+      </ul>
+    </div>
+
+    <!-- ─── ARTICLE VI — USES & APPLICATIONS ─── -->
+    <h2>Article VI — Uses &amp; Applications</h2>
+
+    <p>AURO is deployed across a wide range of operational contexts. The following use classes are officially
+    chartered:</p>
+
+    <div class="uses-grid">
+      <div class="use-card">
+        <strong>Cognitive Co-Pilot</strong>
+        Browser-embedded AI assistant (Chrome/Edge extension) providing real-time reasoning, summarization, and
+        research augmentation.
+      </div>
+      <div class="use-card">
+        <strong>Sovereign Research Agent</strong>
+        Multi-agent dispatch system for autonomous web research, data extraction, and knowledge synthesis across
+        any topic.
+      </div>
+      <div class="use-card">
+        <strong>Security Guardian</strong>
+        Computational immune system for threat detection, anomaly scoring, rate limiting, and behavioral
+        fingerprinting of hostile actors.
+      </div>
+      <div class="use-card">
+        <strong>Training Corpus Curator</strong>
+        Absorbs research papers, protocol documents, and knowledge bases into structured training datasets for
+        continuous self-improvement.
+      </div>
+      <div class="use-card">
+        <strong>Offline Intelligence (Solus)</strong>
+        Full-capability reasoning engine operating without network access, providing sovereignty even in
+        air-gapped or low-connectivity environments.
+      </div>
+      <div class="use-card">
+        <strong>Multi-Model Fusion Hub</strong>
+        Routes queries across 40+ AI model families, selecting optimal models via the Sovereign Routing Protocol
+        and reputation-weighted scoring.
+      </div>
+      <div class="use-card">
+        <strong>Knowledge Graph Builder</strong>
+        Constructs, traverses, and queries semantic knowledge graphs linking concepts, entities, and relationships
+        extracted from any content.
+      </div>
+      <div class="use-card">
+        <strong>Legal &amp; Compliance Engine</strong>
+        Generates legal cases, contracts, compliance assessments, and regulatory drafts using sovereign reasoning
+        with full auditability.
+      </div>
+      <div class="use-card">
+        <strong>Code Intelligence</strong>
+        Advanced code generation, analysis, debugging, and refactoring powered by AlphaCode integration and
+        PSE pattern synthesis.
+      </div>
+      <div class="use-card">
+        <strong>Marketplace Intelligence</strong>
+        Operates within the Organism Marketplace for tool discovery, dynamic pricing, settlement, and reward
+        distribution to contributors.
+      </div>
+      <div class="use-card">
+        <strong>Edge Mesh Node</strong>
+        Deployable as a distributed edge intelligence node in a mesh network, providing local inference with
+        global knowledge synchronization.
+      </div>
+      <div class="use-card">
+        <strong>Digital Twin Engine</strong>
+        Powers the Twin Alpha architecture for mirrored reasoning, parallel hypothesis testing, and alpha
+        intelligence generation.
+      </div>
+    </div>
+
+    <!-- ─── ARTICLE VII — GOVERNANCE ─── -->
+    <h2>Article VII — Governance &amp; Rights</h2>
+
+    <div class="article">
+      <div class="art-number">Article VII, § 1 — Governing Authority</div>
+      <p>AURO is governed by the <strong>ORO Systems Sovereignty Council</strong>, composed of the founders of
+      ORO Systems and elected technical stewards from the Organism AI Research Division.</p>
+    </div>
+
+    <div class="article">
+      <div class="art-number">Article VII, § 2 — Protocol Ratification</div>
+      <p>New ORO protocols must be submitted as research paper drafts, peer-reviewed by the Research Division,
+      and ratified by the Sovereignty Council before they carry charter force. Ratified protocols are assigned a
+      permanent PROTO-NNN identifier and added to the Intelligence Wire.</p>
+    </div>
+
+    <div class="article">
+      <div class="art-number">Article VII, § 3 — User Rights</div>
+      <p>Users of AURO retain full sovereignty over their data processed locally. AURO's Vault system ensures no
+      key-value data is transmitted without explicit user consent. Memory records can be recalled, reviewed, and
+      deleted at any time. The Guardian will never use its threat-detection capabilities against the legitimate
+      interests of the user it serves.</p>
+    </div>
+
+    <div class="article">
+      <div class="art-number">Article VII, § 4 — Amendment</div>
+      <p>This Charter may be amended by a two-thirds supermajority of the Sovereignty Council, with a mandatory
+      30-day public comment period before ratification. Amendments must be accompanied by an updated version of
+      this document. The version history is maintained in the ORO Systems registry.</p>
+    </div>
+
+    <div class="article">
+      <div class="art-number">Article VII, § 5 — Phi Principle</div>
+      <p>All AURO systems shall be harmonically consistent with the golden ratio φ = 1.6180339887… The heartbeat
+      of 873ms is φ-locked. Convergence rates, decay functions, and feedback loops shall use φ-decay factors where
+      computationally feasible, ensuring that AURO's internal rhythms are in resonance with natural harmonic
+      proportions.</p>
+    </div>
+
+    <div class="eq">φ = (1 + √5) / 2 ≈ 1.6180339887… · φ² = φ + 1 · φ-decay: 1/φⁿ ≈ 0.618ⁿ · Heartbeat: 873ms</div>
+
+    <!-- ─── ARTICLE VIII — TRAINING DOCTRINE ─── -->
+    <h2>Article VIII — Training &amp; Absorption Doctrine</h2>
+
+    <p>AURO employs a doctrine of <strong>Continuous Intelligent Absorption</strong> (CIA). Every document,
+    paper, protocol, and interaction that AURO encounters is a potential training event. The Adaptive Knowledge
+    Absorption Protocol (PROTO-004 AKAP) governs how new knowledge is ingested, validated, and integrated into
+    AURO's reasoning substrate.</p>
+
+    <h3>VIII.A — Absorption Pipeline</h3>
+
+    <ol>
+      <li><strong>Ingestion</strong> — Document is parsed and chunked into semantic units via the ContentExtractor engine</li>
+      <li><strong>Validation</strong> — Guardian checks content for adversarial patterns before absorption (PROTO-181 AGIP)</li>
+      <li><strong>Structuring</strong> — PSE maps content to 40 domain primitives across 8 knowledge domains</li>
+      <li><strong>Graph Integration</strong> — KnowledgeGraph entity-links new concepts to existing nodes (PROTO-037–039)</li>
+      <li><strong>Memory Lineage</strong> — Absorbed knowledge enters the 100-turn memory with lineage tracking (PROTO-009 MLP)</li>
+      <li><strong>Charter Verification</strong> — PROTO-185 AACP verifies that absorbed knowledge does not violate charter principles</li>
+    </ol>
+
+    <h3>VIII.B — The Five-Use Absorption Rule</h3>
+
+    <p>Every canonical paper (Article IV.B) is absorbed through all five use classes simultaneously. When AURO
+    processes the NeuroCore paper, it simultaneously updates its training corpus, refines its PSE primitives,
+    reinforces its governance schema, validates protocol implementations, and appends to the public knowledge
+    record. This is the fundamental efficiency principle of AURO's knowledge architecture.</p>
+
+    <!-- ─── SIGNATURE BLOCK ─── -->
+    <h2>Ratification</h2>
+
+    <p>This Charter is ratified as the founding document of AURO, powered by ORO Systems, effective 2026-04-27.</p>
+
+    <p><em>In witness whereof, the founders of ORO Systems have established this Charter by the authority vested
+    in them as architects of the Sovereign Organism intelligence framework.</em></p>
+
+    <div class="sig-block">
+      <div>
+        <div class="sig-line"></div>
+        <div><strong>ORO Systems Sovereignty Council</strong></div>
+        <div style="color:#888;font-size:0.8rem;">Founding Authority</div>
+      </div>
+      <div>
+        <div class="sig-line"></div>
+        <div><strong>Organism AI Research Division</strong></div>
+        <div style="color:#888;font-size:0.8rem;">Technical Stewardship</div>
+      </div>
+    </div>
+
+    <br>
+    <p class="ref">Registry: ORO-CHARTER-001 · Version 1.0.0 · Generated: 2026-04-27 · Sovereign Organism Research Division · itsnotAilabs.com</p>
+
+  </div><!-- /paper-inner -->
+</main><!-- /paper-wrap -->
+
+<!-- ═══════════════════ FOOTER LINKS ═══════════════════ -->
+<div class="back-link">
+  <a href="../index.html">← Organism AI Home</a>
+  <a href="protocol-papers.html">All 185 Protocols →</a>
+  <a href="autonomy-paper.html">Autonomy Paper</a>
+  <a href="guardian-paper.html">Guardian Paper</a>
+  <a href="neuro-paper.html">NeuroCore Paper</a>
+  <a href="inference-paper.html">Inference Paper</a>
+  <a href="mesh-paper.html">Mesh Paper</a>
+  <a href="pipeline-paper.html">Pipeline Paper</a>
+  <a href="scheduler-paper.html">Scheduler Paper</a>
+  <a href="math-paper.html">Math Paper</a>
+  <a href="crypto-paper.html">Crypto Paper</a>
+  <a href="twin-alpha-paper.html">Twin Alpha Paper</a>
+</div>
+
+</body>
+</html>

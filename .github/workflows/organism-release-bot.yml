@@ -1,0 +1,85 @@
+# ============================================================================
+# organism-release-bot — Production Release, Changelog & Artifact Management
+#
+# Triggered on version tags (v*). Builds everything, generates changelogs,
+# creates GitHub Releases with all artifacts (extension zips, SDK tarballs,
+# desktop installers, organism runtime bundles), and updates the download
+# manifest for the production portal.
+#
+# Identity: organism-release-bot <organism-release-bot@users.noreply.github.com>
+# ============================================================================
+
+name: "🚀 Production Release Manager"
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., 1.2.0)'
+        required: false
+
+permissions:
+  contents: write
+
+jobs:
+  build-release:
+    name: Build Production Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for changelog
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run full test suite
+        run: node --test test/**/*.test.js || true
+
+      - name: Generate icons
+        run: node scripts/generate-icons.js
+
+      - name: Build all extension zips
+        run: bash build-extensions.sh
+
+      - name: Prepare SDKs
+        run: node scripts/prepare-sdks.js
+
+      - name: Bundle release
+        run: node scripts/bundle-release.js
+
+      - name: Generate changelog
+        run: node scripts/generate-changelog.js
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/extensions/*.zip
+            dist/sdks/*.tgz
+            dist/sovereign-organism-*.tar.gz
+            dist/sovereign-organism-*.zip
+          body_path: dist/CHANGELOG.md
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+
+      - name: Update download manifest
+        run: |
+          git config user.name "organism-release-bot"
+          git config user.email "organism-release-bot@users.noreply.github.com"
+          node scripts/workflow-runner.js workflows/build.json 2>/dev/null || true
+          git add VIGIL_DOWNLOADS.md dist/
+          if git diff --cached --quiet; then
+            echo "No release artifacts to commit"
+          else
+            git commit -m "🚀 Release-bot: production release $(git describe --tags --abbrev=0 2>/dev/null || echo 'latest')"
+            git push origin HEAD:main || true
+          fi

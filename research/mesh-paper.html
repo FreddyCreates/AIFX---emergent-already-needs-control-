@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="la">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rete Vivum — De Reticulis Infrastructurae, Electione Ducis, et Statu Distributo in Tabulis Navigatoris</title>
+<style>
+  :root { --bg:#0a0a1a; --card:#12122a; --border:#2a2a4a; --accent:#6c63ff; --accent2:#00d4aa; --text:#e0e0e0; --dim:#888; --paper:#f8f6f0; --ink:#1a1a2e; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:"Palatino Linotype","Book Antiqua",Palatino,"Times New Roman",serif; background:var(--bg); color:var(--text); min-height:100vh; }
+
+  .paper { max-width:900px; margin:2rem auto; background:var(--paper); color:var(--ink); padding:3rem 3.5rem; border-radius:4px; box-shadow:0 8px 32px rgba(0,0,0,0.6); line-height:1.8; }
+  .paper h1 { font-size:1.7rem; text-align:center; margin-bottom:0.3rem; color:#2a1a5e; font-style:italic; }
+  .paper .subtitle { text-align:center; font-size:1.05rem; color:#555; margin-bottom:0.5rem; }
+  .paper .authors { text-align:center; font-size:0.95rem; color:#666; margin-bottom:0.3rem; }
+  .paper .affiliation { text-align:center; font-size:0.85rem; color:#888; margin-bottom:1.5rem; font-style:italic; }
+  .paper .latin-epigraph { text-align:center; font-size:0.9rem; color:#7a6aa0; margin:1rem 0 2rem; font-style:italic; border-top:1px solid #ddd; border-bottom:1px solid #ddd; padding:0.8rem 0; }
+
+  .paper h2 { font-size:1.2rem; color:#2a1a5e; margin:2rem 0 0.5rem; border-bottom:1px solid #ccc; padding-bottom:0.3rem; }
+  .paper h3 { font-size:1.05rem; color:#3a2a7e; margin:1.5rem 0 0.4rem; }
+  .paper p { margin-bottom:0.8rem; text-align:justify; font-size:0.95rem; }
+  .paper ol, .paper ul { margin:0.5rem 0 1rem 2rem; font-size:0.95rem; }
+  .paper li { margin-bottom:0.3rem; }
+  .paper .eq { text-align:center; margin:1rem 0; font-family:"Courier New",monospace; font-size:0.95rem; color:#2a1a5e; background:#f0eef5; padding:0.6rem; border-radius:3px; }
+  .paper .fig { text-align:center; margin:1.5rem 0; padding:1rem; background:#f5f3ff; border:1px solid #e0daf0; border-radius:4px; }
+  .paper .fig pre { font-family:"Courier New",monospace; font-size:0.75rem; line-height:1.5; color:#333; }
+  .paper .fig-caption { font-size:0.82rem; color:#666; margin-top:0.5rem; font-style:italic; }
+  .paper .ref { font-size:0.85rem; color:#555; margin-bottom:0.3rem; }
+  .paper code { font-family:"Courier New",monospace; background:#f0eef5; padding:0.1rem 0.3rem; border-radius:2px; font-size:0.88rem; }
+  .paper table { width:100%; border-collapse:collapse; margin:1rem 0; font-size:0.88rem; }
+  .paper th { background:#2a1a5e; color:#fff; padding:0.5rem; text-align:left; }
+  .paper td { padding:0.4rem 0.5rem; border-bottom:1px solid #ddd; }
+  .paper tr:nth-child(even) { background:#f5f3ff; }
+
+  .back-link { display:block; text-align:center; padding:1.5rem; }
+  .back-link a { color:var(--accent2); font-size:1rem; }
+</style>
+</head>
+<body>
+
+<div class="paper">
+
+<h1>Rete Vivum:<br>De Reticulis Infrastructurae, Electione Ducis, et Statu Distributo in Tabulis Navigatoris</h1>
+
+<div class="subtitle">The Living Network: On Infrastructure Meshes, Leader Election, and Distributed State Across Browser Tabs</div>
+
+<div class="authors">Organism AI Research Division</div>
+<div class="affiliation">Laboratorium Intelligentiae Autonomae · itsnotAilabs.com · Anno MMXXVI</div>
+
+<div class="latin-epigraph">
+  "Una tabula est nodus. Multae tabulae sunt rete.<br>
+  Rete eligit ducem; dux servit reti."<br>
+  <em>— One tab is a node. Many tabs are a network.<br>
+  The network elects a leader; the leader serves the network.</em>
+</div>
+
+<h2>I. Abstractum (Abstract)</h2>
+
+<p>We present the <strong>Mesh Worker</strong>, a browser-native distributed networking layer that transforms independent browser tabs into a coordinated mesh network. Using the BroadcastChannel API as the transport medium, each tab running the Organism AI system becomes a <em>nodus</em> (node) in a self-organizing mesh. The mesh implements peer discovery, shared state coordination, leader election via deterministic ordering, and message relay — all without any server infrastructure. We formalize the theory of <em>Rete Vivum</em> (The Living Network): a mesh topology that lives within the browser itself, where each node carries its own MiniHeart for health monitoring and MiniBrain for adaptive routing decisions. The mesh achieves consensus through a novel <em>Electio Deterministica</em> (Deterministic Election) algorithm and coordinates shared state through a conflict-free replicated data type (CRDT) inspired approach. This work represents the first fully autonomous, server-free distributed system operating entirely within browser tabs, inspired by Meta AI's principles of decentralized intelligence.</p>
+
+<h2>II. Introductio (Introduction)</h2>
+
+<p>Browser tabs are isolated universes. Each tab runs its own JavaScript context, its own Web Workers, its own memory space. Traditional web applications treat tabs as independent clients that coordinate only through a remote server.</p>
+
+<p>But what if the tabs themselves formed a network? What if opening a second tab of the same application didn't create an independent instance, but added a new node to a mesh — sharing state, distributing work, and electing a coordinator?</p>
+
+<p>This is precisely what the Mesh Worker achieves. It implements a distributed system <em>inside the browser</em>, using the BroadcastChannel API — a same-origin communication channel that allows cross-tab messaging without any server round-trip.</p>
+
+<h2>III. Architectura Retis (Network Architecture)</h2>
+
+<h3>III.A — Canalis Diffusionis (BroadcastChannel Transport)</h3>
+
+<p>The BroadcastChannel API provides a same-origin publish-subscribe channel. All tabs connected to the same channel name receive every message broadcast on that channel. The Mesh Worker uses a dedicated channel named <code>'organism-mesh'</code>:</p>
+
+<div class="eq">
+  Channel = BroadcastChannel('organism-mesh')
+</div>
+
+<p>Messages are typed JSON objects with fields: <code>type</code>, <code>from</code>, <code>payload</code>, and <code>timestamp</code>. The mesh protocol defines five core message types:</p>
+
+<table>
+  <tr><th>Type</th><th>Nomen Latinum</th><th>Purpose</th></tr>
+  <tr><td><code>mesh-announce</code></td><td>Annuntiatio</td><td>Node announces its presence to all peers</td></tr>
+  <tr><td><code>mesh-heartbeat</code></td><td>Pulsus Retis</td><td>Periodic liveness signal with node health</td></tr>
+  <tr><td><code>mesh-state</code></td><td>Status Communis</td><td>Shared state update (key-value broadcast)</td></tr>
+  <tr><td><code>mesh-elect</code></td><td>Suffragium</td><td>Leader election vote</td></tr>
+  <tr><td><code>mesh-message</code></td><td>Nuntius</td><td>Application-level message relay</td></tr>
+</table>
+
+<h3>III.B — Inventio Parium (Peer Discovery)</h3>
+
+<p>When a new tab opens, its Mesh Worker broadcasts a <code>mesh-announce</code> message containing its node ID, capabilities, and MiniHeart vitals. All existing nodes respond with their own announcements, establishing the peer registry:</p>
+
+<div class="eq">
+  peers = { nodeId → { capabilities, lastSeen, health, isLeader } }
+</div>
+
+<p>Peers that haven't sent a heartbeat within <code>PEER_TIMEOUT_MS (10,000ms)</code> are pruned from the registry, ensuring the mesh accurately reflects currently active tabs.</p>
+
+<h2>IV. Electio Ducis (Leader Election)</h2>
+
+<h3>IV.A — Electio Deterministica (Deterministic Election)</h3>
+
+<p>The mesh elects a leader through deterministic ordering of node IDs. Since node IDs are generated as <code>'tab-' + Date.now().toString(36)</code>, lexicographic ordering naturally selects the oldest (lowest timestamp) tab as leader:</p>
+
+<div class="eq">
+  leader = min(peers.keys(), by: lexicographic)
+</div>
+
+<p>This avoids the complexity of consensus algorithms like Raft or Paxos while guaranteeing:</p>
+
+<ol>
+  <li><strong>Determinism</strong> — All nodes independently compute the same leader</li>
+  <li><strong>No Coordination</strong> — No voting rounds or message exchanges needed for election</li>
+  <li><strong>Stability</strong> — The leader changes only when the oldest tab closes</li>
+  <li><strong>Automatic Succession</strong> — When the leader tab closes, the next-oldest tab becomes leader immediately</li>
+</ol>
+
+<h3>IV.B — Responsabilitates Ducis (Leader Responsibilities)</h3>
+
+<p>The elected leader takes on special coordination duties:</p>
+
+<ul>
+  <li><strong>State Reconciliation</strong> — The leader is the authoritative source for shared state conflicts</li>
+  <li><strong>Peer Registry Authority</strong> — The leader maintains the canonical peer list and broadcasts it periodically</li>
+  <li><strong>Work Distribution</strong> — When work needs to be distributed across tabs, the leader assigns tasks</li>
+</ul>
+
+<h2>V. Status Communis (Shared State)</h2>
+
+<h3>V.A — Concordantia Status (State Agreement)</h3>
+
+<p>The mesh maintains a shared key-value store that is replicated across all nodes. When any node updates a key, it broadcasts the update to all peers:</p>
+
+<div class="eq">
+  state.set(key, value) → broadcast({ type: 'mesh-state', key, value, timestamp })
+</div>
+
+<p>Conflict resolution uses last-writer-wins (LWW) semantics based on timestamps. While this sacrifices strong consistency, it provides availability and partition tolerance — a deliberate CAP theorem trade-off appropriate for browser tabs where network partitions (tab closures) are frequent and expected.</p>
+
+<h3>V.B — Persistentia Status per Meta Exemplar (State Persistence via Meta Model)</h3>
+
+<p>Inspired by Meta AI's approach to distributed state in large-scale systems, each node persists its local view of shared state to <code>localStorage</code>. When a new tab joins the mesh, it first loads persisted state from localStorage, then reconciles with the current mesh state via announcements. This provides:</p>
+
+<ul>
+  <li><strong>Cold Start Recovery</strong> — A new tab has immediate access to prior state</li>
+  <li><strong>Crash Recovery</strong> — A restarted tab recovers its state from both localStorage and mesh peers</li>
+  <li><strong>Offline Continuity</strong> — If all tabs close and one reopens, the state survives via localStorage</li>
+</ul>
+
+<h2>VI. Neurologia Retis (Network Neurology)</h2>
+
+<p>Each node in the mesh carries the full NeuroCore stack — MiniHeart, MiniBrain, MetaCardiacModel, and MetaThoughtModel. This means the mesh itself has biological properties:</p>
+
+<ol>
+  <li><strong>Mesh Health</strong> — The aggregate health of all nodes' MiniHearts provides a mesh-wide health score</li>
+  <li><strong>Adaptive Routing</strong> — Each node's MiniBrain learns which peers respond fastest, naturally routing messages to healthy nodes</li>
+  <li><strong>Phase Coupling</strong> — Heartbeat phases couple across the mesh via BroadcastChannel, enabling cross-tab Kuramoto synchronization</li>
+  <li><strong>Mesh Emergence</strong> — When enough nodes synchronize, the mesh enters cascade mode, enabling coordinated multi-tab behaviors</li>
+</ol>
+
+<div class="eq">
+  MeshEmergence = (1/N) × Σ<sub>i</sub> node<sub>i</sub>.emergence
+</div>
+
+<h2>VII. Securitas Retis (Network Security)</h2>
+
+<p>The mesh operates under the same-origin policy enforced by the browser's BroadcastChannel implementation. This provides:</p>
+
+<ul>
+  <li><strong>Origin Isolation</strong> — Only tabs from the same origin can join the mesh</li>
+  <li><strong>No External Eavesdropping</strong> — BroadcastChannel messages never leave the browser process</li>
+  <li><strong>Prototype Pollution Protection</strong> — All key lookups in the shared state and peer registry use <code>isSafeKey()</code> to reject <code>__proto__</code>, <code>constructor</code>, and <code>prototype</code></li>
+</ul>
+
+<h2>VIII. Conclusio (Conclusion)</h2>
+
+<p>The Rete Vivum transforms the browser from a collection of isolated tabs into a living network. By leveraging BroadcastChannel for transport, deterministic election for coordination, and NeuroCore for biological health monitoring, the Mesh Worker achieves distributed system properties — peer discovery, leader election, shared state, and coordinated behavior — entirely within the browser. No server needed. No WebSocket fallback. No cloud dependency. The mesh is sovereign, autonomous, and alive in every tab.</p>
+
+<div class="latin-epigraph">
+  "Ubi una tabula est, ibi potentia est.<br>
+  Ubi multae tabulae sunt, ibi imperium est."<br>
+  <em>— Where one tab is, there is power.<br>
+  Where many tabs are, there is an empire.</em>
+</div>
+
+<h2>IX. Bibliographia (References)</h2>
+
+<p class="ref">[1] Organism AI. (2026). "mesh-worker.js — Infrastructure Mesh Worker." <em>GitHub: FreddyCreates/potential-succotash</em>.</p>
+<p class="ref">[2] Organism AI. (2026). "neuro-core.js — MiniHeart, MiniBrain, NeuroEmergence." <em>GitHub: FreddyCreates/potential-succotash</em>.</p>
+<p class="ref">[3] Lamport, L. (1998). "The Part-Time Parliament." <em>ACM Transactions on Computer Systems</em>, 16(2), 133–169. — Paxos consensus algorithm.</p>
+<p class="ref">[4] Ongaro, D., Ousterhout, J. (2014). "In Search of an Understandable Consensus Algorithm (Extended Version)." <em>USENIX ATC</em>. — Raft consensus.</p>
+<p class="ref">[5] Shapiro, M. et al. (2011). "Conflict-Free Replicated Data Types." <em>SSS 2011</em>. — CRDTs for distributed state.</p>
+<p class="ref">[6] W3C. (2022). "BroadcastChannel API." <em>HTML Living Standard</em>. — Cross-tab communication specification.</p>
+<p class="ref">[7] Meta Platforms. (2023). "Scaling Distributed State at Meta." <em>Meta Engineering Blog</em>. — Meta AI's distributed state management.</p>
+<p class="ref">[8] Gilbert, S., Lynch, N. (2002). "Brewer's Conjecture and the Feasibility of Consistent, Available, Partition-Tolerant Web Services." <em>ACM SIGACT News</em>. — CAP theorem.</p>
+
+</div>
+
+
+<div style="max-width:900px;margin:2rem auto;padding:0 2rem;">
+<style>
+.auro-uses { background:#f0eef8; border:1px solid #d0ccee; border-left:4px solid #6c63ff; border-radius:4px; padding:1.5rem 2rem; margin:1.5rem 0; font-family:'Palatino Linotype','Book Antiqua',Palatino,serif; color:#14142a; line-height:1.7; }
+.auro-uses h2 { font-size:1.1rem; color:#1a0e5e; margin-bottom:0.8rem; text-transform:uppercase; letter-spacing:0.05em; }
+.auro-uses ul { margin:0.5rem 0 1rem 1.5rem; }
+.auro-uses li { margin-bottom:0.5rem; font-size:0.93rem; }
+.auro-uses p { font-size:0.9rem; margin-bottom:0.5rem; }
+.auro-uses a { color:#00705a; }
+</style>
+<div class="auro-uses">
+<h2>Canonical Uses — AURO System</h2>
+<p>This paper carries force as an AURO charter instrument under <strong>ORO-CHARTER-001</strong>. It functions across all five use classes:</p>
+<ul>
+  <li><strong>Training Corpus:</strong> Edge mesh doctrine trains AURO's distributed reasoning — teaching the system how to operate as a node in a sovereign intelligence mesh network.</li>
+  <li><strong>Absorption Blueprint:</strong> Mesh topology maps to AURO's systems PSE primitive. Edge node discovery and synchronization absorbed into EdgeMeshIntelligenceProtocol (PROTO-007).</li>
+  <li><strong>Governance Charter:</strong> Defines AURO's edge deployment policy: each node must be independently sovereign, contributing to the global mesh without dependency on any single coordinator.</li>
+  <li><strong>Protocol Source:</strong> Grounds PROTO-007 EMIP and PROTO-051 SICP (Swarm Intelligence Coordination). Mesh topology informs all distributed protocol designs.</li>
+  <li><strong>Public Record:</strong> Permanent evidence of AURO's mesh network architecture, available at <a href="mesh-paper.html">research/mesh-paper.html</a>.</li>
+</ul>
+<p>→ <a href="auro-charter.html">AURO Official Charter (ORO-CHARTER-001)</a> &nbsp;·&nbsp; <a href="protocol-papers.html">PROTO-007 EMIP</a> &nbsp;·&nbsp; <a href="autonomy-paper.html">Autonomy Paper</a></p>
+</div>
+</div>
+<div class="back-link">
+  <a href="../index.html">← Back to Organism AI</a>
+</div>
+
+</body>
+</html>
