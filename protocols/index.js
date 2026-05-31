@@ -221,3 +221,6 @@ export { AlphaOrchestratorProtocol, ORCHESTRATOR_CONFIG, MESSAGE_TYPES as ORCHES
 
 // PROTO-256: Alpha Conductor — Signal routing, ensemble direction, harmonic coordination, tempo management
 export { AlphaConductorProtocol, CONDUCTOR_CONFIG, MESSAGE_TYPES as CONDUCTOR_MESSAGE_TYPES, CONDUCTOR_STATES as CONDUCTOR_PROTOCOL_STATES, CONDUCTOR_TYPES, ENSEMBLE_ROLES, SIGNAL_TYPES as CONDUCTOR_SIGNAL_TYPES, calculateSignalStrength, calculateHarmony, calculateOptimalTempo, calculateDissonance, calculateRoleWeight } from './alpha-conductor-protocol.js';
+
+// PROTO-257: Next-Generation Trading Platform — product target, risk-first execution, AI governance, vertical slice
+export { NextGenerationTradingPlatformProtocol, DEFAULT_PRODUCT_TARGET, MEASURABLE_GOALS, PLATFORM_DOMAINS, ROLLOUT_STAGES, EXECUTION_MODES, CIRCUIT_STATES } from './next-generation-trading-platform-protocol.js';
