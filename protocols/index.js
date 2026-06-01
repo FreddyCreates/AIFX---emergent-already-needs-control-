@@ -245,3 +245,12 @@ export { MyceliumEconomicSignalingProtocol, ECONOMIC_SIGNALS as MYCELIUM_ECONOMI
 
 // PROTO-264: Mycelium Cross-Substrate Exchange — governed substrate-to-substrate intelligence exchange
 export { MyceliumCrossSubstrateExchangeProtocol, EXCHANGE_STATES as MYCELIUM_EXCHANGE_STATES, MESSAGE_TYPES as MYCELIUM_EXCHANGE_MESSAGE_TYPES, calculateExchangeReliability } from './mycelium-cross-substrate-exchange-protocol.js';
+
+// PROTO-265: Mycelium Collective Intelligence — quorum sensing, distributed cognition, emergent consensus
+export { MyceliumCollectiveIntelligenceProtocol, COLLECTIVE_STATES as MYCELIUM_COLLECTIVE_STATES, MESSAGE_TYPES as MYCELIUM_COLLECTIVE_MESSAGE_TYPES, SIGNAL_TYPES as MYCELIUM_SIGNAL_TYPES, calculateQuorumDensity, calculateFusionScore, calculateTraceDecay, calculateConsensusConvergence } from './mycelium-collective-intelligence-protocol.js';
+
+// PROTO-266: Mycelium Memory Propagation — engram formation, gradient diffusion, network-level memory
+export { MyceliumMemoryPropagationProtocol, MEMORY_STATES as MYCELIUM_MEMORY_STATES, MESSAGE_TYPES as MYCELIUM_MEMORY_MESSAGE_TYPES, ENGRAM_TYPES, calculateGradientStrength, calculateEngramCoherence, calculateRetention, calculateRecallMatch } from './mycelium-memory-propagation-protocol.js';
+
+// PROTO-267: Mycelium Evolutionary Adaptation — fitness landscapes, mutation, selection, speciation
+export { MyceliumEvolutionaryAdaptationProtocol, EVOLUTION_STATES as MYCELIUM_EVOLUTION_STATES, MESSAGE_TYPES as MYCELIUM_EVOLUTION_MESSAGE_TYPES, MUTATION_TYPES as MYCELIUM_MUTATION_TYPES, calculateFitness as calculateMyceliumFitness, applyMutation as applyMyceliumMutation, calculateSpeciationDistance, calculateSurvivalProbability } from './mycelium-evolutionary-adaptation-protocol.js';

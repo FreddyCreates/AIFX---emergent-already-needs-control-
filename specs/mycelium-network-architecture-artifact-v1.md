@@ -2,7 +2,7 @@
 
 ## Identity
 - **Artifact ID:** `MYCELIUM-ARCH-V1`
-- **Protocol Family:** `PROTO-257` through `PROTO-264`
+- **Protocol Family:** `PROTO-257` through `PROTO-267`
 - **Substrate Role:** Sovereign neuro-network substrate for governed multi-node intelligence execution.
 
 ## Scope and Boundaries
@@ -61,8 +61,11 @@
 - **Congestion adaptation loop:** dynamic route score adjustment.
 - **Trust decay/recovery loop:** heartbeat + proof-driven trust modulation.
 - **Partition-aware reroute loop:** isolate avoidance and fast alternate pathing.
+- **Quorum sensing loop:** signal density monitoring → emergent behavior activation.
+- **Memory consolidation loop:** short-term encoding → gradient propagation → long-term engram formation.
+- **Evolutionary selection loop:** fitness evaluation → selection → mutation → speciation.
 
 ## Governance Covenant Alignment
 - Charter authority: `PROTO-257`.
 - Sovereign hierarchy reference: integrated into `PROTO-227` dependency graph.
-- Message namespaces: `mycelium.identity.*`, `mycelium.mesh.*`, `mycelium.route.*`, `mycelium.trust.*`, `mycelium.heal.*`, `mycelium.economy.*`, `mycelium.exchange.*`.
+- Message namespaces: `mycelium.identity.*`, `mycelium.mesh.*`, `mycelium.route.*`, `mycelium.trust.*`, `mycelium.heal.*`, `mycelium.economy.*`, `mycelium.exchange.*`, `mycelium.collective.*`, `mycelium.memory.*`, `mycelium.evolve.*`.

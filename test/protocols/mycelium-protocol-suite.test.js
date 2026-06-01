@@ -129,4 +129,99 @@ describe('Mycelium Protocol Suite', () => {
     assert.equal(ex.accepted, true);
     assert.equal(exchange.verifyExchange(ex.id).valid, true);
   });
+
+  it('achieves quorum sensing and emergent consensus via collective intelligence', async () => {
+    const Collective = (await import('../../protocols/mycelium-collective-intelligence-protocol.js')).MyceliumCollectiveIntelligenceProtocol;
+    const collective = new Collective({ quorumThreshold: 0.5, consensusThreshold: 0.618 });
+
+    // Emit signals from multiple nodes until quorum
+    collective.emitSignal('node-1', 'attention', { strength: 0.9 });
+    collective.emitSignal('node-2', 'attention', { strength: 0.85 });
+    const result = collective.emitSignal('node-3', 'attention', { strength: 0.8 });
+    assert.ok(result.density > 0);
+
+    // Contribute knowledge fragments
+    collective.contributeFragment('node-1', { domain: 'routing', coherence: 0.8, pattern: ['optimize', 'path'] });
+    collective.contributeFragment('node-2', { domain: 'routing', coherence: 0.75, pattern: ['reduce', 'hops'] });
+    collective.contributeFragment('node-3', { domain: 'routing', coherence: 0.9, pattern: ['trust', 'path'] });
+    const fusion = collective.fuseKnowledge();
+    assert.ok(fusion.score > 0);
+
+    // Cast votes and reach consensus
+    collective.castVote('node-1', 'upgrade', 1, 0.9);
+    collective.castVote('node-2', 'upgrade', 1, 0.85);
+    const consensus = collective.castVote('node-3', 'upgrade', 1, 0.8);
+    assert.equal(consensus.consensus, true);
+    assert.equal(consensus.decision.position, 'upgrade');
+
+    // Stigmergy
+    collective.depositTrace('node-1', 'path-a->b', 0.9);
+    const trace = collective.readTraceAt('path-a->b');
+    assert.ok(trace.intensity > 0);
+    assert.equal(trace.traceCount, 1);
+  });
+
+  it('encodes, propagates, consolidates, and recalls network memory', async () => {
+    const Memory = (await import('../../protocols/mycelium-memory-propagation-protocol.js')).MyceliumMemoryPropagationProtocol;
+    const memory = new Memory({ consolidationThreshold: 0.2, recallThreshold: 0.1 });
+
+    // Encode
+    const encoding = memory.encode('node-a', { type: 'semantic', pattern: ['trust', 'route', 'phi'], strength: 0.8, domain: 'routing' });
+    assert.ok(encoding.id);
+    assert.equal(encoding.type, 'semantic');
+
+    // Propagate
+    const propagation = memory.propagate(encoding.id, ['node-b', 'node-c', 'node-d'], 1);
+    assert.equal(propagation.propagations.length, 3);
+    assert.ok(propagation.propagations[0].strength > 0);
+
+    // Consolidate
+    const consolidation = memory.consolidate();
+    assert.ok(consolidation.count >= 1);
+
+    // Recall
+    const results = memory.recall(['trust', 'phi'], 'routing');
+    assert.ok(results.length >= 1);
+    assert.ok(results[0].recallScore > 0);
+
+    // Metrics
+    const metrics = memory.getMetrics();
+    assert.ok(metrics.engramCount >= 1);
+  });
+
+  it('evolves strategies through fitness selection and mutation', async () => {
+    const Evolution = (await import('../../protocols/mycelium-evolutionary-adaptation-protocol.js')).MyceliumEvolutionaryAdaptationProtocol;
+    const evolution = new Evolution({ mutationRate: 0.2, survivalThreshold: 0.2 });
+
+    // Register strategies
+    evolution.registerStrategy('strat-alpha', { routingWeight: 0.7, trustWeight: 0.8, healRate: 0.5 });
+    evolution.registerStrategy('strat-beta', { routingWeight: 0.3, trustWeight: 0.4, healRate: 0.2 });
+    evolution.registerStrategy('strat-gamma', { routingWeight: 0.9, trustWeight: 0.9, healRate: 0.8 });
+
+    // Evaluate fitness
+    evolution.evaluateFitness('strat-alpha', { throughput: 0.8, trust: 0.85, efficiency: 0.7, failures: 1, latencyMs: 30 });
+    evolution.evaluateFitness('strat-beta', { throughput: 0.3, trust: 0.2, efficiency: 0.3, failures: 5, latencyMs: 200 });
+    evolution.evaluateFitness('strat-gamma', { throughput: 0.95, trust: 0.9, efficiency: 0.85, failures: 0, latencyMs: 15 });
+
+    // Mutate
+    const child = evolution.mutateStrategy('strat-gamma');
+    assert.ok(child);
+    assert.equal(child.parentId, 'strat-gamma');
+    assert.equal(child.generation, 1);
+
+    // Run epoch
+    const epoch = evolution.runEpoch({ '*': { throughput: 0.6, trust: 0.7, efficiency: 0.6, failures: 1, latencyMs: 50 } });
+    assert.ok(epoch.strategyCount > 0);
+    assert.ok(epoch.avgFitness > 0);
+
+    // Fittest
+    const fittest = evolution.getFittest();
+    assert.ok(fittest);
+    assert.ok(fittest.fitness > 0);
+
+    // Lineage
+    const lineage = evolution.getLineage(child.id);
+    assert.ok(lineage.length >= 1);
+    assert.equal(lineage[0].parentId, 'strat-gamma');
+  });
 });

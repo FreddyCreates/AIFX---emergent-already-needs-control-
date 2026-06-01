@@ -11,6 +11,9 @@ Mycelium is the sovereign substrate protocol family for deep network intelligenc
 - `PROTO-262` — Mycelium Healing Recovery Protocol
 - `PROTO-263` — Mycelium Economic Signaling Protocol
 - `PROTO-264` — Mycelium Cross-Substrate Exchange Protocol
+- `PROTO-265` — Mycelium Collective Intelligence Protocol
+- `PROTO-266` — Mycelium Memory Propagation Protocol
+- `PROTO-267` — Mycelium Evolutionary Adaptation Protocol
 
 ## Guarantees
 - Sovereignty law and admission policy are charter-defined.
@@ -18,6 +21,9 @@ Mycelium is the sovereign substrate protocol family for deep network intelligenc
 - Failure handling is heartbeat-bound and reconcile-mandated.
 - Audit law is append-only with proof references.
 - Upgrade law requires compatibility threshold, evidence, and rollback readiness.
+- Collective decisions require quorum sensing and phi-convergence consensus.
+- Network memory propagates via gradient diffusion and consolidates through coherence.
+- Evolutionary adaptation proceeds through fitness-driven selection and phi-bounded mutation.
 
 ## Message Contract Namespaces
 - `mycelium.identity.*`
@@ -27,6 +33,9 @@ Mycelium is the sovereign substrate protocol family for deep network intelligenc
 - `mycelium.heal.*`
 - `mycelium.economy.*`
 - `mycelium.exchange.*`
+- `mycelium.collective.*`
+- `mycelium.memory.*`
+- `mycelium.evolve.*`
 
 ## Canonical Artifacts
 - Architecture artifact: `/specs/mycelium-network-architecture-artifact-v1.md`

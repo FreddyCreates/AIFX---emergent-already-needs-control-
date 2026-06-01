@@ -15,6 +15,9 @@ export const PROTOCOL_FAMILY = [
   { id: 'PROTO-262', name: 'MyceliumHealingRecoveryProtocol' },
   { id: 'PROTO-263', name: 'MyceliumEconomicSignalingProtocol' },
   { id: 'PROTO-264', name: 'MyceliumCrossSubstrateExchangeProtocol' },
+  { id: 'PROTO-265', name: 'MyceliumCollectiveIntelligenceProtocol' },
+  { id: 'PROTO-266', name: 'MyceliumMemoryPropagationProtocol' },
+  { id: 'PROTO-267', name: 'MyceliumEvolutionaryAdaptationProtocol' },
 ];
 
 export const MYCELIUM_DOCTRINE = {
