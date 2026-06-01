@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://itsnotailabs.ai/schemas/mycelium-node-identity.schema.json",
+  "title": "Mycelium Node Identity",
+  "type": "object",
+  "required": ["nodeId", "state", "trust", "rights", "region", "substrate", "admittedAt"],
+  "properties": {
+    "nodeId": { "type": "string", "minLength": 1 },
+    "state": { "type": "string", "enum": ["pending", "active", "quarantined", "revoked"] },
+    "trust": { "type": "number", "minimum": 0, "maximum": 1 },
+    "rights": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+    "region": { "type": "string" },
+    "substrate": { "type": "string" },
+    "admittedAt": { "type": "integer", "minimum": 0 },
+    "lastHeartbeatAt": { "type": ["integer", "null"], "minimum": 0 },
+    "heartbeatDriftMs": { "type": "number", "minimum": 0 },
+    "attestationScore": { "type": "number", "minimum": 0, "maximum": 1 }
+  }
+}

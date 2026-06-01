@@ -122,6 +122,11 @@ ARTIFACTA bodies the output.
 - **Role:** Bind diagnostics, traces, route cards, claims, artifacts, and hashes into notarizable graph roots.
 - **Canonical line:** `The notary should record the root of the evidence graph, not only the final file bundle.`
 
+### 18) MYCELIUM — Protocolum Mycelii: De Structura Reticulari Intelligenti et Souverana
+- **Name:** Mycelium Sovereign Substrate Protocol Family
+- **Role:** Govern node identity, mesh formation, adaptive routing, trust law, healing law, economic signaling, and cross-substrate exchange.
+- **Canonical line:** `MYCELIUM binds sovereign substrate intelligence into resilient network life.`
+
 ## Public Citation Anchors
 
 - **MSIT-RP-2026-001**  

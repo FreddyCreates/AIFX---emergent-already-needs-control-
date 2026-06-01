@@ -222,5 +222,37 @@ export { AlphaOrchestratorProtocol, ORCHESTRATOR_CONFIG, MESSAGE_TYPES as ORCHES
 // PROTO-256: Alpha Conductor — Signal routing, ensemble direction, harmonic coordination, tempo management
 export { AlphaConductorProtocol, CONDUCTOR_CONFIG, MESSAGE_TYPES as CONDUCTOR_MESSAGE_TYPES, CONDUCTOR_STATES as CONDUCTOR_PROTOCOL_STATES, CONDUCTOR_TYPES, ENSEMBLE_ROLES, SIGNAL_TYPES as CONDUCTOR_SIGNAL_TYPES, calculateSignalStrength, calculateHarmony, calculateOptimalTempo, calculateDissonance, calculateRoleWeight } from './alpha-conductor-protocol.js';
 
+// PROTO-257: Mycelium Charter — Sovereign doctrine for mycelium substrate governance
+export { MyceliumCharterProtocol, PROTOCOL_FAMILY as MYCELIUM_PROTOCOL_FAMILY, MYCELIUM_DOCTRINE, CHARTER_STATES as MYCELIUM_CHARTER_STATES } from './mycelium-charter-protocol.js';
+
+// PROTO-258: Mycelium Node Identity — admission, attestation, rights, lifecycle identity controls
+export { MyceliumNodeIdentityProtocol, IDENTITY_STATES as MYCELIUM_IDENTITY_STATES, MESSAGE_TYPES as MYCELIUM_IDENTITY_MESSAGE_TYPES, calculateIdentityTrust } from './mycelium-node-identity-protocol.js';
+
+// PROTO-259: Mycelium Mesh Formation — topology growth, partition detection, and reconciliation
+export { MyceliumMeshFormationProtocol, MESH_STATES as MYCELIUM_MESH_STATES, MESSAGE_TYPES as MYCELIUM_MESH_MESSAGE_TYPES, calculateTopologyWeight } from './mycelium-mesh-formation-protocol.js';
+
+// PROTO-260: Mycelium Routing Intelligence — trust and congestion aware domain routing
+export { MyceliumRoutingIntelligenceProtocol, ROUTING_STATES as MYCELIUM_ROUTING_STATES, MESSAGE_TYPES as MYCELIUM_ROUTING_MESSAGE_TYPES, calculateRouteScore as calculateMyceliumRouteScore } from './mycelium-routing-intelligence-protocol.js';
+
+// PROTO-261: Mycelium Trust Reputation — proof-driven trust decay and recovery
+export { MyceliumTrustReputationProtocol, TRUST_STATES as MYCELIUM_TRUST_STATES, MESSAGE_TYPES as MYCELIUM_TRUST_MESSAGE_TYPES, decayTrust as calculateMyceliumTrustDecay, recoverTrust as calculateMyceliumTrustRecovery } from './mycelium-trust-reputation-protocol.js';
+
+// PROTO-262: Mycelium Healing Recovery — failure law execution and heal queue orchestration
+export { MyceliumHealingRecoveryProtocol, HEALING_STATES as MYCELIUM_HEALING_STATES, MESSAGE_TYPES as MYCELIUM_HEALING_MESSAGE_TYPES, calculateHealPriority as calculateMyceliumHealPriority } from './mycelium-healing-recovery-protocol.js';
+
+// PROTO-263: Mycelium Economic Signaling — reward, penalty, bond, and bid scoring
+export { MyceliumEconomicSignalingProtocol, ECONOMIC_SIGNALS as MYCELIUM_ECONOMIC_SIGNALS, MESSAGE_TYPES as MYCELIUM_ECONOMIC_MESSAGE_TYPES, calculateRoutingBid as calculateMyceliumRoutingBid } from './mycelium-economic-signaling-protocol.js';
+
+// PROTO-264: Mycelium Cross-Substrate Exchange — governed substrate-to-substrate intelligence exchange
+export { MyceliumCrossSubstrateExchangeProtocol, EXCHANGE_STATES as MYCELIUM_EXCHANGE_STATES, MESSAGE_TYPES as MYCELIUM_EXCHANGE_MESSAGE_TYPES, calculateExchangeReliability } from './mycelium-cross-substrate-exchange-protocol.js';
+
+// PROTO-265: Mycelium Collective Intelligence — quorum sensing, distributed cognition, emergent consensus
+export { MyceliumCollectiveIntelligenceProtocol, COLLECTIVE_STATES as MYCELIUM_COLLECTIVE_STATES, MESSAGE_TYPES as MYCELIUM_COLLECTIVE_MESSAGE_TYPES, SIGNAL_TYPES as MYCELIUM_SIGNAL_TYPES, calculateQuorumDensity, calculateFusionScore, calculateTraceDecay, calculateConsensusConvergence } from './mycelium-collective-intelligence-protocol.js';
+
+// PROTO-266: Mycelium Memory Propagation — engram formation, gradient diffusion, network-level memory
+export { MyceliumMemoryPropagationProtocol, MEMORY_STATES as MYCELIUM_MEMORY_STATES, MESSAGE_TYPES as MYCELIUM_MEMORY_MESSAGE_TYPES, ENGRAM_TYPES, calculateGradientStrength, calculateEngramCoherence, calculateRetention, calculateRecallMatch } from './mycelium-memory-propagation-protocol.js';
+
+// PROTO-267: Mycelium Evolutionary Adaptation — fitness landscapes, mutation, selection, speciation
+export { MyceliumEvolutionaryAdaptationProtocol, EVOLUTION_STATES as MYCELIUM_EVOLUTION_STATES, MESSAGE_TYPES as MYCELIUM_EVOLUTION_MESSAGE_TYPES, MUTATION_TYPES as MYCELIUM_MUTATION_TYPES, calculateFitness as calculateMyceliumFitness, applyMutation as applyMyceliumMutation, calculateSpeciationDistance, calculateSurvivalProbability } from './mycelium-evolutionary-adaptation-protocol.js';
 // PROTO-257: Next-Generation Trading Platform — product target, risk-first execution, AI governance, vertical slice
 export { NextGenerationTradingPlatformProtocol, DEFAULT_PRODUCT_TARGET, MEASURABLE_GOALS, PLATFORM_DOMAINS, ROLLOUT_STAGES, EXECUTION_MODES, CIRCUIT_STATES } from './next-generation-trading-platform-protocol.js';
