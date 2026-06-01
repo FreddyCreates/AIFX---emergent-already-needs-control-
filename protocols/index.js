@@ -254,3 +254,5 @@ export { MyceliumMemoryPropagationProtocol, MEMORY_STATES as MYCELIUM_MEMORY_STA
 
 // PROTO-267: Mycelium Evolutionary Adaptation — fitness landscapes, mutation, selection, speciation
 export { MyceliumEvolutionaryAdaptationProtocol, EVOLUTION_STATES as MYCELIUM_EVOLUTION_STATES, MESSAGE_TYPES as MYCELIUM_EVOLUTION_MESSAGE_TYPES, MUTATION_TYPES as MYCELIUM_MUTATION_TYPES, calculateFitness as calculateMyceliumFitness, applyMutation as applyMyceliumMutation, calculateSpeciationDistance, calculateSurvivalProbability } from './mycelium-evolutionary-adaptation-protocol.js';
+// PROTO-257: Next-Generation Trading Platform — product target, risk-first execution, AI governance, vertical slice
+export { NextGenerationTradingPlatformProtocol, DEFAULT_PRODUCT_TARGET, MEASURABLE_GOALS, PLATFORM_DOMAINS, ROLLOUT_STAGES, EXECUTION_MODES, CIRCUIT_STATES } from './next-generation-trading-platform-protocol.js';
