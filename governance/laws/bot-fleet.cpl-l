@@ -187,6 +187,17 @@ subjects:
           - action: "NOTIFY"
             target: "fleet_commander"
 
+      - name: "HALT_ON_REWARD_DIVERGENCE"
+        description: "Escalate when reward signal diverges from expected training distribution"
+        when: 'context.reward_divergence !== undefined && context.reward_divergence > 0.618'
+        then:
+          - action: "ESCALATE"
+            target: "human://operator"
+            reason: "Reward divergence requires manual inspection of training data"
+          - action: "FORBID"
+            target: "weight_update"
+            reason: "Training halted — reward signal divergence exceeds φ⁻¹ threshold"
+
   # ── Alpha Bot (commander) ───────────────────────────────────────────────────
   - id: "atlas://bot/organism-alpha-bot"
     rules:
