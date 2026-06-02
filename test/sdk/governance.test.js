@@ -412,4 +412,37 @@ describe('AtlasMemory', () => {
       assert.equal(recent[19].index, 99);
     });
   });
+
+  describe('learning-stability.cpl-l', () => {
+    it('should not escalate when reward_signal is missing', () => {
+      const lawFile = path.join(__dirname, '../../governance/laws/learning-stability.cpl-l');
+      const learningEngine = new CplLEngine(lawFile);
+
+      const result = learningEngine.apply(
+        'atlas://bot/organism-learning-bot',
+        {},
+        { op: 'learning_tick' },
+        { /* reward_signal intentionally absent */ }
+      );
+
+      assert.equal(result.blocked, false);
+      assert.equal(result.decisions.length, 0);
+      assert.equal(result.escalations.length, 0);
+    });
+
+    it('should escalate when reward_signal is NaN', () => {
+      const lawFile = path.join(__dirname, '../../governance/laws/learning-stability.cpl-l');
+      const learningEngine = new CplLEngine(lawFile);
+
+      const result = learningEngine.apply(
+        'atlas://bot/organism-learning-bot',
+        {},
+        { op: 'learning_tick' },
+        { reward_signal: NaN }
+      );
+
+      assert.equal(result.blocked, true);
+      assert.ok(result.decisions.some(d => d.action === 'ESCALATE' && d.rule === 'HALT_ON_REWARD_DIVERGENCE'));
+    });
+  });
 });
