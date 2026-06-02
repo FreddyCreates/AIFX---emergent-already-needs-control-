@@ -98,8 +98,10 @@ jobs:
         with:
           script: |
             const fs = require('fs');
+            const path = require('path');
             const auditDir = 'dist/governance';
             const auditFile = `${auditDir}/audit-log.jsonl`;
+            const feedbackDir = 'governance/feedback';
 
             if (!fs.existsSync(auditFile)) {
               console.log('No audit log found');
@@ -121,14 +123,83 @@ jobs:
                 .map(d => ({ entity: e.entity, ...d }))
             );
 
+            function loadRecentDismissals(days = 30) {
+              if (!fs.existsSync(feedbackDir)) return new Set();
+              const dismissals = new Set();
+              const files = fs.readdirSync(feedbackDir).filter(f => f.startsWith('fb-') && f.endsWith('.yaml'));
+              const cutoffMs = Date.now() - days * 24 * 60 * 60 * 1000;
+
+              for (const f of files) {
+                const p = path.join(feedbackDir, f);
+                let content = '';
+                try { content = fs.readFileSync(p, 'utf8'); } catch { continue; }
+
+                const at = content.match(/^\s*at:\s*"([^"]+)"/m)?.[1] || '';
+                const atMs = Date.parse(at);
+                if (!atMs || atMs < cutoffMs) continue;
+
+                const human = content.match(/^\s*human:\s*"?([A-Z]+)"?/m)?.[1] || '';
+                if (human !== 'DISMISS') continue;
+
+                const lawId = content.match(/^\s*law_id:\s*"([^"]+)"/m)?.[1] || '';
+                const ruleName = content.match(/^\s*rule_name:\s*"([^"]+)"/m)?.[1] || '';
+                if (!lawId || !ruleName) continue;
+
+                dismissals.add(`${lawId}#${ruleName}`);
+              }
+
+              return dismissals;
+            }
+
+            const recentDismissals = loadRecentDismissals(30);
+
+            // De-dupe escalations within this run
+            const unique = new Map();
             for (const esc of escalations) {
+              const botName = String(esc.entity || '').replace('atlas://bot/', '');
+              const key = [
+                botName,
+                esc.law || '',
+                esc.rule || '',
+                esc.target || '',
+                esc.reason || '',
+              ].join('|');
+              if (!unique.has(key)) unique.set(key, esc);
+            }
+
+            for (const esc of unique.values()) {
               const botName = esc.entity.replace('atlas://bot/', '');
               const title   = `🏛️ Governance Escalation: ${esc.rule} — ${botName}`;
+
+              // Suppress known false positives that have been dismissed recently
+              if (recentDismissals.has(`${esc.law}#${esc.rule}`)) {
+                console.log(`Dismissed recently; skipping issue: ${title}`);
+                continue;
+              }
+
+              // Skip if a matching issue is already open
+              try {
+                const q = [
+                  `repo:${context.repo.owner}/${context.repo.repo}`,
+                  `is:issue`,
+                  `is:open`,
+                  `"${esc.rule} — ${botName}" in:title`,
+                ].join(' ');
+                const existing = await github.rest.search.issuesAndPullRequests({ q, per_page: 1 });
+                if ((existing.data.items || []).length > 0) {
+                  console.log(`Issue already open; skipping: ${title}`);
+                  continue;
+                }
+              } catch (e) {
+                console.log(`Search failed (continuing): ${e.message}`);
+              }
+
               const body    = [
                 `## Governance Escalation`,
                 ``,
                 `**Bot:** \`${botName}\``,
                 `**Rule:** \`${esc.rule}\``,
+                `**Law:** \`${esc.law || 'unknown'}\``,
                 `**Action:** ${esc.action}`,
                 `**Target:** ${esc.target}`,
                 `**Reason:** ${esc.reason}`,
@@ -140,8 +211,8 @@ jobs:
                 ``,
                 `### Governance References`,
                 `- OCL: \`governance/organism/bot-fleet.ocl\``,
-                `- Laws: \`governance/laws/bot-fleet.cpl-l\``,
-                `- Pipeline: \`governance/pipelines/bot-governance.cpl-p\``,
+                `- Laws: \`governance/laws/\``,
+                `- Pipeline: \`governance/pipelines/\``,
                 ``,
                 `*Auto-created by organism-governance-bot*`,
               ].join('\n');

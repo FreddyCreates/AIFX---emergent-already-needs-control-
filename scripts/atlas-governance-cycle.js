@@ -36,6 +36,8 @@ const path = require('path');
 
 const REPO = path.resolve(__dirname, '..');
 const DOCS = path.join(REPO, 'docs');
+const GOVERNANCE_DIST_DIR = path.join(REPO, 'dist', 'governance');
+const ATLAS_CYCLE_STATE_FILE = path.join(GOVERNANCE_DIST_DIR, 'atlas-cycle-state.json');
 
 // Load the universal SDK
 const AtlasEvent    = require('../sdk/governance/atlas-event.js');
@@ -55,6 +57,60 @@ const flags = {
   summary:     process.argv.includes('--summary'),
 };
 if (!Object.values(flags).some(Boolean)) flags.cycle = true;
+
+function readAtlasCycleState() {
+  if (!fs.existsSync(ATLAS_CYCLE_STATE_FILE)) return { last_ts: null, last_id: null };
+  try {
+    const data = JSON.parse(fs.readFileSync(ATLAS_CYCLE_STATE_FILE, 'utf8'));
+    return { last_ts: data.last_ts || null, last_id: data.last_id || null };
+  } catch {
+    return { last_ts: null, last_id: null };
+  }
+}
+
+function writeAtlasCycleState(state) {
+  fs.mkdirSync(GOVERNANCE_DIST_DIR, { recursive: true });
+  fs.writeFileSync(ATLAS_CYCLE_STATE_FILE, JSON.stringify({ ...state, updated_at: new Date().toISOString() }, null, 2));
+}
+
+function compareEventWatermark(a, b) {
+  const ats = Date.parse(a?.ts || '') || 0;
+  const bts = Date.parse(b?.ts || '') || 0;
+  if (ats !== bts) return ats - bts;
+  const aid = String(a?.id || '');
+  const bid = String(b?.id || '');
+  return aid.localeCompare(bid);
+}
+
+function isAfterWatermark(evt, watermark) {
+  const w = watermark || {};
+  if (!w.last_ts) return true;
+
+  const wEvent = { ts: w.last_ts, id: w.last_id || '' };
+  return compareEventWatermark(wEvent, evt) < 0;
+}
+
+function buildEventMaps(events) {
+  const byEntity = new Map();
+  const byClass  = new Map();
+  const byTag    = new Map();
+
+  for (const evt of events) {
+    if (!byEntity.has(evt.entity_id)) byEntity.set(evt.entity_id, []);
+    byEntity.get(evt.entity_id).push(evt);
+
+    const cls = evt.entity_id?.match(/^atlas:\/\/([^/]+)\//)?.[1] || 'unknown';
+    if (!byClass.has(cls)) byClass.set(cls, []);
+    byClass.get(cls).push(evt);
+
+    for (const tag of (evt.tags || [])) {
+      if (!byTag.has(tag)) byTag.set(tag, []);
+      byTag.get(tag).push(evt);
+    }
+  }
+
+  return { byEntity, byClass, byTag };
+}
 
 // Classify atlas URI to pipeline domain
 function entityToDomain(entityId = '') {
@@ -91,13 +147,23 @@ function initialize() {
 
 function ingestEvents() {
   console.log('  ⚙️ Step 1 — Ingest events');
-  const { all, byEntity, byClass, byTag } = AtlasEvent.ingest();
-  console.log(`    📡 ${all.length} event(s) found across ${byEntity.size} entities`);
+  const watermark = readAtlasCycleState();
+  const all = AtlasEvent.loadAll();
+  all.sort(compareEventWatermark);
+
+  const events = all.filter(evt => isAfterWatermark(evt, watermark));
+  const { byEntity, byClass, byTag } = buildEventMaps(events);
+  console.log(`    📡 ${events.length} new event(s) (of ${all.length} total) across ${byEntity.size} entities`);
 
   for (const [cls, evts] of byClass.entries()) {
     if (evts.length > 0) console.log(`       ${cls}: ${evts.length} event(s)`);
   }
-  return { events: all, byEntity, byClass, byTag };
+
+  const nextWatermark = events.length > 0
+    ? { last_ts: events[events.length - 1].ts, last_id: events[events.length - 1].id }
+    : null;
+
+  return { events, byEntity, byClass, byTag, nextWatermark };
 }
 
 // ── Step 2 — Group ───────────────────────────────────────────────────────────
@@ -511,7 +577,7 @@ async function main() {
   }
 
   // Full cycle
-  const { events, byEntity, byClass, byTag } = ingestEvents();
+  const { events, byEntity, byClass, byTag, nextWatermark } = ingestEvents();
 
   if (flags.ingestOnly) {
     console.log('\n  ✅ Ingest-only mode complete\n');
@@ -535,6 +601,11 @@ async function main() {
   const narration    = runOrganismNarration(allResults, uelProposals);
 
   generateUniversalReport(allResults, byDomain, uelProposals, narration, feedback);
+
+  if (nextWatermark) {
+    writeAtlasCycleState(nextWatermark);
+    console.log(`  🧭 Watermark updated → ${nextWatermark.last_ts}`);
+  }
 
   console.log(`\n  ✅ Universal governance cycle complete | Decisions: ${totalDecisions} | Blocked: ${totalBlocked} | Escalated: ${totalEscalated}\n`);
 }
