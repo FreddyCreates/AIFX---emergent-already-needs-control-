@@ -49,6 +49,22 @@ class NexorisEngine {
   // ── Register State Operations ──────────────────────────────────────────
 
   /**
+   * Update multiple dimensions within a register.
+   * Backwards-compatible alias for older SDK callers/tests.
+   */
+  updateRegister(register, values = {}, immediate = false) {
+    if (!REGISTERS.includes(register)) {
+      throw new Error(`Invalid register: ${register}`);
+    }
+
+    for (const [dimension, value] of Object.entries(values)) {
+      if (DIMENSIONS.includes(dimension)) {
+        this.set(register, dimension, value, immediate);
+      }
+    }
+  }
+
+  /**
    * Get current value of a register dimension
    */
   get(register, dimension) {
@@ -99,11 +115,7 @@ class NexorisEngine {
    * Update entire register at once
    */
   setRegister(register, values) {
-    for (const [dimension, value] of Object.entries(values)) {
-      if (DIMENSIONS.includes(dimension)) {
-        this.set(register, dimension, value);
-      }
-    }
+    this.updateRegister(register, values);
   }
 
   /**
@@ -132,13 +144,16 @@ class NexorisEngine {
   /**
    * Create a named state store
    */
-  createStore(name, initialState = {}) {
-    this.stores.set(name, {
-      state: { ...initialState },
+  createStore(name, initialValue = {}) {
+    const store = {
+      name,
+      value: { ...initialValue },
       version: 0,
       subscribers: new Map(),
-    });
-    return name;
+    };
+
+    this.stores.set(name, store);
+    return store;
   }
 
   /**
@@ -147,7 +162,7 @@ class NexorisEngine {
   getStore(name, key) {
     const store = this.stores.get(name);
     if (!store) return undefined;
-    return key ? store.state[key] : { ...store.state };
+    return key ? store.value[key] : store;
   }
 
   /**
@@ -160,13 +175,29 @@ class NexorisEngine {
       return;
     }
     
-    store.state[key] = value;
+    store.value[key] = value;
     store.version++;
     
     // Notify store subscribers
     for (const callback of store.subscribers.values()) {
-      callback(key, value, store.state);
+      callback(key, value, store.value);
     }
+  }
+
+  /**
+   * Replace a store's value (and bump version).
+   * Backwards-compatible alias for older SDK callers/tests.
+   */
+  updateStore(name, nextValue = {}) {
+    const store = this.stores.get(name) || this.createStore(name, {});
+    store.value = { ...nextValue };
+    store.version++;
+
+    for (const callback of store.subscribers.values()) {
+      callback(null, store.value, store.value);
+    }
+
+    return store;
   }
 
   /**
@@ -197,24 +228,26 @@ class NexorisEngine {
    * Subscribe to register dimension changes
    */
   subscribe(register, dimension, callback) {
-    const key = `${register}.${dimension}`;
-    if (!this.subscribers.has(key)) {
-      this.subscribers.set(key, new Map());
-    }
-    
-    const subId = `sub-${Date.now()}-${Math.random().toString(36).slice(2)}`;
-    this.subscribers.get(key).set(subId, callback);
-    return subId;
+    const key = `${register}:${dimension}`;
+    if (!this.subscribers.has(key)) this.subscribers.set(key, []);
+
+    this.subscribers.get(key).push(callback);
+    return () => this.unsubscribe(register, dimension, callback);
   }
 
   /**
    * Unsubscribe from changes
    */
-  unsubscribe(register, dimension, subId) {
-    const key = `${register}.${dimension}`;
+  unsubscribe(register, dimension, callback) {
+    const key = `${register}:${dimension}`;
     const subs = this.subscribers.get(key);
-    if (subs) {
-      subs.delete(subId);
+    if (!subs) return;
+
+    const next = subs.filter(cb => cb !== callback);
+    if (next.length === 0) {
+      this.subscribers.delete(key);
+    } else {
+      this.subscribers.set(key, next);
     }
   }
 
@@ -222,10 +255,10 @@ class NexorisEngine {
    * Notify subscribers of state change
    */
   notifySubscribers(register, dimension, value) {
-    const key = `${register}.${dimension}`;
+    const key = `${register}:${dimension}`;
     const subs = this.subscribers.get(key);
     if (subs) {
-      for (const callback of subs.values()) {
+      for (const callback of subs) {
         try {
           callback(value, register, dimension);
         } catch (e) {
@@ -383,7 +416,7 @@ class NexorisEngine {
     return {
       version: this.version,
       historyLength: this.history.length,
-      subscriberCount: Array.from(this.subscribers.values()).reduce((sum, m) => sum + m.size, 0),
+      subscriberCount: Array.from(this.subscribers.values()).reduce((sum, arr) => sum + arr.length, 0),
       peerCount: this.syncPeers.size,
       storeCount: this.stores.size,
       resonanceScore: this.getResonanceScore(),
@@ -392,6 +425,27 @@ class NexorisEngine {
       registers: REGISTERS,
       dimensions: DIMENSIONS,
     };
+  }
+
+  /**
+   * Get a simple health report (per register + overall).
+   * Intended for diagnostics and unit testing.
+   */
+  getHealth() {
+    const scoreRegister = (register) => {
+      const r = this.state[register];
+      const signal = (r.awareness + r.coherence + r.resonance) / 3;
+      const penalty = r.entropy / PHI;
+      return this.clamp(signal - penalty, 0, PHI);
+    };
+
+    const cognitive = { ...this.state.cognitive, score: scoreRegister('cognitive') };
+    const affective = { ...this.state.affective, score: scoreRegister('affective') };
+    const somatic = { ...this.state.somatic, score: scoreRegister('somatic') };
+    const sovereign = { ...this.state.sovereign, score: scoreRegister('sovereign') };
+    const overall = this.clamp((cognitive.score + affective.score + somatic.score + sovereign.score) / 4, 0, PHI);
+
+    return { cognitive, affective, somatic, sovereign, overall };
   }
 
   /**

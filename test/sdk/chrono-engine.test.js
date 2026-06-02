@@ -315,24 +315,24 @@ describe('ChronoEngine', () => {
 
   describe('decay()', () => {
     it('should return value between 0 and 1', () => {
-      const result = engine.decay(0, 1, 5);
+      const result = engine.decay(1, 5, 100);
       assert.ok(result >= 0);
       assert.ok(result <= 1);
     });
 
     it('should return 1 at age 0', () => {
-      const result = engine.decay(0, 1, 0);
+      const result = engine.decay(1, 0, 100);
       assert.equal(result, 1);
     });
 
     it('should decrease with age', () => {
-      const young = engine.decay(0, 1, 1);
-      const old = engine.decay(0, 1, 10);
+      const young = engine.decay(1, 1, 100);
+      const old = engine.decay(1, 10, 100);
       assert.ok(young >= old);
     });
 
     it('should approach 0 for large age', () => {
-      const result = engine.decay(0, 1, 1000);
+      const result = engine.decay(1, 1000, 100);
       assert.ok(result < 0.1);
     });
   });
