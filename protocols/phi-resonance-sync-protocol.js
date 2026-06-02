@@ -93,6 +93,12 @@ class PhiResonanceSyncProtocol {
   getOrderParameter() {
     const N = this.oscillators.size;
     if (N === 0) return { R: 0, Psi: 0 };
+    if (N === 1) {
+      const only = this.oscillators.values().next().value;
+      const sumCos = Math.cos(only.theta);
+      const sumSin = Math.sin(only.theta);
+      return { R: 1, Psi: Math.atan2(sumSin, sumCos) };
+    }
 
     let sumCos = 0;
     let sumSin = 0;
@@ -103,7 +109,8 @@ class PhiResonanceSyncProtocol {
     sumCos /= N;
     sumSin /= N;
 
-    const R = Math.sqrt(sumCos * sumCos + sumSin * sumSin);
+    const rawR = Math.sqrt(sumCos * sumCos + sumSin * sumSin);
+    const R = Math.max(0, Math.min(1, rawR));
     const Psi = Math.atan2(sumSin, sumCos);
 
     return { R, Psi };

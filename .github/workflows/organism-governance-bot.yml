@@ -98,64 +98,45 @@ jobs:
         with:
           script: |
             const fs = require('fs');
-            const auditDir = 'dist/governance';
-            const auditFile = `${auditDir}/audit-log.jsonl`;
+            const path = require('path');
+            const { planEscalationIssues } = require(path.join(process.env.GITHUB_WORKSPACE || process.cwd(), 'sdk/governance/escalation-issues.js'));
+
+            const auditFile = 'dist/governance/audit-log.jsonl';
+            const feedbackDir = 'governance/feedback';
 
             if (!fs.existsSync(auditFile)) {
               console.log('No audit log found');
               return;
             }
 
-            const lines = fs.readFileSync(auditFile, 'utf8')
-              .trim().split('\n').filter(Boolean);
+            const auditLogText = fs.readFileSync(auditFile, 'utf8');
+            const planned = planEscalationIssues({
+              auditLogText,
+              feedbackDir,
+              cutoffMs: 10 * 60 * 1000, // last 10 minutes
+            });
 
-            // Get entries from the last 10 minutes
-            const cutoff = Date.now() - 10 * 60 * 1000;
-            const recent = lines
-              .map(l => { try { return JSON.parse(l); } catch { return null; } })
-              .filter(e => e && new Date(e.at).getTime() > cutoff);
+            for (const item of planned) {
+              const title = item.title;
 
-            const escalations = recent.flatMap(e =>
-              (e.decisions || [])
-                .filter(d => d.action === 'ESCALATE')
-                .map(d => ({ entity: e.entity, ...d }))
-            );
-
-            for (const esc of escalations) {
-              const botName = esc.entity.replace('atlas://bot/', '');
-              const title   = `🏛️ Governance Escalation: ${esc.rule} — ${botName}`;
-              const body    = [
-                `## Governance Escalation`,
-                ``,
-                `**Bot:** \`${botName}\``,
-                `**Rule:** \`${esc.rule}\``,
-                `**Action:** ${esc.action}`,
-                `**Target:** ${esc.target}`,
-                `**Reason:** ${esc.reason}`,
-                ``,
-                `### What to do`,
-                `1. Review the governance report: \`docs/governance-report.md\``,
-                `2. If this escalation is incorrect, create a feedback file in \`governance/feedback/\``,
-                `3. See \`governance/feedback/TEMPLATE.yaml\` for the override format`,
-                ``,
-                `### Governance References`,
-                `- OCL: \`governance/organism/bot-fleet.ocl\``,
-                `- Laws: \`governance/laws/bot-fleet.cpl-l\``,
-                `- Pipeline: \`governance/pipelines/bot-governance.cpl-p\``,
-                ``,
-                `*Auto-created by organism-governance-bot*`,
-              ].join('\n');
+              // Skip if an identical escalation issue is already open.
+              const q = `repo:${context.repo.owner}/${context.repo.repo} is:issue is:open in:title "${title.replace(/\"/g, '\\"')}"`;
+              const existing = await github.rest.search.issuesAndPullRequests({ q, per_page: 5 });
+              if ((existing.data.items || []).some(i => i.title === title)) {
+                console.log(`Skipping (already open): ${title}`);
+                continue;
+              }
 
               try {
                 await github.rest.issues.create({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   title,
-                  body,
-                  labels: ['governance', 'escalation'],
+                  body: item.body,
+                  labels: item.labels,
                 });
                 console.log(`Created issue: ${title}`);
               } catch (e) {
-                console.log(`Could not create issue (label may not exist): ${e.message}`);
+                console.log(`Could not create issue (labels may not exist): ${e.message}`);
               }
             }

@@ -18,7 +18,7 @@ subjects:
     rules:
       - name: "HALT_ON_REWARD_DIVERGENCE"
         description: "Stop learning if reward signal diverges (NaN or > φ²)"
-        when: 'isNaN(context.reward_signal) || context.reward_signal > 2.618'
+        when: 'Number.isNaN(context.reward_signal) || context.reward_signal > 2.618'
         then:
           - action: "FORBID"
             target: "weight_update"
