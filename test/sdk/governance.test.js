@@ -212,6 +212,35 @@ subjects:
   });
 });
 
+describe('Learning Stability Law (governance://law/learning-stability)', () => {
+  const learningLaw = path.resolve(__dirname, '..', '..', 'governance', 'laws', 'learning-stability.cpl-l');
+
+  it('should not escalate when reward_signal is missing', () => {
+    const engine = new CplLEngine(learningLaw);
+    const result = engine.apply(
+      'atlas://bot/organism-learning-bot',
+      {},
+      {},
+      {}
+    );
+    assert.equal(result.decisions.length, 0);
+    assert.equal(result.blocked, false);
+    assert.equal(result.escalations.length, 0);
+  });
+
+  it('should escalate when reward_signal is NaN', () => {
+    const engine = new CplLEngine(learningLaw);
+    const result = engine.apply(
+      'atlas://bot/organism-learning-bot',
+      {},
+      {},
+      { reward_signal: NaN }
+    );
+    assert.ok(result.decisions.some(d => d.rule === 'HALT_ON_REWARD_DIVERGENCE' && d.action === 'ESCALATE'));
+    assert.equal(result.blocked, true);
+  });
+});
+
 describe('AtlasMemory', () => {
   let memory;
   let tmpDir;
