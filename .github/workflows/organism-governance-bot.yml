@@ -44,6 +44,9 @@ permissions:
 jobs:
   governance-cycle:
     name: "🏛️ Governance Cycle"
+    # Prevent self-trigger loops: this workflow commits reports back to `main`,
+    # which would otherwise retrigger the `push` event indefinitely.
+    if: ${{ github.event_name != 'push' || !startsWith(github.event.head_commit.message || '', '🏛️ Governance-bot:') }}
     runs-on: ubuntu-latest
 
     steps:
@@ -98,6 +101,7 @@ jobs:
         with:
           script: |
             const fs = require('fs');
+            const { loadDismissedEscalations } = require('./scripts/governance-escalation-utils.js');
             const auditDir = 'dist/governance';
             const auditFile = `${auditDir}/audit-log.jsonl`;
 
@@ -105,6 +109,8 @@ jobs:
               console.log('No audit log found');
               return;
             }
+
+            const dismissed = loadDismissedEscalations('governance/feedback', { windowDays: 30 });
 
             const lines = fs.readFileSync(auditFile, 'utf8')
               .trim().split('\n').filter(Boolean);
@@ -118,12 +124,32 @@ jobs:
             const escalations = recent.flatMap(e =>
               (e.decisions || [])
                 .filter(d => d.action === 'ESCALATE')
-                .map(d => ({ entity: e.entity, ...d }))
+                .map(d => ({ at: e.at, entity: e.entity, ...d }))
             );
 
+            const uniqueEscalations = [];
+            const seen = new Set();
             for (const esc of escalations) {
+              const key = `${esc.entity}|${esc.rule}|${esc.target}|${esc.reason}`;
+              if (seen.has(key)) continue;
+              seen.add(key);
+              uniqueEscalations.push(esc);
+            }
+
+            const owner = context.repo.owner;
+            const repo  = context.repo.repo;
+            const runUrl = `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`;
+
+            for (const esc of uniqueEscalations) {
               const botName = esc.entity.replace('atlas://bot/', '');
               const title   = `🏛️ Governance Escalation: ${esc.rule} — ${botName}`;
+
+              const dismissKey = `${esc.entity}|${esc.rule}`;
+              if (dismissed.has(dismissKey)) {
+                console.log(`Suppressed escalation due to recent DISMISS feedback: ${title}`);
+                continue;
+              }
+
               const body    = [
                 `## Governance Escalation`,
                 ``,
@@ -147,15 +173,50 @@ jobs:
               ].join('\n');
 
               try {
-                await github.rest.issues.create({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  title,
-                  body,
-                  labels: ['governance', 'escalation'],
-                });
-                console.log(`Created issue: ${title}`);
+                const query = `repo:${owner}/${repo} is:issue is:open in:title "${title.replaceAll('"', '\\"')}" label:governance label:escalation`;
+                const existing = await github.rest.search.issuesAndPullRequests({ q: query, per_page: 5 });
+                const issue = existing.data.items?.[0];
+
+                if (issue) {
+                  const commentBody = [
+                    `### Escalation repeated`,
+                    ``,
+                    `**Rule:** \`${esc.rule}\``,
+                    `**Action:** ${esc.action}`,
+                    `**Target:** ${esc.target}`,
+                    `**Reason:** ${esc.reason}`,
+                    `**At:** ${esc.at}`,
+                    ``,
+                    `Run: ${runUrl}`,
+                    ``,
+                    `See: \`docs/governance-report.md\``,
+                    ``,
+                    `*Update from organism-governance-bot*`,
+                  ].join('\n');
+
+                  await github.rest.issues.createComment({
+                    owner,
+                    repo,
+                    issue_number: issue.number,
+                    body: commentBody,
+                  });
+                  console.log(`Updated existing issue #${issue.number}: ${title}`);
+                } else {
+                  try {
+                    await github.rest.issues.create({
+                      owner,
+                      repo,
+                      title,
+                      body,
+                      labels: ['governance', 'escalation'],
+                    });
+                  } catch (e) {
+                    // Fallback if labels don't exist / validation fails.
+                    await github.rest.issues.create({ owner, repo, title, body });
+                  }
+                  console.log(`Created issue: ${title}`);
+                }
               } catch (e) {
-                console.log(`Could not create issue (label may not exist): ${e.message}`);
+                console.log(`Could not create/update issue: ${e.message}`);
               }
             }
