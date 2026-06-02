@@ -171,6 +171,17 @@ jobs:
                 console.log(`Skipped duplicate open escalation issue: ${title}`);
                 continue;
               }
+              // Extra safety: avoid re-creating issues if labels were removed/changed.
+              try {
+                const q = `repo:${owner}/${repo} is:issue is:open in:title "${title.replace(/"/g, '')}"`;
+                const found = await github.rest.search.issuesAndPullRequests({ q, per_page: 1 });
+                if ((found.data?.total_count || 0) > 0) {
+                  console.log(`Skipped duplicate open escalation issue (search): ${title}`);
+                  continue;
+                }
+              } catch (e) {
+                console.log(`Search failed (continuing): ${e.message}`);
+              }
 
               const body = [
                 `## Governance Escalation`,
