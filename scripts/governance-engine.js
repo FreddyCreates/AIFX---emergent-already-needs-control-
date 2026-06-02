@@ -610,12 +610,14 @@ async function main() {
     fleetState = result.fleetState;
   }
 
+  if (flags.report && !fleetState && !flags.event) {
+    const result = await runFullCycle();
+    allResults = result.allResults;
+    fleetState = result.fleetState;
+  }
+
   if (flags.report && fleetState) {
     generateReport(allResults, fleetState);
-  } else if (flags.report && !fleetState) {
-    // Run collection for report only
-    const fs2 = collectBotState();
-    generateReport([], fs2);
   }
 
   console.log('\n  ✅ Governance cycle complete\n');

@@ -51,13 +51,13 @@ steps:
 branches:
 
   - id: "if_reward_divergence"
-    when: "isNaN(context.reward_signal) || context.reward_signal > 2.618"
+    when: "typeof context.reward_signal === \"number\" && (isNaN(context.reward_signal) || context.reward_signal > 2.618)"
     then:
       type: "ESCALATE"
       target: "human://operator"
 
   - id: "if_learning_healthy"
-    when: "context.reward_signal > 0.7 && context.protocol_failure_rate < 0.1"
+    when: "typeof context.reward_signal === \"number\" && context.reward_signal > 0.7 && context.protocol_failure_rate < 0.1"
     then:
       type: "ALLOW"
       skip_steps: ["route_actions"]
