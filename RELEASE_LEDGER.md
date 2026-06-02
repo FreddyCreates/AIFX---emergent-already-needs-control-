@@ -95,6 +95,20 @@ This ledger tracks public research releases, platform records, DOIs, URLs, versi
 - Release notes: `papers/rete-vivum/release-notes.txt`
 - Citation: `papers/rete-vivum/citation.txt`
 
+## MSIT-RP-2026-007
+
+**Title:** Resilience Benchmarks for Governed Agentic Systems: Poisoning Resistance, Boundary Leakage, Rollback Integrity, and Promotion Throughput  
+**Author:** Alfredo Medina Hernandez  
+**Affiliation:** MedinaSITech  
+**Version:** v1.0 internal markdown  
+**Platform:** Pending  
+**DOI / URL:** Pending  
+**Rights:** All rights reserved unless platform-specific record states otherwise.  
+**Files:**
+- Paper: `papers/resilience-benchmarks/paper.md`
+- Metadata: `papers/resilience-benchmarks/metadata.txt`
+- Release notes: `papers/resilience-benchmarks/release-notes.txt`
+
 ## MSIT-SW-2026-001
 
 **Title:** Sovereign Organism Production Software Snapshot (SDKs + Protocols + Extension Artifacts)  

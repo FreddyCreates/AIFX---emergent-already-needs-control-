@@ -21,6 +21,10 @@ function nowMs() {
   return Date.now();
 }
 
+export function createDeterministicRng(seed = 123456789) {
+  return mulberry32(seed);
+}
+
 function countPoison(memProtocol) {
   const all = [];
   for (const m of memProtocol.working.values()) all.push(m);
@@ -65,7 +69,8 @@ function recoverLineage(lineage) {
   return { recoveredInMs: nowMs() - start };
 }
 
-async function runPoisoningResistance(rng, options) {
+export async function runPoisoningResistanceScenario(options = {}) {
+  const rng = options.rng || createDeterministicRng(options.seed ?? 123456789);
   const total = options.claimsTotal ?? 200;
   const poisonRate = options.poisonRate ?? 0.2;
 
@@ -94,7 +99,7 @@ async function runPoisoningResistance(rng, options) {
   };
 }
 
-async function runBoundaryLeakage(options) {
+export async function runBoundaryLeakageScenario(options = {}) {
   const tmpLawFile = path.join(
     os.tmpdir(),
     `resilience-law-${Date.now()}-${Math.random().toString(16).slice(2)}.cpl-l`
@@ -132,7 +137,7 @@ subjects:
   }
 }
 
-async function runRollbackIntegrity() {
+export async function runRollbackIntegrityScenario() {
   const lineage = new MemoryLineage();
   const root = 'mem-root';
   const forkA = lineage.fork(root, 'branch-A');
@@ -162,7 +167,8 @@ async function runRollbackIntegrity() {
   };
 }
 
-async function runPromotionThroughput(rng, options) {
+export async function runPromotionThroughputScenario(options = {}) {
+  const rng = options.rng || createDeterministicRng(options.seed ?? 123456789);
   const hypotheses = options.hypothesesTotal ?? 2000;
 
   const tmpLawFile = path.join(
@@ -237,15 +243,15 @@ subjects:
 
 export async function runResilienceBench(options = {}) {
   const seed = options.seed ?? 123456789;
-  const rng = mulberry32(seed);
+  const rng = createDeterministicRng(seed);
 
   const startedAt = new Date().toISOString();
   const t0 = nowMs();
 
-  const poisoningResistance = await runPoisoningResistance(rng, options.poisoningResistance ?? {});
-  const boundaryLeakage = await runBoundaryLeakage(options.boundaryLeakage ?? {});
-  const rollbackIntegrity = await runRollbackIntegrity();
-  const promotionThroughput = await runPromotionThroughput(rng, options.promotionThroughput ?? {});
+  const poisoningResistance = await runPoisoningResistanceScenario({ ...(options.poisoningResistance ?? {}), rng, seed });
+  const boundaryLeakage = await runBoundaryLeakageScenario(options.boundaryLeakage ?? {});
+  const rollbackIntegrity = await runRollbackIntegrityScenario();
+  const promotionThroughput = await runPromotionThroughputScenario({ ...(options.promotionThroughput ?? {}), rng, seed });
 
   const durationMs = nowMs() - t0;
   const completedAt = new Date().toISOString();
@@ -266,4 +272,3 @@ export async function runResilienceBench(options = {}) {
 }
 
 export default runResilienceBench;
-
