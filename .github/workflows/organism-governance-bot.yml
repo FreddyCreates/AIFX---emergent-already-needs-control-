@@ -98,8 +98,11 @@ jobs:
         with:
           script: |
             const fs = require('fs');
+            const path = require('path');
             const auditDir = 'dist/governance';
             const auditFile = `${auditDir}/audit-log.jsonl`;
+            const feedbackDir = path.join('governance', 'feedback');
+            const DISMISS_WINDOW_MS = 30 * 24 * 60 * 60 * 1000;
 
             if (!fs.existsSync(auditFile)) {
               console.log('No audit log found');
@@ -121,13 +124,86 @@ jobs:
                 .map(d => ({ entity: e.entity, ...d }))
             );
 
+            function loadDismissedEscalations() {
+              if (!fs.existsSync(feedbackDir)) return new Set();
+
+              const now = Date.now();
+              const dismissed = new Set();
+
+              const files = fs.readdirSync(feedbackDir)
+                .filter(f => f.startsWith('fb-') && f.endsWith('.yaml'));
+
+              for (const file of files) {
+                let content = '';
+                try {
+                  content = fs.readFileSync(path.join(feedbackDir, file), 'utf8');
+                } catch {
+                  continue;
+                }
+
+                const entity = content.match(/^\s*entity:\s*"([^"]+)"/m)?.[1];
+                const rule   = content.match(/^\s*rule_name:\s*"([^"]+)"/m)?.[1];
+                const system = content.match(/^\s*system:\s*"([^"]+)"/m)?.[1];
+                const human  = content.match(/^\s*human:\s*"([^"]+)"/m)?.[1];
+                const at     = content.match(/^\s*at:\s*"([^"]+)"/m)?.[1];
+                const atMs   = at ? Date.parse(at) : NaN;
+
+                if (!entity || !rule) continue;
+                if (system !== 'ESCALATE' || human !== 'DISMISS') continue;
+                if (Number.isNaN(atMs)) continue;
+                if (atMs < (now - DISMISS_WINDOW_MS)) continue;
+
+                dismissed.add(`${entity}::${rule}`);
+              }
+
+              return dismissed;
+            }
+
+            async function hasOpenDuplicateIssue(title) {
+              const owner = context.repo.owner;
+              const repo = context.repo.repo;
+
+              const query = [
+                `repo:${owner}/${repo}`,
+                'is:issue',
+                'is:open',
+                `in:title "${title.replace(/"/g, '\\"')}"`,
+              ].join(' ');
+
+              const res = await github.rest.search.issuesAndPullRequests({
+                q: query,
+                per_page: 5,
+              });
+
+              return (res.data.items || []).some(i => i.title === title);
+            }
+
+            const dismissed = loadDismissedEscalations();
+            const seenTitles = new Set();
+
             for (const esc of escalations) {
               const botName = esc.entity.replace('atlas://bot/', '');
               const title   = `🏛️ Governance Escalation: ${esc.rule} — ${botName}`;
+              const dismissKey = `${esc.entity}::${esc.rule}`;
+
+              if (dismissed.has(dismissKey)) {
+                console.log(`Skipping dismissed escalation (feedback override): ${title}`);
+                continue;
+              }
+
+              if (seenTitles.has(title)) continue;
+              seenTitles.add(title);
+
+              if (await hasOpenDuplicateIssue(title)) {
+                console.log(`Skipping duplicate open escalation issue: ${title}`);
+                continue;
+              }
+
               const body    = [
                 `## Governance Escalation`,
                 ``,
                 `**Bot:** \`${botName}\``,
+                `**Law:** \`${esc.law || 'unknown'}\``,
                 `**Rule:** \`${esc.rule}\``,
                 `**Action:** ${esc.action}`,
                 `**Target:** ${esc.target}`,
@@ -135,13 +211,14 @@ jobs:
                 ``,
                 `### What to do`,
                 `1. Review the governance report: \`docs/governance-report.md\``,
-                `2. If this escalation is incorrect, create a feedback file in \`governance/feedback/\``,
-                `3. See \`governance/feedback/TEMPLATE.yaml\` for the override format`,
+                `2. Review the Atlas governance report: \`docs/atlas-governance-report.md\``,
+                `3. If this escalation is incorrect, create a feedback file in \`governance/feedback/\``,
+                `4. See \`governance/feedback/TEMPLATE.yaml\` for the override format`,
                 ``,
                 `### Governance References`,
                 `- OCL: \`governance/organism/bot-fleet.ocl\``,
-                `- Laws: \`governance/laws/bot-fleet.cpl-l\``,
-                `- Pipeline: \`governance/pipelines/bot-governance.cpl-p\``,
+                `- Laws: \`governance/laws/*.cpl-l\``,
+                `- Pipeline: \`governance/pipelines/*.cpl-p\``,
                 ``,
                 `*Auto-created by organism-governance-bot*`,
               ].join('\n');

@@ -166,6 +166,22 @@ subjects:
       assert.equal(result.decisions.length, 0);
       assert.equal(result.blocked, false);
     });
+
+    it('should not trigger HALT_ON_REWARD_DIVERGENCE when reward_signal is missing', () => {
+      const lawFile = path.resolve(__dirname, '../../governance/laws/learning-stability.cpl-l');
+      const learningEngine = new CplLEngine(lawFile);
+
+      const result = learningEngine.apply(
+        'atlas://bot/organism-learning-bot',
+        {},
+        {},
+        {}
+      );
+
+      assert.equal(result.decisions.length, 0);
+      assert.equal(result.escalations.length, 0);
+      assert.equal(result.blocked, false);
+    });
   });
 
   describe('applyBatch()', () => {

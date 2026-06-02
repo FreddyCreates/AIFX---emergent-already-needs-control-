@@ -189,7 +189,7 @@ subjects:
 
       - name: "HALT_ON_REWARD_DIVERGENCE"
         description: "Escalate when reward signal diverges from expected training distribution"
-        when: 'context.reward_divergence !== undefined && context.reward_divergence > 0.618'
+        when: 'context.reward_divergence !== undefined && !isNaN(context.reward_divergence) && context.reward_divergence > 0.618'
         then:
           - action: "ESCALATE"
             target: "human://operator"
