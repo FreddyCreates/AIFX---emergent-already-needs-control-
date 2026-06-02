@@ -25,9 +25,9 @@ on:
     branches: [main]
     paths:
       - 'governance/**'
-      - 'docs/**'
       - 'protocols/**'
       - 'sdk/**'
+      - 'scripts/**'
   schedule:
     - cron: '0 */3 * * *'  # Every 3 hours — governance heartbeat
   workflow_dispatch:
@@ -44,6 +44,7 @@ permissions:
 jobs:
   governance-cycle:
     name: "🏛️ Governance Cycle"
+    if: github.actor != 'organism-governance-bot' && github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
 
     steps:
@@ -55,28 +56,25 @@ jobs:
         with:
           node-version: '20'
 
-      - name: "Phase 1 — Run full governance cycle"
-        run: node scripts/governance-engine.js --full-cycle
+      - name: "Phase 1 — Run governance cycle + report"
+        run: node scripts/governance-engine.js --full-cycle --report
 
-      - name: "Phase 2 — Generate governance report"
-        run: node scripts/governance-engine.js --report
-
-      - name: "Phase 3 — Run meta engine analysis"
+      - name: "Phase 2 — Run meta engine analysis"
         run: node scripts/governance-meta-engine.js --analyze --report
 
-      - name: "Phase 4 — Process specific event (if provided)"
+      - name: "Phase 3 — Process specific event (if provided)"
         if: ${{ github.event.inputs.event_json != '' }}
         run: |
           echo '${{ github.event.inputs.event_json }}' > /tmp/gov-event.json
           node scripts/governance-engine.js --event @/tmp/gov-event.json
 
-      - name: "Phase 5 — Emit governance events for all entities"
+      - name: "Phase 4 — Emit governance events for all entities"
         run: node scripts/atlas-governance-cycle.js --emit-events
 
-      - name: "Phase 6 — Run universal Atlas governance cycle (all domains)"
+      - name: "Phase 5 — Run universal Atlas governance cycle (all domains)"
         run: node scripts/atlas-governance-cycle.js --cycle
 
-      - name: "Phase 7 — Print audit summary"
+      - name: "Phase 6 — Print audit summary"
         run: node scripts/governance-engine.js --audit
 
       - name: Commit governance outputs
@@ -98,8 +96,17 @@ jobs:
         with:
           script: |
             const fs = require('fs');
+            const path = require('path');
             const auditDir = 'dist/governance';
             const auditFile = `${auditDir}/audit-log.jsonl`;
+            const feedbackDir = 'governance/feedback';
+
+            const {
+              loadEscalationsFromAudit,
+              loadDismissedEscalationsFromFeedback,
+              dedupeEscalations,
+              buildEscalationIssue,
+            } = require(path.join(process.cwd(), 'scripts', 'governance-escalation-utils.js'));
 
             if (!fs.existsSync(auditFile)) {
               console.log('No audit log found');
@@ -110,52 +117,76 @@ jobs:
               .trim().split('\n').filter(Boolean);
 
             // Get entries from the last 10 minutes
-            const cutoff = Date.now() - 10 * 60 * 1000;
-            const recent = lines
-              .map(l => { try { return JSON.parse(l); } catch { return null; } })
-              .filter(e => e && new Date(e.at).getTime() > cutoff);
+            const nowMs = Date.now();
+            const cutoffMs = nowMs - 10 * 60 * 1000;
 
-            const escalations = recent.flatMap(e =>
-              (e.decisions || [])
-                .filter(d => d.action === 'ESCALATE')
-                .map(d => ({ entity: e.entity, ...d }))
-            );
+            const rawEscalations = loadEscalationsFromAudit(auditFile, { sinceMs: cutoffMs, nowMs });
+            const uniqueEscalations = dedupeEscalations(rawEscalations);
+
+            const dismissed = loadDismissedEscalationsFromFeedback(feedbackDir, {
+              nowMs,
+              ttlMs: 30 * 24 * 60 * 60 * 1000, // 30 days
+            });
+
+            const escalations = uniqueEscalations.filter(e => !dismissed.has(e.dismissKey));
+
+            if (escalations.length === 0) {
+              console.log('No new (non-dismissed) escalations detected');
+              return;
+            }
 
             for (const esc of escalations) {
-              const botName = esc.entity.replace('atlas://bot/', '');
-              const title   = `🏛️ Governance Escalation: ${esc.rule} — ${botName}`;
-              const body    = [
-                `## Governance Escalation`,
-                ``,
-                `**Bot:** \`${botName}\``,
-                `**Rule:** \`${esc.rule}\``,
-                `**Action:** ${esc.action}`,
-                `**Target:** ${esc.target}`,
-                `**Reason:** ${esc.reason}`,
-                ``,
-                `### What to do`,
-                `1. Review the governance report: \`docs/governance-report.md\``,
-                `2. If this escalation is incorrect, create a feedback file in \`governance/feedback/\``,
-                `3. See \`governance/feedback/TEMPLATE.yaml\` for the override format`,
-                ``,
-                `### Governance References`,
-                `- OCL: \`governance/organism/bot-fleet.ocl\``,
-                `- Laws: \`governance/laws/bot-fleet.cpl-l\``,
-                `- Pipeline: \`governance/pipelines/bot-governance.cpl-p\``,
-                ``,
-                `*Auto-created by organism-governance-bot*`,
-              ].join('\n');
+              const { title, body, botName } = buildEscalationIssue(esc);
+
+              const owner = context.repo.owner;
+              const repo = context.repo.repo;
+
+              const searchQuery = `repo:${owner}/${repo} is:issue is:open in:title "${title.replaceAll('"', '\\"')}"`;
+              const search = await github.rest.search.issuesAndPullRequests({
+                q: searchQuery,
+                per_page: 5,
+              });
+
+              const existing = (search.data.items || []).find(i => i.title === title);
+              if (existing) {
+                await github.rest.issues.createComment({
+                  owner,
+                  repo,
+                  issue_number: existing.number,
+                  body: [
+                    `New escalation occurrence detected at **${esc.at}**.`,
+                    ``,
+                    `- **Bot:** \`${botName}\``,
+                    `- **Rule:** \`${esc.rule}\``,
+                    `- **Target:** ${esc.target}`,
+                    `- **Reason:** ${esc.reason}`,
+                  ].join('\n'),
+                });
+                console.log(`Updated existing escalation issue: ${title}`);
+                continue;
+              }
 
               try {
                 await github.rest.issues.create({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
+                  owner,
+                  repo,
                   title,
                   body,
                   labels: ['governance', 'escalation'],
                 });
                 console.log(`Created issue: ${title}`);
               } catch (e) {
-                console.log(`Could not create issue (label may not exist): ${e.message}`);
+                // Retry without labels if labels don't exist
+                try {
+                  await github.rest.issues.create({
+                    owner,
+                    repo,
+                    title,
+                    body,
+                  });
+                  console.log(`Created issue (no labels): ${title}`);
+                } catch (e2) {
+                  console.log(`Could not create issue: ${e2.message}`);
+                }
               }
             }
