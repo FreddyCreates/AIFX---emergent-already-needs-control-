@@ -1,0 +1,35 @@
+# Feedback: Dismiss noisy HALT_ON_REWARD_DIVERGENCE escalations when reward_signal is missing
+#
+# The learning-stability law currently triggers HALT_ON_REWARD_DIVERGENCE on
+# `isNaN(context.reward_signal)`. In JS, `isNaN(undefined)` is true, so any
+# learning-domain event that omits `reward_signal` produces an escalation and
+# can spam GitHub issues.
+
+id: "fb-2026-06-02-001"
+actor: "human://operator"
+
+target:
+  type: "decision"
+  entity: "atlas://bot/organism-learning-bot"
+  law_id: "governance://law/learning-stability"
+  rule_name: "HALT_ON_REWARD_DIVERGENCE"
+  pipeline_id: "pipeline://governance/learning_cycle"
+  run_id: "atlas-cycle-2026-06-02-024446Z"
+
+decision:
+  system: "ESCALATE"
+  human: "DISMISS"
+
+context_snapshot:
+  reward_signal: null
+  findings:
+    - "reward_signal_missing_in_event_context"
+    - "isNaN(undefined)_causes_false_positive"
+
+rationale: "Escalation is a false positive: `reward_signal` was not present in the event context, and the current rule treats missing values as NaN. Suppress escalation unless reward_signal is explicitly provided (number) and divergent."
+
+law_proposal:
+  type: "CONDITION_TIGHTENING"
+  suggestion: "Update learning-stability.cpl-l HALT_ON_REWARD_DIVERGENCE to require context.reward_signal !== undefined before applying isNaN()/threshold checks."
+
+at: "2026-06-02T05:40:00Z"
