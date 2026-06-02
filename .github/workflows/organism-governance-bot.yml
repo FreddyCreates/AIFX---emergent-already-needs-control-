@@ -98,6 +98,7 @@ jobs:
         with:
           script: |
             const fs = require('fs');
+            const path = require('path');
             const auditDir = 'dist/governance';
             const auditFile = `${auditDir}/audit-log.jsonl`;
 
@@ -121,9 +122,57 @@ jobs:
                 .map(d => ({ entity: e.entity, ...d }))
             );
 
+            // Load recent DISMISS feedbacks so we can avoid re-opening known false-positives.
+            const feedbackDir = path.join(process.cwd(), 'governance', 'feedback');
+            const feedbackCutoff = Date.now() - 7 * 24 * 60 * 60 * 1000; // 7 days
+            const dismissed = new Set();
+            if (fs.existsSync(feedbackDir)) {
+              const files = fs.readdirSync(feedbackDir).filter(f => f.startsWith('fb-') && f.endsWith('.yaml'));
+              for (const f of files) {
+                const content = fs.readFileSync(path.join(feedbackDir, f), 'utf8');
+                const entity  = content.match(/entity:\s*"([^"]+)"/)?.[1] || '';
+                const rule    = content.match(/rule_name:\s*"([^"]+)"/)?.[1] || '';
+                const human   = content.match(/human:\s*"?([A-Z]+)"?/)?.[1] || '';
+                const atStr   = content.match(/^\s*at:\s*"([^"]+)"/m)?.[1] || '';
+                const atMs    = atStr ? new Date(atStr).getTime() : 0;
+
+                if (!entity || !rule) continue;
+                if (human !== 'DISMISS') continue;
+                if (atMs && atMs < feedbackCutoff) continue;
+
+                dismissed.add(`${entity}#${rule}`);
+              }
+            }
+
+            // Build a map of existing escalation issues so we don't open duplicates.
+            const existingIssues = await github.paginate(github.rest.issues.listForRepo, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'governance,escalation',
+              per_page: 100,
+            });
+            const openByTitle = new Map(existingIssues.map(i => [i.title, i.number]));
+
+            const seenTitles = new Set();
             for (const esc of escalations) {
               const botName = esc.entity.replace('atlas://bot/', '');
               const title   = `🏛️ Governance Escalation: ${esc.rule} — ${botName}`;
+              const dismissKey = `${esc.entity}#${esc.rule}`;
+
+              if (seenTitles.has(title)) continue;
+              seenTitles.add(title);
+
+              if (dismissed.has(dismissKey)) {
+                console.log(`Skipping dismissed escalation: ${title}`);
+                continue;
+              }
+
+              if (openByTitle.has(title)) {
+                console.log(`Skipping duplicate open issue (#${openByTitle.get(title)}): ${title}`);
+                continue;
+              }
+
               const body    = [
                 `## Governance Escalation`,
                 ``,

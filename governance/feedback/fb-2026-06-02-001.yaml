@@ -1,0 +1,34 @@
+# Feedback: Dismiss false positive HALT_ON_REWARD_DIVERGENCE escalation
+# Root cause: reward_signal is not present on routine organism-learning-bot
+# events, and `isNaN(undefined)` evaluates true. This caused the learning
+# stability law to escalate in every universal governance cycle.
+
+id: "fb-2026-06-02-001"
+actor: "human://operator"
+
+target:
+  type: "decision"
+  entity: "atlas://bot/organism-learning-bot"
+  law_id: "governance://law/learning-stability"
+  rule_name: "HALT_ON_REWARD_DIVERGENCE"
+  pipeline_id: "pipeline://governance/learning_cycle"
+  run_id: "atlas-universal-cycle"
+
+decision:
+  system: "ESCALATE"
+  human: "DISMISS"
+
+context_snapshot:
+  health_dashboard: "green"
+  risk_score: 0.1706
+  findings:
+    - "reward_signal_missing_from_ci_events"
+    - "isNaN(undefined)_causes_false_positive"
+
+rationale: "This escalation is a false positive: routine organism-learning-bot CI events do not include `context.reward_signal`, and the learning stability law/pipeline treated a missing value as divergent because `isNaN(undefined)` is true. No evidence of reward divergence exists; no manual inspection of training data is required."
+
+law_proposal:
+  type: "CONDITION_TIGHTENING"
+  suggestion: "Guard reward divergence checks with `context.reward_signal !== undefined && context.reward_signal !== null` before calling isNaN()/threshold comparisons (learning-stability.cpl-l + learning-cycle.cpl-p)."
+
+at: "2026-06-02T05:40:00Z"

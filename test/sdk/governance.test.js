@@ -168,6 +168,41 @@ subjects:
     });
   });
 
+  describe('Learning stability laws', () => {
+    it('should not escalate reward divergence when reward_signal is missing', () => {
+      const lawFile = path.join(__dirname, '../../governance/laws/learning-stability.cpl-l');
+      const learningEngine = new CplLEngine(lawFile);
+      const result = learningEngine.apply(
+        'atlas://bot/organism-learning-bot',
+        {},
+        { op: 'ci_run_completed' },
+        { status: 'success', risk_score: 0.1 }
+      );
+
+      assert.ok(!result.decisions.some(d => d.rule === 'HALT_ON_REWARD_DIVERGENCE'));
+      assert.equal(result.escalations.length, 0);
+      assert.equal(result.blocked, false);
+    });
+
+    it('should escalate reward divergence when reward_signal is NaN', () => {
+      const lawFile = path.join(__dirname, '../../governance/laws/learning-stability.cpl-l');
+      const learningEngine = new CplLEngine(lawFile);
+      const result = learningEngine.apply(
+        'atlas://bot/organism-learning-bot',
+        {},
+        { op: 'learning_cycle_completed' },
+        { reward_signal: NaN }
+      );
+
+      const decisions = result.decisions.filter(d => d.rule === 'HALT_ON_REWARD_DIVERGENCE');
+      assert.ok(decisions.length > 0);
+      assert.ok(decisions.some(d => d.action === 'ESCALATE'));
+      assert.ok(decisions.some(d => d.action === 'FORBID'));
+      assert.ok(result.escalations.some(e => e.target === 'human://operator'));
+      assert.equal(result.blocked, true);
+    });
+  });
+
   describe('applyBatch()', () => {
     it('should process multiple events', () => {
       const events = [

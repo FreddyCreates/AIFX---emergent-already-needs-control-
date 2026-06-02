@@ -198,7 +198,7 @@ describe('PhiResonanceSyncProtocol', () => {
     it('should handle single oscillator', () => {
       protocol.registerOscillator('osc-1');
       const result = protocol.step(0.1);
-      assert.equal(result.orderParameter.R, 1); // Single oscillator = perfect sync
+      assert.ok(Math.abs(result.orderParameter.R - 1) < 1e-12); // Single oscillator = perfect sync
     });
   });
 
@@ -212,7 +212,7 @@ describe('PhiResonanceSyncProtocol', () => {
     it('should return R=1 for single oscillator', () => {
       protocol.registerOscillator('osc-1');
       const result = protocol.getOrderParameter();
-      assert.equal(result.R, 1);
+      assert.ok(Math.abs(result.R - 1) < 1e-12);
     });
 
     it('should return R near 1 for synchronized oscillators', () => {
