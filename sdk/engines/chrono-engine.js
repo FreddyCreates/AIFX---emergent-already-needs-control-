@@ -134,7 +134,9 @@ class ChronoEngine {
    * Cancel a scheduled task
    */
   cancelTask(taskId) {
+    const before = this.scheduledTasks.length;
     this.scheduledTasks = this.scheduledTasks.filter(t => t.id !== taskId);
+    return this.scheduledTasks.length !== before;
   }
 
   // ── Time-Based Decay Functions ─────────────────────────────────────────
@@ -195,6 +197,18 @@ class ChronoEngine {
   }
 
   /**
+   * Snapshot of the current temporal state.
+   */
+  now() {
+    return {
+      beat: this.getBeat(),
+      time: this.getTime(),
+      phase: this.getPhiPhase(),
+      scale: this.getTimeScale(),
+    };
+  }
+
+  /**
    * Subscribe to heartbeat events (legacy)
    */
   onBeat(callback) {
@@ -242,13 +256,12 @@ class ChronoEngine {
     }
     
     // Notify beat listeners
-    for (const [, callback] of this.listeners) {
-      try {
-        callback(currentBeat, this.getPhiPhase());
-      } catch (e) {
-        console.error(`[CHRONO] Listener failed:`, e.message);
-      }
-    }
+    this.emit('beat', {
+      beat: currentBeat,
+      phase: this.getPhiPhase(),
+      scale: this.getTimeScale(),
+      time: this.getTime(),
+    });
     
     return {
       beat: currentBeat,

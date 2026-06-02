@@ -430,4 +430,114 @@ describe('SynapseBindingEngineProtocol', () => {
       assert.equal(job.retries, 1);
     });
   });
+
+  describe('processNext()', () => {
+    it('should execute a queued job successfully and record completion', async () => {
+      const imprint = protocol.createImprint('imprint-1', { hello: 'world' });
+      protocol.scheduleJob('BIND', imprint.id, { binding: 'x' });
+
+      const result = await protocol.processNext();
+      assert.equal(result.success, true);
+      assert.equal(result.job.status, 'completed');
+      assert.ok(protocol.completedJobs.some(j => j.id === result.job.id));
+    });
+
+    it('should classify failures and schedule a retry when allowed', async () => {
+      const imprint = protocol.createImprint('imprint-1', { hello: 'world' });
+      protocol.scheduleJob('VERIFY', imprint.id, {});
+
+      // Force a transient failure in the job executor.
+      const originalExecuteVerify = protocol.executeVerify;
+      protocol.executeVerify = () => {
+        throw new Error('temporary network retry');
+      };
+
+      const originalSetTimeout = globalThis.setTimeout;
+      globalThis.setTimeout = (fn) => {
+        fn();
+        return 0;
+      };
+
+      try {
+        const result = await protocol.processNext();
+        assert.equal(result.success, false);
+        assert.equal(result.failureClass, 'TRANSIENT');
+
+        // The job should get re-queued (immediately, due to the stubbed setTimeout).
+        assert.ok(protocol.jobQueue.length >= 1);
+        assert.equal(protocol.jobQueue[0].status, 'queued');
+        assert.equal(protocol.jobQueue[0].retries, 1);
+      } finally {
+        protocol.executeVerify = originalExecuteVerify;
+        globalThis.setTimeout = originalSetTimeout;
+      }
+    });
+
+    it('should mark job failed when no retries are allowed', async () => {
+      protocol.scheduleJob('BIND', 'missing-imprint', {});
+      const result = await protocol.processNext();
+
+      assert.equal(result.success, false);
+      assert.equal(result.failureClass, 'PERMANENT');
+      assert.equal(result.job.status, 'failed');
+      assert.ok(protocol.failedJobs.some(j => j.id === result.job.id));
+    });
+  });
+
+  describe('executeJob()', () => {
+    it('should throw on unknown job type', async () => {
+      await assert.rejects(async () => {
+        await protocol.executeJob({ type: 'UNKNOWN' });
+      });
+    });
+
+    it('should terminate an imprint', () => {
+      const imprint = protocol.createImprint('imprint-1', {});
+      const result = protocol.executeTerminate({ target: imprint.id });
+      assert.deepEqual(result, { terminated: true });
+      assert.equal(protocol.getImprint(imprint.id), undefined);
+    });
+
+    it('should execute SYNC/HEAL/VERIFY/TERMINATE jobs', async () => {
+      const imprint = protocol.createImprint('imprint-1', { v: 1 });
+      imprint.phiSignature = 0; // force drift
+
+      const syncResult = await protocol.executeJob({ type: 'SYNC', target: imprint.id });
+      assert.equal(syncResult.synced, true);
+      assert.ok(typeof syncResult.drift === 'number');
+
+      const healResult = await protocol.executeJob({ type: 'HEAL', target: imprint.id });
+      assert.equal(healResult.healed, true);
+      assert.ok(typeof healResult.newSignature === 'number');
+
+      const verifyResult = await protocol.executeJob({ type: 'VERIFY', target: imprint.id });
+      assert.equal(verifyResult.verified, true);
+      assert.equal(verifyResult.valid, true);
+
+      const terminateResult = await protocol.executeJob({ type: 'TERMINATE', target: imprint.id });
+      assert.deepEqual(terminateResult, { terminated: true });
+    });
+  });
+
+  describe('classifyFailure()', () => {
+    it('should classify TIMEOUT', () => {
+      assert.equal(protocol.classifyFailure(new Error('request timeout')), 'TIMEOUT');
+    });
+
+    it('should classify RESOURCE', () => {
+      assert.equal(protocol.classifyFailure(new Error('out of memory resource')), 'RESOURCE');
+    });
+
+    it('should classify CONFLICT', () => {
+      assert.equal(protocol.classifyFailure(new Error('lock conflict detected')), 'CONFLICT');
+    });
+
+    it('should classify PARTIAL', () => {
+      assert.equal(protocol.classifyFailure(new Error('partial write')), 'PARTIAL');
+    });
+
+    it('should default to UNKNOWN', () => {
+      assert.equal(protocol.classifyFailure(new Error('something else')), 'UNKNOWN');
+    });
+  });
 });

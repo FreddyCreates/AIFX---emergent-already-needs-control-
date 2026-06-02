@@ -96,9 +96,10 @@ describe('Sacred Geometry Timers', () => {
 
   describe('createMultiHeartGenerator()', () => {
     it('should return interval id', () => {
-      const timer = sacredGeometry.createMultiHeartGenerator(() => {}, { baseMs: 100000 });
+      const timer = sacredGeometry.createMultiHeartGenerator(3, () => {}, { baseMs: 100000 });
       assert.ok(timer);
-      clearInterval(timer);
+      assert.ok(typeof timer.stop === 'function');
+      timer.stop();
     });
   });
 
@@ -115,7 +116,7 @@ describe('Sacred Geometry Timers', () => {
       if (suite.rotator) clearInterval(suite.rotator);
       if (suite.phyllotaxis) clearInterval(suite.phyllotaxis);
       if (suite.metatron) clearInterval(suite.metatron);
-      if (suite.multiHeart) clearInterval(suite.multiHeart);
+      if (suite.multiHeart) suite.multiHeart.stop?.();
       if (suite.dualOscillator) clearInterval(suite.dualOscillator);
     });
   });

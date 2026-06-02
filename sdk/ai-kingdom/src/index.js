@@ -141,7 +141,7 @@ export { DreamWeaver, DreamOrchestra, DREAM_MODALITIES, GROUNDING_LEVELS, WEAVER
 // ═══════════════════════════════════════════════════════════════════════════════
 // CHRONO VAULT — Temporal versioning and time-travel state management
 // ═══════════════════════════════════════════════════════════════════════════════
-export { ChronoVault, ChronoSnapshot, TemporalQueryEngine, TEMPORAL_STATES, TIMELINE_TYPES } from './chrono-vault.js';
+export { ChronoVault, ChronoSnapshot, TemporalQueryEngine, TEMPORAL_STATES as CHRONO_VAULT_TEMPORAL_STATES, TIMELINE_TYPES } from './chrono-vault.js';
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // SYNAPSE GARDEN — Organic neural pathway growth and pruning
