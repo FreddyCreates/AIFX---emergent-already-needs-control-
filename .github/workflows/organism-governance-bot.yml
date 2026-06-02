@@ -121,13 +121,72 @@ jobs:
                 .map(d => ({ entity: e.entity, ...d }))
             );
 
+            // Dedupe: a single cycle can emit many identical ESCALATE decisions.
+            const unique = new Map();
             for (const esc of escalations) {
-              const botName = esc.entity.replace('atlas://bot/', '');
-              const title   = `🏛️ Governance Escalation: ${esc.rule} — ${botName}`;
-              const body    = [
+              const botName = (esc.entity || '').replace('atlas://bot/', '');
+              const key = `${botName}::${esc.rule}::${esc.target}`;
+              if (!unique.has(key)) unique.set(key, { ...esc, botName });
+            }
+
+            // Suppress issues when a human has already dismissed the escalation via feedback.
+            const dismissed = new Set();
+            const feedbackDir = 'governance/feedback';
+            if (fs.existsSync(feedbackDir)) {
+              const fbFiles = fs.readdirSync(feedbackDir).filter(f => f.endsWith('.yaml') || f.endsWith('.yml'));
+              for (const f of fbFiles) {
+                try {
+                  const text = fs.readFileSync(`${feedbackDir}/${f}`, 'utf8');
+                  const entityMatch = text.match(/\bentity:\s*["']?(atlas:\/\/bot\/[^\s"']+)["']?/);
+                  const ruleMatch   = text.match(/\brule_name:\s*["']?([A-Z0-9_]+)["']?/);
+                  const humanDismiss = /\bhuman:\s*["']?DISMISS["']?/m.test(text);
+                  if (entityMatch && ruleMatch && humanDismiss) {
+                    dismissed.add(`${entityMatch[1]}::${ruleMatch[1]}`);
+                  }
+                } catch { /* ignore malformed feedback */ }
+              }
+            }
+
+            const owner = context.repo.owner;
+            const repo  = context.repo.repo;
+
+            const existing = await github.paginate(github.rest.issues.listForRepo, {
+              owner,
+              repo,
+              state: 'open',
+              labels: 'governance,escalation',
+              per_page: 100,
+            });
+            const existingTitles = new Set(existing.map(i => i.title));
+
+            for (const esc of unique.values()) {
+              if (!esc.target || !String(esc.target).startsWith('human://')) continue;
+              if (dismissed.has(`${esc.entity}::${esc.rule}`)) {
+                console.log(`Suppressed dismissed escalation: ${esc.rule} — ${esc.botName}`);
+                continue;
+              }
+
+              const title = `🏛️ Governance Escalation: ${esc.rule} — ${esc.botName}`;
+              if (existingTitles.has(title)) {
+                console.log(`Skipped duplicate open escalation issue: ${title}`);
+                continue;
+              }
+              // Extra safety: avoid re-creating issues if labels were removed/changed.
+              try {
+                const q = `repo:${owner}/${repo} is:issue is:open in:title "${title.replace(/"/g, '')}"`;
+                const found = await github.rest.search.issuesAndPullRequests({ q, per_page: 1 });
+                if ((found.data?.total_count || 0) > 0) {
+                  console.log(`Skipped duplicate open escalation issue (search): ${title}`);
+                  continue;
+                }
+              } catch (e) {
+                console.log(`Search failed (continuing): ${e.message}`);
+              }
+
+              const body = [
                 `## Governance Escalation`,
                 ``,
-                `**Bot:** \`${botName}\``,
+                `**Bot:** \`${esc.botName}\``,
                 `**Rule:** \`${esc.rule}\``,
                 `**Action:** ${esc.action}`,
                 `**Target:** ${esc.target}`,
@@ -148,8 +207,8 @@ jobs:
 
               try {
                 await github.rest.issues.create({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
+                  owner,
+                  repo,
                   title,
                   body,
                   labels: ['governance', 'escalation'],
