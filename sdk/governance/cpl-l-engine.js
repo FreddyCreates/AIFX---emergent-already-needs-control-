@@ -36,10 +36,20 @@ const LAWS_DIR_DEFAULT = path.resolve(__dirname, '../../governance/laws');
 class CplLEngine {
   /**
    * @param {string|string[]} [lawFiles]  specific .cpl-l files to load, or directory to scan
+   * @param {object} [options]
+   * @param {'strict'|'legacy'} [options.sandbox='strict']  strict blocks unsafe condition expressions
    */
-  constructor(lawFiles = null) {
+  constructor(lawFiles = null, options = {}) {
     this._lawFiles  = lawFiles;
     this._subjects  = null;  // loaded lazily
+    this._options = {
+      sandbox: options.sandbox || 'strict',
+    };
+
+    this._unsafeExpressionStats = {
+      totalRejected: 0,
+      samples: [],
+    };
   }
 
   // ── Law File Parser ──────────────────────────────────────────────────────────
@@ -153,8 +163,66 @@ class CplLEngine {
 
   // ── Condition Evaluator ────────────────────────────────────────────────────
 
+  _isStrictSandbox() {
+    return this._options?.sandbox === 'strict';
+  }
+
+  _recordUnsafeExpression(expression, reason) {
+    this._unsafeExpressionStats.totalRejected++;
+    if (this._unsafeExpressionStats.samples.length < 25) {
+      this._unsafeExpressionStats.samples.push({
+        expression: String(expression || '').slice(0, 200),
+        reason: String(reason || 'unsafe'),
+        at: new Date().toISOString(),
+      });
+    }
+  }
+
+  _isSafeConditionExpr(conditionExpr) {
+    if (typeof conditionExpr !== 'string') return false;
+    const expr = conditionExpr.trim();
+    if (expr.length === 0) return false;
+    if (expr.length > 500) return false;
+
+    // Block syntax that enables statement injection or property escape tricks.
+    if (/[;`\\]/.test(expr)) return false;
+    if (/[\[\]{}]/.test(expr)) return false;
+
+    // Block high-risk identifiers / globals.
+    const banned = [
+      'process',
+      'globalThis',
+      'global',
+      'Function',
+      'eval',
+      'require',
+      'import',
+      'module',
+      'exports',
+      'constructor',
+      '__proto__',
+      'prototype',
+      'window',
+      'document',
+    ];
+    const bannedRe = new RegExp(`\\b(${banned.join('|')})\\b`, 'i');
+    if (bannedRe.test(expr)) return false;
+
+    // If arrows are used, require expression bodies (no blocks).
+    if (expr.includes('=>') && /=>\s*{/.test(expr)) return false;
+
+    return true;
+  }
+
   _evalCondition(conditionExpr, entity, event, context) {
     if (!conditionExpr) return false;
+    if (this._isStrictSandbox()) {
+      const safe = this._isSafeConditionExpr(conditionExpr);
+      if (!safe) {
+        this._recordUnsafeExpression(conditionExpr, 'rejected by strict sandbox');
+        return false;
+      }
+    }
     try {
       const fn = new Function(
         'entity', 'event', 'context',
@@ -254,6 +322,13 @@ class CplLEngine {
   rulesFor(entityId) {
     this._loadSubjects();
     return (this._lawSources?.[entityId] || []).flatMap(s => s.rules.map(r => ({ law: s.lawId, ...r })));
+  }
+
+  /**
+   * Introspection for security/testing: rejected condition expressions under strict sandbox.
+   */
+  getUnsafeExpressionStats() {
+    return { ...this._unsafeExpressionStats, samples: [...this._unsafeExpressionStats.samples] };
   }
 }
 
