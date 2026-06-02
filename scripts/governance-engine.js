@@ -57,6 +57,7 @@ const FEEDBACK_DIR = path.join(GOVERNANCE, 'feedback');
 const AUDIT_DIR    = path.join(REPO, 'dist', 'governance');
 const AUDIT_FILE   = path.join(AUDIT_DIR, 'audit-log.jsonl');
 const META_FILE    = path.join(AUDIT_DIR, 'meta-stats.json');
+const LAST_CYCLE_FILE = path.join(AUDIT_DIR, 'last-cycle.json');
 
 const PHI     = 1.618033988749895;
 const PHI_INV = 1 / PHI;
@@ -517,6 +518,14 @@ async function runFullCycle() {
   const totalEscalated = allResults.flatMap(r => r.decisions.filter(d => d.action === 'ESCALATE')).length;
   console.log(`    ✅ CPL-L applied to ${allResults.length} entities | Blocked: ${totalBlocked} | Escalated: ${totalEscalated}`);
 
+  // Persist last evaluated results so `--report` can render from the same cycle.
+  try {
+    fs.writeFileSync(
+      LAST_CYCLE_FILE,
+      JSON.stringify({ at: new Date().toISOString(), allResults, fleetState }, null, 2)
+    );
+  } catch { /* never let persistence failure break the cycle */ }
+
   // Emit universal governance event for the atlas cycle to ingest
   try {
     const govEvt = AtlasEvent.bot('organism-governance-bot', 'fleet_governance_cycle_completed', {
@@ -613,7 +622,21 @@ async function main() {
   if (flags.report && fleetState) {
     generateReport(allResults, fleetState);
   } else if (flags.report && !fleetState) {
-    // Run collection for report only
+    // Prefer rendering from the last full-cycle snapshot to avoid overwriting
+    // the report with "0 entities" when invoked as a separate phase.
+    try {
+      if (fs.existsSync(LAST_CYCLE_FILE)) {
+        const snap = JSON.parse(fs.readFileSync(LAST_CYCLE_FILE, 'utf8'));
+        if (snap && Array.isArray(snap.allResults) && snap.fleetState) {
+          generateReport(snap.allResults, snap.fleetState);
+          console.log('  📦 Rendered report from dist/governance/last-cycle.json');
+          console.log('\n  ✅ Governance cycle complete\n');
+          return;
+        }
+      }
+    } catch { /* fall back to report-only mode */ }
+
+    // Fallback: collection-only report
     const fs2 = collectBotState();
     generateReport([], fs2);
   }
