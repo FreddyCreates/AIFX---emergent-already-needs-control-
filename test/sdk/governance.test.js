@@ -168,6 +168,39 @@ subjects:
     });
   });
 
+  describe('real law files', () => {
+    it('HALT_ON_REWARD_DIVERGENCE should not trigger when reward_signal is missing', () => {
+      const lawFile = path.join(__dirname, '../../governance/laws/learning-stability.cpl-l');
+      const realEngine = new CplLEngine(lawFile);
+
+      const result = realEngine.apply(
+        'atlas://bot/organism-learning-bot',
+        {},
+        {},
+        {}
+      );
+
+      assert.equal(result.decisions.length, 0);
+      assert.equal(result.blocked, false);
+    });
+
+    it('HALT_ON_REWARD_DIVERGENCE should trigger on NaN reward_signal', () => {
+      const lawFile = path.join(__dirname, '../../governance/laws/learning-stability.cpl-l');
+      const realEngine = new CplLEngine(lawFile);
+
+      const result = realEngine.apply(
+        'atlas://bot/organism-learning-bot',
+        {},
+        {},
+        { reward_signal: NaN }
+      );
+
+      assert.equal(result.blocked, true);
+      assert.ok(result.decisions.some(d => d.rule === 'HALT_ON_REWARD_DIVERGENCE' && d.action === 'FORBID'));
+      assert.ok(result.decisions.some(d => d.rule === 'HALT_ON_REWARD_DIVERGENCE' && d.action === 'ESCALATE'));
+    });
+  });
+
   describe('applyBatch()', () => {
     it('should process multiple events', () => {
       const events = [

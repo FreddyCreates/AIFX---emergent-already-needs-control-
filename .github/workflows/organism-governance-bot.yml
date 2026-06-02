@@ -25,9 +25,9 @@ on:
     branches: [main]
     paths:
       - 'governance/**'
-      - 'docs/**'
       - 'protocols/**'
       - 'sdk/**'
+      - 'scripts/**'
   schedule:
     - cron: '0 */3 * * *'  # Every 3 hours — governance heartbeat
   workflow_dispatch:
@@ -100,14 +100,18 @@ jobs:
             const fs = require('fs');
             const auditDir = 'dist/governance';
             const auditFile = `${auditDir}/audit-log.jsonl`;
+            const feedbackDir = 'governance/feedback';
 
             if (!fs.existsSync(auditFile)) {
               console.log('No audit log found');
               return;
             }
 
-            const lines = fs.readFileSync(auditFile, 'utf8')
-              .trim().split('\n').filter(Boolean);
+            const lines = fs.readFileSync(auditFile, 'utf8').trim().split('\n').filter(Boolean);
+            if (lines.length === 0) {
+              console.log('Audit log empty');
+              return;
+            }
 
             // Get entries from the last 10 minutes
             const cutoff = Date.now() - 10 * 60 * 1000;
@@ -121,17 +125,94 @@ jobs:
                 .map(d => ({ entity: e.entity, ...d }))
             );
 
+            if (escalations.length === 0) {
+              console.log('No recent escalations found');
+              return;
+            }
+
+            // Load recent DISMISS feedback to suppress known false positives
+            function loadDismissedFeedback(days = 30) {
+              const dismissed = new Set();
+              if (!fs.existsSync(feedbackDir)) return dismissed;
+
+              const cutoffTs = Date.now() - days * 24 * 60 * 60 * 1000;
+              const files = fs.readdirSync(feedbackDir).filter(f => f.endsWith('.yaml') || f.endsWith('.yml'));
+              for (const file of files) {
+                let text = '';
+                try { text = fs.readFileSync(`${feedbackDir}/${file}`, 'utf8'); } catch { continue; }
+
+                const entity = text.match(/^\s*entity:\s*"([^"]+)"/m)?.[1];
+                const rule = text.match(/^\s*rule_name:\s*"([^"]+)"/m)?.[1];
+                const human = text.match(/^\s*human:\s*"([^"]+)"/m)?.[1];
+                const at = text.match(/^\s*at:\s*"([^"]+)"/m)?.[1];
+
+                if (!entity || !rule || !human) continue;
+                if (human !== 'DISMISS') continue;
+                if (at && !Number.isNaN(Date.parse(at)) && Date.parse(at) < cutoffTs) continue;
+
+                dismissed.add(`${entity}#${rule}`);
+              }
+              return dismissed;
+            }
+
+            const dismissed = loadDismissedFeedback(30);
+
+            // Coalesce escalations by (entity, law, rule, target, reason)
+            const groups = new Map();
             for (const esc of escalations) {
-              const botName = esc.entity.replace('atlas://bot/', '');
-              const title   = `🏛️ Governance Escalation: ${esc.rule} — ${botName}`;
-              const body    = [
+              const key = `${esc.entity}#${esc.law}#${esc.rule}#${esc.target}#${esc.reason || ''}`;
+              const prev = groups.get(key) || { ...esc, count: 0, firstAt: esc.at, lastAt: esc.at };
+              prev.count++;
+              prev.firstAt = prev.firstAt && prev.firstAt < esc.at ? prev.firstAt : esc.at;
+              prev.lastAt = prev.lastAt && prev.lastAt > esc.at ? prev.lastAt : esc.at;
+              groups.set(key, prev);
+            }
+
+            // Build a set of open escalation issues to prevent duplicates
+            const openEscalationTitles = new Set();
+            try {
+              let page = 1;
+              while (true) {
+                const res = await github.rest.issues.listForRepo({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  state: 'open',
+                  labels: 'governance,escalation',
+                  per_page: 100,
+                  page,
+                });
+                for (const issue of res.data || []) openEscalationTitles.add(issue.title);
+                if (!res.data || res.data.length < 100) break;
+                page++;
+              }
+            } catch (e) {
+              console.log(`Could not list existing issues for dedupe: ${e.message}`);
+            }
+
+            for (const esc of groups.values()) {
+              const botName = String(esc.entity || '').replace('atlas://bot/', '');
+              const title = `🏛️ Governance Escalation: ${esc.rule} — ${botName}`;
+
+              if (openEscalationTitles.has(title)) {
+                console.log(`Skipping duplicate open issue: ${title}`);
+                continue;
+              }
+
+              if (dismissed.has(`${esc.entity}#${esc.rule}`)) {
+                console.log(`Skipping dismissed escalation via feedback: ${esc.rule} — ${botName}`);
+                continue;
+              }
+
+              const body = [
                 `## Governance Escalation`,
                 ``,
                 `**Bot:** \`${botName}\``,
+                `**Law:** \`${esc.law}\``,
                 `**Rule:** \`${esc.rule}\``,
                 `**Action:** ${esc.action}`,
                 `**Target:** ${esc.target}`,
                 `**Reason:** ${esc.reason}`,
+                `**Occurrences (last 10 min):** ${esc.count}`,
                 ``,
                 `### What to do`,
                 `1. Review the governance report: \`docs/governance-report.md\``,
@@ -140,7 +221,7 @@ jobs:
                 ``,
                 `### Governance References`,
                 `- OCL: \`governance/organism/bot-fleet.ocl\``,
-                `- Laws: \`governance/laws/bot-fleet.cpl-l\``,
+                `- Laws: \`governance/laws/bot-fleet.cpl-l\` + \`governance/laws/learning-stability.cpl-l\``,
                 `- Pipeline: \`governance/pipelines/bot-governance.cpl-p\``,
                 ``,
                 `*Auto-created by organism-governance-bot*`,
