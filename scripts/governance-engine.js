@@ -57,6 +57,7 @@ const FEEDBACK_DIR = path.join(GOVERNANCE, 'feedback');
 const AUDIT_DIR    = path.join(REPO, 'dist', 'governance');
 const AUDIT_FILE   = path.join(AUDIT_DIR, 'audit-log.jsonl');
 const META_FILE    = path.join(AUDIT_DIR, 'meta-stats.json');
+const LAST_CYCLE_FILE = path.join(AUDIT_DIR, 'last-cycle.json');
 
 const PHI     = 1.618033988749895;
 const PHI_INV = 1 / PHI;
@@ -460,6 +461,7 @@ function readFeedback() {
 // ── Full Cycle ────────────────────────────────────────────────────────────────
 async function runFullCycle() {
   console.log('\n🏛️ Governance Engine — Full Cycle\n═══════════════════════════════════════════\n');
+  const cycleStartedAt = new Date().toISOString();
 
   // 1. Collect state
   console.log('  ⚙️ Step 1 — Collecting bot state...');
@@ -530,6 +532,18 @@ async function runFullCycle() {
     }, ['governance', 'fleet']);
     govEvt.emit();
   } catch { /* never let event emission break the cycle */ }
+
+  // Persist the evaluated results so `--report` can render the last cycle even
+  // when invoked as a separate CLI run (as it is in CI).
+  try {
+    fs.writeFileSync(LAST_CYCLE_FILE, JSON.stringify({
+      version: 1,
+      cycle_started_at: cycleStartedAt,
+      cycle_completed_at: new Date().toISOString(),
+      fleetState,
+      allResults,
+    }, null, 2));
+  } catch { /* best-effort only */ }
 
   return { allResults, fleetState };
 }
@@ -613,7 +627,21 @@ async function main() {
   if (flags.report && fleetState) {
     generateReport(allResults, fleetState);
   } else if (flags.report && !fleetState) {
-    // Run collection for report only
+    // If `--report` is invoked as a separate process, prefer rendering from the
+    // latest persisted cycle snapshot.
+    if (fs.existsSync(LAST_CYCLE_FILE)) {
+      try {
+        const snapshot = JSON.parse(fs.readFileSync(LAST_CYCLE_FILE, 'utf8'));
+        if (snapshot && snapshot.fleetState && Array.isArray(snapshot.allResults)) {
+          generateReport(snapshot.allResults, snapshot.fleetState);
+          console.log(`  ↪ Rendered report from ${path.relative(REPO, LAST_CYCLE_FILE)}`);
+          console.log('\n  ✅ Governance cycle complete\n');
+          return;
+        }
+      } catch { /* fall back to report-only mode */ }
+    }
+
+    // Fall back: generate a report from current fleet state only.
     const fs2 = collectBotState();
     generateReport([], fs2);
   }

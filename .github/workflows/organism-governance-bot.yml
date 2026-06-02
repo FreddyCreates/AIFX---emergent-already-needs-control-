@@ -100,10 +100,32 @@ jobs:
             const fs = require('fs');
             const auditDir = 'dist/governance';
             const auditFile = `${auditDir}/audit-log.jsonl`;
+            const feedbackDir = 'governance/feedback';
 
             if (!fs.existsSync(auditFile)) {
               console.log('No audit log found');
               return;
+            }
+
+            // Load human feedback overrides (DISMISS) to avoid re-opening known false positives.
+            const dismissed = new Set();
+            try {
+              if (fs.existsSync(feedbackDir)) {
+                const fbFiles = fs.readdirSync(feedbackDir)
+                  .filter(f => f.startsWith('fb-') && f.endsWith('.yaml'));
+                for (const file of fbFiles) {
+                  const content = fs.readFileSync(`${feedbackDir}/${file}`, 'utf8');
+                  const entity = content.match(/entity:\s*"([^"]+)"/)?.[1] || '';
+                  const rule   = content.match(/rule_name:\s*"([^"]+)"/)?.[1] || '';
+                  const system = content.match(/system:\s*"?([A-Z]+)"?/)?.[1] || '';
+                  const human  = content.match(/human:\s*"?([A-Z]+)"?/)?.[1] || '';
+                  if (entity && rule && system === 'ESCALATE' && human === 'DISMISS') {
+                    dismissed.add(`${entity}::${rule}`);
+                  }
+                }
+              }
+            } catch (e) {
+              console.log(`Could not load feedback overrides: ${e.message}`);
             }
 
             const lines = fs.readFileSync(auditFile, 'utf8')
@@ -121,9 +143,39 @@ jobs:
                 .map(d => ({ entity: e.entity, ...d }))
             );
 
+            // Deduplicate escalations within this run (audit can contain multiple entries).
+            const unique = new Map();
             for (const esc of escalations) {
+              const key = `${esc.entity}::${esc.rule}::${esc.target || ''}`;
+              if (!unique.has(key)) unique.set(key, esc);
+            }
+
+            for (const esc of unique.values()) {
               const botName = esc.entity.replace('atlas://bot/', '');
               const title   = `🏛️ Governance Escalation: ${esc.rule} — ${botName}`;
+
+              if (dismissed.has(`${esc.entity}::${esc.rule}`)) {
+                console.log(`Skipping dismissed escalation (feedback override): ${title}`);
+                continue;
+              }
+
+              // Skip if an identical escalation issue is already open.
+              try {
+                const q = [
+                  `repo:${context.repo.owner}/${context.repo.repo}`,
+                  'is:issue',
+                  'is:open',
+                  `in:title "${title.replace(/"/g, '\\"')}"`,
+                ].join(' ');
+                const existing = await github.rest.search.issuesAndPullRequests({ q, per_page: 1 });
+                if ((existing.data.total_count || 0) > 0) {
+                  console.log(`Issue already open, skipping: ${title}`);
+                  continue;
+                }
+              } catch (e) {
+                console.log(`Could not search for existing issues (continuing): ${e.message}`);
+              }
+
               const body    = [
                 `## Governance Escalation`,
                 ``,
