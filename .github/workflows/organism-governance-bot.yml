@@ -45,6 +45,8 @@ jobs:
   governance-cycle:
     name: "🏛️ Governance Cycle"
     runs-on: ubuntu-latest
+    # Prevent push-triggered self-loops when this workflow commits governance outputs.
+    if: ${{ github.event_name != 'push' || (github.actor != 'github-actions[bot]' && github.actor != 'organism-governance-bot') }}
 
     steps:
       - name: Checkout
@@ -98,53 +100,56 @@ jobs:
         with:
           script: |
             const fs = require('fs');
+            const path = require('path');
+            const issueUtils = require('./scripts/governance-escalation-issues.js');
+
             const auditDir = 'dist/governance';
             const auditFile = `${auditDir}/audit-log.jsonl`;
+            const feedbackDir = 'governance/feedback';
 
             if (!fs.existsSync(auditFile)) {
               console.log('No audit log found');
               return;
             }
 
-            const lines = fs.readFileSync(auditFile, 'utf8')
-              .trim().split('\n').filter(Boolean);
+            const now = Date.now();
+            const dismissed = issueUtils.loadDismissedFeedback({
+              feedbackDir: path.resolve(process.cwd(), feedbackDir),
+              now,
+              windowDays: 30,
+            });
 
-            // Get entries from the last 10 minutes
-            const cutoff = Date.now() - 10 * 60 * 1000;
-            const recent = lines
-              .map(l => { try { return JSON.parse(l); } catch { return null; } })
-              .filter(e => e && new Date(e.at).getTime() > cutoff);
+            const escalations = issueUtils.dedupeEscalations(
+              issueUtils.getRecentEscalationsFromAudit({
+                auditFile: path.resolve(process.cwd(), auditFile),
+                now,
+                windowMs: 10 * 60 * 1000,
+              })
+            ).filter(e => !issueUtils.isSuppressedByFeedback(e, dismissed));
 
-            const escalations = recent.flatMap(e =>
-              (e.decisions || [])
-                .filter(d => d.action === 'ESCALATE')
-                .map(d => ({ entity: e.entity, ...d }))
-            );
+            if (escalations.length === 0) {
+              console.log('No recent escalations to create issues for');
+              return;
+            }
+
+            // Dedupe against existing open issues by title.
+            const open = await github.paginate(github.rest.issues.listForRepo, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'governance,escalation',
+              per_page: 100,
+            });
+            const openTitles = new Set(open.map(i => i.title));
 
             for (const esc of escalations) {
-              const botName = esc.entity.replace('atlas://bot/', '');
-              const title   = `🏛️ Governance Escalation: ${esc.rule} — ${botName}`;
-              const body    = [
-                `## Governance Escalation`,
-                ``,
-                `**Bot:** \`${botName}\``,
-                `**Rule:** \`${esc.rule}\``,
-                `**Action:** ${esc.action}`,
-                `**Target:** ${esc.target}`,
-                `**Reason:** ${esc.reason}`,
-                ``,
-                `### What to do`,
-                `1. Review the governance report: \`docs/governance-report.md\``,
-                `2. If this escalation is incorrect, create a feedback file in \`governance/feedback/\``,
-                `3. See \`governance/feedback/TEMPLATE.yaml\` for the override format`,
-                ``,
-                `### Governance References`,
-                `- OCL: \`governance/organism/bot-fleet.ocl\``,
-                `- Laws: \`governance/laws/bot-fleet.cpl-l\``,
-                `- Pipeline: \`governance/pipelines/bot-governance.cpl-p\``,
-                ``,
-                `*Auto-created by organism-governance-bot*`,
-              ].join('\n');
+              const title = issueUtils.buildIssueTitle(esc);
+              const body = issueUtils.buildIssueBody(esc);
+
+              if (openTitles.has(title)) {
+                console.log(`Skipping duplicate open issue: ${title}`);
+                continue;
+              }
 
               try {
                 await github.rest.issues.create({
@@ -155,6 +160,7 @@ jobs:
                   labels: ['governance', 'escalation'],
                 });
                 console.log(`Created issue: ${title}`);
+                openTitles.add(title);
               } catch (e) {
                 console.log(`Could not create issue (label may not exist): ${e.message}`);
               }
