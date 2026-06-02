@@ -51,7 +51,7 @@ steps:
 branches:
 
   - id: "if_reward_divergence"
-    when: "isNaN(context.reward_signal) || context.reward_signal > 2.618"
+    when: "context.reward_signal !== undefined && context.reward_signal !== null && (isNaN(context.reward_signal) || context.reward_signal > 2.618)"
     then:
       type: "ESCALATE"
       target: "human://operator"

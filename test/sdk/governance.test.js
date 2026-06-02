@@ -212,6 +212,41 @@ subjects:
   });
 });
 
+describe('Learning stability laws', () => {
+  it('should not escalate when reward_signal is missing', () => {
+    const lawPath = path.join(__dirname, '../../governance/laws/learning-stability.cpl-l');
+    const engine = new CplLEngine(lawPath);
+
+    const result = engine.apply(
+      'atlas://bot/organism-learning-bot',
+      {},
+      {},
+      {}
+    );
+
+    assert.equal(result.decisions.length, 0);
+    assert.equal(result.blocked, false);
+    assert.equal(result.escalations.length, 0);
+  });
+
+  it('should forbid and escalate when reward_signal is NaN', () => {
+    const lawPath = path.join(__dirname, '../../governance/laws/learning-stability.cpl-l');
+    const engine = new CplLEngine(lawPath);
+
+    const result = engine.apply(
+      'atlas://bot/organism-learning-bot',
+      {},
+      {},
+      { reward_signal: NaN }
+    );
+
+    assert.ok(result.decisions.some(d => d.rule === 'HALT_ON_REWARD_DIVERGENCE' && d.action === 'FORBID'));
+    assert.ok(result.decisions.some(d => d.rule === 'HALT_ON_REWARD_DIVERGENCE' && d.action === 'ESCALATE'));
+    assert.equal(result.blocked, true);
+    assert.ok(result.escalations.some(e => e.target === 'human://operator'));
+  });
+});
+
 describe('AtlasMemory', () => {
   let memory;
   let tmpDir;
