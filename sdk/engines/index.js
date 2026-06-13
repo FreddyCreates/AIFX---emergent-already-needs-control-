@@ -1,11 +1,12 @@
 /**
  * CORE ENGINES INDEX
  * 
- * The 4 foundational "physics" engines of Civitas:
+ * The 5 foundational engines of Civitas:
  *   - CHRONO: Time & Scheduling
  *   - NEXORIS: State Management
  *   - QUANTUM_FLUX: Randomness & Entropy
  *   - COREOGRAPH: Orchestration
+ *   - TOKENOMICS: Cognitive Resource Allocation
  * 
  * These are the substrate on which all agents operate.
  */
@@ -45,6 +46,20 @@ export const ENGINE_CONSTANTS = {
   EMERGENCE_THRESHOLD: 0.618033988749895,
 };
 
+// Tokenomics Engine
+export {
+  TokenomicsEngine,
+  tokenomicsEngine,
+  TokenGovernor,
+  SalienceEngine,
+  CognitiveReturnScorer,
+  CompressionAuditor,
+  WasteDetector,
+  ReuseExtractor,
+  BenchmarkHarness,
+  TOKENOMICS,
+} from './tokenomics/index.js';
+
 // Engine factory for creating isolated instances
 export function createEngines() {
   return {
@@ -53,5 +68,6 @@ export function createEngines() {
     quantumFlux: new QuantumFluxEngine(),
     coreograph: new CoreographEngine(),
     centerfold: new CenterfoldEngine(),
+    tokenomics: new TokenomicsEngine(),
   };
 }
