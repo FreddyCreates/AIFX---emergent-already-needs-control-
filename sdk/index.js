@@ -330,5 +330,32 @@ export {
   createWorkerBinding,
 } from './nova-bindings/src/index.js';
 
+// Trading Engines SDK (@medina/trading-engines)
+export {
+  // TradingView Integration
+  WebhookReceiver,
+  SignalAggregator,
+  ChartDataProvider,
+  // Connectors
+  BaseBrokerConnector,
+  FX_BROKERS,
+  createFxConnector,
+  CRYPTO_EXCHANGES,
+  createCryptoConnector,
+  // Deep Trading Engines
+  SignalEngine,
+  ExecutionEngine,
+  RiskEngine,
+  PortfolioEngine,
+  MarketMakingEngine,
+  ArbitrageEngine,
+  // Infrastructure
+  UnifiedBrokerAdapter,
+  ENVIRONMENTS,
+  getEnvironment,
+  validateConfig,
+  createTradingPlatform,
+} from './trading-engines/index.js';
+
 // Default export is the bootstrap function
 export { default } from './runtime/bootstrap.js';
