@@ -45,6 +45,23 @@ export const ENGINE_CONSTANTS = {
   EMERGENCE_THRESHOLD: 0.618033988749895,
 };
 
+// Tokenomics Engine
+export {
+  TokenomicsEngine,
+  TokenGovernor,
+  SalienceEngine,
+  CognitiveReturnScorer,
+  CompressionAuditor,
+  WasteDetector,
+  ReuseExtractor,
+  BenchmarkHarness,
+  tokenomicsEngine,
+  DEFAULT_BUDGETS as TOKENOMICS_BUDGETS,
+} from './tokenomics-engine.js';
+
+import { tokenomicsEngine as _tokenomicsEngine, TokenomicsEngine as _TokenomicsEngine } from './tokenomics-engine.js';
+export const TOKENOMICS = _tokenomicsEngine;
+
 // Engine factory for creating isolated instances
 export function createEngines() {
   return {
@@ -53,5 +70,6 @@ export function createEngines() {
     quantumFlux: new QuantumFluxEngine(),
     coreograph: new CoreographEngine(),
     centerfold: new CenterfoldEngine(),
+    tokenomics: new _TokenomicsEngine(),
   };
 }
