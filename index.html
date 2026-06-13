@@ -8,6 +8,8 @@
   <meta name="keywords" content="AI Research, Machine Learning, Cognitive Protocols, Decentralized AI, Scientific Computing">
   <meta name="author" content="ItsNotAILABS Research">
   <link rel="canonical" href="https://itsnotailabs.com/">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#4a90d9">
   
   <!-- Open Graph -->
   <meta property="og:title" content="ItsNotAILABS — Advanced AI Research Laboratory">
@@ -1930,6 +1932,17 @@
     </div>
   </div>
 </footer>
+
+<!-- Service Worker Registration — Intelligence on the Raw Web -->
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').then(function(reg) {
+      console.log('[ORGANISM] Service Worker registered — intelligence API active at /api/*');
+    }).catch(function(err) {
+      console.warn('[ORGANISM] Service Worker registration failed:', err);
+    });
+  }
+</script>
 
 </body>
 </html>

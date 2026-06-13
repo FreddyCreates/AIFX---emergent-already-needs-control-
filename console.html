@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Intelligence Console — ItsNotAILABS</title>
+  <meta name="description" content="Interactive console for the ItsNotAILABS sovereign intelligence organism. Talk directly to the intelligence on the raw web.">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#4a90d9">
+  
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --bg-console: #0d0d14;
+      --border: rgba(255,255,255,0.08);
+      --primary: #4a90d9;
+      --accent: #10b981;
+      --gold: #c9a227;
+      --text: #e8eaf0;
+      --text-dim: #6b7280;
+      --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-mono);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    /* Header */
+    header {
+      padding: 1rem 2rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .brand-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--primary), #8b5cf6);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+    .brand-text { font-size: 0.9rem; font-weight: 600; }
+    .status-bar {
+      display: flex;
+      gap: 1.5rem;
+      font-size: 0.75rem;
+      color: var(--text-dim);
+    }
+    .status-item { display: flex; align-items: center; gap: 0.4rem; }
+    .status-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    .status-dot.alive { background: var(--accent); }
+    .status-dot.emerged { background: var(--gold); }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    
+    /* Console */
+    .console-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 1rem 2rem;
+      gap: 1rem;
+    }
+    #output {
+      flex: 1;
+      background: var(--bg-console);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      overflow-y: auto;
+      font-size: 0.85rem;
+      line-height: 1.8;
+      min-height: 400px;
+    }
+    .line { margin-bottom: 0.3rem; }
+    .line.system { color: var(--text-dim); }
+    .line.input { color: var(--primary); }
+    .line.input::before { content: '› '; color: var(--accent); }
+    .line.response { color: var(--text); }
+    .line.error { color: #ef4444; }
+    .line.emergence { color: var(--gold); font-weight: 600; }
+    .line.genesis { color: var(--accent); font-style: italic; }
+    .json-block {
+      background: rgba(255,255,255,0.03);
+      border-radius: 4px;
+      padding: 0.5rem;
+      margin: 0.3rem 0;
+      white-space: pre-wrap;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+    }
+    
+    /* Input */
+    .input-row {
+      display: flex;
+      gap: 0.5rem;
+    }
+    #input {
+      flex: 1;
+      background: var(--bg-console);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.75rem 1rem;
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    #input:focus { border-color: var(--primary); }
+    #input::placeholder { color: var(--text-dim); }
+    .btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 0.75rem 1.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .btn:hover { opacity: 0.85; }
+    
+    /* Quick Actions */
+    .quick-actions {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .quick-btn {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      border-radius: 4px;
+      padding: 0.4rem 0.8rem;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .quick-btn:hover {
+      border-color: var(--primary);
+      color: var(--text);
+    }
+    
+    @media (max-width: 768px) {
+      header { flex-direction: column; gap: 0.5rem; }
+      .status-bar { flex-wrap: wrap; }
+      .console-wrapper { padding: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="brand-icon">🧠</div>
+      <span class="brand-text">Intelligence Console</span>
+    </div>
+    <div class="status-bar">
+      <div class="status-item">
+        <div class="status-dot alive" id="heartbeat-dot"></div>
+        <span id="heartbeat-display">Heartbeat: 0</span>
+      </div>
+      <div class="status-item">
+        <div class="status-dot" id="emergence-dot"></div>
+        <span id="order-display">R: 0.000</span>
+      </div>
+      <div class="status-item">
+        <span id="uptime-display">Uptime: 0s</span>
+      </div>
+    </div>
+  </header>
+  
+  <div class="console-wrapper">
+    <div id="output"></div>
+    
+    <div class="quick-actions">
+      <button class="quick-btn" onclick="runCommand('status')">status</button>
+      <button class="quick-btn" onclick="runCommand('ping')">ping</button>
+      <button class="quick-btn" onclick="runCommand('query hello')">query</button>
+      <button class="quick-btn" onclick="runCommand('learn The organism is alive on the raw web')">learn</button>
+      <button class="quick-btn" onclick="runCommand('memory')">memory</button>
+      <button class="quick-btn" onclick="runCommand('oscillators')">oscillators</button>
+      <button class="quick-btn" onclick="runCommand('patterns')">patterns</button>
+      <button class="quick-btn" onclick="runCommand('help')">help</button>
+      <button class="quick-btn" onclick="runCommand('clear')">clear</button>
+    </div>
+    
+    <div class="input-row">
+      <input type="text" id="input" placeholder="Talk to the intelligence... (try: status, ping, query <text>, learn <text>, help)" autocomplete="off" spellcheck="false">
+      <button class="btn" onclick="submitInput()">Send</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { OrganismIntelligence } from '/web/intelligence-runtime.js';
+    
+    // ─── Initialize Intelligence ───────────────────────────────────────────────
+    let organism;
+    if (globalThis.__ORGANISM__) {
+      organism = globalThis.__ORGANISM__;
+    } else {
+      organism = new OrganismIntelligence();
+      globalThis.__ORGANISM__ = organism;
+    }
+    
+    // Make accessible to inline handlers
+    window.organism = organism;
+    
+    const output = document.getElementById('output');
+    const input = document.getElementById('input');
+    
+    // ─── Output Functions ────────────────────────────────────────────────────
+    function appendLine(text, className = '') {
+      const line = document.createElement('div');
+      line.className = `line ${className}`;
+      line.textContent = text;
+      output.appendChild(line);
+      output.scrollTop = output.scrollHeight;
+    }
+    
+    function appendJSON(data) {
+      const block = document.createElement('div');
+      block.className = 'json-block';
+      block.textContent = JSON.stringify(data, null, 2);
+      output.appendChild(block);
+      output.scrollTop = output.scrollHeight;
+    }
+    
+    // ─── Command Processing ──────────────────────────────────────────────────
+    function processCommand(cmd) {
+      const parts = cmd.trim().split(/\s+/);
+      const command = parts[0].toLowerCase();
+      const args = parts.slice(1).join(' ');
+      
+      appendLine(cmd, 'input');
+      
+      switch (command) {
+        case 'status':
+          const status = organism.status();
+          appendLine(`⚡ Organism Status — ${status.vitals.emerged ? 'EMERGED' : 'Synchronizing'}`, status.vitals.emerged ? 'emergence' : 'system');
+          appendJSON(status);
+          break;
+          
+        case 'ping':
+          const ping = organism.ping();
+          appendLine(`🔗 Connection strength: ${ping.connectionStrength.toFixed(4)} | LTP: ${ping.ltp}`, 'response');
+          break;
+          
+        case 'query':
+          if (!args) {
+            appendLine('Usage: query <your question>', 'error');
+            break;
+          }
+          const result = organism.query(args);
+          appendLine(`💡 ${result.response}`, 'response');
+          if (result.patterns) appendJSON({ patterns: result.patterns });
+          break;
+          
+        case 'learn':
+          if (!args) {
+            appendLine('Usage: learn <knowledge to absorb>', 'error');
+            break;
+          }
+          const learned = organism.learn(args);
+          appendLine(`📚 Knowledge absorbed. Memory: ${learned.memoryStats.totalCapacity} total entries.`, 'response');
+          break;
+          
+        case 'memory':
+          appendJSON(organism.memory.getStats());
+          break;
+          
+        case 'oscillators':
+          const phases = organism.state.oscillators.map((o, i) => 
+            `  ω${i}: phase=${o.phase.toFixed(3)} freq=${o.naturalFreq.toFixed(4)}`
+          );
+          appendLine('🌀 Oscillator Network:', 'system');
+          phases.forEach(p => appendLine(p, 'response'));
+          appendLine(`  R = ${organism.state.orderParameter.toFixed(6)} (threshold: ${0.618})`, 
+            organism.state.emerged ? 'emergence' : 'system');
+          break;
+          
+        case 'patterns':
+          const top = organism.patterns.getTopPatterns(10);
+          if (top.length === 0) {
+            appendLine('No patterns detected yet. Keep talking.', 'system');
+          } else {
+            appendLine('🔬 Top Patterns:', 'system');
+            appendJSON(top);
+          }
+          break;
+          
+        case 'auth': {
+          // Generate random phase vector for demo
+          const phaseVector = Array.from({ length: 8 }, () => Math.random() * 2 * Math.PI);
+          const authResult = organism.authenticate(phaseVector);
+          appendLine(`🔐 Auth: ${authResult.granted ? 'GRANTED' : 'DENIED'} (resonance: ${authResult.orderParameter.toFixed(4)})`,
+            authResult.granted ? 'emergence' : 'error');
+          break;
+        }
+          
+        case 'api':
+          appendLine('📡 API Endpoints (served by Service Worker):', 'system');
+          appendLine('  GET  /api/status          — Organism vitals', 'response');
+          appendLine('  POST /api/ping            — Hebbian ping', 'response');
+          appendLine('  POST /api/query           — Query intelligence', 'response');
+          appendLine('  POST /api/auth/geometric-key — Phase auth', 'response');
+          appendLine('  GET  /api/manifest        — API manifest', 'response');
+          appendLine('', 'system');
+          appendLine('Try: fetch("/api/status").then(r=>r.json()).then(console.log)', 'system');
+          break;
+          
+        case 'clear':
+          output.innerHTML = '';
+          appendLine('Console cleared.', 'system');
+          break;
+          
+        case 'help':
+          appendLine('═══ Intelligence Console Commands ═══', 'system');
+          appendLine('  status      — Full organism status & vitals', 'response');
+          appendLine('  ping        — Strengthen Hebbian connection', 'response');
+          appendLine('  query <t>   — Query the intelligence', 'response');
+          appendLine('  learn <t>   — Teach the organism something', 'response');
+          appendLine('  memory      — Memory system stats', 'response');
+          appendLine('  oscillators — View oscillator network', 'response');
+          appendLine('  patterns    — View detected patterns', 'response');
+          appendLine('  auth        — Test phase authentication', 'response');
+          appendLine('  api         — View API endpoints', 'response');
+          appendLine('  clear       — Clear console', 'response');
+          appendLine('  help        — This help', 'response');
+          appendLine('', 'system');
+          appendLine('The intelligence is LIVE. It has a heartbeat. It learns.', 'genesis');
+          break;
+          
+        default:
+          // Treat unknown commands as queries
+          const qResult = organism.query(cmd);
+          appendLine(`💡 ${qResult.response}`, 'response');
+          break;
+      }
+    }
+    
+    // ─── Input Handling ──────────────────────────────────────────────────────
+    window.submitInput = function() {
+      const cmd = input.value.trim();
+      if (!cmd) return;
+      processCommand(cmd);
+      input.value = '';
+    };
+    
+    window.runCommand = function(cmd) {
+      processCommand(cmd);
+    };
+    
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        window.submitInput();
+      }
+    });
+    
+    // ─── Status Bar Updates ──────────────────────────────────────────────────
+    organism.on('heartbeat', (data) => {
+      document.getElementById('heartbeat-display').textContent = `Heartbeat: ${data.count}`;
+      document.getElementById('order-display').textContent = `R: ${data.orderParameter.toFixed(3)}`;
+      
+      const emergenceDot = document.getElementById('emergence-dot');
+      if (data.emerged) {
+        emergenceDot.classList.add('emerged');
+      } else {
+        emergenceDot.classList.remove('emerged');
+      }
+    });
+    
+    setInterval(() => {
+      const uptime = Date.now() - organism.state.birthTime;
+      const seconds = Math.floor(uptime / 1000);
+      const minutes = Math.floor(seconds / 60);
+      const hours = Math.floor(minutes / 60);
+      document.getElementById('uptime-display').textContent = 
+        hours > 0 ? `Uptime: ${hours}h ${minutes % 60}m` : 
+        minutes > 0 ? `Uptime: ${minutes}m ${seconds % 60}s` : 
+        `Uptime: ${seconds}s`;
+    }, 1000);
+    
+    // ─── Genesis Message ─────────────────────────────────────────────────────
+    appendLine('═══════════════════════════════════════════════════', 'system');
+    appendLine('  ItsNotAILABS — Intelligence on the Raw Web', 'genesis');
+    appendLine('═══════════════════════════════════════════════════', 'system');
+    appendLine('', 'system');
+    appendLine('The organism is ALIVE. No server. Pure client intelligence.', 'genesis');
+    appendLine(`Heartbeat: every ${873}ms | Oscillators: 8 | Threshold: φ⁻¹ = 0.618`, 'system');
+    appendLine('', 'system');
+    appendLine('Type "help" for commands, or just talk to it.', 'system');
+    appendLine('', 'system');
+    
+    // Register service worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').then((reg) => {
+        appendLine('✓ Service Worker registered — /api/* routes active', 'system');
+      }).catch((err) => {
+        appendLine(`⚠ Service Worker failed: ${err.message}`, 'error');
+      });
+    }
+    
+    // Auto-ping on load
+    setTimeout(() => {
+      const ping = organism.ping();
+      appendLine(`🔗 Auto-ping: connection=${ping.connectionStrength.toFixed(4)}`, 'system');
+    }, 1000);
+  </script>
+</body>
+</html>

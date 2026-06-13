@@ -1,0 +1,51 @@
+{
+  "name": "ItsNotAILABS Intelligence",
+  "short_name": "AIFX Intelligence",
+  "description": "Sovereign AI Intelligence running on the raw web. No server. The organism IS the client.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0f",
+  "theme_color": "#4a90d9",
+  "orientation": "any",
+  "scope": "/",
+  "categories": ["productivity", "utilities", "education"],
+  "icons": [
+    {
+      "src": "/assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "serviceworker": {
+    "src": "/sw.js",
+    "scope": "/",
+    "type": "module"
+  },
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "protocol_handlers": [
+    {
+      "protocol": "web+organism",
+      "url": "/console.html?q=%s"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Intelligence Console",
+      "url": "/console.html",
+      "description": "Interactive intelligence terminal"
+    },
+    {
+      "name": "API Status",
+      "url": "/api/status",
+      "description": "Check organism vitals"
+    }
+  ]
+}
